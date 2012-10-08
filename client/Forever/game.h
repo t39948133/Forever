@@ -1,3 +1,4 @@
+#include "unit.h"
 
 void gameInit()
 {
