@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="0"
+			CharacterSet="1"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\..\src\Client;..\..\src\Model;..\..\src\Common"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -177,6 +178,14 @@
 			<Filter
 				Name="Model"
 				>
+				<File
+					RelativePath="..\..\src\Model\CPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CUnitObject.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -195,6 +204,10 @@
 			<Filter
 				Name="Model"
 				>
+				<File
+					RelativePath="..\..\src\Model\CPlayer.h"
+					>
+				</File>
 				<File
 					RelativePath="..\..\src\model\CUnitObject.h"
 					>
