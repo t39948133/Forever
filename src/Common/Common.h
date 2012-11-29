@@ -38,6 +38,17 @@ struct AdvancedAttribute	//進階屬性
 	
 };
 
+enum EquipSlot	//裝備槽
+{
+	MAIN_HAND,	//主手
+	OFF_HAND,	//副手
+	CHEST,		//上衣
+	LEGS,		//褲子
+	SHOULDER,	//肩甲
+	GLOVES,		//手套
+	BOOTS		//鞋子
+};
+
 
 
 #endif  //_COMMON_H_
