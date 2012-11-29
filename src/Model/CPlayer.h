@@ -2,6 +2,7 @@
 #define _CPLAYER_H_
 
 #include "CUnitObject.h"
+#include <map>
 
 class CPlayer:public CUnitObject
 {
@@ -15,6 +16,8 @@ private:
 	unsigned int m_xp;	//經驗值
 	unsigned int m_xpMax;	//最大經驗值
 	char m_levelMax;	//最高等級 預設50
+	std::map<int ,CItem*> m_weaponSlot;	//
+	std::map<int ,CItem*> m_armorSlot;	//
 };
 
 #endif
