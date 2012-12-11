@@ -2,6 +2,7 @@
 
 CUnitObject::CUnitObject(std::wstring strName,char level) : m_strName(strName),m_level(level)
 {
+	AttributeClear(m_advAttr);
 }
 
 std::wstring CUnitObject::getName()

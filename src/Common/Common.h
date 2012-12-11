@@ -43,12 +43,77 @@ enum EquipSlot	//裝備槽
 	MAIN_HAND,	//主手
 	OFF_HAND,	//副手
 	CHEST,		//上衣
+	BELT,		//腰帶
 	LEGS,		//褲子
-	SHOULDER,	//肩甲
+	SHOULDER,	//護肩
+	GLOVE,		//手套
+	BOOT		//鞋子
+};
+
+enum ItemType	//物品種類
+{
+	DAGGER,		//匕首
+	SWORD,		//長劍
+	MACE,		//釘錘
+	STAVE,		//法杖
+	SPELLBOOK,	//法書
+	ORB,		//法珠
+	GREATSWORD,	//巨劍
+	POLEARM,	//戰戟
+	BOW,		//弓
+	CLOTH,		//長袍
+	LEATHER,	//皮甲
+	CHAIN,		//鏈甲
+	PLATE,		//金屬甲
+	SHIELDS,	//盾牌
+	POTION,		//藥水
+	FOOD,		//食物
+	SCROLL		//卷軸
+};
+
+enum EquipQuality	//裝備品質
+{
+	COMMON,	//普通
+	RARE,	//稀有
+	LEGEND,	//傳說
+	UNIQUE,	//獨特
+	EPIC	//史詩
+};
+
+enum WeaponWieldType	//單持武器/雙持
+{
+	ONE_HAND,	//單持
+	TWO_HAND	//雙持
+};
+
+enum ArmorWearType	//裝備位置
+{
+	CLOTHES,	//衣服
+	BELTS,
+	PANTS,		//褲子
+	PAULDRONS,	//護肩
 	GLOVES,		//手套
 	BOOTS		//鞋子
 };
 
+struct AdvancedItem
+{
+	std::wstring name;	//名稱
+	ItemType type;		//種類
+	bool soulBind;		//綁定
+	char level;			//等級
+	int stackLimit;		//堆疊上限
+	int sellPrice;		//賣價
+	int buyPrice;		//買價
+};
 
+enum EdibleEffectType
+{
+	HP,					//補血
+	MP,					//補魔
+	HPMax,				//增加最大血量
+	MPMax,				//增加最大魔量
+	Skill,				//技能
+};
 
 #endif  //_COMMON_H_

@@ -179,11 +179,39 @@
 				Name="Model"
 				>
 				<File
+					RelativePath="..\..\src\Model\AttributeSet.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CArmor.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CConsumable.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CEquip.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CItem.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CItemTable.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CPlayer.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CUnitObject.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CWeapon.cpp"
 					>
 				</File>
 			</Filter>
@@ -205,11 +233,47 @@
 				Name="Model"
 				>
 				<File
+					RelativePath="..\..\src\Model\AttributeSet.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CArmor.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CConsumable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CEquip.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CItem.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CItemTable.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CPlayer.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\model\CUnitObject.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CWeapon.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\obj_mTable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\obj_table.h"
 					>
 				</File>
 			</Filter>

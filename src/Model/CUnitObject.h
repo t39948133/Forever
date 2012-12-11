@@ -2,6 +2,7 @@
 #define _CUNITOBJECT_H_
 
 #include "Common.h"
+#include "AttributeSet.h"
 
 class CUnitObject
 {
