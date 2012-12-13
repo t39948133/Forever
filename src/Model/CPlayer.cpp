@@ -1,6 +1,6 @@
 #include "CPlayer.h"
 
-CPlayer::CPlayer(std::wstring strName,char level) : CUnitObject(strName,level),m_levelMax(50)
+CPlayer::CPlayer(std::wstring strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
 {
 }
 

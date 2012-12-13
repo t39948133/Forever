@@ -9,7 +9,7 @@
 class CPlayer:public CUnitObject
 {
 public:
-	CPlayer(std::wstring strName,char level = 1);	//ミà︹ 肚单(箇砞ミ1)
+	CPlayer(std::wstring strName, long long uid, char level = 1);	//ミà︹ 肚单(箇砞ミ1)
 	void addXP(unsigned int xp);	//糤XP unsigned ぃ盿璽计
 	unsigned int getXP();			//弄XP
 	unsigned int getXPMax();		//弄程XP

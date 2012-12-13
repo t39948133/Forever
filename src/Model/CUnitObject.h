@@ -7,8 +7,9 @@
 class CUnitObject
 {
 public:
-	CUnitObject(std::wstring strName,char level=0); //建立角色 傳入名字、等級(預設建立後為0級)
+	CUnitObject(std::wstring strName, long long uid, char level = 0); //建立角色 傳入名字、等級(預設建立後為0級)
 
+	long long getUID();	//取得唯一編號
 	std::wstring getName();	//取得角色名字
 	char getLevel();	//取得等級
 
@@ -24,6 +25,7 @@ public:
 	AdvancedAttribute getAdvAttr();	//取得屬性
 
 private:
+	long long m_uid;	//唯一編號
 	char m_level;	//等級
 	std::wstring m_strName;	//名字
 	AdvancedAttribute m_advAttr;	//屬性

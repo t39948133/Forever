@@ -19,7 +19,7 @@ void CItemTable::initItemTable ()
 		baseAttr.iHIT = 5;
 		extendAttr.iHP = 80;
 		extendAttr.iMPMax = 8;
-		pw->initWeapon(_T("¤M¤l"), SWORD, false, 1, 1, 20, 50, COMMON,
+		pw->initWeapon(L"¤M¤l", SWORD, false, 1, 1, 20, 50, COMMON,
 			baseAttr, extendAttr, ONE_HAND);
 		addInfo(pw);
 
@@ -31,7 +31,7 @@ void CItemTable::initItemTable ()
 		baseAttr.iHIT = 7;
 		extendAttr.iHP = 90;
 		extendAttr.iMPMax = 0;
-		pa->initWeapon(_T("³T"), CLOTH, false, 1, 1, 20, 50, COMMON,
+		pa->initWeapon(L"³T", CLOTH, false, 1, 1, 20, 50, COMMON,
 			baseAttr, extendAttr, CLOTHES);
 		addInfo(pa);
 
