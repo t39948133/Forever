@@ -88,11 +88,6 @@ void ToolBarWnd::init (Window* pw0,
 			
 			addChild (pTA) ;
 		}
-
-		
-
-
-
 	}
 
 bool ToolBarWnd::canDrag (int tx, int ty)

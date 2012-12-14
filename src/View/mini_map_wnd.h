@@ -1,18 +1,18 @@
-#ifndef _PLAYER_NAME_WND_H_
-#define _PLAYER_NAME_WND_H_
+#ifndef _MINI_MAP_WND_H_
+#define _MINI_MAP_WND_H_
 
 #include "window.h"
 #include "unit.h"
 
-class PlayerNameWnd:public Window
+class MiniMapWnd:public Window
 {
 private:
 	UnitData* pUnitData ;
 
 public:
-	enum {CELL_H_COUNT = 1, CELL_W_COUNT = 4,CELL_SIZE = 20} ;
+	enum {CELL_H_COUNT = 1, CELL_W_COUNT = 1,CELL_SIZE = 100} ;
 
-	~PlayerNameWnd () {};
+	~MiniMapWnd () {};
 
 	void init (int _x, int _y, UnitData* pu) ;
 

@@ -16,13 +16,13 @@ void SkillWnd::init (int _x, int _y, GP::NetStream* pns, Player* pb,
 	x = _x ;
 	y = _y ;
 	w = CELL_SIZE*BUTTON_COUNT ;
-	h = CELL_SIZE*BUTTON_COUNT+CELL_SIZE ;
+	h = CELL_SIZE*(BUTTON_COUNT+1) ;
 
 #ifdef _PROJECT_OGRE_3D_
 	overlaySK.init (x, y, w, h) ;
 
 	for (int i = 0; i<BUTTON_COUNT; i++)
-	{		
+	{	
 		ImageButton* pBtn = new ImageButton ;
 		pBtn->init (overlaySK, 0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i) ;
 		if (i == 0)
@@ -39,10 +39,10 @@ void SkillWnd::init (int _x, int _y, GP::NetStream* pns, Player* pb,
 	}
 
 	for (int i = 0; i<BUTTON_COUNT; i++)
-	{		
+	{	
 		ImageButton* pBtn = new ImageButton ;
 		pBtn->init (overlaySK, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i) ;
-		pBtn->setImage ("normalNoiseColor") ;
+		pBtn->setImage ("ogreborder") ;
 		addChild (pBtn) ;
 	}
 /*
@@ -63,10 +63,12 @@ void SkillWnd::init (int _x, int _y, GP::NetStream* pns, Player* pb,
 
 		if (i == 0)
 		{			
-			pTA->setText ("火球術    耗費10MP", 1, 1, 1) ;
+			pTA->setText ("火球術    耗費10MP", 1, 0, 0) ;
 		}else if (i == 1)
 		{
-			pTA->setText ("治癒術    耗費15MP", 1, 1, 1) ;
+			pTA->setText ("治癒術    耗費15MP", 1, 0, 0) ;
+		}else
+		{
 		}
 
 		addChild (pTA) ;

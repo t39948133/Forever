@@ -16,21 +16,21 @@ void PlayerImageWnd::init (int _x, int _y, UnitData* pu)
 
 		
 #ifdef _PROJECT_GDI_
-			TextButton* pBtn = new TextButton ;
+		TextButton* pBtn = new TextButton ;
 
-			pBtn->init (0, 0, w, h, 0) ;
+		pBtn->init (0, 0, w, h, 0) ;
 
-			if (i == 0)
-				pBtn->str = "玩家頭像" ;
+		if (i == 0)
+			pBtn->str = "玩家頭像" ;
 		
 #else _PROJECT_OGRE_3D_
-			ImageButton* pBtn = new ImageButton ;
+		ImageButton* pBtn = new ImageButton ;
 
-			pBtn->init (overlayPIM, 0, 0, w, h, 0) ;
-			pBtn->setImage ("elyos") ;
+		pBtn->init (overlayPIM, 0, 0, w, h, 0) ;
+		pBtn->setImage ("elyos") ;
 
 #endif
-			addChild (pBtn) ;
+		addChild (pBtn) ;
 }
 
 bool PlayerImageWnd::canDrag (int tx, int ty)

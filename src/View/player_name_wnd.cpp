@@ -1,4 +1,5 @@
 #include "player_name_wnd.h"
+#include "image_button.h"
 
 void PlayerNameWnd::init (int _x, int _y, UnitData* pu)
 {
@@ -9,47 +10,32 @@ void PlayerNameWnd::init (int _x, int _y, UnitData* pu)
 	h = CELL_SIZE*CELL_H_COUNT ;
 
 #ifdef _PROJECT_OGRE_3D_
-	//	overlay.init (x, y, w, h) ;
-#endif
-		for (int i = 0; i<CELL_H_COUNT; i++)
-		{
-#ifdef _PROJECT_GDI_
-			TextButton* pBtn = new TextButton ;
+/*		overlay.init (x, y, w, h) ;
 
-			pBtn->init (0, 0, w, h, i) ;
-
-			if (i == 0)
-				pBtn->str = "" ;
-
-
-#else _PROJECT_OGRE_3D_
-			ImageButton* pBtn = new ImageButton ;
-
-			pBtn->init (overlay, (i+1)*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, i) ;
-
-			/*
-			if (i == 0)
-				pBtn->setImage ("img_backpack") ;
-			else if (i == 1)
-				pBtn->setImage ("img_skill") ;
-			else if (i == 2)
-				pBtn->setImage ("img_status") ;
-			else if (i == 3)
-				pBtn->setImage ("img_shp") ;
-			*/
-
-#endif
-			addChild (pBtn) ;
-		}
-
-		TextArea* pTA = new TextArea ;
-			
-		pTA->init (0, 5, w, h) ;
+		TextArea* pTA = new TextArea ;			
+		pTA->init (0, 0, w, h) ;
 		pTA->setText ("玩家名字", 1, 1, 1) ;
-
 		addChild (pTA) ;
 
-	
+		ImageButton* pBtn = new ImageButton ;
+		pBtn->init (overlay, (i+1)*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, i) ;
+		
+		if (i == 0)
+			pBtn->setImage ("img_backpack") ;
+		else if (i == 1)
+			pBtn->setImage ("img_skill") ;
+		else if (i == 2)
+			pBtn->setImage ("img_status") ;
+		else if (i == 3)
+			pBtn->setImage ("img_shp") ;
+		addChild (pBtn) ;
+*/	
+#else _PROJECT_GDI_
+		TextButton* pBtn = new TextButton ;
+		pBtn->init (0, 0, w, h, 0) ;
+		pBtn->str = "玩家名字" ;
+		addChild (pBtn) ;			
+#endif	
 }
 
 bool PlayerNameWnd::canDrag (int tx, int ty)

@@ -11,6 +11,7 @@
 
 #include "text_overlay.h"
 
+class Player ;
 class ImageButton:public Button
 {
 private:
@@ -26,6 +27,8 @@ public:
 	Ogre::OverlayContainer* getImage () ;
 
 	void setImage (const  Ogre::String& st) ;
+
+//	void upData (Player* plr) ;
 } ;
 
 class TextArea:public Window

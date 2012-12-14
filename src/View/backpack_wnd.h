@@ -15,10 +15,12 @@ class BackpackWnd:public Window
 public:
 //	Backpack* pBackpack ;
 	enum {BUTTON_COUNT = 25, CELL_SIZE = 60, TEXT_COUNT = 26} ;
-	Player* pPlayer ;
+	
 	#ifdef _PROJECT_OGRE_3D_
 		OverlayUI overlayBP ;//ºÞ²zoverlay
 	#endif
+
+	Player* pPlayer ;
 
 	~BackpackWnd () {};
 

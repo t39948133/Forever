@@ -42,9 +42,13 @@ Ogre::OverlayContainer* ImageButton::getImage ()
 void ImageButton::setImage (const Ogre::String& st)
 {
 	pImage->setMaterialName (st);
-	
 }
-
+/*
+void ImageButton::upData (Player* plr)
+{
+	w = w*plr->data.iHP/plr->data.iHPMax ;
+}
+*/
 void TextArea::init (OverlayUI& ui, int _x, int _y, int _w, int _h)
 {
 	x = _x ;
