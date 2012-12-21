@@ -1,6 +1,6 @@
 #include "CUnitObject.h"
 
-CUnitObject::CUnitObject(std::wstring strName, long long uid, char level) : m_strName(strName),m_uid(uid),m_level(level)
+CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_strName(strName),m_uid(uid),m_level(level)
 {
 	AttributeClear(m_advAttr);
 }
@@ -10,7 +10,7 @@ long long CUnitObject::getUID()
 	return m_uid;
 }
 
-std::wstring CUnitObject::getName()
+std::string CUnitObject::getName()
 {
 	return m_strName;
 }

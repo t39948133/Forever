@@ -6,16 +6,16 @@
 class CConsumable:public CItem	//耗材性物品
 {
 public:
-	std::wstring getDesc();
-	virtual void read(FILE* pFile);
-	virtual void write(FILE* pFile);
-	void initWeapon(std::wstring name, ItemType type, bool soulBind,
+	std::string getDesc();
+	void initConsumable(std::string name, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
-					std::wstring desc, EdibleEffectType effect, int much);
+					std::string desc, EdibleEffectType effect, int much);
+	
+	virtual void read(FILE* pFile);
 
 
 private:
-	std::wstring m_strDesc;		//物品描述
+	std::string m_strDesc;		//物品描述
 	EdibleEffectType m_effect;	//效果種類
 	int m_iMuch;				//影響數值
 };

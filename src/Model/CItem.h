@@ -10,7 +10,7 @@
 class CItem					//物品
 {
 public:
-	std::wstring getName();	//取得名字
+	std::string getName();	//取得名字
 	ItemType getItemType();	//取得哪種物品(ItemType分類)
 	bool getSoulBind();		//取得是否綁定
 	char getLevel();		//取得可使用等級
@@ -22,12 +22,11 @@ public:
 	bool isConsumable();	//檢查是否消耗物品
 
 	virtual void read(FILE* pFile);		//讀檔
-	virtual void write(FILE* pFile);	//編檔
 	AdvancedItem* getAll();		//一次取得所有需要外流的項目資訊, 使用完資料後自行delete
 
 protected:
 
-	void setName(std::wstring name);
+	void setName(std::string name);
 	void setItemType(ItemType type);
 	void setSoulBind(bool soulBind);
 	void setLevel(char level);
@@ -36,7 +35,7 @@ protected:
 	void setBuyPrice(int buyPrice);
 
 private:
-	std::wstring m_strName;	//名稱
+	std::string m_strName;	//名稱
 	ItemType m_type;		//種類
 	bool m_bSoulBind;		//綁定
 	char m_level;			//等級

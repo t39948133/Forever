@@ -21,7 +21,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -187,6 +187,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CBackPack.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CConsumable.cpp"
 					>
 				</File>
@@ -241,6 +245,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CBackPack.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CConsumable.h"
 					>
 				</File>
@@ -270,10 +278,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\obj_mTable.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Model\obj_table.h"
 					>
 				</File>
 			</Filter>

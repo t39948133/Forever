@@ -1,12 +1,17 @@
 #include "CItemTable.h"
+#include "CWeapon.h"
+#include "CArmor.h"
+#include "CConsumable.h"
+#include "AttributeSet.h"
 
 
 
 void CItemTable::initItemTable ()
 {
-	if (ITEM_INFO::read ("item.itb"))
+	if(ITEM_INFO::read("Item.la"))
 	{
-	}else
+	}
+	else
 	{
 		CWeapon* pw;
 		pw = new CWeapon;
@@ -19,7 +24,7 @@ void CItemTable::initItemTable ()
 		baseAttr.iHIT = 5;
 		extendAttr.iHP = 80;
 		extendAttr.iMPMax = 8;
-		pw->initWeapon(L"¤M¤l", SWORD, false, 1, 1, 20, 50, COMMON,
+		pw->initWeapon("¤M¤l", SWORD, true, 1, 1, 20, 50, COMMON,
 			baseAttr, extendAttr, ONE_HAND);
 		addInfo(pw);
 
@@ -31,23 +36,12 @@ void CItemTable::initItemTable ()
 		baseAttr.iHIT = 7;
 		extendAttr.iHP = 90;
 		extendAttr.iMPMax = 0;
-		pa->initWeapon(L"³T", CLOTH, false, 1, 1, 20, 50, COMMON,
+		pa->initArmor("³T", CLOTH, false, 5, 10, 10, 70, COMMON,
 			baseAttr, extendAttr, CLOTHES);
 		addInfo(pa);
 
-		
-
-		/*
-		baseAttr->iATK = 20;
-		baseAttr->iCRI = 10;
-		baseAttr->iHIT = 5;
-		extendAttr->iHP = 80;
-		extendAttr->iMPMax = 8;
-		pi.initWeapon(_T("¤M¤l"), SWORD, false, 1, 1, 20, 50, COMMON,
-			(*baseAttr), (*extendAttr),ONE_HAND);
-		baseAttr = NULL;
-		extendAttr = NULL;*/
 	}
+
 }
 CItemTable::CItemTable ():m_iStack(0)
 {
@@ -63,6 +57,7 @@ CItemTable::~CItemTable()
 		dx = getInfo(i);
 		delete dx;
 	}
+	clear();
 }
 
 bool CItemTable::addStack (int id, int& st)

@@ -3,9 +3,6 @@
 
 #include "obj_mTable.h"
 #include "CItem.h"
-#include "CWeapon.h"
-#include "CArmor.h"
-#include "AttributeSet.h"
 
 typedef ObjTable <CItem*> ITEM_INFO;
 

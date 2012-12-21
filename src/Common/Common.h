@@ -68,7 +68,8 @@ enum ItemType	//物品種類
 	SHIELDS,	//盾牌
 	POTION,		//藥水
 	FOOD,		//食物
-	SCROLL		//卷軸
+	SCROLL,		//卷軸
+	ITEM_TYPE_TOTAL,	//總數
 };
 
 enum EquipQuality	//裝備品質
@@ -89,7 +90,7 @@ enum WeaponWieldType	//單持武器/雙持
 enum ArmorWearType	//裝備位置
 {
 	CLOTHES,	//衣服
-	BELTS,
+	BELTS,		//腰帶
 	PANTS,		//褲子
 	PAULDRONS,	//護肩
 	GLOVES,		//手套
@@ -98,10 +99,10 @@ enum ArmorWearType	//裝備位置
 
 struct AdvancedItem
 {
-	std::wstring name;	//名稱
+	std::string name;	//名稱
 	ItemType type;		//種類
 	bool soulBind;		//綁定
-	char level;			//等級
+	char level;		//等級
 	int stackLimit;		//堆疊上限
 	int sellPrice;		//賣價
 	int buyPrice;		//買價
@@ -111,9 +112,14 @@ enum EdibleEffectType
 {
 	HP,					//補血
 	MP,					//補魔
-	HPMax,				//增加最大血量
-	MPMax,				//增加最大魔量
-	Skill,				//技能
+	HP_MAX,	//增加最大血量
+	MP_MAX,	//增加最大魔量
+	SKILL,	//技能
 };
+
+
+const int BACK_ROW = 8;		//row橫 
+const int BACK_COLUMN = 3;	//column直
+const int BACK_MAX = 24;	//格數
 
 #endif  //_COMMON_H_

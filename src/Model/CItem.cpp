@@ -3,7 +3,7 @@
 #include "CArmor.h"
 #include "CConsumable.h"
 
-std::wstring CItem::getName()
+std::string CItem::getName()
 {
 	return m_strName;
 }
@@ -81,7 +81,7 @@ AdvancedItem* CItem::getAll()
 	return pItem;
 }
 
-void CItem::setName(std::wstring name)
+void CItem::setName(std::string name)
 {
 	m_strName = name;
 }
@@ -124,7 +124,6 @@ void CItem::setBuyPrice(int buyPrice)
 	m_iBuyPrice = buyPrice;
 }
 
-
 void CItem::read(FILE* pFile)
 {
 	int version = 0;
@@ -139,35 +138,4 @@ void CItem::read(FILE* pFile)
 	fread (&m_iSellPrice, sizeof(m_iSellPrice), 1, pFile);
 	fread (&m_iBuyPrice, sizeof(m_iBuyPrice), 1, pFile);
 
-	if(isWeapon())
-		((CWeapon*)this)->read(pFile);
-	if(isArmor())
-		((CArmor*)this)->read(pFile);
-	if(isConsumable())
-		((CConsumable*)this)->read(pFile);
-
 }
-
-void CItem::write(FILE* pFile)
-{ 
-	int version = 0;
-	fwrite (&version, sizeof(version), 1, pFile);
-
-	fwrite (&m_strName, sizeof(m_strName), 1, pFile);
-
-	fwrite (&m_type, sizeof(m_type), 1, pFile);
-	fwrite (&m_bSoulBind, sizeof(m_bSoulBind), 1, pFile);
-	fwrite (&m_level, sizeof(m_level), 1, pFile);
-	fwrite (&m_iStackLimit, sizeof(m_iStackLimit), 1, pFile);
-	fwrite (&m_iSellPrice, sizeof(m_iSellPrice), 1, pFile);
-	fwrite (&m_iBuyPrice, sizeof(m_iBuyPrice), 1, pFile);
-	
-	if(isWeapon())
-		((CWeapon*)this)->read(pFile);
-	if(isArmor())
-		((CArmor*)this)->read(pFile);
-	if(isConsumable())
-		((CConsumable*)this)->read(pFile);
-
-}
-

@@ -10,7 +10,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                      LPTSTR    lpCmdLine,
                      int       nCmdShow)
 {
-	CPlayer player(_T("xXX"),123);	//_T _TEXT的意思 可將內容轉為文字用的2個bytes 1個字
 
 	AdvancedItem *itemInfo;		//item的項目資料struct
 	CItem item;					//要讀取的item
@@ -32,6 +31,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	pk = cta.getInfo(0);
 
 	WeaponWieldType ti;
+	ti = ((CWeapon*)pk)->getWield();
+
+	CPlayer player("xXX",123);	//_T _TEXT的意思 可將內容轉為文字用的2個bytes 1個字
+
+	CItemTable* pBPItem;
+	pBPItem = player.m_backPack.getItem(0);
+	pk = pBPItem->getInfo();
 	ti = ((CWeapon*)pk)->getWield();
 
 

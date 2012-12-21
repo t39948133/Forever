@@ -1,7 +1,8 @@
 #include "CPlayer.h"
 
-CPlayer::CPlayer(std::wstring strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
+CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
 {
+	m_backPack.initBack();
 }
 
 void CPlayer::addXP(unsigned int xp)

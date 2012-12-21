@@ -4,15 +4,17 @@
 #include "CUnitObject.h"
 #include "CItem.h"
 #include "CEquip.h"
+#include "CBackPack.h"
 #include <map>
 
 class CPlayer:public CUnitObject
 {
 public:
-	CPlayer(std::wstring strName, long long uid, char level = 1);	//建立角色 傳入名字、等級(預設建立後為1級)
+	CPlayer(std::string strName, long long uid, char level = 1);	//建立角色 傳入名字、等級(預設建立後為1級)
 	void addXP(unsigned int xp);	//增加XP unsigned 不帶負數
 	unsigned int getXP();			//讀取XP
 	unsigned int getXPMax();		//讀取最大XP
+	CBackPack m_backPack;
 
 private:
 	unsigned int m_xp;	//經驗值
