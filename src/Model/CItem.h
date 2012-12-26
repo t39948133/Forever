@@ -17,10 +17,6 @@ public:
 	virtual ~CItem();
 	virtual int getClassType () = 0;		//回傳那一種class(武器、防具、消耗性物品)
 
-	bool isWeapon();		//檢查是否武器
-	bool isArmor();			//檢查是否防具
-	bool isConsumable();	//檢查是否消耗物品
-
 	virtual void read(FILE* pFile);		//讀檔
 	AdvancedItem* getAll();		//一次取得所有需要外流的項目資訊, 使用完資料後自行delete
 

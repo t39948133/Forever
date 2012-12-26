@@ -42,35 +42,6 @@ CItem::~CItem()
 {
 }
 
-bool CItem::isWeapon()
-{
-	if(m_type == DAGGER || m_type == SWORD || m_type == MACE || m_type == STAVE || 
-		m_type == SPELLBOOK || m_type == ORB || m_type == GREATSWORD || m_type == POLEARM ||
-		m_type == BOW || m_type == SHIELDS)
-	{
-		return true;
-	}
-	return false;
-}
-
-bool CItem::isArmor()
-{
-	if(m_type == CLOTH || m_type == LEATHER || m_type == CHAIN || m_type == PLATE)
-	{
-		return true;
-	}
-	return false;
-}
-
-bool CItem::isConsumable()
-{
-	if(m_type == POTION || m_type == FOOD || m_type == SCROLL)
-	{
-		return true;
-	}
-	return false;
-}
-
 AdvancedItem* CItem::getAll()
 {
 	AdvancedItem *pItem = new AdvancedItem;

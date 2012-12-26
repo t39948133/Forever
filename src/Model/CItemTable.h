@@ -4,7 +4,7 @@
 #include "obj_mTable.h"
 #include "CItemInfoLoader.h"
 
-typedef ObjTable <CItem*, ItemInfoLoader> ITEM_INFO;
+typedef ObjTable <CItem*, CItemInfoLoader> ITEM_INFO;
 
 class CItemTable:public ITEM_INFO
 {

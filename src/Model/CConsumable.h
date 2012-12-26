@@ -6,7 +6,9 @@
 class CConsumable:public CItem	//耗材性物品
 {
 public:
-	std::string getDesc();
+	std::string getDesc();			//取得物品描述
+	EdibleEffectType getEffect();	//取得哪種效果
+	int getMuch();					//取得影響數值
 	void initConsumable(std::string name, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					std::string desc, EdibleEffectType effect, int much);

@@ -17,6 +17,9 @@ public:
 		FILE* pFile ; 
 		fopen_s (&pFile, name, "rb") ;
 
+		
+		if (pFile != NULL)
+		{
 		for(int i = 0; (size_t)i < vInfo.size (); i++)
 		{
 			delete vInfo[i];
@@ -26,8 +29,6 @@ public:
 		}
 		vInfo.clear () ;
 
-		if (pFile != NULL)
-		{
 			CLASS_LOADER loader ;
 
 			int version = 0 ;
