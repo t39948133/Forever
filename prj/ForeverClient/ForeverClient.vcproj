@@ -203,6 +203,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CitemInfoLoader.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CItemTable.cpp"
 					>
 				</File>
@@ -258,6 +262,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CItem.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CItemInfoLoader.h"
 					>
 				</File>
 				<File

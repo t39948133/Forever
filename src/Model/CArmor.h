@@ -12,6 +12,9 @@ public:
 					EquipQuality quality, AdvancedAttribute baseAttr,
 					AdvancedAttribute extendAttr, ArmorWearType wear);
 
+	~CArmor();
+	int getClassType ();
+
 	void read(FILE* pFile);
 
 private:

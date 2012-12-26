@@ -46,3 +46,25 @@ void AttributeSet (AdvancedAttribute& attr, int hp, int mp, int hpMax, int mpMax
 	attr.fATKSpeed = atkSpeed;
 	attr.fCasting = casting;
 }
+
+void AttributeAdd (AdvancedAttribute& attr, AdvancedAttribute add)
+{
+	attr.iHP += add.iHP;
+	attr.iMP += add.iMP;
+	attr.iHPMax += add.iHPMax;
+	attr.iMPMax += add.iMPMax;
+	attr.iATK += add.iATK;
+	attr.iDEF += add.iDEF;
+	attr.iHIT += add.iHIT;
+	attr.iCRI += add.iCRI;
+	attr.iMATK += add.iMATK;
+	attr.iMDEF += add.iMDEF;
+	attr.iMHIT += add.iMHIT;
+	attr.iMCRI += add.iMCRI;
+	attr.iSDEF += add.iSDEF;
+	attr.iWDEF += add.iWDEF;
+	attr.iFlee += add.iFlee;
+	attr.fMove += add.fMove;
+	attr.fATKSpeed += add.fATKSpeed;
+	attr.fCasting += add.fCasting;
+}

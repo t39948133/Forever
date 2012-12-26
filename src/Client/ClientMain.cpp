@@ -10,8 +10,14 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                      LPTSTR    lpCmdLine,
                      int       nCmdShow)
 {
+	CItemTable::initItemTable();
+	CPlayer pla("lua",001);
+	pla.wearEquip(0);
+	pla.shedEquip(MAIN_HAND);
+	pla.wearEquip(0);
+	pla;
 
-	AdvancedItem *itemInfo;		//item的項目資料struct
+/*	AdvancedItem *itemInfo;		//item的項目資料struct
 	CItem item;					//要讀取的item
 	itemInfo = item.getAll();	//取得資訊
 
@@ -39,7 +45,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	pBPItem = player.m_backPack.getItem(0);
 	pk = pBPItem->getInfo();
 	ti = ((CWeapon*)pk)->getWield();
-
+*/
 
    return 0;
 }

@@ -23,6 +23,15 @@ void CArmor::initArmor(std::string name, ItemType type, bool soulBind,
 	m_wear = wear;
 }
 
+CArmor::~CArmor()
+{
+}
+
+int CArmor::getClassType ()
+{
+	return ARMOR;
+}
+
 void CArmor::read(FILE* pFile)
 {
 	CEquip::read(pFile);

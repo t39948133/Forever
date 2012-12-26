@@ -12,6 +12,9 @@ public:
 					EquipQuality quality, AdvancedAttribute baseAttr,
 					AdvancedAttribute extendAttr, WeaponWieldType wield);
 	
+	~CWeapon();
+	int getClassType ();
+
 	void read(FILE* pFile);
 
 private:

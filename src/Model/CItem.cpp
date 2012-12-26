@@ -38,6 +38,10 @@ int CItem::getBuyPrice()
 	return m_iBuyPrice;
 }
 
+CItem::~CItem()
+{
+}
+
 bool CItem::isWeapon()
 {
 	if(m_type == DAGGER || m_type == SWORD || m_type == MACE || m_type == STAVE || 
@@ -130,7 +134,6 @@ void CItem::read(FILE* pFile)
 	fread (&version, sizeof(version), 1, pFile);
 
 	fread (&m_strName, sizeof(m_strName), 1, pFile);
-
 	fread (&m_type, sizeof(m_type), 1, pFile);
 	fread (&m_bSoulBind, sizeof(m_bSoulBind), 1, pFile);
 	fread (&m_level, sizeof(m_level), 1, pFile);

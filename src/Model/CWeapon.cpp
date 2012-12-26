@@ -23,6 +23,15 @@ void CWeapon::initWeapon(std::string name, ItemType type, bool soulBind,
 	m_wield = wield;
 }
 
+CWeapon::~CWeapon()
+{
+}
+
+int CWeapon::getClassType ()
+{
+	return WEAPON;
+}
+
 void CWeapon::read(FILE* pFile)
 {
 	CEquip::read(pFile);

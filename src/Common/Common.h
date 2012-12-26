@@ -47,7 +47,15 @@ enum EquipSlot	//裝備槽
 	LEGS,		//褲子
 	SHOULDER,	//護肩
 	GLOVE,		//手套
-	BOOT		//鞋子
+	BOOT,		//鞋子
+};
+
+enum ItemClassType
+{
+	WEAPON,
+	ARMOR,
+	CONSUMABLE,
+
 };
 
 enum ItemType	//物品種類
@@ -83,8 +91,8 @@ enum EquipQuality	//裝備品質
 
 enum WeaponWieldType	//單持武器/雙持
 {
-	ONE_HAND,	//單持
-	TWO_HAND	//雙持
+	ONE_HAND,	//主手
+	TWO_HAND	//副手
 };
 
 enum ArmorWearType	//裝備位置

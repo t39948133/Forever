@@ -14,7 +14,7 @@ void CItemTable::initItemTable ()
 	else
 	{
 		CWeapon* pw;
-		pw = new CWeapon;
+		pw = new CWeapon();
 		AdvancedAttribute baseAttr;
 		AdvancedAttribute extendAttr;
 		AttributeClear(baseAttr);
@@ -29,7 +29,7 @@ void CItemTable::initItemTable ()
 		addInfo(pw);
 
 		CArmor* pa;
-		pa = new CArmor;
+		pa = new CArmor();
 		AttributeClear(baseAttr);
 		AttributeClear(extendAttr);
 		baseAttr.iATK = 10;
@@ -49,15 +49,6 @@ CItemTable::CItemTable ():m_iStack(0)
 
 CItemTable::~CItemTable()
 {
-	if(getInfoCount()==0)
-		return;
-	CItem* dx;
-	for(int i = 0;i<getInfoCount();i++)
-	{
-		dx = getInfo(i);
-		delete dx;
-	}
-	clear();
 }
 
 bool CItemTable::addStack (int id, int& st)
@@ -129,5 +120,14 @@ void CItemTable::create (int id, int st)
 			m_iStack = st ;
 		else
 			m_iStack = pinfo->getStackLimit();
+	}
+}
+
+void CItemTable::taken()
+{
+	m_iStack--;
+	if(m_iStack <= 0)
+	{
+		clear();
 	}
 }

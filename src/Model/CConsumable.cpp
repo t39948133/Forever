@@ -22,6 +22,15 @@ void CConsumable::initConsumable(std::string name, ItemType type, bool soulBind,
 	m_iMuch = much;
 }
 
+CConsumable::~CConsumable()
+{
+}
+
+int CConsumable::getClassType ()
+{
+	return CONSUMABLE;
+}
+
 void CConsumable::read(FILE* pFile)
 {
 	//CItem::read(pFile);

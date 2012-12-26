@@ -2,8 +2,12 @@
 #define _OBJ_MTABLE_H_
 
 #include <vector>
+#include "Common.h"
+#include "CWeapon.h"
+#include "CArmor.h"
+#include "CConsumable.h"
 
-template <class INFO>
+template <class INFO, class CLASS_LOADER>
 class ObjTable
 {
 
@@ -13,21 +17,35 @@ public:
 		FILE* pFile ; 
 		fopen_s (&pFile, name, "rb") ;
 
+		for(int i = 0; (size_t)i < vInfo.size (); i++)
+		{
+			delete vInfo[i];
+			/*
+			INFO pInfo = vInfo[i] ;
+			delete pInfo ;*/
+		}
+		vInfo.clear () ;
+
 		if (pFile != NULL)
 		{
+			CLASS_LOADER loader ;
+
 			int version = 0 ;
 			fread (&version, sizeof (version), 1, pFile) ;
 
 			int count ;
 			fread (&count, sizeof (count), 1, pFile) ;
 
-			vInfo.resize (count) ;
-
-			V_INFO::iterator pi = vInfo.begin () ;
-			while (pi != vInfo.end ())
+			for(int i = 0; i < count; i++)
 			{
-				(*pi)->read (pFile) ;
-				++ pi ;
+				int type;
+				fread (&type, sizeof(type), 1, pFile);
+
+				INFO pInfo = loader.create (type) ;		//INFO是指標型態 修改*pInfo
+			{
+					pInfo->read (pFile) ;
+					vInfo.push_back(pInfo);
+				}
 			}
 
 			fclose (pFile) ;
@@ -65,6 +83,24 @@ public:
 	ObjTable ():ID(NO_ID)
 	{
 	}
+	~ObjTable()
+	{
+		if(0 == vInfo.size())
+		{
+			return;
+		}
+		V_INFO::iterator pi = vInfo.begin () ;
+		while(vInfo.end() != pi)
+		{
+			if(NULL != (*pi))
+			{
+				delete (*pi);
+				(*pi) = NULL;
+			}
+			pi++;
+		}
+		vInfo.clear();
+	}
 	int getID ()
 	{
 		return ID ;
@@ -72,7 +108,7 @@ public:
 	bool create (size_t i)
 	{
 		ID = i ;
-		if (ID >= 0 && ID < vInfo.size ())
+		if (ID >= 0 && (size_t) ID < vInfo.size ())
 			return true ;
 		else
 			return false ;
@@ -83,7 +119,7 @@ public:
 	}
 	INFO getInfo ()
 	{
-		if (ID >= 0 && ID < vInfo.size ())
+		if (ID >= 0 && (size_t) ID < vInfo.size ())
 			return (vInfo[ID]) ;
 		else
 			return NULL ;
@@ -91,14 +127,14 @@ public:
 
 private:
 	enum {NO_ID = -1} ;
-	size_t ID ;//編號
+	int ID ;//編號
 	typedef std::vector <INFO> V_INFO ;
 	static V_INFO vInfo ;
 } ;
 
-template <class INFO> 
+template <class INFO, class CLASS_LOADER> 
 std::vector <INFO>
-ObjTable<INFO>::
+ObjTable<INFO, CLASS_LOADER>::
 vInfo ;
 
 

@@ -3,10 +3,6 @@
 
 #include "Common.h"
 
-
-
-
-
 class CItem					//物品
 {
 public:
@@ -17,6 +13,10 @@ public:
 	int getStackLimit();	//取得堆疊上限
 	int getSellPrice();		//取得賣價
 	int getBuyPrice();		//取得買價
+
+	virtual ~CItem();
+	virtual int getClassType () = 0;		//回傳那一種class(武器、防具、消耗性物品)
+
 	bool isWeapon();		//檢查是否武器
 	bool isArmor();			//檢查是否防具
 	bool isConsumable();	//檢查是否消耗物品

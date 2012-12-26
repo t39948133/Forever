@@ -2,9 +2,9 @@
 #define _CITEMTABLE_H_
 
 #include "obj_mTable.h"
-#include "CItem.h"
+#include "CItemInfoLoader.h"
 
-typedef ObjTable <CItem*> ITEM_INFO;
+typedef ObjTable <CItem*, ItemInfoLoader> ITEM_INFO;
 
 class CItemTable:public ITEM_INFO
 {
@@ -15,6 +15,7 @@ public:
 	bool addStack (int id, int& st);
 	int getStack ();
 	void create (int id, int st);
+	void taken();
 
 private:
 	int m_iStack;

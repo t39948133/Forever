@@ -11,6 +11,9 @@ public:
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					std::string desc, EdibleEffectType effect, int much);
 	
+	~CConsumable();
+	int getClassType ();
+
 	virtual void read(FILE* pFile);
 
 
