@@ -42,7 +42,7 @@ void MiniMapWnd::init (int _x, int _y, UnitData* pu)
 
 bool MiniMapWnd::canDrag (int tx, int ty)
 {
-	return true ;
+	return false ;
 }
 
 void MiniMapWnd::onCommand (int id)

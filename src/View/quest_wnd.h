@@ -2,16 +2,14 @@
 #define _QUEST_WND_H_
 
 #include "window.h"
-
 #include "player.h"
 
 //­I¥]µøµ¡
 class QuestWnd:public Window
 {
 public:
-	enum {CELL_H_COUNT = 4, CELL_SIZE = 40} ;
-//	const int CELL_H_COUNT = 4 ;
-//	const int CELL_SIZE = 40 ;
+	enum {TEXT_COUNT = 8, CELL_SIZE = 20} ;
+
 	Player* pPlayer ;
 
 	~QuestWnd () {};
@@ -19,11 +17,16 @@ public:
 	void init (int _x, int _y, Player* pb) ;
 
 	bool canDrag (int tx, int ty) ;
+	void onCommand (int id) ;
 
-//	void onCommand (int) ;
-//	void onClick (int tx, int ty) ;
+#ifdef _PROJECT_OGRE_3D_	
+	void onMove () ;
 
-	void draw (HDC hdc, int ox, int oy) ;
+	void setZOrder (int z) ;
+	void onSwitch () ;
+#endif
+
+//	void draw (HDC hdc, int ox, int oy) ;
 } ;
 
 #endif

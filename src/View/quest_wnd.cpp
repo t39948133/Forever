@@ -1,39 +1,85 @@
 #include "quest_wnd.h"
-
 #include "backpack_wnd.h"
 #include "item.h"
+#include "image_button.h"
 
 //背包視窗
 void QuestWnd::init (int _x, int _y, Player* pb)
+{
+	pPlayer = pb ;
+	x = _x ;
+	y = _y ;
+	w = 200 ;
+	h = TEXT_COUNT*CELL_SIZE ;
+
+#ifdef _PROJECT_OGRE_3D_
+	overlayUI.init (x, y, w, h) ;
+	
+	for (int i = 0; i<TEXT_COUNT; i++)
 	{
-		pPlayer = pb ;
-		x = _x ;
-		y = _y ;
+		TextArea* pTA = new TextArea ;
+		pTA->init (overlayUI, 0, i*CELL_SIZE, w, CELL_SIZE) ;
+		if (i == 0)
+		{	
+			pTA->setText ("任務名稱", 1, 1, 1) ;
+		}else if (i == 1)
+		{
+			pTA->setText ("任務解釋", 1, 1, 1) ;
+		}else
+		{
+		}
 
-		w = 200 ;
-		h = CELL_H_COUNT*CELL_SIZE+CELL_SIZE ;
-
-		/*
-		for (int i = 0; i<4; i++)
-			for (int m = 0; m<4; m++)
-			{
-				Button* pBtn = new Button ;
-				pBtn->x = m*CELL_SIZE ;
-				pBtn->y = (i+1)*CELL_SIZE ;
-				pBtn->w = CELL_SIZE ;
-				pBtn->h = CELL_SIZE ;
-				pBtn->id = i*4+m ;
-
-				addChild (pBtn) ;
-			}
-		*/
+		addChild (pTA) ;
 	}
+#else _PROJECT_GDI_
+
+	TextButton* pBtn = new TextButton ;
+	pBtn->init (0, 0, w, h, 0) ;
+	addChild (pBtn) ;
+	
+	for (int i = 0; i<TEXT_COUNT; i++)
+	{
+		TextArea* pTA = new TextArea ;
+		pTA->init (0, i*CELL_SIZE, w, CELL_SIZE) ;
+		if (i == 0)
+		{	
+			pTA->setText ("任務名稱", 1, 1, 1) ;
+		}else if (i == 1)
+		{
+			pTA->setText ("任務解釋", 1, 1, 1) ;
+		}else
+		{
+		}
+
+		addChild (pTA) ;
+	}
+#endif
+}
 
 bool QuestWnd::canDrag (int tx, int ty)
 {
-	return ty < CELL_SIZE ;
+	return false ;
 }
 
+void QuestWnd::onCommand (int id)
+{
+}
+
+#ifdef _PROJECT_OGRE_3D_	
+void QuestWnd::onMove ()
+{
+}
+
+void QuestWnd::setZOrder (int z)
+{
+}
+
+void QuestWnd::onSwitch ()
+{
+}
+#endif
+
+/*
 void QuestWnd::draw (HDC hdc, int ox, int oy)
 {
 	Window::draw (hdc, ox, oy) ;
@@ -51,63 +97,6 @@ void QuestWnd::draw (HDC hdc, int ox, int oy)
 		i ++ ;
 	}
 }
-
-/*
-void QuestWnd::onCommand (int id)
-{
-	pPlayer->useItem (id) ;
-}
 */
 
-/*
-void QuestWnd::onClick (int tx, int ty)
-{
-	int offset = tx/CELL_SIZE+
-		(ty-CELL_SIZE)/CELL_SIZE*CELL_W_COUNT ;
 
-	pPlayer->useItem (offset) ;
-}
-*/
-
-/*
-	void QuestWnd::draw (HDC hdc)
-	{
-		Window::draw (hdc, 0, 0) ;
-
-		char buf[256] ;
-
-		for (int i = 0; i<4; i++)
-			for (int m = 0; m<4; m++)
-			{
-				Rectangle (hdc, x+m*CELL_SIZE,
-								y+i*CELL_SIZE+CELL_SIZE,
-								x+(m+1)*CELL_SIZE,
-								y+(i+1)*CELL_SIZE+CELL_SIZE) ;
-			}
-
-		for (int i = 0; i<4; i++)
-			for (int m = 0; m<4; m++)
-			{
-//				int itemID = pPlayer->backpack.vItemID[i*4+m] ;
-//				if (itemID != -1)
-				Item* pItem = pPlayer->backpack.getItem (i*4+m) ;
-				if (pItem != NULL)
-				{
-					ItemInfo* pinfo = pItem->getInfo () ;
-					if (pinfo != NULL)
-					{ 
-						_itoa_s (pItem->getStack (), buf,
-							sizeof(buf), 10) ;
-
-						TextOut (hdc, x+m*CELL_SIZE,
-									y+i*CELL_SIZE+CELL_SIZE,
-									pinfo->name,
-									4) ;
-						TextOut (hdc, x+m*CELL_SIZE,
-									y+i*CELL_SIZE+CELL_SIZE+20,
-									buf, strlen (buf)) ;
-					}
-				}
-			}
-	}
-*/

@@ -3,36 +3,40 @@
 
 #include "window.h"
 #include "player.h"
-
-#ifdef _PROJECT_OGRE_3D_
-	#include "overlayUI.h"
-#endif
+#include "image_button.h"
 
 //背包視窗
-
+class HotKeyWnd ;
+class PlayerInfoWnd ;
 class BackpackWnd:public Window
 {
 public:
-//	Backpack* pBackpack ;
 	enum {BUTTON_COUNT = 25, CELL_SIZE = 60, TEXT_COUNT = 26} ;
 	
-	#ifdef _PROJECT_OGRE_3D_
-		OverlayUI overlayBP ;//管理overlay
-	#endif
-
 	Player* pPlayer ;
+	HotKeyWnd* phkWnd ;
+	PlayerInfoWnd* ppinWnd ;
+
+#ifdef _PROJECT_OGRE_3D_	
+	ImageButton* vpBtn[BUTTON_COUNT] ;
+#else _PROJECT_GDI_
+	TextButton* vpBtn[BUTTON_COUNT] ;
+#endif
+	TextArea* vpText[TEXT_COUNT];
 
 	~BackpackWnd () {};
 
-	void init (int _x, int _y, Player* pb) ;
+	void init (int _x, int _y, Player* pb, HotKeyWnd* pw, PlayerInfoWnd* ppinw) ;
 
 	bool canDrag (int tx, int ty) ;
 
 	void onCommand (int) ;
+
 #ifdef _PROJECT_OGRE_3D_	
 	void onMove () ;
 
 	void setZOrder (int z) ;
+	void onSwitch () ;
 
 #endif
 //	void onClick (int tx, int ty) ;

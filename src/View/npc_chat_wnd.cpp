@@ -1,50 +1,89 @@
 #include "npc_chat_wnd.h"
 #include "npc.h"
 #include "net_packet.h"
+#include "image_button.h"
 
 //背包視窗
 void NPCChatWnd::init (int _x, int _y, Player* pb, NetStream* pns)
+{
+	selQuestID = -1 ;//目前選的任務編號
+	type = TYPE_CHAT ;
+	pPlayer = pb ;
+	x = _x ;
+	y = _y ;
+	pStream = pns ;
+	pNPC = NULL ;
+	w = 200 ;
+	h = TEXT_COUNT*CELL_SIZE ;
+
+#ifdef _PROJECT_OGRE_3D_
+	overlayUI.init (x, y, w, h) ;
+	overlayUI.setImage ("NoiseVolume") ;
+
+	for (int i = 0; i<TEXT_COUNT; i++)
 	{
-		selQuestID = -1 ;//目前選的任務編號
-
-		type = TYPE_CHAT ;
-
-		pPlayer = pb ;
-		x = _x ;
-		y = _y ;
-		pStream = pns ;
-		pNPC = NULL ;
-
-		w = 200 ;
-		h = (CHAT_H_COUNT+QUEST_H_COUNT+1)*CELL_SIZE+CELL_SIZE ;
-
-		for (int i = 0; i<QUEST_H_COUNT+CHAT_H_COUNT+1; i++)
+		TextArea* pTA = new TextArea ;
+		pTA->init (overlayUI, 0, i*CELL_SIZE, w, CELL_SIZE) ;
+		if (i == 0)
+		{	
+			pTA->setText ("NPC:對話內容", 1, 1, 1) ;
+		}else if (i == 1)
 		{
-			TextButton* pBtn = new TextButton ;
-			pBtn->x = 0 ;
-			pBtn->y = (i+1)*CELL_SIZE ;
-			pBtn->w = w ;
-			pBtn->h = CELL_SIZE ;
-			pBtn->id = i ;
-			pBtn->str = "" ;
-
-			if (i == QUEST_H_COUNT+CHAT_H_COUNT)
-			{
-				//接任務
-				pBtn->x = w/2 ;
-				pBtn->w = w/2 ;
-				pBtn->str = "接受任務" ;
-				pBtn->bVisible = false ;
-			}
-
-			vpBtn[i] = pBtn ;
-
-			addChild (pBtn) ;
+			pTA->setText ("", 1, 1, 1) ;
 		}
+
+		addChild (pTA) ;
+	}
+#else _PROJECT_GDI_
+
+	TextButton* pBtn = new TextButton ;
+	pBtn->init (0, 0, w, h, 0) ;
+	addChild (pBtn) ;
+	
+	for (int i = 0; i<TEXT_COUNT; i++)
+	{
+		TextArea* pTA = new TextArea ;
+		pTA->init (0, i*CELL_SIZE, w, CELL_SIZE) ;
+		if (i == 0)
+		{	
+			pTA->setText ("NPC:對話內容", 1, 1, 1) ;
+		}else if (i == 1)
+		{
+			pTA->setText ("", 1, 1, 1) ;
+		}
+
+		addChild (pTA) ;
 	}
 
+#endif
+}
+/*	for (int i = 0; i<QUEST_H_COUNT+CHAT_H_COUNT+1; i++)
+	{
+		TextButton* pBtn = new TextButton ;
+		pBtn->x = 0 ;
+		pBtn->y = (i+1)*CELL_SIZE ;
+		pBtn->w = w ;
+		pBtn->h = CELL_SIZE ;
+		pBtn->id = i ;
+		pBtn->str = "" ;
+
+		if (i == QUEST_H_COUNT+CHAT_H_COUNT)
+		{
+			//接任務
+			pBtn->x = w/2 ;
+			pBtn->w = w/2 ;
+			pBtn->str = "接受任務" ;
+			pBtn->bVisible = false ;
+		}
+
+		vpBtn[i] = pBtn ;
+
+		addChild (pBtn) ;
+	}
+*/
+
 void NPCChatWnd::setNPC (NPC* pnp)
-{
+{/*
 	pNPC = pnp ;
 	selQuestID = -1 ;//目前選的任務編號
 
@@ -108,16 +147,16 @@ void NPCChatWnd::setNPC (NPC* pnp)
 			}
 		}
 
-	}
+	}*/
 }
 
 bool NPCChatWnd::canDrag (int tx, int ty)
 {
-	return ty < CELL_SIZE ;
+	return false ;
 }
 
 void NPCChatWnd::onCommand (int btnID)
-{
+{/*
 	if (pNPC == NULL)
 		return ;
 
@@ -181,10 +220,10 @@ void NPCChatWnd::onCommand (int btnID)
 		}
 
 	}
-
+*/
 }
 
-
+/*
 void NPCChatWnd::draw (HDC hdc, int ox, int oy)
 {
 	Window::draw (hdc, ox, oy) ;
@@ -194,7 +233,7 @@ void NPCChatWnd::draw (HDC hdc, int ox, int oy)
 
 	NPCInfo* pinfo = pNPC->getInfo () ;
 
-	/*
+	
 	int offset = 0 ;
 	for (int i = 0; i<pinfo->vQuestID.size (); i++)
 	{
@@ -220,5 +259,6 @@ void NPCChatWnd::draw (HDC hdc, int ox, int oy)
 		TextOut (hdc, x+2, y+2+(CELL_SIZE+i+3)*3,
 			text, text.length ()) ;
 	}
-	*/
+	
 }
+*/

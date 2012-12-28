@@ -10,9 +10,7 @@
 class ShopWnd:public Window
 {
 private:
-	static const int CELL_W_COUNT = 4 ;
-	static const int CELL_H_COUNT = 4 ;
-	static const int CELL_SIZE = 40 ;
+	enum {BUTTON_COUNT = 22, CELL_SIZE = 60, TEXT_COUNT = 13} ;
 
 public:
 //	Backpack* pBackpack ;
@@ -23,9 +21,17 @@ public:
 	void init (int _x, int _y, Player* pb) ;
 
 	bool canDrag (int tx, int ty) ;
-	void onClick (int tx, int ty) ;
+	void onCommand (int) ;
+	
+#ifdef _PROJECT_OGRE_3D_	
+	void onMove () ;
 
-	void draw (HDC hdc, int ox, int oy) ;
+	void setZOrder (int z) ;
+	void onSwitch () ;
+
+#endif
+//	void onClick (int tx, int ty) ;
+//	void draw (HDC hdc, int ox, int oy) ;
 } ;
 
 #endif

@@ -12,8 +12,7 @@ class NPC ;
 class NPCChatWnd:public Window
 {
 public:
-	enum {QUEST_H_COUNT = 3, CHAT_H_COUNT = 3,
-			CELL_SIZE = 40} ;
+	enum {TEXT_COUNT = 8, CELL_SIZE = 20} ;
 	Player* pPlayer ;
 	NPC* pNPC ;
 	NetStream* pStream ;
@@ -23,7 +22,7 @@ public:
 
 	int selQuestID ;//目前選的任務編號
 
-	TextButton* vpBtn[QUEST_H_COUNT+CHAT_H_COUNT+1] ;
+	TextButton* vpBtn[TEXT_COUNT] ;
 
 	~NPCChatWnd () {};
 
@@ -35,7 +34,7 @@ public:
 	void onCommand (int) ;
 //	void onClick (int tx, int ty) ;
 
-	void draw (HDC hdc, int ox, int oy) ;
+//	void draw (HDC hdc, int ox, int oy) ;
 } ;
 
 #endif

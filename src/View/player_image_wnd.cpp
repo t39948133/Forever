@@ -11,31 +11,41 @@ void PlayerImageWnd::init (int _x, int _y, UnitData* pu)
 	h = CELL_H ;
 
 #ifdef _PROJECT_OGRE_3D_
-		overlayPIM.init (x, y, w, h) ;
+	overlayUI.init (x, y, w, h) ;
+
+	ImageButton* pBtn = new ImageButton ;
+	pBtn->init (overlayUI, 0, 0, w, h, 0) ;
+	pBtn->setImage ("elyos") ;
+	addChild (pBtn) ;
+
+	TextArea* pTA = new TextArea ;
+	pTA->init (overlayUI, 2, 80, CELL_W, 20) ;
+	char buf[64] ;
+	sprintf (buf, "LV :  %d", pUnitData->m_level) ;
+	pTA->setText (buf, 1, 1, 1) ;
+	addChild (pTA) ;
+	
+
+#else _PROJECT_GDI_
+	TextButton* pBtn = new TextButton ;
+	pBtn->init (0, 0, w, h, 0) ;
+	pBtn->str = "玩家頭像" ;
+	addChild (pBtn) ;
+
+	TextArea* pTA = new TextArea ;
+	pTA->init (2, 80, CELL_W, 20) ;
+	char buf[64] ;
+	sprintf_s (buf, sizeof (buf), "LV :  %d", pUnitData->m_level) ;
+	pTA->setText (buf, 1, 1, 1) ;
+	addChild (pTA) ;
+	
 #endif
-
-		
-#ifdef _PROJECT_GDI_
-		TextButton* pBtn = new TextButton ;
-
-		pBtn->init (0, 0, w, h, 0) ;
-
-		if (i == 0)
-			pBtn->str = "玩家頭像" ;
-		
-#else _PROJECT_OGRE_3D_
-		ImageButton* pBtn = new ImageButton ;
-
-		pBtn->init (overlayPIM, 0, 0, w, h, 0) ;
-		pBtn->setImage ("elyos") ;
-
-#endif
-		addChild (pBtn) ;
+	
 }
 
 bool PlayerImageWnd::canDrag (int tx, int ty)
 {
-	return true ;
+	return false ;
 }
 
 void PlayerImageWnd::onCommand (int id)
@@ -45,11 +55,19 @@ void PlayerImageWnd::onCommand (int id)
 #ifdef _PROJECT_OGRE_3D_
 void PlayerImageWnd::onMove ()
 {
-	overlayPIM.setPos (x, y) ;
+	overlayUI.setPos (x, y) ;
 }
 
 void PlayerImageWnd::setZOrder (int z)
 {
-	overlayPIM.setZOrder (z) ;
+	overlayUI.setZOrder (z) ;
+}
+
+void PlayerImageWnd::onSwitch ()
+{
+	if (bVisible)
+		overlayUI.getOverlay ()->show () ;
+	else
+		overlayUI.getOverlay ()->hide () ;
 }
 #endif

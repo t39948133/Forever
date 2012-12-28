@@ -10,12 +10,12 @@ void ShortcutBarWnd::init (int _x, int _y, UnitData* pu)
 	h = CELL_SIZE ;
 
 #ifdef _PROJECT_OGRE_3D_
-	overlaySB.init (x, y, w, h) ;
+	overlayUI.init (x, y, w, h) ;
 
 	for (int i = 0; i<CELL_W_COUNT; i++)
 	{
 		ImageButton* pBtn = new ImageButton ;
-		pBtn->init (overlaySB, (i)*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, i) ;
+		pBtn->init (overlayUI, (i)*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, i) ;
 
 		
 		if (i == 0)
@@ -64,12 +64,12 @@ void ShortcutBarWnd::onCommand (int id)
 #ifdef _PROJECT_OGRE_3D_
 void ShortcutBarWnd::onMove ()
 {
-	overlaySB.setPos (x, y) ;
+	overlayUI.setPos (x, y) ;
 }
 
 void ShortcutBarWnd::setZOrder (int z)
 {
-	overlaySB.setZOrder (z) ;
+	overlayUI.setZOrder (z) ;
 }
 #endif
 

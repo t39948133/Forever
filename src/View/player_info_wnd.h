@@ -3,34 +3,52 @@
 
 #include "window.h"
 #include "unit.h"
-#ifdef _PROJECT_OGRE_3D_
-	#include "overlayUI.h"
-#endif
+#include "image_button.h"
+
+
+class PlayerInfo
+{
+public:
+	int itemID ;
+} ;
 
 class PlayerInfoWnd:public Window
 {
 private:
-	UnitData* pUnitData ;
-	TextArea* pTA ;
-#ifdef _PROJECT_OGRE_3D_
-	OverlayUI overlayPIN ;//ºÞ²zoverlay
-#endif
-
+	Player* pPlayer ;
+	
 public:
-	enum {BUTTON_COUNT = 13, CELL_SIZE = 20, TEXT_COUNT = 21} ;
+	
+	enum {BUTTON_SPAULDER, BUTTON_GLOVE, BUTTON_WEAPON, BUTTON_CLOTHES,
+	BUTTON_PANTS, BUTTON_SHIELD, BUTTON_SHOES, BUTTON_UI_NAME, BUTTON_PLAYER_NAME, 
+	BUTTON_LEVEL_EXP, BUTTON_ATTRIBUTE, BUTTON_PLAYER_IMAGE, BUTTON_COUNT} ;
+
+	enum {CELL_SIZE = 20, TEXT_COUNT = 21} ;
 
 	~PlayerInfoWnd () {};
 
-	void init (int _x, int _y, UnitData* pu) ;
+	PlayerInfo playerInfo[BUTTON_COUNT] ;
+
+#ifdef _PROJECT_OGRE_3D_	
+	ImageButton* vpBtn[BUTTON_COUNT] ;
+#else _PROJECT_GDI_
+	TextButton* vpBtn[BUTTON_COUNT] ;
+#endif
+	TextArea* vpText[TEXT_COUNT];
+
+	void init (int _x, int _y, Player* pPlr) ;
 
 	bool canDrag (int tx, int ty) ;
 
 	void onCommand (int id) ;
 
+	void wearEquip (int _itemID) ;
+
 #ifdef _PROJECT_OGRE_3D_	
 	void onMove () ;
 
 	void setZOrder (int z) ;
+	void onSwitch () ;
 #endif
 
 //	void draw (HDC hdc) ;

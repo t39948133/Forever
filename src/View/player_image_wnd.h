@@ -1,10 +1,6 @@
 #ifndef _PLAYER_IMAGE_WND_H_
 #define _PLAYER_IMAGE_WND_H_
 
-#ifdef _PROJECT_OGRE_3D_
-	#include "overlayUI.h"
-#endif
-
 #include "window.h"
 #include "unit.h"
 
@@ -12,9 +8,6 @@ class PlayerImageWnd:public Window
 {
 private:
 	UnitData* pUnitData ;
-	#ifdef _PROJECT_OGRE_3D_
-		OverlayUI overlayPIM ;//ºÞ²zoverlay
-	#endif
 
 public:
 	enum {CELL_W = 70, CELL_H = 100} ;
@@ -31,6 +24,7 @@ public:
 	void onMove () ;
 
 	void setZOrder (int z) ;
+	void onSwitch () ;
 #endif
 
 //	void draw (HDC hdc) ;

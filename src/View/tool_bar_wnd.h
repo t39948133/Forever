@@ -3,21 +3,13 @@
 
 #include "window.h"
 
-
-#ifdef _PROJECT_OGRE_3D_
-	#include "overlayUI.h"
-#endif
-
 //背包視窗
 class ToolBarWnd:public Window
 {
 public:
-	#ifdef _PROJECT_OGRE_3D_
-		OverlayUI overlayTB ;//管理overlay
-	#endif
 
 	enum {UI_COUNT = 4, CELL_SIZE = 40} ;
-	Window* vpWnd[UI_COUNT] ;
+	Window* vpWnd[UI_COUNT] ;//指向按鈕對應的UI
 
 	TextArea* pTA ;
 	~ToolBarWnd () {};

@@ -2,7 +2,6 @@
 #define _TARGET_INFO_WND_H_
 
 #include "window.h"
-
 #include "monster.h"
 
 class Scene ;
@@ -24,7 +23,14 @@ public:
 
 	void setTarget (long long) ;
 
-	void draw (HDC hdc) ;
+	void onCommand (int id) ;
+
+#ifdef _PROJECT_OGRE_3D_	
+	void onMove () ;
+
+	void setZOrder (int z) ;
+	void onSwitch () ;
+#endif
 } ;
 
 #endif
