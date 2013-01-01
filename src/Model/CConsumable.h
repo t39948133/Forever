@@ -9,7 +9,7 @@ public:
 	std::string getDesc();			//取得物品描述
 	EdibleEffectType getEffect();	//取得哪種效果
 	int getMuch();					//取得影響數值
-	void initConsumable(std::string name, ItemType type, bool soulBind,
+	void initConsumable(std::string name, std::string iconName, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					std::string desc, EdibleEffectType effect, int much);
 	

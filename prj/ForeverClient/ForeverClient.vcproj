@@ -191,6 +191,18 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CBuff.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CBuffInfoLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CBuffTable.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CConsumable.cpp"
 					>
 				</File>
@@ -212,6 +224,18 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CSkill.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CSkillInfoLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CSkillTable.cpp"
 					>
 				</File>
 				<File
@@ -253,6 +277,18 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CBuff.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CBuffInfoLoader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CBuffTable.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CConsumable.h"
 					>
 				</File>
@@ -274,6 +310,18 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CPlayer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CSkill.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CSkillInfoLoader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CSkillTable.h"
 					>
 				</File>
 				<File

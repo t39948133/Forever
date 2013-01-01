@@ -116,7 +116,9 @@ void CPlayer::upDateEquipAttr()
 	std::map<EquipSlot , int>::iterator pi = m_mEquip.begin();
 	AdvancedAttribute advAttr;
 	AttributeClear(advAttr);
-	//advAttr = getAdvAttr();		//取得角色初始素質
+	ObscureAttribute obsAttr;
+	AttributeClear(obsAttr);
+	BasisAttributeSet(getLevel(), getBasAttr(), advAttr, obsAttr);		//取得角色初始素質
 	while (m_mEquip.end() != pi)
 	{
 		CWeapon* wp = (CWeapon*) CItemTable::getInfo(pi->second);
@@ -145,4 +147,22 @@ void CPlayer::wearToEquipSlot(EquipSlot es, unsigned int id)
 		m_backPack.addItem(m_mEquip.find(es)->second, st, bu);
 		m_mEquip.insert(std::make_pair(es, id));
 	}
+}
+
+std::map<EquipSlot, int> CPlayer::getEquip()
+{
+	return m_mEquip;
+}
+int CPlayer::getEquip(EquipSlot equip)
+{
+	int id ;
+	if(m_mEquip.end() == m_mEquip.find(equip))
+	{
+		id = -1;
+	}
+	else
+	{
+		id = m_mEquip.find(equip)->second;
+	}
+	return id;
 }

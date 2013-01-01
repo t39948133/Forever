@@ -15,6 +15,16 @@
 #include <memory.h>
 #include <tchar.h>
 
+struct BasisAttribute
+{
+	int iSTR;		//力量
+	int iVIT;		//體力
+	int iDEX;		//命中
+	int iAGI;		//敏捷
+	int iINT;		//智力
+	int iWIL;		//意志
+};
+
 struct AdvancedAttribute	//進階屬性
 { 
 	int iHP;	//生命力
@@ -36,6 +46,12 @@ struct AdvancedAttribute	//進階屬性
 	float fATKSpeed;//攻擊速度 揮擊動作以秒為單位 1下 1.5 秒 預設值 1.5
 	float fCasting;//施展速度 以秒為單位 1.0 秒 預設值 1.0
 	
+};
+
+struct ObscureAttribute
+{
+	int iHPR;			//生命回復量
+	int iMPR;			//精神回復量
 };
 
 enum EquipSlot	//裝備槽
@@ -108,6 +124,7 @@ enum ArmorWearType	//裝備位置
 struct AdvancedItem
 {
 	std::string name;	//名稱
+	std::string iconName;//圖示名稱
 	ItemType type;		//種類
 	bool soulBind;		//綁定
 	char level;		//等級
@@ -118,13 +135,42 @@ struct AdvancedItem
 
 enum EdibleEffectType
 {
-	HP,					//補血
-	MP,					//補魔
-	HP_MAX,	//增加最大血量
-	MP_MAX,	//增加最大魔量
-	SKILL,	//技能
+	EDIBLE_HP,		//補血
+	EDIBLE_MP,		//補魔
+	EDIBLE_HP_MAX,	//增加最大血量
+	EDIBLE_MP_MAX,	//增加最大魔量
+	EDIBLE_SKILL,	//技能
 };
 
+enum AttackTarget
+{
+	ENEMY,				//怪物
+	TEAM,				//友方
+	SELF,				//自己
+	GROUND,				//範圍
+};
+
+struct ComplexAttribute
+{
+	AdvancedAttribute AdvAttr;		//影響屬性
+	ObscureAttribute ObsAttr;
+};
+
+enum tagSKILL_TYPE 
+{
+	TYPE_ACTIVE,    // 主動技能
+	TYPE_PASSIVE    // 被動技能
+};
+
+enum SkillClassType
+{
+    SKILL,
+};
+
+enum BuffClassType
+{
+	BUFF,
+};
 
 const int BACK_ROW = 8;		//row橫 
 const int BACK_COLUMN = 3;	//column直

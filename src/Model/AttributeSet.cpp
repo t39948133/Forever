@@ -22,6 +22,18 @@ void AttributeClear (AdvancedAttribute& attr)
 	attr.fCasting = 1.0f;
 }
 
+void AttributeClear (ObscureAttribute& obs)
+{
+	obs.iHPR = 0;
+	obs.iMPR = 0;
+}
+
+void AttributeClear (ComplexAttribute& com)
+{
+	AttributeClear(com.AdvAttr);
+	AttributeClear(com.ObsAttr);
+}
+
 void AttributeSet (AdvancedAttribute& attr, int hp, int mp, int hpMax, int mpMax,
 				   int atk, int def, int hit, int cri, int matk, int mdef,
 				   int mhit, int mcri, int sdef, int wdef, int flee,
@@ -67,4 +79,25 @@ void AttributeAdd (AdvancedAttribute& attr, AdvancedAttribute add)
 	attr.fMove += add.fMove;
 	attr.fATKSpeed += add.fATKSpeed;
 	attr.fCasting += add.fCasting;
+}
+
+void BasisAttributeSet (int leve, BasisAttribute bas, AdvancedAttribute& adv, ObscureAttribute& obs)
+{
+	adv.iATK = (int) ((bas.iSTR * 236 * leve) * 0.001f); 
+
+	adv.iHPMax = (int) (((bas.iVIT * 645 * leve) * 0.001f) + (150 / (leve+1)));
+	obs.iHPR = ((int) ((leve * 0.1f) + (bas.iVIT * 0.025f)))+1;
+
+	adv.iHIT = (int) ((bas.iDEX * 1.5f) + leve * 0.2f);
+	adv.iCRI = (int) (bas.iDEX * 0.02f);
+
+	adv.iFlee = (int) ((leve * 10) + bas.iAGI * 0.6f);
+	adv.iSDEF = (int) ((leve * 10) + bas.iAGI * 0.6f);
+	adv.iWDEF = (int) ((leve * 10) + bas.iAGI * 0.6f);
+
+	adv.iMATK = (int) ((leve * 0.3f) + bas.iINT * 0.001f);
+	adv.iMCRI = (int) ((leve * 0.1f) + bas.iINT * 0.55f);
+
+	adv.iMPMax = ((leve * 70) + bas.iWIL + 10);
+	obs.iMPR = (int) ((leve * 0.3f) + (bas.iWIL * 0.05f));
 }

@@ -8,6 +8,11 @@ std::string CItem::getName()
 	return m_strName;
 }
 
+std::string CItem::geticonName()
+{
+	return m_iconName;
+}
+
 ItemType CItem::getItemType()
 {
 	return m_type;
@@ -46,6 +51,7 @@ AdvancedItem* CItem::getAll()
 {
 	AdvancedItem *pItem = new AdvancedItem;
 	pItem->name = getName();				//名稱
+	pItem->iconName = geticonName();		//圖示名稱
 	pItem->type = getItemType();			//種類
 	pItem->soulBind = getSoulBind();		//綁定
 	pItem->level = getLevel();				//等級
@@ -59,6 +65,11 @@ AdvancedItem* CItem::getAll()
 void CItem::setName(std::string name)
 {
 	m_strName = name;
+}
+
+void CItem::seticonName(std::string iconName)
+{
+	m_iconName = iconName;
 }
 
 void CItem::setItemType(ItemType type)
@@ -105,6 +116,7 @@ void CItem::read(FILE* pFile)
 	fread (&version, sizeof(version), 1, pFile);
 
 	fread (&m_strName, sizeof(m_strName), 1, pFile);
+	fread (&m_iconName, sizeof(m_iconName), 1, pFile);
 	fread (&m_type, sizeof(m_type), 1, pFile);
 	fread (&m_bSoulBind, sizeof(m_bSoulBind), 1, pFile);
 	fread (&m_level, sizeof(m_level), 1, pFile);

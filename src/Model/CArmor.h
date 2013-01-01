@@ -7,7 +7,7 @@ class CArmor:public CEquip	//¨¾¨ã
 {
 public:
 	ArmorWearType getWear();
-	void initArmor(std::string name, ItemType type, bool soulBind,
+	void initArmor(std::string name, std::string iconName, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					EquipQuality quality, AdvancedAttribute baseAttr,
 					AdvancedAttribute extendAttr, ArmorWearType wear);

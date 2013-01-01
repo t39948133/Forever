@@ -24,7 +24,7 @@ void CItemTable::initItemTable ()
 		baseAttr.iHIT = 5;
 		extendAttr.iHP = 80;
 		extendAttr.iMPMax = 8;
-		pw->initWeapon("짳쨖", SWORD, true, 1, 1, 20, 50, COMMON,
+		pw->initWeapon("짳쨖", "", SWORD, true, 1, 1, 20, 50, COMMON,
 			baseAttr, extendAttr, ONE_HAND);
 		addInfo(pw);
 
@@ -36,9 +36,13 @@ void CItemTable::initItemTable ()
 		baseAttr.iHIT = 7;
 		extendAttr.iHP = 90;
 		extendAttr.iMPMax = 0;
-		pa->initArmor("쿟", CLOTH, false, 5, 10, 10, 70, COMMON,
+		pa->initArmor("쿟", "", CLOTH, false, 5, 10, 10, 70, COMMON,
 			baseAttr, extendAttr, CLOTHES);
 		addInfo(pa);
+
+		CConsumable* pc = new CConsumable();
+
+		pc->initConsumable("Ν쯗쳐ㆄ", "", POTION, false, 1, 10, 5, 10, "�^�_Ν쯗50헕", EDIBLE_HP, 50);
 
 	}
 

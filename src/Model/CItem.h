@@ -7,6 +7,7 @@ class CItem					//物品
 {
 public:
 	std::string getName();	//取得名字
+	std::string geticonName();
 	ItemType getItemType();	//取得哪種物品(ItemType分類)
 	bool getSoulBind();		//取得是否綁定
 	char getLevel();		//取得可使用等級
@@ -23,6 +24,7 @@ public:
 protected:
 
 	void setName(std::string name);
+    void seticonName(std::string iconName);
 	void setItemType(ItemType type);
 	void setSoulBind(bool soulBind);
 	void setLevel(char level);
@@ -32,6 +34,7 @@ protected:
 
 private:
 	std::string m_strName;	//名稱
+    std::string m_iconName; //圖示名稱
 	ItemType m_type;		//種類
 	bool m_bSoulBind;		//綁定
 	char m_level;			//等級

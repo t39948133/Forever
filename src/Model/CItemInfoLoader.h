@@ -1,7 +1,6 @@
 #ifndef _CITEMINFOLOADER_H_
 #define _CITEMINFOLOADER_H_
 
-#include "Common.h"
 #include "CItem.h"
 
 class CItemInfoLoader

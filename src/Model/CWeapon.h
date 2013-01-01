@@ -7,7 +7,7 @@ class CWeapon:public CEquip		//ชZพน
 {
 public:
 	WeaponWieldType getWield();
-	void initWeapon(std::string name, ItemType type, bool soulBind,
+	void initWeapon(std::string name, std::string iconName, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					EquipQuality quality, AdvancedAttribute baseAttr,
 					AdvancedAttribute extendAttr, WeaponWieldType wield);

@@ -5,12 +5,13 @@ WeaponWieldType CWeapon::getWield()
 	return m_wield;
 }
 
-void CWeapon::initWeapon(std::string name, ItemType type, bool soulBind,
+void CWeapon::initWeapon(std::string name, std::string iconName, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					EquipQuality quality, AdvancedAttribute baseAttr,
 					AdvancedAttribute extendAttr, WeaponWieldType wield)
 {
 	setName(name);
+	seticonName(iconName);
 	setItemType(type);
 	setSoulBind(soulBind);
 	setLevel(level);

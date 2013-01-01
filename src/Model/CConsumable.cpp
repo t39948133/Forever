@@ -16,11 +16,12 @@ int CConsumable::getMuch()
 	return m_iMuch;
 }
 
-void CConsumable::initConsumable(std::string name, ItemType type, bool soulBind,
+void CConsumable::initConsumable(std::string name, std::string iconName, ItemType type, bool soulBind,
 				char level, int stackLimit, int sellPrice, int buyPrice,
 				std::string desc, EdibleEffectType effect, int much)
 {
 	setName(name);
+	seticonName(iconName);
 	setItemType(type);
 	setSoulBind(soulBind);
 	setLevel(level);

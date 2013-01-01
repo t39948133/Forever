@@ -67,6 +67,16 @@ int CUnitObject::getMPMax()
 	return m_advAttr.iMPMax;
 }
   
+void CUnitObject::addHPR(int hpr)
+{
+	m_obsAttr.iHPR += hpr;
+}
+
+void CUnitObject::addMPR(int mpr)
+{
+	m_obsAttr.iMPR += mpr;
+}
+  
 void CUnitObject::setAdvAttr(AdvancedAttribute advattr)
 {
 	m_advAttr = advattr;	//設定屬性資料
@@ -75,4 +85,9 @@ void CUnitObject::setAdvAttr(AdvancedAttribute advattr)
 AdvancedAttribute CUnitObject::getAdvAttr()
 {
 	return m_advAttr;
+}
+
+BasisAttribute CUnitObject::getBasAttr()
+{
+	return m_basAttr;
 }

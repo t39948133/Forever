@@ -1,8 +1,5 @@
 #include "CBackPack.h"
 
-
-
-	
 void CBackPack::setGrid(int grid, CItemTable& itm)
 {
 	if((grid >= 0) && (grid < BACK_MAX))
@@ -21,6 +18,14 @@ CItemTable* CBackPack::getItem(int grid)
 	{
 		return NULL;
 	}
+}
+
+CItem* CBackPack::getCItem(int grid)
+{
+    CItemTable* pc = getItem(grid);					
+    if (pc != NULL)
+        return pc->getInfo () ;
+    return NULL ;
 }
 
 void CBackPack::addItem(int id, int& stack, int& grid)

@@ -13,9 +13,11 @@ public:
 	void addXP(unsigned int xp);	//增加XP unsigned 不帶負數
 	unsigned int getXP();			//讀取XP
 	unsigned int getXPMax();		//讀取最大XP
-	CBackPack getBackPack();
-	void wearEquip(unsigned int id);
-	void shedEquip(EquipSlot grid);
+	CBackPack getBackPack();		//取得背包
+	void wearEquip(unsigned int id);//穿上 id 號裝備
+	void shedEquip(EquipSlot grid);	//脫下 哪格裝備欄 裝備
+	std::map<EquipSlot, int> getEquip();	//取得裝備map陣列
+	int getEquip(EquipSlot equip);	//取得哪一格裝備
 
 private:
 	unsigned int m_xp;	//經驗值

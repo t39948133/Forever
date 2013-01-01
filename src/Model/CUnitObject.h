@@ -21,14 +21,23 @@ public:
 	int getMP();	//取得MP
 	int getMPMax();	//取得最大MP
   
+	void addHPR(int hpr);
+
+	void addMPR(int mpr);
+  
 	void setAdvAttr(AdvancedAttribute advAttr);	//設定屬性
 	AdvancedAttribute getAdvAttr();	//取得屬性
+	BasisAttribute getBasAttr();
+
+protected:
 
 private:
 	long long m_uid;	//唯一編號
 	char m_level;	//等級
 	std::string m_strName;	//名字
+	BasisAttribute m_basAttr;		//基本數值
 	AdvancedAttribute m_advAttr;	//屬性
+	ObscureAttribute m_obsAttr;		//隱藏數值
 
 };
 
