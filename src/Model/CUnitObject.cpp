@@ -1,8 +1,15 @@
 #include "CUnitObject.h"
+#include "AttributeSet.h"
 
 CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_strName(strName),m_uid(uid),m_level(level)
 {
+	//AttributeClear(m_basAttr);
 	AttributeClear(m_advAttr);
+	AttributeClear(m_comAttr);
+    CBuffTable buffTable;
+    buffTable.initCBuffTable(); //之後改到主程式呼叫
+    CSkillTable skillTable;
+    skillTable.initSkillTable();
 }
 
 long long CUnitObject::getUID()
@@ -90,4 +97,69 @@ AdvancedAttribute CUnitObject::getAdvAttr()
 BasisAttribute CUnitObject::getBasAttr()
 {
 	return m_basAttr;
+}
+
+std::list<CBuffTable> CUnitObject::getBuff()
+{
+    return m_lBuff;
+}
+
+void CUnitObject::updateBuff(float timepass)
+{
+    std::list<CBuffTable>::iterator pi = m_lBuff.begin();
+
+    while(m_lBuff.end() != pi)
+    {
+        if(pi->afterTime(timepass))
+        {
+            pi = m_lBuff.erase(pi);
+        }
+        pi++;
+    }
+
+	pi = m_lBuff.begin();
+	CBuff* pBuff;
+
+	while(m_lBuff.end() != pi)
+	{
+		pBuff = pi->getInfo();
+		AttributeAdd(m_comAttr, pBuff->getAttr());
+		pBuff->getPercentAttr();
+		pi++;
+	}
+}
+
+void CUnitObject::addBuff(unsigned int id)
+{
+    CBuffTable buffTable;
+    buffTable.create(id);
+    m_lBuff.push_back(buffTable);
+}
+
+std::vector<CSkillTable> CUnitObject::getSkill()
+{
+    return m_vSkill;
+}
+
+void CUnitObject::SkillCoolDown(float timepass)
+{
+    std::vector<CSkillTable>::iterator pi = m_vSkill.begin();
+    while(m_vSkill.end() != pi)
+    {
+        pi->afterTime(timepass);
+        pi++;
+    }
+}
+
+bool CUnitObject::addSkill(unsigned int id)
+{
+    CSkillTable skillTable;
+    skillTable.create(id);
+    if(skillTable.canLearn(m_level))
+    {
+        m_vSkill.push_back(skillTable);
+        return true;
+    }
+    return false;
+
 }

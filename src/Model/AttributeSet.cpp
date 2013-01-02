@@ -81,6 +81,50 @@ void AttributeAdd (AdvancedAttribute& attr, AdvancedAttribute add)
 	attr.fCasting += add.fCasting;
 }
 
+void AttributeAdd (ComplexAttribute& attr, ComplexAttribute add)
+{
+	AttributeAdd(attr.AdvAttr, add.AdvAttr);
+	attr.ObsAttr.iHPR += add.ObsAttr.iHPR;
+	attr.ObsAttr.iMPR += add.ObsAttr.iMPR;
+}
+
+void MultiPrecent(int& attr, int add)
+{
+	if(0 != add)
+	{
+		attr =(int) (attr * add * 0.01f);
+	}
+}
+
+void AttributeMulti (AdvancedAttribute& attr, AdvancedAttribute add)
+{
+	attr.iHP *= add.iHP;
+	attr.iMP *= add.iMP;
+	attr.iHPMax *= add.iHPMax;
+	attr.iMPMax *= add.iMPMax;
+	attr.iATK *= add.iATK;
+	attr.iDEF *= add.iDEF;
+	attr.iHIT *= add.iHIT;
+	attr.iCRI *= add.iCRI;
+	attr.iMATK *= add.iMATK;
+	attr.iMDEF *= add.iMDEF;
+	attr.iMHIT *= add.iMHIT;
+	attr.iMCRI *= add.iMCRI;
+	attr.iSDEF *= add.iSDEF;
+	attr.iWDEF *= add.iWDEF;
+	attr.iFlee *= add.iFlee;
+	attr.fMove *= add.fMove;
+	attr.fATKSpeed *= add.fATKSpeed;
+	attr.fCasting *= add.fCasting;
+}
+
+void AttributeMulti (ComplexAttribute& attr, ComplexAttribute add)
+{
+	AttributeMulti(attr.AdvAttr, add.AdvAttr);
+	attr.ObsAttr.iHPR *= add.ObsAttr.iHPR;
+	attr.ObsAttr.iMPR *= add.ObsAttr.iMPR;
+}
+
 void BasisAttributeSet (int leve, BasisAttribute bas, AdvancedAttribute& adv, ObscureAttribute& obs)
 {
 	adv.iATK = (int) ((bas.iSTR * 236 * leve) * 0.001f); 

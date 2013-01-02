@@ -1,5 +1,6 @@
 #include "CPlayer.h"
 #include "CItemTable.h"
+#include "AttributeSet.h"
 
 CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
 {
@@ -132,6 +133,13 @@ void CPlayer::upDateEquipAttr()
 		pi++;
 	}
 	setAdvAttr(advAttr);
+
+    std::vector<CSkillTable>::iterator ps = m_vSkill.begin();
+    while(m_vSkill.end() != ps)
+    {
+        ps->chackAvailable(getEquip());
+        ps++;
+    }
 }
 
 void CPlayer::wearToEquipSlot(EquipSlot es, unsigned int id)

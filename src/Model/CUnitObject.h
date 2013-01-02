@@ -2,7 +2,9 @@
 #define _CUNITOBJECT_H_
 
 #include "Common.h"
-#include "AttributeSet.h"
+#include "CSkillTable.h"
+#include "CBuffTable.h"
+#include <list>
 
 class CUnitObject
 {
@@ -21,15 +23,22 @@ public:
 	int getMP();	//取得MP
 	int getMPMax();	//取得最大MP
   
-	void addHPR(int hpr);
+	void addHPR(int hpr);   //取得回復的生命力點
 
-	void addMPR(int mpr);
+	void addMPR(int mpr);   //取得回復的精神力點
   
 	void setAdvAttr(AdvancedAttribute advAttr);	//設定屬性
 	AdvancedAttribute getAdvAttr();	//取得屬性
-	BasisAttribute getBasAttr();
+	BasisAttribute getBasAttr();    //取得基礎屬性
+
+    std::list<CBuffTable> getBuff();    //取得身上的Buff表
+    void addBuff(unsigned int id);      //增加Buff
+
+    std::vector<CSkillTable> getSkill();    //取得學會的技能表
+    bool addSkill(unsigned int id);         //學技能
 
 protected:
+    std::vector<CSkillTable> m_vSkill;  //擁有的技能
 
 private:
 	long long m_uid;	//唯一編號
@@ -38,7 +47,11 @@ private:
 	BasisAttribute m_basAttr;		//基本數值
 	AdvancedAttribute m_advAttr;	//屬性
 	ObscureAttribute m_obsAttr;		//隱藏數值
+	ComplexAttribute m_comAttr;		//狀態屬性
+    std::list<CBuffTable> m_lBuff;	//身上的Buff
 
+    void updateBuff(float timepass);    //更新所有Buff的時間
+    void SkillCoolDown(float timepass);     //更新所有技能的冷卻
 };
 
 #endif

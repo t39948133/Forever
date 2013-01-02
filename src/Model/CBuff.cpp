@@ -48,6 +48,14 @@ bool CBuff::isHarmful()
     return m_bHarmful;
 }
 
+CBuff::CBuff()
+{
+}
+
+CBuff::~CBuff()
+{
+}
+
 void CBuff::read(FILE* pFile)
 {
     int version = 0 ;

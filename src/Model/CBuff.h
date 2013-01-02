@@ -17,6 +17,9 @@ public:
     float getContinued();				//取得最大持續時間
     bool isHarmful();					//取得是否有害
 
+    CBuff();
+    ~CBuff();
+
     void read(FILE* pFile);				//讀黨
 
 	int getClassType();

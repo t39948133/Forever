@@ -1,5 +1,6 @@
 #include "CSkillTable.h"
 #include "AttributeSet.h"
+#include "CPlayer.h"
 
 void CSkillTable::initSkillTable()
 {
@@ -23,7 +24,7 @@ void CSkillTable::initSkillTable()
 	}
 }
 
-CSkillTable::CSkillTable()
+CSkillTable::CSkillTable() : m_bAvailable(false) , m_fSurplus(0.0f)
 {
 }
 
@@ -40,19 +41,43 @@ bool CSkillTable::getAvailable()
 	return m_bAvailable;
 }
 
-void CSkillTable::create(unsigned int id, CPlayer* pPlayer)
+void CSkillTable::create(unsigned int id)
 {
 	SKILL_INFO::create(id);
 
 	CSkill* pInfo = getInfo();
 	if(NULL != pInfo)
 	{
-		m_fSurplus = pInfo->getCoolDown();
-		checkAvailable(pPlayer);
+		m_fSurplus = 0.0f;
+        m_bAvailable = true;
 	}
 }
 
-void CSkillTable::checkAvailable(CPlayer* pPlayer)
+void CSkillTable::afterTime(float timePass)
+{
+	m_fSurplus -= timePass;
+	if(0.0f > m_fSurplus)
+	{
+		m_fSurplus =  0.0f;
+	}
+}
+
+bool CSkillTable::isReady()
+{
+	return 0.0f >= m_fSurplus;
+}
+
+bool CSkillTable::canLearn(unsigned int lv)
+{
+    CSkill* pInfo = getInfo();
+    if(NULL != pInfo)
+    {
+        return lv >= (unsigned int)pInfo->getLevel();
+    }
+    return false;
+}
+
+void CSkillTable::chackAvailable(std::map<EquipSlot, int> equip)
 {
 	CSkill* pInfo = getInfo();
 	if(NULL != pInfo)
@@ -61,14 +86,14 @@ void CSkillTable::checkAvailable(CPlayer* pPlayer)
 		bool bS = true;
 		if(pInfo->getWeapon())
 		{
-			if((-1) == pPlayer->getEquip(MAIN_HAND))
+			if(equip.end() == equip.find(MAIN_HAND))
 			{
 				bW = false;
 			}
 		}
 		if(pInfo->getSield())
 		{
-			if((-1) == pPlayer->getEquip(OFF_HAND))
+			if(equip.end() == equip.find(OFF_HAND))
 			{
 				bS = false;
 			}
@@ -89,18 +114,4 @@ void CSkillTable::checkAvailable(CPlayer* pPlayer)
 			}
 		}
 	}
-}
-
-void CSkillTable::afterTime(float timePass)
-{
-	m_fSurplus -= timePass;
-	if(0.0f > m_fSurplus)
-	{
-		m_fSurplus =  0.0f;
-	}
-}
-
-bool CSkillTable::isReady()
-{
-	return 0.0f >= m_fSurplus;
 }

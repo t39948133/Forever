@@ -16,6 +16,12 @@ void AttributeSet (AdvancedAttribute& attr, int hp = 0, int mp = 0, int hpMax = 
 
 void AttributeAdd (AdvancedAttribute& attr, AdvancedAttribute add);
 
+void AttributeAdd (ComplexAttribute& attr, ComplexAttribute add);
+
+void AttributeMulti (AdvancedAttribute& attr, AdvancedAttribute add);
+
+void AttributeMulti (ComplexAttribute& attr, ComplexAttribute add);
+
 void BasisAttributeSet (int leve, BasisAttribute bas, AdvancedAttribute& adv, 
 						ObscureAttribute& obs);
 
