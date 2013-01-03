@@ -74,17 +74,7 @@ public:
 
 		return (vInfo.back ()) ;
 	}
-	bool checkID (size_t id)
-	{
-		if (id < vInfo.size () && id >= 0)
-			return true ;
-		else
-			return false ;
-	}
-	ObjTable ():ID(NO_ID)
-	{
-	}
-	~ObjTable()
+    static void release()
 	{
 		if(0 == vInfo.size())
 		{
@@ -101,6 +91,19 @@ public:
 			pi++;
 		}
 		vInfo.clear();
+	}
+	bool checkID (size_t id)
+	{
+		if (id < vInfo.size () && id >= 0)
+			return true ;
+		else
+			return false ;
+	}
+	ObjTable ():ID(NO_ID)
+	{
+	}
+	~ObjTable()
+	{
 	}
 	int getID ()
 	{

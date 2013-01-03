@@ -4,7 +4,7 @@ void CSkill::initSkill(tagSKILL_TYPE type, int level, std::string icomName,
                        std::string name, std::string desc, int actionID,
 					   float castTime, float coolTime, float castRange,
 					   AttackTarget target, AdvancedAttribute effectAttr,
-					   AdvancedAttribute effectAttrPercent, int bufID,
+					   FloatPrecentAttribute effectAttrPercent, int bufID,
 					   int motionEffects,int triggerMotion,bool weapon,
                        bool shield)
 {
@@ -82,7 +82,7 @@ AdvancedAttribute CSkill::getEffectAttr()
     return m_effectAttr;
 }
 
-AdvancedAttribute CSkill::getEffectAttrPercent()
+FloatPrecentAttribute CSkill::getEffectAttrPercent()
 {
 	return m_effectAttrPercent;
 }

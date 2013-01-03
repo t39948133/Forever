@@ -1,7 +1,7 @@
 #include "CBuff.h"
 
 void CBuff::initBuff(std::string name, std::string desc, std::string iconName,
-                    ComplexAttribute attr, ComplexAttribute attrPercent,
+                    ComplexAttribute attr, FloatPrecentAttribute attrPercent,
                     float continued, bool harmful)
 {
     m_strName = name;
@@ -33,7 +33,7 @@ ComplexAttribute CBuff::getAttr()
     return m_Attr;
 }
 
-ComplexAttribute CBuff::getPercentAttr()
+FloatPrecentAttribute CBuff::getPercentAttr()
 {
     return m_AttrPercent;
 }

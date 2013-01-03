@@ -7,13 +7,13 @@ class CBuff
 {
 public:
     void initBuff(std::string name, std::string desc, std::string iconName,
-                    ComplexAttribute attr, ComplexAttribute attrPercent,
+                    ComplexAttribute attr, FloatPrecentAttribute attrPercent,
                     float continued, bool harmful);		//初始
     std::string getName();				//取得名稱
     std::string getDesc();				//取得說明
     std::string getIconName();			//取得圖示名稱
     ComplexAttribute getAttr();			//取得屬性
-    ComplexAttribute getPercentAttr();	//取得影響百分比
+    FloatPrecentAttribute getPercentAttr();	//取得影響百分比
     float getContinued();				//取得最大持續時間
     bool isHarmful();					//取得是否有害
 
@@ -29,7 +29,7 @@ private:
     std::string m_strDesc;				//說明
     std::string m_iconName;				//圖示名稱
     ComplexAttribute m_Attr;			//影響屬性
-    ComplexAttribute m_AttrPercent;		//百分比屬性
+    FloatPrecentAttribute m_AttrPercent;		//百分比屬性
     float m_fContinued;					//持續時間
     bool m_bHarmful;					//有害/增益
 

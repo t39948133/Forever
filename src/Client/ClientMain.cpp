@@ -11,10 +11,16 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                      int       nCmdShow)
 {
 	CItemTable::initItemTable();
+    CBuffTable::initCBuffTable();
+    CSkillTable::initSkillTable();
 	CPlayer pla("lua",001);
 	pla.wearEquip(0);
 	pla.shedEquip(MAIN_HAND);
 	pla.wearEquip(0);
+    pla.addBuff(0);
+    pla.addBuff(0);
+    pla.addSkill(0);
+    pla.getHPMax();
 	pla;
 
 /*	AdvancedItem *itemInfo;		//item的項目資料struct
@@ -46,6 +52,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	pk = pBPItem->getInfo();
 	ti = ((CWeapon*)pk)->getWield();
 */
+    CItemTable::release();    
+    CBuffTable::release();
+    CSkillTable::release();
 
    return 0;
 }

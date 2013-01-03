@@ -156,6 +156,30 @@ struct ComplexAttribute
 	ObscureAttribute ObsAttr;
 };
 
+struct FloatPrecentAttribute
+{
+    float fHP;			//生命力
+	float fMP;			//精神力
+	float fHPMax;			//最大生命力
+	float fMPMax;			//最大精神力
+	float fATK;			//物理攻擊力
+	float fDEF;			//物理防禦力
+	float fHIT;			//物理命中率
+	float fCRI;			//物理暴擊率
+	float fMATK;			//魔法攻擊力
+	float fMDEF;			//魔法防禦力
+	float fMHIT;			//魔法命中率
+	float fMCRI;			//魔法暴擊率
+	float fSDEF;			//盾牌防禦力
+	float fWDEF;			//武器防禦力
+	float fFlee;			//迴避率
+	float fMove;		//移動速度 預設值 6.0
+	float fATKSpeed;	//攻擊速度 揮擊動作以秒為單位 1下 1.5 秒 預設值 1.5
+	float fCasting;		//施展速度 以秒為單位 1.0 秒 預設值 1.0
+    float fHPR;			//生命回復量
+	float fMPR;			//精神回復量
+};
+
 enum tagSKILL_TYPE 
 {
 	TYPE_ACTIVE,    // 主動技能

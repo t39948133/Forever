@@ -10,7 +10,7 @@ public:
                                   std::string name, std::string desc, int actionID,
 								  float castTime, float coolTime, float castRange,
 								  AttackTarget target, AdvancedAttribute effectAttr,
-								  AdvancedAttribute effectAttrPercent, int bufID,
+								  FloatPrecentAttribute effectAttrPercent, int bufID,
 								  int motionEffects,int triggerMotion,bool weapon,
                                   bool shield);   //初始設定
     tagSKILL_TYPE       getType();          //取得技能種類
@@ -24,7 +24,7 @@ public:
     float               getCastRange();     //取得施展距離
     AttackTarget        getTarget();        //取得目標
     AdvancedAttribute   getEffectAttr();    //取得影響屬性
-	AdvancedAttribute	getEffectAttrPercent();	//取得百分比影響屬性
+	FloatPrecentAttribute	getEffectAttrPercent();	//取得百分比影響屬性
 	int					getBuffID();		//取得BuffID
 	int					getMotionEffects();	//取得狀態效果
 	int					getTriggerMotion();	//取得觸發狀態
@@ -49,7 +49,7 @@ private:
 	float             m_fCastRange;	//施展距離
 	AttackTarget      m_target;	    //目標
 	AdvancedAttribute m_effectAttr; //影響的屬性
-    AdvancedAttribute m_effectAttrPercent;	//百分比屬性
+    FloatPrecentAttribute m_effectAttrPercent;	//百分比屬性
     int               m_iBuffID;    //BuffID
 	int				  m_iMotionEffects;	//狀態效果
 	int				  m_iTriggerMotion;	//觸發狀態

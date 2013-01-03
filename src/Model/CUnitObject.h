@@ -23,10 +23,6 @@ public:
 	int getMP();	//取得MP
 	int getMPMax();	//取得最大MP
   
-	void addHPR(int hpr);   //取得回復的生命力點
-
-	void addMPR(int mpr);   //取得回復的精神力點
-  
 	void setAdvAttr(AdvancedAttribute advAttr);	//設定屬性
 	AdvancedAttribute getAdvAttr();	//取得屬性
 	BasisAttribute getBasAttr();    //取得基礎屬性
@@ -48,7 +44,12 @@ private:
 	AdvancedAttribute m_advAttr;	//屬性
 	ObscureAttribute m_obsAttr;		//隱藏數值
 	ComplexAttribute m_comAttr;		//狀態屬性
+    FloatPrecentAttribute m_preAttr;//浮點數百分比屬性
     std::list<CBuffTable> m_lBuff;	//身上的Buff
+
+
+	int getHPR();   //取得回復的生命力點
+	int getMPR();   //取得回復的精神力點
 
     void updateBuff(float timepass);    //更新所有Buff的時間
     void SkillCoolDown(float timepass);     //更新所有技能的冷卻

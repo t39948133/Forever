@@ -10,16 +10,20 @@ void CBuffTable::initCBuffTable()
 	{
 		CBuff* pB = new CBuff();
 		ComplexAttribute ComAttr;
-		ComplexAttribute ComPercent;
+		FloatPrecentAttribute preAttr;
 
 		AttributeClear(ComAttr);
-		AttributeClear(ComPercent);
+        ComAttr.AdvAttr.fATKSpeed = 0.0f;
+        ComAttr.AdvAttr.fCasting = 0.0f;
+        ComAttr.AdvAttr.fMove = 0.0f;
+		AttributeClear(preAttr);
 
 		ComAttr.ObsAttr.iHPR = 50;
-		ComPercent.AdvAttr.iHPMax = 50;
+		preAttr.fHPMax = 150;
 
 		pB->initBuff("主神盔甲", "3分鐘內，最大生命提高50%、生命回復速度提升50點", "",
-			ComAttr, ComPercent, 3, true);
+			ComAttr, preAttr, 3, true);
+        addInfo(pB);
 	}
 }
 
@@ -44,7 +48,7 @@ bool CBuffTable::afterTime(float timePass)
 {
 	m_fSurplus -= timePass;
 
-	if(0.0f >= timePass)
+	if(0.0f >= m_fSurplus)
 	{
 		m_fSurplus = 0.0f;
 		clear();

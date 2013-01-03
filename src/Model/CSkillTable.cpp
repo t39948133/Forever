@@ -11,16 +11,20 @@ void CSkillTable::initSkillTable()
 	{
 		CSkill* ps = new CSkill();
 		AdvancedAttribute adv;
-		AdvancedAttribute advPercent;
+		FloatPrecentAttribute preAttr;
 
 		AttributeClear(adv);
-		AttributeClear(advPercent);
+        adv.fATKSpeed = 0.0f;
+        adv.fCasting = 0.0f;
+        adv.fMove = 0.0f;
+		AttributeClear(preAttr);
 
-		advPercent.iHPMax = 25;
+		preAttr.fHPMax = 25;
 
 		ps->initSkill(TYPE_ACTIVE, 1, "", "主神盔甲",
 			"回復自身25%生命力，在3分鐘內，最大生命提高50%、生命回復速度提升50點",
-			-1, 0, 6, 0, SELF, adv, advPercent, 0, -1, -1, false, false);
+			-1, 0, 6, 0, SELF, adv, preAttr, 0, -1, -1, false, false);
+        addInfo(ps);
 	}
 }
 

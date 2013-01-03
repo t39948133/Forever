@@ -34,6 +34,40 @@ void AttributeClear (ComplexAttribute& com)
 	AttributeClear(com.ObsAttr);
 }
 
+void AttributeClear (BasisAttribute& bas)
+{
+    bas.iSTR = 0;
+    bas.iVIT = 0;
+    bas.iDEX = 0;
+    bas.iAGI = 0;
+    bas.iINT = 0;
+    bas.iWIL = 0;
+}
+
+void AttributeClear (FloatPrecentAttribute& pre)
+{
+    pre.fHP = 0.0f;
+	pre.fMP = 0.0f;
+	pre.fHPMax = 0.0f;
+	pre.fMPMax = 0.0f;
+	pre.fATK = 0.0f;
+	pre.fDEF = 0.0f;
+	pre.fHIT = 0.0f;
+	pre.fCRI = 0.0f;
+	pre.fMATK = 0.0f;
+	pre.fMDEF = 0.0f;
+	pre.fMHIT = 0.0f;
+	pre.fMCRI = 0.0f;
+	pre.fSDEF = 0.0f;
+	pre.fWDEF = 0.0f;
+	pre.fFlee = 0.0f;
+	pre.fMove = 0.0f;
+	pre.fATKSpeed = 0.0f;
+	pre.fCasting = 0.0f;
+    pre.fHPR = 0.0f;
+    pre.fMPR = 0.0f;
+}
+
 void AttributeSet (AdvancedAttribute& attr, int hp, int mp, int hpMax, int mpMax,
 				   int atk, int def, int hit, int cri, int matk, int mdef,
 				   int mhit, int mcri, int sdef, int wdef, int flee,
@@ -88,41 +122,117 @@ void AttributeAdd (ComplexAttribute& attr, ComplexAttribute add)
 	attr.ObsAttr.iMPR += add.ObsAttr.iMPR;
 }
 
-void MultiPrecent(int& attr, int add)
+void MultiPrecent(float& attr, int add)
 {
-	if(0 != add)
+	if(0 < add)
 	{
-		attr =(int) (attr * add * 0.01f);
+        if(0.0f >= attr)
+        {
+            attr = add * 0.01f;
+        }
+        else
+        {
+            attr = attr * add * 0.01f;
+        }
 	}
 }
 
-void AttributeMulti (AdvancedAttribute& attr, AdvancedAttribute add)
+void MultiPrecent(float& attr, float add)
 {
-	attr.iHP *= add.iHP;
-	attr.iMP *= add.iMP;
-	attr.iHPMax *= add.iHPMax;
-	attr.iMPMax *= add.iMPMax;
-	attr.iATK *= add.iATK;
-	attr.iDEF *= add.iDEF;
-	attr.iHIT *= add.iHIT;
-	attr.iCRI *= add.iCRI;
-	attr.iMATK *= add.iMATK;
-	attr.iMDEF *= add.iMDEF;
-	attr.iMHIT *= add.iMHIT;
-	attr.iMCRI *= add.iMCRI;
-	attr.iSDEF *= add.iSDEF;
-	attr.iWDEF *= add.iWDEF;
-	attr.iFlee *= add.iFlee;
-	attr.fMove *= add.fMove;
-	attr.fATKSpeed *= add.fATKSpeed;
-	attr.fCasting *= add.fCasting;
+	if(0.0f < add)
+	{
+        if(0.0f >= attr)
+        {
+            attr = add * 0.01f;
+        }
+        else
+        {
+            attr = attr * add * 0.01f;
+        }
+	}
 }
 
-void AttributeMulti (ComplexAttribute& attr, ComplexAttribute add)
+void MultiPrecent(int& attr, float add)
 {
-	AttributeMulti(attr.AdvAttr, add.AdvAttr);
-	attr.ObsAttr.iHPR *= add.ObsAttr.iHPR;
-	attr.ObsAttr.iMPR *= add.ObsAttr.iMPR;
+	if(0.0f < add)
+	{
+        if(0 >= attr)
+        {
+            attr = (int) (add);
+        }
+        else
+        {
+            attr = (int) (attr * add);
+        }
+	}
+}
+
+void MultiPrecent(float& attr, float add, float bas)
+{
+	if(0.0f < add)
+	{
+        if(bas == attr)
+        {
+            attr = add * 0.01f;
+        }
+        else
+        {
+            attr = attr * add * 0.01f;
+        }
+	}
+}
+
+void AttributeMulti (AdvancedAttribute& attr, FloatPrecentAttribute add)
+{
+	MultiPrecent(attr.iHP, add.fHP);
+	MultiPrecent(attr.iMP, add.fMP);
+	MultiPrecent(attr.iHPMax, add.fHPMax);
+	MultiPrecent(attr.iMPMax, add.fMPMax);
+	MultiPrecent(attr.iATK, add.fATK);
+	MultiPrecent(attr.iDEF, add.fDEF);
+	MultiPrecent(attr.iHIT, add.fHIT);
+	MultiPrecent(attr.iCRI, add.fCRI);
+	MultiPrecent(attr.iMATK, add.fMATK);
+	MultiPrecent(attr.iMDEF, add.fMDEF);
+	MultiPrecent(attr.iMHIT, add.fMHIT);
+	MultiPrecent(attr.iMCRI, add.fMCRI);
+	MultiPrecent(attr.iSDEF, add.fSDEF);
+	MultiPrecent(attr.iWDEF, add.fWDEF);
+	MultiPrecent(attr.iFlee, add.fFlee);
+	MultiPrecent(attr.fMove, add.fMove, 6.0f);
+	MultiPrecent(attr.fATKSpeed, add.fATKSpeed, 1.5f);
+	MultiPrecent(attr.fCasting, add.fCasting, 1.0f);
+}
+
+void AttributeMulti (ComplexAttribute& attr, FloatPrecentAttribute add)
+{
+	AttributeMulti(attr.AdvAttr, add);
+	MultiPrecent(attr.ObsAttr.iHPR, add.fHPR);
+	MultiPrecent(attr.ObsAttr.iMPR, add.fMPR);
+}
+
+void AttributeMulti (FloatPrecentAttribute& attr, FloatPrecentAttribute add)
+{
+    MultiPrecent(attr.fHP, add.fHP);
+	MultiPrecent(attr.fMP, add.fMP);
+	MultiPrecent(attr.fHPMax, add.fHPMax);
+	MultiPrecent(attr.fMPMax, add.fMPMax);
+	MultiPrecent(attr.fATK, add.fATK);
+	MultiPrecent(attr.fDEF, add.fDEF);
+	MultiPrecent(attr.fHIT, add.fHIT);
+	MultiPrecent(attr.fCRI, add.fCRI);
+	MultiPrecent(attr.fMATK, add.fMATK);
+	MultiPrecent(attr.fMDEF, add.fMDEF);
+	MultiPrecent(attr.fMHIT, add.fMHIT);
+	MultiPrecent(attr.fMCRI, add.fMCRI);
+	MultiPrecent(attr.fSDEF, add.fSDEF);
+	MultiPrecent(attr.fWDEF, add.fWDEF);
+	MultiPrecent(attr.fFlee, add.fFlee);
+	MultiPrecent(attr.fMove, add.fMove);
+	MultiPrecent(attr.fATKSpeed, add.fATKSpeed);
+	MultiPrecent(attr.fCasting, add.fCasting);
+	MultiPrecent(attr.fHPR, add.fHPR);
+	MultiPrecent(attr.fMPR, add.fMPR);
 }
 
 void BasisAttributeSet (int leve, BasisAttribute bas, AdvancedAttribute& adv, ObscureAttribute& obs)
