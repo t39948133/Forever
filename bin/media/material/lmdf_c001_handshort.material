@@ -1,0 +1,20 @@
+material "LMDF_C001_Hand"
+{
+	technique LMDF_C001_Hand_technique
+	{
+		pass LMDF_C001_Hand_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit LMDF_C001_Hand_Diffuse#0
+			{
+				texture lmdf_c001_hand.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

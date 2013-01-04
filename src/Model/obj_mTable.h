@@ -1,7 +1,6 @@
 #ifndef _OBJ_MTABLE_H_
 #define _OBJ_MTABLE_H_
 
-#include <vector>
 #include "Common.h"
 #include "CWeapon.h"
 #include "CArmor.h"
@@ -17,7 +16,6 @@ public:
 		FILE* pFile ; 
 		fopen_s (&pFile, name, "rb") ;
 
-		
 		if (pFile != NULL)
 		{
 		for(int i = 0; (size_t)i < vInfo.size (); i++)

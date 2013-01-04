@@ -1,0 +1,20 @@
+material "LM023_Hair"
+{
+	technique LM023_Hair_technique
+	{
+		pass LM023_Hair_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit LM023_Hair_Diffuse#0
+			{
+				texture lm023_hair.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

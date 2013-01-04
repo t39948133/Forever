@@ -4,7 +4,6 @@
 #include "CUnitObject.h"
 #include "CEquip.h"
 #include "CBackPack.h"
-#include <map>
 
 class CPlayer:public CUnitObject
 {
@@ -18,6 +17,14 @@ public:
 	void shedEquip(EquipSlot grid);	//脫下 哪格裝備欄 裝備
 	std::map<EquipSlot, int> getEquip();	//取得裝備map陣列
 	int getEquip(EquipSlot equip);	//取得哪一格裝備
+
+   // Add by Darren Chen on 2012/12/26 {
+#ifdef _GAMEENGINE_2D_
+   /** @brief Client端繪圖動作 
+     * @param hdc 繪圖裝置 */
+   void draw(HDC hdc);
+#endif
+   // } Add by Darren Chen on 2012/12/26
 
 private:
 	unsigned int m_xp;	//經驗值

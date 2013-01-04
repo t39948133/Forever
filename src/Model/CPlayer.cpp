@@ -4,8 +4,153 @@
 
 CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
 {
-	m_backPack.initBack();
-	upDateEquipAttr();
+   m_backPack.initBack();
+   upDateEquipAttr();
+
+   // Add by Darren Chen on 2012/12/27 {
+   ACTION_DATA actData;
+   CActionEvent actEvent;
+   CAction *pAction = NULL;
+   CActionEventHandler *pActionEventHandler = NULL;
+
+   // Idle動作->(座標更動)->跑步動作
+   actData.iID           = 1;
+   actData.name          = "等待";
+   actData.fTime         = 4.33333f;
+   actData.animationName = "lm_nidle_001";
+   actData.iNextActID    = 0;  // 沒有下一個動作
+   actData.bMove         = false;
+   pAction = new CAction();
+   pAction->init(actData);
+
+   actEvent.clear();
+   actEvent.m_event      = AET_KEY_WASD;
+   actEvent.m_iKeyDownID = 'W';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 2);
+   pAction->addEventHandler(pActionEventHandler);
+
+   actEvent.clear();
+   actEvent.m_event      = AET_KEY_WASD;
+   actEvent.m_iKeyDownID = 'A';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 2);
+   pAction->addEventHandler(pActionEventHandler);
+
+   actEvent.clear();
+   actEvent.m_event      = AET_KEY_WASD;
+   actEvent.m_iKeyDownID = 'S';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 2);
+   pAction->addEventHandler(pActionEventHandler);
+
+   actEvent.clear();
+   actEvent.m_event      = AET_KEY_WASD;
+   actEvent.m_iKeyDownID = 'D';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 2);
+   pAction->addEventHandler(pActionEventHandler);
+
+   actEvent.clear();
+   actEvent.m_event      = AET_NOT_REACH;
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 2);
+   pAction->addEventHandler(pActionEventHandler);
+
+   actEvent.clear();
+   actEvent.m_event      = AET_KEY;
+   actEvent.m_iKeyID     = 'X';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 3);
+   pAction->addEventHandler(pActionEventHandler);
+
+   m_pActionSystem->addAction(pAction);
+
+   // 跑步動作->(座標無更動)->Idle動作
+   actData.iID           = 2;
+   actData.name          = "跑步";
+   actData.fTime         = 1.46667f;
+   actData.animationName = "lm_nrun_001";
+   actData.iNextActID    = 0;  // 沒有下一個動作
+   actData.bMove         = true;
+   pAction = new CAction();
+   pAction->init(actData);
+
+   actEvent.clear();
+   actEvent.m_event    = AET_KEY_WASD;
+   actEvent.m_iKeyUpID = 'W';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 1);
+   pAction->addEventHandler(pActionEventHandler);
+
+   actEvent.clear();
+   actEvent.m_event    = AET_KEY_WASD;
+   actEvent.m_iKeyUpID = 'A';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 1);
+   pAction->addEventHandler(pActionEventHandler);
+
+   actEvent.clear();
+   actEvent.m_event    = AET_KEY_WASD;
+   actEvent.m_iKeyUpID = 'S';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 1);
+   pAction->addEventHandler(pActionEventHandler);
+
+   actEvent.clear();
+   actEvent.m_event    = AET_KEY_WASD;
+   actEvent.m_iKeyUpID = 'D';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 1);
+   pAction->addEventHandler(pActionEventHandler);
+
+   actEvent.clear();
+   actEvent.m_event    = AET_REACH;
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 1);
+   pAction->addEventHandler(pActionEventHandler);
+
+   m_pActionSystem->addAction(pAction);
+
+   // Idle動作->(拔出武器快捷鍵)->戰鬥姿態動作
+   actData.iID           = 3;
+   actData.name          = "拔出武器";
+   actData.fTime         = 1.33333f;
+   actData.animationName = "lm_cdraw_2weapon_001";
+   actData.iNextActID    = 4;  
+   actData.bMove         = false;
+   pAction = new CAction();
+   pAction->init(actData);
+   m_pActionSystem->addAction(pAction);
+
+   actData.iID           = 4;
+   actData.name          = "戰鬥姿勢";
+   actData.fTime         = 1.0f;
+   actData.animationName = "lm_cidle_2weapon_001";
+   actData.iNextActID    = 0;  // 沒有下一個動作
+   actData.bMove         = false;
+   pAction = new CAction();
+   pAction->init(actData);
+
+   actEvent.clear();
+   actEvent.m_event      = AET_KEY;
+   actEvent.m_iKeyID     = 'X';
+   pActionEventHandler = new CActionEventHandler();
+   pActionEventHandler->init(actEvent, 5);
+   pAction->addEventHandler(pActionEventHandler);
+
+   m_pActionSystem->addAction(pAction);
+
+   actData.iID           = 5;
+   actData.name          = "收回武器";
+   actData.fTime         = 1.66667f;
+   actData.animationName = "lm_nputin_2weapon_001";
+   actData.iNextActID    = 1;  
+   actData.bMove         = false;
+   pAction = new CAction();
+   pAction->init(actData);
+   m_pActionSystem->addAction(pAction);
+   // } Add by Darren Chen on 2012/12/27
 }
 
 void CPlayer::addXP(unsigned int xp)
@@ -174,3 +319,17 @@ int CPlayer::getEquip(EquipSlot equip)
 	}
 	return id;
 }
+
+// Add by Darren Chen on 2012/12/26 {
+#ifdef _GAMEENGINE_2D_
+void CPlayer::draw(HDC hdc)
+{
+   CUnitObject::draw(hdc);
+
+   int size = 20;
+   char buf[128];
+   sprintf_s(buf, sizeof(buf), "%s", getName().c_str());
+   TextOut(hdc, (int)getPosition().fX - size, (int)getPosition().fY + size + 5, buf, strlen(buf));
+}
+#endif  // #ifdef _GAMEENGINE_2D_
+// } Add by Darren Chen on 2012/12/26

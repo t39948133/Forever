@@ -1,0 +1,20 @@
+material "LM001_Head"
+{
+	technique LM001_Head_technique
+	{
+		pass LM001_Head_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit LM001_Head_Diffuse#0
+			{
+				texture lm001_head.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

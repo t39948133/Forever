@@ -18,7 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\..\bin\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="0"
@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\src\Client;..\..\src\Model;..\..\src\Common"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\Network;..\..\lib\gp_framework"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_GAMEENGINE_3D_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -61,7 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="OgreMain_d.lib OIS_d.lib wsock32.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="&quot;..\..\lib\ogre_v1-8-1\lib\$(ConfigurationName)&quot;;&quot;..\..\lib\ogre_v1-8-1\boost\lib&quot;;..\..\lib\gp_framework"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -90,7 +92,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			OutputDirectory="..\..\bin\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
@@ -115,7 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\Network;..\..\lib\gp_framework"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_GAMEENGINE_3D_"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -133,8 +136,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="OgreMain.lib OIS.lib wsock32.lib"
 				LinkIncremental="1"
-				GenerateDebugInformation="true"
+				AdditionalLibraryDirectories="&quot;..\..\lib\ogre_v1-8-1\lib\$(ConfigurationName)&quot;;&quot;..\..\lib\ogre_v1-8-1\boost\lib&quot;;..\..\lib\gp_framework"
+				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -172,7 +177,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\src\client\ClientMain.cpp"
+				RelativePath="..\..\src\client\Client_3D_Main.cpp"
 				>
 			</File>
 			<Filter
@@ -246,6 +251,122 @@
 					RelativePath="..\..\src\Model\CWeapon.cpp"
 					>
 				</File>
+			</Filter>
+			<Filter
+				Name="GraphicsRender"
+				>
+				<File
+					RelativePath="..\..\src\GraphicsRender\CGraphicsRender.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\GraphicsRender\CRenderLoader.cpp"
+					>
+				</File>
+				<Filter
+					Name="Ogre"
+					>
+					<File
+						RelativePath="..\..\src\GraphicsRender\Ogre\COgreRender.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="3D"
+				>
+				<File
+					RelativePath="..\..\src\3D\CGameClient3D.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\3D\CPlayer3D.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\3D\CTerrain.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Controller"
+				>
+				<File
+					RelativePath="..\..\src\Controller\CAction.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CActionDispatch.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CActionEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CActionEventHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CActionSystem.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CGameClient.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CScene.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Common"
+				>
+				<File
+					RelativePath="..\..\src\Common\Common.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Lib"
+				>
+				<Filter
+					Name="ETM"
+					>
+					<File
+						RelativePath="..\..\lib\etm-2.3.1\src\ETBrush.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\etm-2.3.1\src\ETIndexHandler.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\etm-2.3.1\src\ETLightmap.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\etm-2.3.1\src\ETLoadSaveHeightmap.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\etm-2.3.1\src\ETSplattingManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\etm-2.3.1\src\ETTerrainInfo.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\etm-2.3.1\src\ETTerrainManager.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\etm-2.3.1\src\ETTile.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -334,6 +455,90 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\obj_mTable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\obj_table.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="GraphicsRender"
+				>
+				<File
+					RelativePath="..\..\src\GraphicsRender\CGraphicsRender.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\GraphicsRender\CRenderLoader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\GraphicsRender\IGameFlowListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\GraphicsRender\IKeyEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\GraphicsRender\IMouseEventListener.h"
+					>
+				</File>
+				<Filter
+					Name="Ogre"
+					>
+					<File
+						RelativePath="..\..\src\GraphicsRender\Ogre\COgreRender.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="3D"
+				>
+				<File
+					RelativePath="..\..\src\3D\CGameClient3D.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\3D\CPlayer3D.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\3D\CTerrain.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Controller"
+				>
+				<File
+					RelativePath="..\..\src\Controller\CAction.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CActionDispatch.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CActionEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CActionEventHandler.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CActionSystem.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CGameClient.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CScene.h"
 					>
 				</File>
 			</Filter>

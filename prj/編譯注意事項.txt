@@ -1,0 +1,9 @@
+開啟專案後, 請依照下面步驟做
+1.在左手邊的"方案總管"內的ForeverClient按下滑鼠右鍵選擇"屬性", 會跳出ForeverClient屬性頁視窗
+2.組態選擇"所有組態"
+3.選擇左手邊的"偵錯"
+4.修改右手邊的"命令"為 ..\..\bin\$(ConfigurationName)\$(ProjectName).exe
+5.修改右手邊的"工作目錄"為 ..\..\bin\$(ConfigurationName)
+6.修改右手邊的"環境"為 ..\..\bin\$(ConfigurationName)
+7.按下"確定"鈕
+8.可以開始Compiler

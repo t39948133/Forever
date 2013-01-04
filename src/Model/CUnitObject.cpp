@@ -5,13 +5,144 @@ CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_str
 {
 	AttributeClear(m_basAttr);
 	AttributeClear(m_advAttr);
-	AttributeClear(m_obsAttr);
+        AttributeClear(m_obsAttr);
 	AttributeClear(m_comAttr);
     m_comAttr.AdvAttr.fATKSpeed = 0.0f;
     m_comAttr.AdvAttr.fCasting = 0.0f;
     m_comAttr.AdvAttr.fMove = 0.0f;
     AttributeClear(m_preAttr);
+
+   // Add by Darren Chen on 2012/12/22 {
+   m_fDirection = -3.1415926f;  // 角色方向朝上(-Z軸)
+   m_position.fX = 450.0f;
+   m_position.fY = 450.0f;
+   m_targetPosition.fX = 450.0f;
+   m_targetPosition.fY = 450.0f;
+   m_pActionSystem = new CActionSystem(uid);
+
+#ifdef _GAMEENGINE_2D_
+   m_bFaceTarget = false;
+#endif
+   // } Add by Darren Chen on 2012/12/22
 }
+
+// Add by Darren Chen on 2012/12/22 {
+CUnitObject::~CUnitObject()
+{
+   if(m_pActionSystem) {
+      delete m_pActionSystem;
+      m_pActionSystem = NULL;
+   }
+}
+
+void CUnitObject::work(float timePass)
+{
+   m_pActionSystem->work(timePass);
+
+#ifdef _GAMEENGINE_2D_
+   if(m_pActionSystem->isMove() == true)
+      move(timePass, m_targetPosition.fX, m_targetPosition.fY, m_bFaceTarget);
+#endif  // #ifdef _GAMEENGINE_2D_
+}
+
+void CUnitObject::addDirection(float offsetDirection)
+{
+   m_fDirection += offsetDirection;
+}
+
+void CUnitObject::setDirection(float direction)
+{
+   m_fDirection = direction;
+}
+
+float CUnitObject::getDirection()
+{
+   return m_fDirection;
+}
+
+void CUnitObject::setPosition(float x, float y)
+{
+   m_position.fX = x;
+   m_position.fY = y;
+}
+
+const POSITION& CUnitObject::getPosition()
+{
+   return m_position;
+}
+
+void CUnitObject::setTargetPosition(float x, float y)
+{
+   m_targetPosition.fX = x;
+   m_targetPosition.fY = y;
+}
+
+#ifdef _GAMEENGINE_2D_
+void CUnitObject::setTargetPosition(float x, float y, bool bFaceTarget)
+{
+   m_bFaceTarget = bFaceTarget;
+   m_targetPosition.fX = x;
+   m_targetPosition.fY = y;
+}
+#endif
+
+const POSITION& CUnitObject::getTargetPosition()
+{
+   return m_targetPosition;
+}
+
+bool CUnitObject::isReachTarget()
+{
+#ifdef _GAMEENGINE_2D_
+   return (m_position.fX == m_targetPosition.fX) && (m_position.fY == m_targetPosition.fY);
+#elif _GAMEENGINE_3D_
+   if((m_position.fX >= m_targetPosition.fX - 0.1f) && (m_position.fX <= m_targetPosition.fX + 0.1f) &&
+      (m_position.fY >= m_targetPosition.fY - 0.1f) && (m_position.fY <= m_targetPosition.fY + 0.1f))
+      return true;
+   else
+      return false;
+#endif  // #ifdef _GAMEENGINE_2D_ && #elif _GAMEENGINE_3D_
+}
+
+bool CUnitObject::isChangeAction()
+{
+   return m_pActionSystem->isChangeAction();
+}
+
+CAction* CUnitObject::getCurAction()
+{
+   return m_pActionSystem->getCurAction();
+}
+
+bool CUnitObject::isMove()
+{
+   if(m_pActionSystem->isMove() == true) {
+      if(isReachTarget() == false)
+         return true;
+      else
+         return false;
+   }
+   else
+      return false;
+}
+
+#ifdef _GAMEENGINE_2D_
+void CUnitObject::draw(HDC hdc)
+{
+   int size = 20;
+   Ellipse(hdc, (int)m_position.fX - size, (int)m_position.fY - size, (int)m_position.fX + size, (int)m_position.fY + size);
+
+   // 畫方向線
+   MoveToEx(hdc, (int)m_position.fX, (int)m_position.fY, NULL);
+   float tx = m_position.fX + size * sin(m_fDirection);
+	float ty = m_position.fY + size * cos(m_fDirection);
+   LineTo(hdc, (int)tx, (int)ty);
+
+   // 畫動作系統
+   m_pActionSystem->draw(hdc, (int)m_position.fX - size, (int)m_position.fY + size + 22);
+}
+#endif  // #ifdef _GAMEENGINE_2D_
+// } Add by Darren Chen on 2012/12/22
 
 long long CUnitObject::getUID()
 {
@@ -216,3 +347,25 @@ bool CUnitObject::addSkill(unsigned int id)
     return false;
 
 }
+
+// Add by Darren Chen on 2013/01/01 {
+#ifdef _GAMEENGINE_2D_
+void CUnitObject::move(float timePass, float targetX, float targetY, bool bFaceTarget)
+{
+   movePoint(m_position.fX, m_position.fY, targetX, targetY, m_advAttr.fMove * timePass);
+
+   if(bFaceTarget == true) {
+      if((m_position.fX != targetX) && (m_position.fY != targetY)) {
+         float dx = targetX - m_position.fX;
+		   float dy = targetY - m_position.fY;
+
+         if(dy != 0)
+		      m_fDirection = atan(dx / dy);
+
+         if(dy < 0)
+            m_fDirection -= 3.1415926f;
+      }
+   }
+}
+#endif  // #ifdef _GAMEENGINE_2D_
+// } Add by Darren Chen on 2013/01/01

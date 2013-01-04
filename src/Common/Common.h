@@ -1,10 +1,10 @@
-/** Copyright (c) 2012-2013 Digital Content Institute.
-  * All Rights Reserved.
+/** This source file is part of Forever
+  * Copyright(c) 2012-2013 The DCI's Forever Team
   *
-  * @檔案:     Common.h
-  * @用途:     共用
-  * @開發者: 
-  * @更新日期: 2012/11/27 */
+  * @file   Common.h
+  * @author Darren Chen (陳盛仟)
+  * @email  darren.z32@msa.hinet.net
+  * @date   2012/11/27 */
 #ifndef _COMMON_H_
 #define _COMMON_H_
 #include <windows.h>
@@ -14,6 +14,12 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+// Add by Darren Chen on 2012/12/22 {
+#include <list>
+#include <map>
+#include <time.h>
+#include <math.h>
+// } Add by Darren Chen on 2012/12/22
 
 struct BasisAttribute
 {
@@ -127,7 +133,7 @@ struct AdvancedItem
 	std::string iconName;//圖示名稱
 	ItemType type;		//種類
 	bool soulBind;		//綁定
-	char level;		//等級
+	char level;			//等級
 	int stackLimit;		//堆疊上限
 	int sellPrice;		//賣價
 	int buyPrice;		//買價
@@ -200,4 +206,50 @@ const int BACK_ROW = 8;		//row橫
 const int BACK_COLUMN = 3;	//column直
 const int BACK_MAX = 24;	//格數
 
-#endif  //_COMMON_H_
+// Add by Darren Chen on 2012/12/13 {
+/** @brief 取得目前系統的日期與時間
+  * @return 字串型態的日期與時間(格式: "2013/01/01 23:59:59") */
+std::string getCurDateTime();
+
+/** @brief 取得滑鼠座標(Client區座標)
+  * @param [in] hWnd 要取得哪個視窗的座標
+  * @param [out] cx  滑鼠X座標
+  * @param [out] cy  滑鼠Y座標 */
+void getMousePos(HWND hWnd, int &cx, int &cy);
+
+/** @brief 取得滑鼠的螢幕座標
+  * @param [out] cx 滑鼠X座標
+  * @param [out] cy 滑鼠Y座標 */
+void getMouseScreenPos(int &cx, int &cy);
+
+/** @brief 取得兩個座標點之間的距離
+  * @param x1 第一個座標點X
+  * @param y1 第一個座標點Y
+  * @param x2 第二個座標點X
+  * @param y2 第二個座標點Y
+  * @return 兩點之間的距離 */
+float getDistance(float x1, float y1, float x2, float y2);
+
+/** @brief 移動第一個座標點位置到第二個座標點
+  * @param [in/out] x1 第一個座標點X
+  * @param [in/out] y1 第一個座標點Y
+  * @param [in] x2     第二個座標點X
+  * @param [in] y2     第二個座標點Y
+  * @param [in] step   每次移動的距離 */   
+void movePoint(float &x1, float &y1, float x2, float y2, float step);
+
+typedef enum tagSCENE_TYPE {
+   SCENE_POETA,     // 波伊塔 (新手村)
+   SCENE_INSTANCE   // 副本
+} SCENE_TYPE;  // 場景型態
+
+typedef enum tagACTION_EVENT_TYPE {
+   AET_NULL,         // 沒有事件
+   AET_REACH,        // 到達目標點   (座標無更動)
+   AET_NOT_REACH,    // 未到達目標點 (座標更動中)
+   AET_KEY,          // 快捷鍵
+   AET_KEY_WASD,     // WASD按鍵
+} ACTION_EVENT_TYPE;  // 動作事件種類
+// } Add by Darren Chen on 2012/12/13
+
+#endif  // #ifndef _COMMON_H_
