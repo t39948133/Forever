@@ -188,7 +188,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CArmor.cpp"
+					RelativePath="..\..\src\Model\CArmorInfo.cpp"
 					>
 				</File>
 				<File
@@ -200,19 +200,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CBuffInfo.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CBuffInfoLoader.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CBuffTable.cpp"
+					RelativePath="..\..\src\Model\CConsumableInfo.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CConsumable.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Model\CEquip.cpp"
+					RelativePath="..\..\src\Model\CEquipInfo.cpp"
 					>
 				</File>
 				<File
@@ -220,11 +220,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CitemInfoLoader.cpp"
+					RelativePath="..\..\src\Model\CItemInfo.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CItemTable.cpp"
+					RelativePath="..\..\src\Model\CitemInfoLoader.cpp"
 					>
 				</File>
 				<File
@@ -236,11 +236,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CSkillInfoLoader.cpp"
+					RelativePath="..\..\src\Model\CSkillInfo.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CSkillTable.cpp"
+					RelativePath="..\..\src\Model\CSkillInfoLoader.cpp"
 					>
 				</File>
 				<File
@@ -248,7 +248,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CWeapon.cpp"
+					RelativePath="..\..\src\Model\CWeaponInfo.cpp"
 					>
 				</File>
 			</Filter>
@@ -390,7 +390,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CArmor.h"
+					RelativePath="..\..\src\Model\CArmorInfo.h"
 					>
 				</File>
 				<File
@@ -402,19 +402,19 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CBuffInfo.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CBuffInfoLoader.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CBuffTable.h"
+					RelativePath="..\..\src\Model\CConsumableInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CConsumable.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Model\CEquip.h"
+					RelativePath="..\..\src\Model\CEquipInfo.h"
 					>
 				</File>
 				<File
@@ -422,11 +422,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CItemInfoLoader.h"
+					RelativePath="..\..\src\Model\CItemInfo.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CItemTable.h"
+					RelativePath="..\..\src\Model\CItemInfoLoader.h"
 					>
 				</File>
 				<File
@@ -438,27 +438,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CSkillInfo.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CSkillInfoLoader.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CSkillTable.h"
+					RelativePath="..\..\src\Model\CUnitObject.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\model\CUnitObject.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Model\CWeapon.h"
+					RelativePath="..\..\src\Model\CWeaponInfo.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\Model\obj_mTable.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Model\obj_table.h"
 					>
 				</File>
 			</Filter>

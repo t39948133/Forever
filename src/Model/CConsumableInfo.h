@@ -1,20 +1,20 @@
-#ifndef _CCONSUMABLE_H_
-#define _CCONSUMABLE_H_
+#ifndef _CCONSUMABLEINFO_H_
+#define _CCONSUMABLEINFO_H_
 
-#include "CItem.h"
+#include "CItemInfo.h"
 
-class CConsumable:public CItem	//耗材性物品
+class CConsumableInfo:public CItemInfo	//耗材性物品
 {
 public:
 	std::string getDesc();			//取得物品描述
 	EdibleEffectType getEffect();	//取得哪種效果
 	int getMuch();					//取得影響數值
-	void initConsumable(std::string name, std::string iconName, ItemType type, bool soulBind,
+	void initConsumableInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					std::string desc, EdibleEffectType effect, int much);
 	
-	~CConsumable();
-	int getClassType ();
+	~CConsumableInfo();
+	ItemClassType getClassType ();
 
 	virtual void read(FILE* pFile);
 

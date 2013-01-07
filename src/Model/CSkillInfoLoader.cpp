@@ -1,10 +1,10 @@
 #include "CSkillInfoLoader.h"
 
-CSkill* CSkillInfoLoader::create(int type)
+CSkillInfo* CSkillInfoLoader::create(int type)
 {
     if(SKILL == type)
     {
-        return new CSkill();
+        return new CSkillInfo();
     }
     else
     {

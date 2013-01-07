@@ -1,12 +1,12 @@
 #ifndef _CSKILLINFOLOADER_H_
 #define _CSKILLINFOLOADER_H_
 
-#include "CSkill.h"
+#include "CSkillInfo.h"
 
 class CSkillInfoLoader
 {
 public:
-    CSkill* create(int type);
+    CSkillInfo* create(int type);
 };
 
 #endif

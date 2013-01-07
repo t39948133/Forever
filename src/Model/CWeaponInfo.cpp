@@ -1,11 +1,11 @@
-#include "CWeapon.h"
+#include "CWeaponInfo.h"
 
-WeaponWieldType CWeapon::getWield()
+WeaponWieldType CWeaponInfo::getWield()
 {
 	return m_wield;
 }
 
-void CWeapon::initWeapon(std::string name, std::string iconName, ItemType type, bool soulBind,
+void CWeaponInfo::initWeaponInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					EquipQuality quality, AdvancedAttribute baseAttr,
 					AdvancedAttribute extendAttr, WeaponWieldType wield)
@@ -24,18 +24,18 @@ void CWeapon::initWeapon(std::string name, std::string iconName, ItemType type, 
 	m_wield = wield;
 }
 
-CWeapon::~CWeapon()
+CWeaponInfo::~CWeaponInfo()
 {
 }
 
-int CWeapon::getClassType ()
+ItemClassType CWeaponInfo::getClassType ()
 {
 	return WEAPON;
 }
 
-void CWeapon::read(FILE* pFile)
+void CWeaponInfo::read(FILE* pFile)
 {
-	CEquip::read(pFile);
+	CEquipInfo::read(pFile);
 	int version = 0;
 	fread (&version, sizeof(version), 1, pFile);
 

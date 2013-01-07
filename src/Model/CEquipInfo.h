@@ -1,10 +1,10 @@
-#ifndef _CEQUIP_H_
-#define _CEQUIP_H_
+#ifndef _CEQUIPINFO_H_
+#define _CEQUIPINFO_H_
 
 #include "Common.h"
-#include "CItem.h"
+#include "CItemInfo.h"
 
-class CEquip:public CItem			//裝備性物品
+class CEquipInfo:public CItemInfo			//裝備性物品
 {
 public:
 	EquipQuality getQuality();			//取得品質

@@ -1,22 +1,22 @@
-#include "CConsumable.h"
+#include "CConsumableInfo.h"
 
 
-std::string CConsumable::getDesc()
+std::string CConsumableInfo::getDesc()
 {
 	return m_strDesc;
 }
 
-EdibleEffectType CConsumable::getEffect()
+EdibleEffectType CConsumableInfo::getEffect()
 {
 	return m_effect;
 }
 	
-int CConsumable::getMuch()
+int CConsumableInfo::getMuch()
 {
 	return m_iMuch;
 }
 
-void CConsumable::initConsumable(std::string name, std::string iconName, ItemType type, bool soulBind,
+void CConsumableInfo::initConsumableInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
 				char level, int stackLimit, int sellPrice, int buyPrice,
 				std::string desc, EdibleEffectType effect, int much)
 {
@@ -33,22 +33,23 @@ void CConsumable::initConsumable(std::string name, std::string iconName, ItemTyp
 	m_iMuch = much;
 }
 
-CConsumable::~CConsumable()
+CConsumableInfo::~CConsumableInfo()
 {
 }
 
-int CConsumable::getClassType ()
+ItemClassType CConsumableInfo::getClassType ()
 {
 	return CONSUMABLE;
 }
 
-void CConsumable::read(FILE* pFile)
+void CConsumableInfo::read(FILE* pFile)
 {
-	//CItem::read(pFile);
+    CItemInfo::read(pFile);
 	int version = 0;
 	fread (&version, sizeof(version), 1, pFile);
-
-	fread (&m_strDesc, sizeof(m_strDesc), 1, pFile);
+    char buf[longStrSize];
+    fread(buf, sizeof(buf), 1, pFile);
+    m_strDesc = buf;
 	fread (&m_effect, sizeof(m_effect), 1, pFile);
 	fread (&m_iMuch, sizeof(m_iMuch), 1, pFile);
 }

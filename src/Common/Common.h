@@ -202,9 +202,10 @@ enum BuffClassType
 	BUFF,
 };
 
-const int BACK_ROW = 8;		//row橫 
+const int BACK_ROW = 9;		//row橫 
 const int BACK_COLUMN = 3;	//column直
-const int BACK_MAX = 24;	//格數
+const int BACK_MAX = BACK_ROW * BACK_COLUMN;	//格數
+const int longStrSize = 256;
 
 // Add by Darren Chen on 2012/12/13 {
 /** @brief 取得目前系統的日期與時間

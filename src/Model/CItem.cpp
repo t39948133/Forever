@@ -1,127 +1,137 @@
 #include "CItem.h"
-#include "CWeapon.h"
-#include "CArmor.h"
-#include "CConsumable.h"
+#include "CWeaponInfo.h"
+#include "CArmorInfo.h"
+#include "CConsumableInfo.h"
+#include "AttributeSet.h"
 
-std::string CItem::getName()
+
+
+void CItem::initItem ()
 {
-	return m_strName;
+	if(ITEM_INFO::read("Item.la"))
+	{
+	}
+	else
+	{
+		CWeaponInfo* pw;
+		pw = new CWeaponInfo();
+		AdvancedAttribute baseAttr;
+		AdvancedAttribute extendAttr;
+		AttributeClear(baseAttr);
+		AttributeClear(extendAttr);
+		baseAttr.iATK = 20;
+		baseAttr.iCRI = 10;
+		baseAttr.iHIT = 5;
+		extendAttr.iHP = 80;
+		extendAttr.iMPMax = 8;
+		pw->initWeaponInfo("刀子", "", SWORD, true, 1, 1, 20, 50, COMMON,
+			baseAttr, extendAttr, ONE_HAND);
+		addInfo(pw);
+
+		CArmorInfo* pa;
+		pa = new CArmorInfo();
+		AttributeClear(baseAttr);
+		AttributeClear(extendAttr);
+		baseAttr.iATK = 10;
+		baseAttr.iHIT = 7;
+		extendAttr.iHP = 90;
+		extendAttr.iMPMax = 0;
+		pa->initArmorInfo("袍", "", CLOTH, false, 5, 10, 10, 70, COMMON,
+			baseAttr, extendAttr, CLOTHES);
+		addInfo(pa);
+
+		CConsumableInfo* pc = new CConsumableInfo();
+
+		pc->initConsumableInfo("生命藥水", "", POTION, false, 1, 10, 5, 10, "回復生命50點", EDIBLE_HP, 50);
+
+	}
+
 }
-
-std::string CItem::geticonName()
+CItem::CItem ():m_iStack(0)
 {
-	return m_iconName;
-}
-
-ItemType CItem::getItemType()
-{
-	return m_type;
-}
-
-bool CItem::getSoulBind()
-{
-	return m_bSoulBind;
-}
-
-char CItem::getLevel()
-{
-	return m_level;
-}
-
-int CItem::getStackLimit()
-{
-	return m_iStackLimit;
-}
-
-int CItem::getSellPrice()
-{
-	return m_iSellPrice;
-}
-
-int CItem::getBuyPrice()
-{
-	return m_iBuyPrice;
 }
 
 CItem::~CItem()
 {
 }
 
-AdvancedItem* CItem::getAll()
+bool CItem::addStack (int id, int& st)
 {
-	AdvancedItem *pItem = new AdvancedItem;
-	pItem->name = getName();				//名稱
-	pItem->iconName = geticonName();		//圖示名稱
-	pItem->type = getItemType();			//種類
-	pItem->soulBind = getSoulBind();		//綁定
-	pItem->level = getLevel();				//等級
-	pItem->stackLimit = getStackLimit();	//堆疊上限
-	pItem->sellPrice = getSellPrice();		//賣價
-	pItem->buyPrice = getBuyPrice();		//買價
+	if (checkID (id) == false)
+		return false ;
 
-	return pItem;
+	CItemInfo* pinfo = getInfo () ;
+	if (pinfo == NULL)
+	{
+		//空格
+		ITEM_INFO::create (id) ;
+		pinfo = getInfo () ;
+		if (pinfo != NULL)
+		{
+			if (st <= pinfo->getStackLimit())
+			{
+				m_iStack = st ;
+				st = 0 ;
+			}else
+			{
+				//滿了
+				st = st-(pinfo->getStackLimit()) ;
+				m_iStack = pinfo->getStackLimit() ;
+			}
+			return true ;
+		}else
+			return false ;
+	}else
+	{
+		if (getID () == id)
+		{
+			//同一種,可以堆疊
+			CItemInfo* pinfo = getInfo () ;
+			if (m_iStack+st <= pinfo->getStackLimit())
+			{
+				//堆疊沒滿
+				m_iStack += st ;
+				st = 0 ;
+				return true ;
+			}else
+			{
+				//堆滿了
+				st = m_iStack+st-pinfo->getStackLimit() ;
+				m_iStack = pinfo->getStackLimit() ;
+				return true ;
+			}
+		}else
+		{
+			//不同種
+			return false ;
+		}
+	}
 }
 
-void CItem::setName(std::string name)
+int CItem::getStack ()
 {
-	m_strName = name;
+	return m_iStack ;
 }
 
-void CItem::seticonName(std::string iconName)
+void CItem::create (int id, int st)
 {
-	m_iconName = iconName;
+	ITEM_INFO::create (id) ;
+
+	CItemInfo* pinfo = getInfo () ;
+	if (pinfo != NULL)
+	{
+		if (st < pinfo->getStackLimit() && st >= 1)
+			m_iStack = st ;
+		else
+			m_iStack = pinfo->getStackLimit();
+	}
 }
 
-void CItem::setItemType(ItemType type)
+void CItem::taken()
 {
-	m_type = type;
-}
-
-void CItem::setSoulBind(bool soulBind)
-{
-	m_bSoulBind = soulBind;
-}
-
-void CItem::setLevel(char level)
-{
-	if(level<0)
-		return;
-	m_level = level;
-}
-
-void CItem::setStackLimit(int stackLimit)
-{
-	if(stackLimit<0)
-		return;
-	m_iStackLimit = stackLimit;
-}
-
-void CItem::setSellPrice(int sellPrice)
-{
-	if(sellPrice<0)
-		return;
-	m_iSellPrice = sellPrice;
-}
-
-void CItem::setBuyPrice(int buyPrice)
-{
-	if(buyPrice<0)
-		return;
-	m_iBuyPrice = buyPrice;
-}
-
-void CItem::read(FILE* pFile)
-{
-	int version = 0;
-	fread (&version, sizeof(version), 1, pFile);
-
-	fread (&m_strName, sizeof(m_strName), 1, pFile);
-	fread (&m_iconName, sizeof(m_iconName), 1, pFile);
-	fread (&m_type, sizeof(m_type), 1, pFile);
-	fread (&m_bSoulBind, sizeof(m_bSoulBind), 1, pFile);
-	fread (&m_level, sizeof(m_level), 1, pFile);
-	fread (&m_iStackLimit, sizeof(m_iStackLimit), 1, pFile);
-	fread (&m_iSellPrice, sizeof(m_iSellPrice), 1, pFile);
-	fread (&m_iBuyPrice, sizeof(m_iBuyPrice), 1, pFile);
-
+	m_iStack--;
+	if(m_iStack <= 0)
+	{
+		clear();
+	}
 }

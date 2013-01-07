@@ -1,19 +1,19 @@
-#ifndef _CWEAPON_H_
-#define _CWEAPON_H_
+#ifndef _CWEAPONINFO_H_
+#define _CWEAPONINFO_H_
 
-#include "CEquip.h"
+#include "CEquipInfo.h"
 
-class CWeapon:public CEquip		//ชZพน
+class CWeaponInfo:public CEquipInfo		//ชZพน
 {
 public:
 	WeaponWieldType getWield();
-	void initWeapon(std::string name, std::string iconName, ItemType type, bool soulBind,
+	void initWeaponInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					EquipQuality quality, AdvancedAttribute baseAttr,
 					AdvancedAttribute extendAttr, WeaponWieldType wield);
 	
-	~CWeapon();
-	int getClassType ();
+	~CWeaponInfo();
+	ItemClassType getClassType ();
 
 	void read(FILE* pFile);
 

@@ -279,14 +279,14 @@ BasisAttribute CUnitObject::getBasAttr()
 	return m_basAttr;
 }
 
-std::list<CBuffTable> CUnitObject::getBuff()
+std::list<CBuff> CUnitObject::getBuff()
 {
     return m_lBuff;
 }
 
 void CUnitObject::updateBuff(float timepass)
 {
-    std::list<CBuffTable>::iterator pi = m_lBuff.begin();
+    std::list<CBuff>::iterator pi = m_lBuff.begin();
 
     while(m_lBuff.end() != pi)
     {
@@ -301,7 +301,7 @@ void CUnitObject::updateBuff(float timepass)
     }
 
 	pi = m_lBuff.begin();
-	CBuff* pBuff;
+	CBuffInfo* pBuff;
 
 	while(m_lBuff.end() != pi)
 	{
@@ -314,20 +314,20 @@ void CUnitObject::updateBuff(float timepass)
 
 void CUnitObject::addBuff(unsigned int id)
 {
-    CBuffTable bt;
+    CBuff bt;
     bt.create(id);
     m_lBuff.push_back(bt);
     updateBuff(0.0f);
 }
 
-std::vector<CSkillTable> CUnitObject::getSkill()
+std::vector<CSkill> CUnitObject::getSkill()
 {
     return m_vSkill;
 }
 
 void CUnitObject::SkillCoolDown(float timepass)
 {
-    std::vector<CSkillTable>::iterator pi = m_vSkill.begin();
+    std::vector<CSkill>::iterator pi = m_vSkill.begin();
     while(m_vSkill.end() != pi)
     {
         pi->afterTime(timepass);
@@ -337,7 +337,7 @@ void CUnitObject::SkillCoolDown(float timepass)
 
 bool CUnitObject::addSkill(unsigned int id)
 {
-    CSkillTable st ;
+    CSkill st ;
     st.create(id);
     if(st.canLearn(m_level))
     {

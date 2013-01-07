@@ -1,11 +1,11 @@
-#include "CArmor.h"
+#include "CArmorInfo.h"
 
-ArmorWearType CArmor::getWear()
+ArmorWearType CArmorInfo::getWear()
 {
 	return m_wear;
 }
 
-void CArmor::initArmor(std::string name, std::string iconName, ItemType type, bool soulBind,
+void CArmorInfo::initArmorInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
 				char level, int stackLimit, int sellPrice, int buyPrice,
 				EquipQuality quality, AdvancedAttribute baseAttr,
 				AdvancedAttribute extendAttr, ArmorWearType wear)
@@ -24,18 +24,18 @@ void CArmor::initArmor(std::string name, std::string iconName, ItemType type, bo
 	m_wear = wear;
 }
 
-CArmor::~CArmor()
+CArmorInfo::~CArmorInfo()
 {
 }
 
-int CArmor::getClassType ()
+ItemClassType CArmorInfo::getClassType ()
 {
 	return ARMOR;
 }
 
-void CArmor::read(FILE* pFile)
+void CArmorInfo::read(FILE* pFile)
 {
-	CEquip::read(pFile);
+	CEquipInfo::read(pFile);
 	int version = 0;
 	fread (&version, sizeof(version), 1, pFile);
 

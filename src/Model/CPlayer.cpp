@@ -1,5 +1,8 @@
 #include "CPlayer.h"
-#include "CItemTable.h"
+#include "CItem.h"
+#include "CWeaponInfo.h"
+#include "CArmorInfo.h"
+#include "CConsumableInfo.h"
 #include "AttributeSet.h"
 
 CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
@@ -180,15 +183,15 @@ CBackPack CPlayer::getBackPack()
 
 void CPlayer::wearEquip(unsigned int id)
 {
-	CItem* pItem = CItemTable::getInfo(id);
+	CItemInfo* pItem = CItem::getInfo(id);
 	if(NULL == pItem)
 	{
 		return;
 	}
 	if(WEAPON == pItem->getClassType())
 	{
-		CWeapon* pWp;
-		pWp = (CWeapon*) pItem;
+		CWeaponInfo* pWp;
+		pWp = (CWeaponInfo*) pItem;
 		if(ONE_HAND == pWp->getWield())
 		{
 			wearToEquipSlot(MAIN_HAND, id);
@@ -205,8 +208,8 @@ void CPlayer::wearEquip(unsigned int id)
 	}
 	else if(pItem->getClassType() == ARMOR)
 	{
-		CArmor* pAm;
-		pAm = (CArmor*) pItem;
+		CArmorInfo* pAm;
+		pAm = (CArmorInfo*) pItem;
 		if(CLOTHES == pAm->getWear())
 		{
 			wearToEquipSlot(CHEST, id);
@@ -254,7 +257,7 @@ void CPlayer::shedEquip(EquipSlot grid)
 	m_backPack.addItem(m_mEquip.find(grid)->second, st, gr);
 	m_mEquip.erase(grid);
 	upDateEquipAttr();
-	//
+	
 }
 
 void CPlayer::upDateEquipAttr()
@@ -267,7 +270,7 @@ void CPlayer::upDateEquipAttr()
 	BasisAttributeSet(getLevel(), getBasAttr(), advAttr, obsAttr);		//取得角色初始素質
 	while (m_mEquip.end() != pi)
 	{
-		CWeapon* wp = (CWeapon*) CItemTable::getInfo(pi->second);
+		CWeaponInfo* wp = (CWeaponInfo*) CItem::getInfo(pi->second);
 		if(NULL == wp)
 		{
 			break;
@@ -279,7 +282,7 @@ void CPlayer::upDateEquipAttr()
 	}
 	setAdvAttr(advAttr);
 
-    std::vector<CSkillTable>::iterator ps = m_vSkill.begin();
+    std::vector<CSkill>::iterator ps = m_vSkill.begin();
     while(m_vSkill.end() != ps)
     {
         ps->chackAvailable(getEquip());

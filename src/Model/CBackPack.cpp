@@ -1,6 +1,6 @@
 #include "CBackPack.h"
 
-void CBackPack::setGrid(int grid, CItemTable& itm)
+void CBackPack::setGrid(int grid, CItem& itm)
 {
 	if((grid >= 0) && (grid < BACK_MAX))
 	{
@@ -8,7 +8,7 @@ void CBackPack::setGrid(int grid, CItemTable& itm)
 	}
 }
 
-CItemTable* CBackPack::getItem(int grid)
+CItem* CBackPack::getItem(int grid)
 {
 	if((grid >= 0) && (grid < BACK_MAX))
 	{
@@ -20,9 +20,9 @@ CItemTable* CBackPack::getItem(int grid)
 	}
 }
 
-CItem* CBackPack::getCItem(int grid)
+CItemInfo* CBackPack::getCItem(int grid)
 {
-    CItemTable* pc = getItem(grid);					
+    CItem* pc = getItem(grid);					
     if (pc != NULL)
         return pc->getInfo () ;
     return NULL ;

@@ -1,21 +1,21 @@
 #include "CItemInfoLoader.h"
-#include "CWeapon.h"
-#include "CArmor.h"
-#include "CConsumable.h"
+#include "CWeaponInfo.h"
+#include "CArmorInfo.h"
+#include "CConsumableInfo.h"
 
-CItem* CItemInfoLoader::create (int type)
+CItemInfo* CItemInfoLoader::create (int type)
 {
 	if(type == WEAPON)
 	{
-		return new CWeapon();
+		return new CWeaponInfo();
 	}
 	else if(type == ARMOR)
 	{
-		return new CArmor () ;
+		return new CArmorInfo() ;
 	}
 	else if(type == CONSUMABLE)
 	{
-		return new CConsumable ();
+		return new CConsumableInfo();
 	}
 	else
 	{

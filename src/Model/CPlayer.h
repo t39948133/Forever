@@ -2,7 +2,6 @@
 #define _CPLAYER_H_
 
 #include "CUnitObject.h"
-#include "CEquip.h"
 #include "CBackPack.h"
 
 class CPlayer:public CUnitObject

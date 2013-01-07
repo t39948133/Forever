@@ -132,7 +132,7 @@ void MultiPrecent(float& attr, int add)
         }
         else
         {
-            attr = attr * add * 0.01f;
+            attr += attr * add * 0.01f;
         }
 	}
 }
@@ -147,7 +147,7 @@ void MultiPrecent(float& attr, float add)
         }
         else
         {
-            attr = attr * add * 0.01f;
+            attr += attr * add * 0.01f;
         }
 	}
 }
@@ -162,7 +162,7 @@ void MultiPrecent(int& attr, float add)
         }
         else
         {
-            attr = (int) (attr * add);
+            attr += (int) (attr * add);
         }
 	}
 }
@@ -177,7 +177,7 @@ void MultiPrecent(float& attr, float add, float bas)
         }
         else
         {
-            attr = attr * add * 0.01f;
+            attr += attr * add * 0.01f;
         }
 	}
 }

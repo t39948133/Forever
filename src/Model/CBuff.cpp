@@ -1,51 +1,60 @@
 #include "CBuff.h"
+#include "AttributeSet.h"
 
-void CBuff::initBuff(std::string name, std::string desc, std::string iconName,
-                    ComplexAttribute attr, FloatPrecentAttribute attrPercent,
-                    float continued, bool harmful)
+void CBuff::initBuff()
 {
-    m_strName = name;
-    m_strDesc = desc;
-    m_iconName = iconName;
-    m_Attr = attr;
-    m_AttrPercent = attrPercent;
-    m_fContinued = continued;
-    m_bHarmful = harmful;
+	if(BUFF_INFO::read("Buff.la"))
+	{
+	}
+	else
+	{
+		CBuffInfo* pB = new CBuffInfo();
+		ComplexAttribute ComAttr;
+		FloatPrecentAttribute preAttr;
+
+		AttributeClear(ComAttr);
+        ComAttr.AdvAttr.fATKSpeed = 0.0f;
+        ComAttr.AdvAttr.fCasting = 0.0f;
+        ComAttr.AdvAttr.fMove = 0.0f;
+		AttributeClear(preAttr);
+
+		ComAttr.ObsAttr.iHPR = 50;
+		preAttr.fHPMax = 50;
+
+		pB->initBuffInfo("主神盔甲", "3分鐘內，最大生命提高50%、生命回復速度提升50點", "",
+			ComAttr, preAttr, (3*60), false);
+        addInfo(pB);
+	}
 }
 
-std::string CBuff::getName()
+float CBuff::getSurplus()
 {
-    return m_strName;
+	return m_fSurplus;
 }
 
-std::string CBuff::getDesc()
+void CBuff::create(unsigned int id)
 {
-    return m_strDesc;
+	BUFF_INFO::create(id);
+
+	CBuffInfo* pInfo = BUFF_INFO::getInfo();
+
+	if(NULL != pInfo)
+	{
+		m_fSurplus = pInfo->getContinued();
+	}
 }
 
-std::string CBuff::getIconName()
+bool CBuff::afterTime(float timePass)
 {
-    return m_iconName;
-}
+	m_fSurplus -= timePass;
 
-ComplexAttribute CBuff::getAttr()
-{
-    return m_Attr;
-}
-
-FloatPrecentAttribute CBuff::getPercentAttr()
-{
-    return m_AttrPercent;
-}
-
-float CBuff::getContinued()
-{
-    return m_fContinued;
-}
-
-bool CBuff::isHarmful()
-{
-    return m_bHarmful;
+	if(0.0f >= m_fSurplus)
+	{
+		m_fSurplus = 0.0f;
+		clear();
+		return true;
+	}
+	return false;
 }
 
 CBuff::CBuff()
@@ -54,24 +63,4 @@ CBuff::CBuff()
 
 CBuff::~CBuff()
 {
-}
-
-void CBuff::read(FILE* pFile)
-{
-    int version = 0 ;
-	fread (&version, sizeof (version), 1, pFile) ;
-
-    
-	fread (&m_strName, sizeof (m_strName), 1, pFile) ;
-	fread (&m_strDesc, sizeof (m_strDesc), 1, pFile) ;
-	fread (&m_iconName, sizeof (m_iconName), 1, pFile) ;
-	fread (&m_Attr, sizeof (m_Attr), 1, pFile) ;
-	fread (&m_AttrPercent, sizeof (m_AttrPercent), 1, pFile) ;
-	fread (&m_fContinued, sizeof (m_fContinued), 1, pFile) ;
-	fread (&m_bHarmful, sizeof (m_bHarmful), 1, pFile) ;
-}
-
-int CBuff::getClassType()
-{
-	return BUFF;
 }

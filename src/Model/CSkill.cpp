@@ -1,142 +1,121 @@
 #include "CSkill.h"
+#include "AttributeSet.h"
+#include "CPlayer.h"
 
-void CSkill::initSkill(tagSKILL_TYPE type, int level, std::string icomName, 
-                       std::string name, std::string desc, int actionID,
-					   float castTime, float coolTime, float castRange,
-					   AttackTarget target, AdvancedAttribute effectAttr,
-					   FloatPrecentAttribute effectAttrPercent, int bufID,
-					   int motionEffects,int triggerMotion,bool weapon,
-                       bool shield)
+void CSkill::initSkill()
 {
-    m_type  = type;
-	m_iLevel = level;
-	m_iconName = icomName;
-	m_strName = name;
-	m_strDesc = desc;
-	m_iActionID = actionID;
-	m_fCastTime = castTime;
-	m_fCoolDown = coolTime;
-	m_fCastRange = castRange;
-	m_target = target;
-	m_effectAttr = effectAttr;
-	m_effectAttrPercent = effectAttrPercent;
-	m_iBuffID = bufID;
-	m_iMotionEffects = motionEffects;
-	m_iTriggerMotion = triggerMotion;
-	m_bWeapon = weapon;
-    m_bShield = shield;
+	if(SKILL_INFO::read("Skill.la"))
+	{
+	}
+	else
+	{
+		CSkillInfo* ps = new CSkillInfo();
+		AdvancedAttribute adv;
+		FloatPrecentAttribute preAttr;
+
+		AttributeClear(adv);
+        adv.fATKSpeed = 0.0f;
+        adv.fCasting = 0.0f;
+        adv.fMove = 0.0f;
+		AttributeClear(preAttr);
+
+		preAttr.fHPMax = 25;
+
+		ps->initSkillInfo(TYPE_ACTIVE, 1, "", "主神盔甲",
+			"回復自身25%生命力，在3分鐘內，最大生命提高50%、生命回復速度提升50點",
+			-1, 0, 6, 0, SELF, adv, preAttr, 0, -1, -1, false, false);
+        addInfo(ps);
+	}
 }
 
-tagSKILL_TYPE  CSkill::getType()
+CSkill::CSkill() : m_bAvailable(false) , m_fSurplus(0.0f)
 {
-    return m_type;
 }
 
-int CSkill::getLevel()
+CSkill::~CSkill()
 {
-    return m_iLevel;
+}
+float CSkill::getSurplus()
+{
+	return m_fSurplus;
 }
 
-std::string CSkill::geticonName()
+bool CSkill::getAvailable()
 {
-    return m_iconName;
+	return m_bAvailable;
 }
 
-std::string CSkill::getName()
+void CSkill::create(unsigned int id)
 {
-    return m_strName;
+	SKILL_INFO::create(id);
+
+	CSkillInfo* pInfo = getInfo();
+	if(NULL != pInfo)
+	{
+		m_fSurplus = 0.0f;
+        m_bAvailable = true;
+	}
 }
 
-std::string CSkill::getDesc()
+void CSkill::afterTime(float timePass)
 {
-    return m_strDesc;
+	m_fSurplus -= timePass;
+	if(0.0f > m_fSurplus)
+	{
+		m_fSurplus =  0.0f;
+	}
 }
 
-int CSkill::getActionID()
+bool CSkill::isReady()
 {
-	return m_iActionID;
+	return 0.0f >= m_fSurplus;
 }
 
-float CSkill::getCastTime()
+bool CSkill::canLearn(unsigned int lv)
 {
-    return m_fCastTime;
+    CSkillInfo* pInfo = getInfo();
+    if(NULL != pInfo)
+    {
+        return lv >= (unsigned int)pInfo->getLevel();
+    }
+    return false;
 }
 
-float CSkill::getCoolDown()
+void CSkill::chackAvailable(std::map<EquipSlot, int> equip)
 {
-    return m_fCoolDown;
-}
-
-float CSkill::getCastRange()
-{
-    return m_fCastRange;
-}
-
-AttackTarget CSkill::getTarget()
-{
-    return m_target;
-}
-
-AdvancedAttribute CSkill::getEffectAttr()
-{
-    return m_effectAttr;
-}
-
-FloatPrecentAttribute CSkill::getEffectAttrPercent()
-{
-	return m_effectAttrPercent;
-}
-
-int CSkill::getBuffID()
-{
-	return m_iBuffID;
-}
-
-int CSkill::getMotionEffects()
-{
-	return m_iMotionEffects;
-}
-
-int CSkill::getTriggerMotion()
-{
-	return m_iTriggerMotion;
-}
-
-bool CSkill::getWeapon()
-{
-    return m_bWeapon;
-}
-
-bool CSkill::getSield()
-{
-    return m_bShield;
-}
-
-void CSkill::read(FILE *pFile)
-{
-    int version = 0 ;
-	fread (&version, sizeof (version), 1, pFile) ;
-
-    fread (&m_type, sizeof (m_type), 1, pFile);
-    fread (&m_iLevel, sizeof (m_iLevel), 1, pFile);
-    fread (&m_iconName, sizeof (m_iconName), 1, pFile);
-    fread (&m_strName, sizeof (m_strName), 1, pFile);
-    fread (&m_strDesc, sizeof (m_strDesc), 1, pFile);
-	fread (&m_iActionID, sizeof(m_iActionID), 1, pFile);
-    fread (&m_fCastTime, sizeof (m_fCastTime), 1, pFile);
-    fread (&m_fCoolDown, sizeof (m_fCoolDown), 1, pFile);
-    fread (&m_fCastRange, sizeof (m_fCastRange), 1, pFile);
-    fread (&m_target, sizeof (m_target), 1, pFile);
-    fread (&m_effectAttr, sizeof (m_effectAttr), 1, pFile);
-    fread (&m_effectAttrPercent, sizeof (m_effectAttrPercent), 1, pFile);
-    fread (&m_iBuffID, sizeof (m_iBuffID), 1, pFile);
-    fread (&m_iMotionEffects, sizeof (m_iMotionEffects), 1, pFile);
-    fread (&m_iTriggerMotion, sizeof (m_iTriggerMotion), 1, pFile);
-    fread (&m_bWeapon, sizeof (m_bWeapon), 1, pFile);
-    fread (&m_bShield, sizeof (m_bShield), 1, pFile);
-}
-
-int getClassType()
-{
-    return SKILL;
+	CSkillInfo* pInfo = getInfo();
+	if(NULL != pInfo)
+	{
+		bool bW = true;
+		bool bS = true;
+		if(pInfo->getWeapon())
+		{
+			if(equip.end() == equip.find(MAIN_HAND))
+			{
+				bW = false;
+			}
+		}
+		if(pInfo->getSield())
+		{
+			if(equip.end() == equip.find(OFF_HAND))
+			{
+				bS = false;
+			}
+		}
+		if(false == pInfo->getWeapon() && false == pInfo->getSield())
+		{
+			m_bAvailable = true;
+		}
+		else
+		{
+			if(false == bW || false == bS)
+			{
+				m_bAvailable = false;
+			}
+			else
+			{
+				m_bAvailable = true;
+			}
+		}
+	}
 }

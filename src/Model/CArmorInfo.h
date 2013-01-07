@@ -1,19 +1,19 @@
-#ifndef _CARMOR_H_
-#define _CARMOR_H_
+#ifndef _CARMORINFO_H_
+#define _CARMORINFO_H_
 
-#include "CEquip.h"
+#include "CEquipInfo.h"
 
-class CArmor:public CEquip	//¨¾¨ã
+class CArmorInfo:public CEquipInfo	//¨¾¨ã
 {
 public:
 	ArmorWearType getWear();
-	void initArmor(std::string name, std::string iconName, ItemType type, bool soulBind,
+	void initArmorInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
 					char level, int stackLimit, int sellPrice, int buyPrice,
 					EquipQuality quality, AdvancedAttribute baseAttr,
 					AdvancedAttribute extendAttr, ArmorWearType wear);
 
-	~CArmor();
-	int getClassType ();
+	~CArmorInfo();
+	ItemClassType getClassType ();
 
 	void read(FILE* pFile);
 

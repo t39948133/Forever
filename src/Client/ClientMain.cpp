@@ -1,18 +1,18 @@
 #include "Common.h"
 #include "CUnitObject.h"
 #include "CPlayer.h"
+#include "CItemInfo.h"
+#include "CWeaponInfo.h"
 #include "CItem.h"
-#include "CWeapon.h"
-#include "CItemTable.h"
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
                      LPTSTR    lpCmdLine,
                      int       nCmdShow)
 {
-	CItemTable::initItemTable();
-    CBuffTable::initCBuffTable();
-    CSkillTable::initSkillTable();
+	CItem::initItem();    
+    CBuff::initBuff();
+    CSkill::initSkill();
 	CPlayer pla("lua",001);
 	pla.wearEquip(0);
 	pla.shedEquip(MAIN_HAND);
@@ -52,9 +52,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	pk = pBPItem->getInfo();
 	ti = ((CWeapon*)pk)->getWield();
 */
-    CItemTable::release();    
-    CBuffTable::release();
-    CSkillTable::release();
+    CItem::release();    
+    CBuff::release();
+    CSkill::release();
 
    return 0;
 }

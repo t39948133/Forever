@@ -1,38 +1,38 @@
-#include "CEquip.h"
+#include "CEquipInfo.h"
 
-EquipQuality CEquip::getQuality()
+EquipQuality CEquipInfo::getQuality()
 {
 	return m_quality;
 }
 
-AdvancedAttribute CEquip::getBaseAttr()
+AdvancedAttribute CEquipInfo::getBaseAttr()
 {
 	return m_baseAttr;
 }
 
-AdvancedAttribute CEquip::getExtendAttr()
+AdvancedAttribute CEquipInfo::getExtendAttr()
 {
 	return m_extendAttr;
 }
 
-void CEquip::setQuality(EquipQuality quality)
+void CEquipInfo::setQuality(EquipQuality quality)
 {
 	m_quality = quality;
 }
 	
-void CEquip::setBaseAttr(AdvancedAttribute baseAttr)
+void CEquipInfo::setBaseAttr(AdvancedAttribute baseAttr)
 {
 	m_baseAttr = baseAttr;
 }
 
-void CEquip::setExtendAttr(AdvancedAttribute extendAttr)
+void CEquipInfo::setExtendAttr(AdvancedAttribute extendAttr)
 {
 	m_extendAttr = extendAttr;
 }
 
-void CEquip::read(FILE* pFile)
+void CEquipInfo::read(FILE* pFile)
 {
-	CItem::read(pFile);
+	CItemInfo::read(pFile);
 	int version = 0;
 	fread (&version, sizeof(version), 1, pFile);
 

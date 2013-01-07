@@ -1,10 +1,10 @@
 #include"CBuffInfoLoader.h"
 
-CBuff* CBuffInfoLoader::create(int type)
+CBuffInfo* CBuffInfoLoader::create(int type)
 {
 	if(BUFF == type)
 	{
-		return new CBuff();
+		return new CBuffInfo();
 	}
 	else
 	{

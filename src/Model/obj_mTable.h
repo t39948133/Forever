@@ -2,9 +2,6 @@
 #define _OBJ_MTABLE_H_
 
 #include "Common.h"
-#include "CWeapon.h"
-#include "CArmor.h"
-#include "CConsumable.h"
 
 template <class INFO, class CLASS_LOADER>
 class ObjTable
