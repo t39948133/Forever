@@ -1,9 +1,9 @@
 #ifndef _CWEAPONINFO_H_
 #define _CWEAPONINFO_H_
-
 #include "CEquipInfo.h"
 
-class CWeaponInfo:public CEquipInfo		//武器
+//武器資訊
+class CWeaponInfo : public CEquipInfo		
 {
 public:
 	WeaponWieldType getWield();
@@ -21,6 +21,4 @@ private:
 	WeaponWieldType m_wield;	//拿取方式
 };
 
-
-
-#endif
+#endif  // #ifndef _CWEAPONINFO_H_

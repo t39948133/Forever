@@ -10,8 +10,11 @@
 #include "CKeyState.h"
 
 typedef enum tagVIRTUAL_KEY {
-   KEY_W, KEY_A, KEY_S, KEY_D,
-   KEY_LBUTTON,
+   KEY_W, KEY_A, KEY_S, KEY_D,  // 鍵盤移動
+   KEY_LBUTTON, KEY_RBUTTON,    // 滑鼠左右鍵
+   KEY_P,                       // 人物資訊視窗
+   KEY_B,                       // 背包視窗
+   KEY_K,                       // 技能視窗
    KEY_COUNT
 } VIRTUAL_KEY;
 

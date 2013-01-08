@@ -457,6 +457,10 @@
 					RelativePath="..\..\src\Model\obj_mTable.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Model\obj_table.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="GraphicsRender"

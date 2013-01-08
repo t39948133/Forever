@@ -4,8 +4,6 @@
 #include "CConsumableInfo.h"
 #include "AttributeSet.h"
 
-
-
 void CItem::initItem ()
 {
 	if(ITEM_INFO::read("Item.la"))
@@ -36,14 +34,17 @@ void CItem::initItem ()
 		baseAttr.iHIT = 7;
 		extendAttr.iHP = 90;
 		extendAttr.iMPMax = 0;
-		pa->initArmorInfo("袍", "", CLOTH, false, 5, 10, 10, 70, COMMON,
+		pa->initArmorInfo("袍", "", CLOTH, false, 5, 1, 10, 70, COMMON,
 			baseAttr, extendAttr, CLOTHES);
 		addInfo(pa);
 
 		CConsumableInfo* pc = new CConsumableInfo();
-
 		pc->initConsumableInfo("生命藥水", "", POTION, false, 1, 10, 5, 10, "回復生命50點", EDIBLE_HP, 50);
+      addInfo(pc);
 
+      CConsumableInfo* pb = new CConsumableInfo();
+		pb->initConsumableInfo("技能書", "", SCROLL, false, 1, 1, 5, 10, "主神盔甲", EDIBLE_SKILL, 0);
+      addInfo(pb);
 	}
 
 }

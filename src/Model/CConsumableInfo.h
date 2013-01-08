@@ -1,9 +1,9 @@
 #ifndef _CCONSUMABLEINFO_H_
 #define _CCONSUMABLEINFO_H_
-
 #include "CItemInfo.h"
 
-class CConsumableInfo:public CItemInfo	//耗材性物品
+//耗材性物品
+class CConsumableInfo : public CItemInfo	
 {
 public:
 	std::string getDesc();			//取得物品描述
@@ -25,5 +25,4 @@ private:
 	int m_iMuch;				//影響數值
 };
 
-
-#endif
+#endif  // #ifndef _CCONSUMABLEINFO_H_

@@ -3,14 +3,14 @@
 
 CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_strName(strName),m_uid(uid),m_level(level)
 {
-	AttributeClear(m_basAttr);
-	AttributeClear(m_advAttr);
-        AttributeClear(m_obsAttr);
-	AttributeClear(m_comAttr);
-    m_comAttr.AdvAttr.fATKSpeed = 0.0f;
-    m_comAttr.AdvAttr.fCasting = 0.0f;
-    m_comAttr.AdvAttr.fMove = 0.0f;
-    AttributeClear(m_preAttr);
+   AttributeClear(m_basAttr);
+   AttributeClear(m_advAttr);
+   AttributeClear(m_obsAttr);
+   AttributeClear(m_comAttr);
+   m_comAttr.AdvAttr.fATKSpeed = 0.0f;
+   m_comAttr.AdvAttr.fCasting = 0.0f;
+   m_comAttr.AdvAttr.fMove = 0.0f;
+   AttributeClear(m_preAttr);
 
    // Add by Darren Chen on 2012/12/22 {
    m_fDirection = -3.1415926f;  // 角色方向朝上(-Z軸)
@@ -225,53 +225,53 @@ int CUnitObject::getMPMax()
 
 int CUnitObject::getHPR()
 {
-	int hpr = m_obsAttr.iHPR;
+   int hpr = m_obsAttr.iHPR;
 
-    hpr += m_comAttr.ObsAttr.iHPR;
+   hpr += m_comAttr.ObsAttr.iHPR;
 
-    if(0.0f > m_preAttr.fHPR)
-{
-        hpr = (int) (hpr * m_preAttr.fHPR);
-}
+   if(0.0f > m_preAttr.fHPR)
+   {
+      hpr = (int) (hpr * m_preAttr.fHPR);
+   }
 
-    return hpr;
+   return hpr;
 }
 
 int CUnitObject::getMPR()
 {
-	int mpr = m_obsAttr.iMPR;
+   int mpr = m_obsAttr.iMPR;
 
-    mpr += m_comAttr.ObsAttr.iMPR;
+   mpr += m_comAttr.ObsAttr.iMPR;
 
-    if(0.0f > m_preAttr.fMPR)
-{
-        mpr = (int) (mpr * m_preAttr.fMPR);
-    }
+   if(0.0f > m_preAttr.fMPR)
+   {
+      mpr = (int) (mpr * m_preAttr.fMPR);
+   }
 
-    return mpr;
+   return mpr;
 }
   
 void CUnitObject::setAdvAttr(AdvancedAttribute advattr)
 {
-	m_advAttr = advattr;	//設定屬性資料
-    if(getHPMax() < m_advAttr.iHP)
-    {
-        m_advAttr.iHP = getHPMax();
-    }
-    if(getMPMax() < m_advAttr.iMP)
-    {
-        m_advAttr.iMP = getMPMax();
-    }
+   m_advAttr = advattr;	//設定屬性資料
+   if(getHPMax() < m_advAttr.iHP)
+   {
+      m_advAttr.iHP = getHPMax();
+   }
+   if(getMPMax() < m_advAttr.iMP)
+   {
+      m_advAttr.iMP = getMPMax();
+   }
 }
 
 AdvancedAttribute CUnitObject::getAdvAttr()
 {
-    AdvancedAttribute attr = m_advAttr;
+   AdvancedAttribute attr = m_advAttr;
 
-    AttributeAdd(attr, m_comAttr.AdvAttr);
-    AttributeMulti(attr, m_preAttr);
+   AttributeAdd(attr, m_comAttr.AdvAttr);
+   AttributeMulti(attr, m_preAttr);
 
-	return attr;
+   return attr;
 }
 
 BasisAttribute CUnitObject::getBasAttr()
@@ -281,71 +281,70 @@ BasisAttribute CUnitObject::getBasAttr()
 
 std::list<CBuff> CUnitObject::getBuff()
 {
-    return m_lBuff;
+   return m_lBuff;
 }
 
 void CUnitObject::updateBuff(float timepass)
 {
     std::list<CBuff>::iterator pi = m_lBuff.begin();
 
-    while(m_lBuff.end() != pi)
-    {
-        if(pi->afterTime(timepass))
-        {
-            pi = m_lBuff.erase(pi);
-        }
-        else
-        {
-        pi++;
-    }
-    }
+   while(m_lBuff.end() != pi)
+   {
+      if(pi->afterTime(timepass))
+      {
+         pi = m_lBuff.erase(pi);
+      }
+      else
+      {
+         pi++;
+      }
+   }
 
-	pi = m_lBuff.begin();
+   pi = m_lBuff.begin();
 	CBuffInfo* pBuff;
 
-	while(m_lBuff.end() != pi)
-	{
-		pBuff = pi->getInfo();
-		AttributeAdd(m_comAttr, pBuff->getAttr());
-		AttributeMulti(m_preAttr, pBuff->getPercentAttr());
-		pi++;
-	}
+   while(m_lBuff.end() != pi)
+   {
+      pBuff = pi->getInfo();
+      AttributeAdd(m_comAttr, pBuff->getAttr());
+      AttributeMulti(m_preAttr, pBuff->getPercentAttr());
+      pi++;
+   }
 }
 
 void CUnitObject::addBuff(unsigned int id)
 {
     CBuff bt;
-    bt.create(id);
-    m_lBuff.push_back(bt);
-    updateBuff(0.0f);
+   bt.create(id);
+   m_lBuff.push_back(bt);
+   updateBuff(0.0f);
 }
 
 std::vector<CSkill> CUnitObject::getSkill()
 {
-    return m_vSkill;
+   return m_vSkill;
 }
 
 void CUnitObject::SkillCoolDown(float timepass)
 {
     std::vector<CSkill>::iterator pi = m_vSkill.begin();
-    while(m_vSkill.end() != pi)
-    {
-        pi->afterTime(timepass);
-        pi++;
-    }
+   while(m_vSkill.end() != pi)
+   {
+      pi->afterTime(timepass);
+      pi++;
+   }
 }
 
 bool CUnitObject::addSkill(unsigned int id)
 {
     CSkill st ;
-    st.create(id);
-    if(st.canLearn(m_level))
-    {
-        m_vSkill.push_back(st);
-        return true;
-    }
-    return false;
-
+   st.create(id);
+   if(st.canLearn(m_level))
+   {
+      m_vSkill.push_back(st);
+      return true;
+   }
+   return false;
 }
 
 // Add by Darren Chen on 2013/01/01 {

@@ -18,6 +18,7 @@
 #ifdef _GAMEENGINE_2D_
 #include "CFPS.h"
 #include "CKeyMan.h"
+#include "CWindowMan.h"
 #endif  // #ifdef _GAMEENGINE_2D_
 
 //typedef enum tagGAME_STATE {
@@ -73,6 +74,9 @@ class CGameClient
         * @param hWnd     Client端視窗 */
       void workPlay(float timePass, HWND hWnd);
 
+      /** @brief UI初始化 */
+      void initUI();
+
       /** @brief 切換遊戲場景
         * @param pNetStream 舊server連線
         * @param pPacket    封包 */
@@ -95,6 +99,7 @@ class CGameClient
 
       CFPS           m_fps;             // FPS產生器
       CKeyMan        m_keyMan;          // 鍵盤/滑鼠監控管理員
+      CWindowMan    *m_pWindowMan;      // 視窗管理員
       bool           m_mouseMove;
       bool           m_keyMove;
 #endif  // #ifdef _GAMEENGINE_2D_

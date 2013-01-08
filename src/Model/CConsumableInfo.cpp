@@ -1,6 +1,5 @@
 #include "CConsumableInfo.h"
 
-
 std::string CConsumableInfo::getDesc()
 {
 	return m_strDesc;

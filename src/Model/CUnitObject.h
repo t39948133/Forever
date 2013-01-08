@@ -34,11 +34,11 @@ class CUnitObject
       AdvancedAttribute getAdvAttr();	            //取得屬性
       BasisAttribute getBasAttr();                 //取得基礎屬性
 
-    std::list<CBuff> getBuff();    //取得身上的Buff表
-      void addBuff(unsigned int id);      //增加Buff
+      std::list<CBuff> getBuff();      //取得身上的Buff表
+      void addBuff(unsigned int id);   //增加Buff
 
-    std::vector<CSkill> getSkill();    //取得學會的技能表
-      bool addSkill(unsigned int id);         //學技能
+      std::vector<CSkill> getSkill();  //取得學會的技能表
+      bool addSkill(unsigned int id);  //學技能
 
       // Add by Darren Chen on 2012/12/22 {
       virtual ~CUnitObject();
@@ -112,10 +112,10 @@ class CUnitObject
       // } Add by Darren Chen on 2012/12/22
 
    protected:
-      std::vector<CSkill> m_vSkill;  //擁有的技能
+      std::vector<CSkill>  m_vSkill;         //擁有的技能
 
       // Add by Darren Chen on 2012/12/27 {
-      CActionSystem *m_pActionSystem;  // 動作系統
+      CActionSystem       *m_pActionSystem;  // 動作系統
       // } Add by Darren Chen on 2012/12/27
 
    private:
@@ -127,7 +127,7 @@ class CUnitObject
       ObscureAttribute      m_obsAttr;	//隱藏數值
       ComplexAttribute      m_comAttr;	//狀態屬性
       FloatPrecentAttribute m_preAttr; //浮點數百分比屬性
-    std::list<CBuff> m_lBuff;	//身上的Buff
+      std::list<CBuff>      m_lBuff;	//身上的Buff
 
       int getHPR();   //取得回復的生命力點
       int getMPR();   //取得回復的精神力點

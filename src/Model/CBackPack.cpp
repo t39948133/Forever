@@ -20,7 +20,7 @@ CItem* CBackPack::getItem(int grid)
 	}
 }
 
-CItemInfo* CBackPack::getCItem(int grid)
+CItemInfo* CBackPack::getItemInfo(int grid)
 {
     CItem* pc = getItem(grid);					
     if (pc != NULL)
@@ -43,6 +43,8 @@ void CBackPack::addItem(int id, int& stack, int& grid)
 
 void CBackPack::initBack()
 {
-	m_itemBack[0].create(0, 1);
-	m_itemBack[1].create(1, 1);
+	m_itemBack[1].create(0, 1);
+	m_itemBack[2].create(1, 1);
+   m_itemBack[3].create(2, 10);
+   m_itemBack[5].create(3, 1);
 }

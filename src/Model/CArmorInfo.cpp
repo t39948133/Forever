@@ -6,9 +6,9 @@ ArmorWearType CArmorInfo::getWear()
 }
 
 void CArmorInfo::initArmorInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
-				char level, int stackLimit, int sellPrice, int buyPrice,
-				EquipQuality quality, AdvancedAttribute baseAttr,
-				AdvancedAttribute extendAttr, ArmorWearType wear)
+                           char level, int stackLimit, int sellPrice, int buyPrice,
+                           EquipQuality quality, AdvancedAttribute baseAttr,
+                           AdvancedAttribute extendAttr, ArmorWearType wear)
 {
 	setName(name);
 	seticonName(iconName);

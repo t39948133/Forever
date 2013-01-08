@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\src\Network;..\..\src\Common;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework"
+				AdditionalIncludeDirectories="..\..\src\Network;..\..\src\Common;..\..\src\View;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_GAMEENGINE_2D_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wsock32.lib"
-				LinkIncremental="1"
+				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -116,7 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\src\Network;..\..\src\Common;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework"
+				AdditionalIncludeDirectories="..\..\src\Network;..\..\src\Common;..\..\src\View;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_GAMEENGINE_2D_"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -306,6 +306,42 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="View"
+				>
+				<File
+					RelativePath="..\..\src\View\CBackpackWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CPlayerInfoWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CSkillWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CTextArea.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CTextButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindowMan.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -453,6 +489,53 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\obj_mTable.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\obj_table.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="View"
+				>
+				<File
+					RelativePath="..\..\src\View\CBackpackWnd.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CButton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CPlayerInfoWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CSkillWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CTextArea.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CTextButton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindow.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindowMan.h"
 					>
 				</File>
 			</Filter>

@@ -39,5 +39,4 @@ void CEquipInfo::read(FILE* pFile)
 	fread (&m_quality, sizeof(m_quality), 1, pFile);
 	fread (&m_baseAttr, sizeof(m_baseAttr), 1, pFile);
 	fread (&m_extendAttr, sizeof(m_extendAttr), 1, pFile);
-
 }

@@ -1,10 +1,10 @@
 #ifndef _CEQUIPINFO_H_
 #define _CEQUIPINFO_H_
-
 #include "Common.h"
 #include "CItemInfo.h"
 
-class CEquipInfo:public CItemInfo			//裝備性物品
+//裝備性物品資訊
+class CEquipInfo : public CItemInfo			
 {
 public:
 	EquipQuality getQuality();			//取得品質
@@ -24,6 +24,4 @@ private:
 	AdvancedAttribute m_extendAttr;	//裝備額外能力
 };
 
-
-
-#endif
+#endif  // #ifndef _CEQUIPINFO_H_

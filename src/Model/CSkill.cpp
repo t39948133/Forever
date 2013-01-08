@@ -5,8 +5,8 @@
 void CSkill::initSkill()
 {
 	if(SKILL_INFO::read("Skill.la"))
-	{
-	}
+{
+}
 	else
 	{
 		CSkillInfo* ps = new CSkillInfo();
@@ -51,7 +51,7 @@ void CSkill::create(unsigned int id)
 
 	CSkillInfo* pInfo = getInfo();
 	if(NULL != pInfo)
-	{
+{
 		m_fSurplus = 0.0f;
         m_bAvailable = true;
 	}
@@ -89,33 +89,33 @@ void CSkill::chackAvailable(std::map<EquipSlot, int> equip)
 		bool bW = true;
 		bool bS = true;
 		if(pInfo->getWeapon())
-		{
+{
 			if(equip.end() == equip.find(MAIN_HAND))
 			{
 				bW = false;
 			}
-		}
+}
 		if(pInfo->getSield())
 		{
 			if(equip.end() == equip.find(OFF_HAND))
-			{
+{
 				bS = false;
-			}
+}
 		}
 		if(false == pInfo->getWeapon() && false == pInfo->getSield())
-		{
+{
 			m_bAvailable = true;
-		}
+}
 		else
-		{
+{
 			if(false == bW || false == bS)
-			{
+{
 				m_bAvailable = false;
-			}
+}
 			else
-			{
+{
 				m_bAvailable = true;
-			}
-		}
-	}
+}
+}
+}
 }

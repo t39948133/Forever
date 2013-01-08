@@ -6,9 +6,9 @@ WeaponWieldType CWeaponInfo::getWield()
 }
 
 void CWeaponInfo::initWeaponInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
-					char level, int stackLimit, int sellPrice, int buyPrice,
-					EquipQuality quality, AdvancedAttribute baseAttr,
-					AdvancedAttribute extendAttr, WeaponWieldType wield)
+                             char level, int stackLimit, int sellPrice, int buyPrice,
+                             EquipQuality quality, AdvancedAttribute baseAttr,
+                             AdvancedAttribute extendAttr, WeaponWieldType wield)
 {
 	setName(name);
 	seticonName(iconName);

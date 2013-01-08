@@ -1,7 +1,4 @@
 #include "CItemInfo.h"
-#include "CWeaponInfo.h"
-#include "CArmorInfo.h"
-#include "CConsumableInfo.h"
 
 std::string CItemInfo::getName()
 {
@@ -123,5 +120,4 @@ void CItemInfo::read(FILE* pFile)
 	fread (&m_iStackLimit, sizeof(m_iStackLimit), 1, pFile);
 	fread (&m_iSellPrice, sizeof(m_iSellPrice), 1, pFile);
 	fread (&m_iBuyPrice, sizeof(m_iBuyPrice), 1, pFile);
-
 }

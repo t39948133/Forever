@@ -1,9 +1,9 @@
 #ifndef _CARMORINFO_H_
 #define _CARMORINFO_H_
-
 #include "CEquipInfo.h"
 
-class CArmorInfo:public CEquipInfo	//防具
+//防具資訊
+class CArmorInfo : public CEquipInfo	
 {
 public:
 	ArmorWearType getWear();
@@ -21,5 +21,4 @@ private:
 	ArmorWearType m_wear;	//裝備位置
 };
 
-
-#endif
+#endif  // #ifndef _CARMORINFO_H_

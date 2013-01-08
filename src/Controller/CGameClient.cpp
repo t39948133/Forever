@@ -6,16 +6,25 @@
   * @email  darren.z32@msa.hinet.net
   * @date   2012/12/12 */
 #include "CGameClient.h"
+#include "CItem.h"
+#include "CSkill.h"
+#include "CPlayerInfoWnd.h"
+#include "CBackpackWnd.h"
+#include "CSkillWnd.h"
 
 CGameClient::CGameClient()
 {
+   CItem::initItem();    // 建立物品表
+   CSkill::initSkill();  // 建立技能表
+
    //m_pNetStream = NULL;
    m_pScene = new CScene();
 
 #ifdef _GAMEENGINE_2D_
+   m_pWindowMan = new CWindowMan();
    m_mouseMove = false;
    m_keyMove = false;
-#endif
+#endif  // #ifdef _GAMEENGINE_2D_
 }
 
 CGameClient::~CGameClient()
@@ -30,6 +39,16 @@ CGameClient::~CGameClient()
       delete m_pScene;
       m_pScene = NULL;
    }
+
+#ifdef _GAMEENGINE_2D_
+   if(m_pWindowMan != NULL) {
+      delete m_pWindowMan;
+      m_pWindowMan = NULL;
+   }
+#endif  // #ifdef _GAMEENGINE_2D_
+
+   CItem::release();
+   CSkill::release();
 }
 
 void CGameClient::init()
@@ -46,6 +65,8 @@ void CGameClient::init()
 
    //單機版用
    CPlayer *pPlayer = m_pScene->addPlayer(1, true);
+
+   initUI();
 }
 
 #ifdef _GAMEENGINE_2D_
@@ -78,6 +99,7 @@ void CGameClient::draw(HDC hdc)
 {
    Rectangle(hdc, 0, 0, 900, 900) ;
    m_pScene->draw(hdc);
+   m_pWindowMan->draw(hdc);
 }
 #endif  // #ifndef _GAMEENGINE_2D_
 
@@ -142,6 +164,23 @@ void CGameClient::workPlay(float timePass, HWND hWnd)
    //      // Todo: 與Scene Server之間的封包處理
    //   }
    //}
+}
+
+void CGameClient::initUI()
+{
+   CPlayer *pPlayer = m_pScene->getMainPlayer();
+
+   CPlayerInfoWnd *pPlayerInfoWnd = new CPlayerInfoWnd();
+   pPlayerInfoWnd->init(10, 10, pPlayer);
+   m_pWindowMan->addWnd(pPlayerInfoWnd);
+
+   CBackpackWnd *pBackpackWnd = new CBackpackWnd();
+   pBackpackWnd->init(10, 411, pPlayer);
+   m_pWindowMan->addWnd(pBackpackWnd);
+
+   CSkillWnd *pSkillWnd = new CSkillWnd();
+   pSkillWnd->init(500, 10, pPlayer);
+   m_pWindowMan->addWnd(pSkillWnd);
 }
 
 //void CGameClient::onRecvChangeScene(GP::NetStream *pNetStream, CPacketChangeScene *pPacket)
@@ -236,30 +275,37 @@ void CGameClient::doKeyControl()
 
 void CGameClient::doUI(HWND hWnd)
 {
+   bool bPressWindow = m_pWindowMan->work(hWnd, m_keyMan);
+
    CPlayer *pPlayer = m_pScene->getMainPlayer();
 
    if(m_keyMan.isPress(KEY_LBUTTON)) {
       int mx, my;
       getMousePos(hWnd, mx, my);
       
-      if(pPlayer != NULL) {
-         if(m_keyMove == true) {
-            POSITION curPos = pPlayer->getPosition();
-            pPlayer->setTargetPosition(curPos.fX, curPos.fY);
+      if(bPressWindow == true) {
+         // 點到介面
+      }
+      else {
+         if(pPlayer != NULL) {
+            if(m_keyMove == true) {
+               POSITION curPos = pPlayer->getPosition();
+               pPlayer->setTargetPosition(curPos.fX, curPos.fY);
+
+               CActionEvent actEvent;
+               actEvent.m_event = AET_KEY_WASD;
+               actEvent.m_iKeyUpID = 'W';
+               CActionDispatch::getInstance()->sendEvnet(pPlayer->getUID(), actEvent);
+               m_keyMove = false;
+            }
+
+            pPlayer->setTargetPosition((float)mx, (float)my, true);
 
             CActionEvent actEvent;
-            actEvent.m_event = AET_KEY_WASD;
-            actEvent.m_iKeyUpID = 'W';
+            actEvent.m_event = AET_NOT_REACH;
             CActionDispatch::getInstance()->sendEvnet(pPlayer->getUID(), actEvent);
-            m_keyMove = false;
+            m_mouseMove = true;
          }
-
-         pPlayer->setTargetPosition((float)mx, (float)my, true);
-
-         CActionEvent actEvent;
-         actEvent.m_event = AET_NOT_REACH;
-         CActionDispatch::getInstance()->sendEvnet(pPlayer->getUID(), actEvent);
-         m_mouseMove = true;
       }
    }
    

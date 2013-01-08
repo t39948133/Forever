@@ -4,8 +4,8 @@
 void CBuff::initBuff()
 {
 	if(BUFF_INFO::read("Buff.la"))
-	{
-	}
+{
+}
 	else
 	{
 		CBuffInfo* pB = new CBuffInfo();
@@ -39,7 +39,7 @@ void CBuff::create(unsigned int id)
 	CBuffInfo* pInfo = BUFF_INFO::getInfo();
 
 	if(NULL != pInfo)
-	{
+{
 		m_fSurplus = pInfo->getContinued();
 	}
 }
@@ -49,11 +49,11 @@ bool CBuff::afterTime(float timePass)
 	m_fSurplus -= timePass;
 
 	if(0.0f >= m_fSurplus)
-	{
+{
 		m_fSurplus = 0.0f;
 		clear();
 		return true;
-	}
+}
 	return false;
 }
 

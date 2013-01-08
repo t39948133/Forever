@@ -8,7 +8,12 @@
 CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
 {
    m_backPack.initBack();
-   upDateEquipAttr();
+   updateEquipAttr();
+   // Add by Darren Chen on 2013/01/05 {
+   m_xp = 0;
+   m_xpMax = 1000;
+   m_money = 0;
+   // } Add by Darren Chen on 2013/01/05
 
    // Add by Darren Chen on 2012/12/27 {
    ACTION_DATA actData;
@@ -181,86 +186,20 @@ CBackPack CPlayer::getBackPack()
 	return m_backPack;
 }
 
-void CPlayer::wearEquip(unsigned int id)
-{
-	CItemInfo* pItem = CItem::getInfo(id);
-	if(NULL == pItem)
-	{
-		return;
-	}
-	if(WEAPON == pItem->getClassType())
-	{
-		CWeaponInfo* pWp;
-		pWp = (CWeaponInfo*) pItem;
-		if(ONE_HAND == pWp->getWield())
-		{
-			wearToEquipSlot(MAIN_HAND, id);
-		}
-		else if(TWO_HAND == pWp->getWield())
-		{
-			wearToEquipSlot(OFF_HAND, id);
-		}
-		else
-		{
-			return;
-		}
-		
-	}
-	else if(pItem->getClassType() == ARMOR)
-	{
-		CArmorInfo* pAm;
-		pAm = (CArmorInfo*) pItem;
-		if(CLOTHES == pAm->getWear())
-		{
-			wearToEquipSlot(CHEST, id);
-		}
-		else if(BELTS == pAm->getWear())
-		{
-			wearToEquipSlot(BELT, id);
-		}
-		else if(PANTS == pAm->getWear())
-		{
-			wearToEquipSlot(LEGS, id);
-		}
-		else if(PAULDRONS == pAm->getWear())
-		{
-			wearToEquipSlot(SHOULDER, id);
-		}
-		else if(GLOVES == pAm->getWear())
-		{
-			wearToEquipSlot(GLOVE, id);
-		}
-		else if(BOOTS == pAm->getWear())
-		{
-			wearToEquipSlot(BOOT, id);
-		}
-		else
-		{
-			return;
-		}
-	}
-	else
-	{
-		return;
-	}
-	upDateEquipAttr();
-}
-
 void CPlayer::shedEquip(EquipSlot grid)
 {
-	if(m_mEquip.end() == m_mEquip.find(grid))
-	{
+   std::map<EquipSlot, int>::iterator it = m_mEquip.find(grid);
+	if(m_mEquip.end() == it)
 		return;
-	}
+	
 	int st = 1;
 	int gr = 0;
-	m_backPack.addItem(m_mEquip.find(grid)->second, st, gr);
+	m_backPack.addItem(it->second, st, gr);
 	m_mEquip.erase(grid);
-	upDateEquipAttr();
-	
+	updateEquipAttr();
 }
 
-void CPlayer::upDateEquipAttr()
+void CPlayer::updateEquipAttr()
 {
 	std::map<EquipSlot , int>::iterator pi = m_mEquip.begin();
 	AdvancedAttribute advAttr;
@@ -290,40 +229,132 @@ void CPlayer::upDateEquipAttr()
     }
 }
 
+// Modify by Darren Chen on 2013/01/07 {
 void CPlayer::wearToEquipSlot(EquipSlot es, unsigned int id)
 {
-	if(m_mEquip.end() == m_mEquip.find(es))
+   std::map<EquipSlot, int>::iterator it = m_mEquip.find(es);
+	if(m_mEquip.end() == it)
 	{
+      // 背包的物品堆疊減一
+      CItemInfo *pFindItemInfo = CItem::getInfo(id);
+      for(int i = 0; i < BACK_MAX; i++) {
+         CItem *pItem = m_backPack.getItem(i);
+         if(pItem->getInfo() == pFindItemInfo) {
+            pItem->taken();
+            break;
+         }
+      }
+
+      // 物品裝備到裝備欄上
 		m_mEquip.insert(std::make_pair(es, id));
 	}
 	else
 	{
+      // 舊物品放入背包
 		int st = 1;
 		int bu = 0;
-		m_backPack.addItem(m_mEquip.find(es)->second, st, bu);
+		m_backPack.addItem(it->second, st, bu);
+
+      // 新物品裝備到裝備欄上
 		m_mEquip.insert(std::make_pair(es, id));
 	}
 }
+// } Modify by Darren Chen on 2013/01/07
 
 std::map<EquipSlot, int> CPlayer::getEquip()
 {
 	return m_mEquip;
 }
+
 int CPlayer::getEquip(EquipSlot equip)
 {
 	int id ;
-	if(m_mEquip.end() == m_mEquip.find(equip))
+   std::map<EquipSlot, int>::iterator it = m_mEquip.find(equip);
+	if(m_mEquip.end() == it)
 	{
 		id = -1;
 	}
 	else
 	{
-		id = m_mEquip.find(equip)->second;
+		id = it->second;
 	}
 	return id;
 }
 
 // Add by Darren Chen on 2012/12/26 {
+void CPlayer::addMoney(long long money)
+{
+   m_money += money;
+}
+
+long long CPlayer::getMoney()
+{
+   return m_money;
+}
+
+void CPlayer::useItem(unsigned int id)
+{
+   CItemInfo* pItemInfo = CItem::getInfo(id);
+   if(pItemInfo == NULL)
+      return;
+
+   if(pItemInfo->getClassType() == WEAPON) {
+		CWeaponInfo *pWp = (CWeaponInfo*) pItemInfo;
+      if(this->getLevel() >= pWp->getLevel()) {
+         if(ONE_HAND == pWp->getWield())
+			   wearToEquipSlot(MAIN_HAND, id);
+         else if(TWO_HAND == pWp->getWield())
+			   wearToEquipSlot(OFF_HAND, id);
+         else
+            return;
+
+         updateEquipAttr();
+      }
+	}
+   else if(pItemInfo->getClassType() == ARMOR) {
+		CArmorInfo *pAm = (CArmorInfo*) pItemInfo;
+      if(this->getLevel() >= pAm->getLevel()) {
+		   if(CLOTHES == pAm->getWear())
+			   wearToEquipSlot(CHEST, id);
+		   else if(BELTS == pAm->getWear())
+			   wearToEquipSlot(BELT, id);
+		   else if(PANTS == pAm->getWear())
+			   wearToEquipSlot(LEGS, id);
+		   else if(PAULDRONS == pAm->getWear())
+			   wearToEquipSlot(SHOULDER, id);
+		   else if(GLOVES == pAm->getWear())
+			   wearToEquipSlot(GLOVE, id);
+		   else if(BOOTS == pAm->getWear())
+			   wearToEquipSlot(BOOT, id);
+         else
+            return;
+
+         updateEquipAttr();
+      }
+	}
+   else if(pItemInfo->getClassType() == CONSUMABLE) {
+      CConsumableInfo *pConsumableInfo = (CConsumableInfo *)pItemInfo;
+      if(this->getLevel() >= pConsumableInfo->getLevel()) {
+         if(pConsumableInfo->getEffect() == EDIBLE_SKILL)
+            addSkill(pConsumableInfo->getMuch());  // 學習某項技能   
+         else if(pConsumableInfo->getEffect() == EDIBLE_HP)
+            addHP(pConsumableInfo->getMuch());     // 補血
+            // Todo: 藥水是否有CD時間
+         else
+            return;
+
+         // 背包物品減一
+         for(int i = 0; i < BACK_MAX; i++) {
+            CItem *pFindItem = m_backPack.getItem(i);
+            if(pFindItem->getInfo() == pItemInfo) {
+               pFindItem->taken();
+               break;
+            }
+         }
+      }
+   }
+}
+
 #ifdef _GAMEENGINE_2D_
 void CPlayer::draw(HDC hdc)
 {

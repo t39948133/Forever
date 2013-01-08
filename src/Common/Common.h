@@ -23,34 +23,35 @@
 
 struct BasisAttribute
 {
-	int iSTR;		//力量
-	int iVIT;		//體力
-	int iDEX;		//命中
-	int iAGI;		//敏捷
-	int iINT;		//智力
-	int iWIL;		//意志
+	int iSTR;	//力量
+	int iVIT;	//體力
+	int iDEX;	//命中
+	int iAGI;	//敏捷
+	int iINT;	//智力
+	int iWIL;	//意志
 };
 
-struct AdvancedAttribute	//進階屬性
+//進階屬性
+struct AdvancedAttribute	
 { 
-	int iHP;	//生命力
-	int iMP;	//精神力
-	int iHPMax;	//最大生命力
-	int iMPMax;	//最大精神力
-	int iATK;	//物理攻擊力
-	int	iDEF;	//物理防禦力
-	int iHIT;	//物理命中率
-	int iCRI;	//物理暴擊率
-	int iMATK;	//魔法攻擊力
-	int iMDEF;	//魔法防禦力
-	int	iMHIT;	//魔法命中率
-	int iMCRI;	//魔法暴擊率
-	int iSDEF;	//盾牌防禦力
-	int iWDEF;	//武器防禦力
-	int iFlee;	//迴避率
-	float fMove;//移動速度 預設值 6.0
-	float fATKSpeed;//攻擊速度 揮擊動作以秒為單位 1下 1.5 秒 預設值 1.5
-	float fCasting;//施展速度 以秒為單位 1.0 秒 預設值 1.0
+	int iHP;	         //生命力
+	int iMP;	         //精神力
+	int iHPMax;	      //最大生命力
+	int iMPMax;	      //最大精神力
+	int iATK;	      //物理攻擊力
+	int iDEF;	      //物理防禦力
+	int iHIT;	      //物理命中率
+	int iCRI;	      //物理暴擊率
+	int iMATK;	      //魔法攻擊力
+	int iMDEF;	      //魔法防禦力
+	int iMHIT;	      //魔法命中率
+	int iMCRI;	      //魔法暴擊率
+	int iSDEF;	      //盾牌防禦力
+	int iWDEF;	      //武器防禦力
+	int iFlee;	      //迴避率
+	float fMove;      //移動速度 預設值 6.0
+	float fATKSpeed;  //攻擊速度 揮擊動作以秒為單位 1下 1.5 秒 預設值 1.5
+	float fCasting;   //施展速度 以秒為單位 1.0 秒 預設值 1.0
 	
 };
 
@@ -60,16 +61,17 @@ struct ObscureAttribute
 	int iMPR;			//精神回復量
 };
 
-enum EquipSlot	//裝備槽
+//裝備槽
+enum EquipSlot	
 {
 	MAIN_HAND,	//主手
 	OFF_HAND,	//副手
 	CHEST,		//上衣
-	BELT,		//腰帶
-	LEGS,		//褲子
+	BELT,		   //腰帶
+	LEGS,		   //褲子
 	SHOULDER,	//護肩
 	GLOVE,		//手套
-	BOOT,		//鞋子
+	BOOT,		   //鞋子
 };
 
 enum ItemClassType
@@ -77,54 +79,57 @@ enum ItemClassType
 	WEAPON,
 	ARMOR,
 	CONSUMABLE,
-
 };
 
-enum ItemType	//物品種類
+//物品種類
+enum ItemType	
 {
 	DAGGER,		//匕首
 	SWORD,		//長劍
-	MACE,		//釘錘
+	MACE,		   //釘錘
 	STAVE,		//法杖
 	SPELLBOOK,	//法書
-	ORB,		//法珠
+	ORB,		   //法珠
 	GREATSWORD,	//巨劍
-	POLEARM,	//戰戟
-	BOW,		//弓
+	POLEARM,	   //戰戟
+	BOW,		   //弓
 	CLOTH,		//長袍
-	LEATHER,	//皮甲
+	LEATHER,	   //皮甲
 	CHAIN,		//鏈甲
 	PLATE,		//金屬甲
-	SHIELDS,	//盾牌
+	SHIELDS,	   //盾牌
 	POTION,		//藥水
-	FOOD,		//食物
+	FOOD,		   //食物
 	SCROLL,		//卷軸
 	ITEM_TYPE_TOTAL,	//總數
 };
 
-enum EquipQuality	//裝備品質
+//裝備品質
+enum EquipQuality	
 {
 	COMMON,	//普通
-	RARE,	//稀有
+	RARE,	   //稀有
 	LEGEND,	//傳說
 	UNIQUE,	//獨特
-	EPIC	//史詩
+	EPIC	   //史詩
 };
 
-enum WeaponWieldType	//單持武器/雙持
+//單持武器/雙持
+enum WeaponWieldType	
 {
 	ONE_HAND,	//主手
-	TWO_HAND	//副手
+	TWO_HAND	   //副手
 };
 
-enum ArmorWearType	//裝備位置
+//裝備位置
+enum ArmorWearType	
 {
-	CLOTHES,	//衣服
+	CLOTHES,	   //衣服
 	BELTS,		//腰帶
 	PANTS,		//褲子
 	PAULDRONS,	//護肩
 	GLOVES,		//手套
-	BOOTS		//鞋子
+	BOOTS		   //鞋子
 };
 
 struct AdvancedItem

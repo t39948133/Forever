@@ -1,9 +1,9 @@
 #ifndef _CITEMINFO_H_
 #define _CITEMINFO_H_
-
 #include "Common.h"
 
-class CItemInfo					//物品
+//物品資訊
+class CItemInfo			
 {
 public:
 	std::string getName();	//取得名字
@@ -22,9 +22,8 @@ public:
 	AdvancedItem* getAll();		//一次取得所有需要外流的項目資訊, 使用完資料後自行delete
 
 protected:
-
 	void setName(std::string name);
-    void seticonName(std::string iconName);
+   void seticonName(std::string iconName);
 	void setItemType(ItemType type);
 	void setSoulBind(bool soulBind);
 	void setLevel(char level);
@@ -34,7 +33,7 @@ protected:
 
 private:
 	std::string m_strName;	//名稱
-    std::string m_iconName; //圖示名稱
+   std::string m_iconName; //圖示名稱
 	ItemType m_type;		//種類
 	bool m_bSoulBind;		//綁定
 	char m_level;			//等級
@@ -42,7 +41,5 @@ private:
 	int m_iSellPrice;		//賣價
 	int m_iBuyPrice;		//買價
 };
-
-
 
 #endif

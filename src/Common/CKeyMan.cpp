@@ -15,6 +15,11 @@ CKeyMan::CKeyMan()
 	m_keyState[KEY_D].setKey('D');
 
    m_keyState[KEY_LBUTTON].setKey(VK_LBUTTON);
+   m_keyState[KEY_RBUTTON].setKey(VK_RBUTTON);
+
+   m_keyState[KEY_P].setKey('P');
+   m_keyState[KEY_B].setKey('B');
+   m_keyState[KEY_K].setKey('K');
 }
 
 bool CKeyMan::isPress(VIRTUAL_KEY key)
