@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\Network;..\..\lib\gp_framework"
+				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\View"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_GAMEENGINE_3D_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\Network;..\..\lib\gp_framework"
+				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\View"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_GAMEENGINE_3D_"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -368,6 +368,50 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="View"
+				>
+				<File
+					RelativePath="..\..\src\View\CBackpackWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CImageButton.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\COverlayUI.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CPlayerInfoWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CSkillWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CTextAreaOgre.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindow.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindowMan.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindowMan3D.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -457,10 +501,6 @@
 					RelativePath="..\..\src\Model\obj_mTable.h"
 					>
 				</File>
-				<File
-					RelativePath="..\..\src\Model\obj_table.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="GraphicsRender"
@@ -539,6 +579,50 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Controller\CScene.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="View"
+				>
+				<File
+					RelativePath="..\..\src\View\CBackpackWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CButton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CImageButton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\COverlayUI.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CPlayerInfoWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CSkillWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CTextAreaOgre.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindow.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindowMan.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CWindowMan3D.h"
 					>
 				</File>
 			</Filter>

@@ -61,6 +61,9 @@ class CGameClient
         * @return 場景 */
       CScene* getScene();
 
+      /** @brief UI初始化 */
+      virtual void initUI();
+
    private:
       /** @brief 遊戲第一次登入的邏輯運算 */
       //void workLogin();
@@ -73,9 +76,6 @@ class CGameClient
         * @param timePass 一個frame幾秒
         * @param hWnd     Client端視窗 */
       void workPlay(float timePass, HWND hWnd);
-
-      /** @brief UI初始化 */
-      void initUI();
 
       /** @brief 切換遊戲場景
         * @param pNetStream 舊server連線

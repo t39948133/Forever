@@ -1,11 +1,9 @@
 #include "CSkillWnd.h"
 #include "CSkill.h"
-#include "CTextButton.h"
 
-void CSkillWnd::init (int _x, int _y, CPlayer* pb)
+void CSkillWnd::init(int _x, int _y, CPlayer *pb)
 {
-   bVisible = false;
-	pPlayer = pb ;
+	m_pPlayer = pb ;
 	
 	x = _x ;
 	y = _y ;
@@ -13,130 +11,130 @@ void CSkillWnd::init (int _x, int _y, CPlayer* pb)
 	h = CELL_SIZE*(BUTTON_COUNT+1) ;
 
 #ifdef _GAMEENGINE_3D_
-	overlaySK.init (x, y, w, h) ;
+	m_overlay.init(x, y, w, h);
 
-	for (int i = 0; i<BUTTON_COUNT; i++)
+	for(int i = 0; i < BUTTON_COUNT; i++)
 	{	
-		ImageButton* pBtn = new ImageButton ;
-		pBtn->init (overlaySK, 0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i) ;
-		if (i == 0)
-			{
-				pBtn->setImage ("skill_5") ;
-			}else if (i == 1)
-			{
-				pBtn->setImage ("skill_1") ;
-			}else 
-			{
-				pBtn->setImage ("ogreborder") ;
-			}
-		addChild (pBtn) ;
+		m_vpBtn[i] = new CImageButton();
+		m_vpBtn[i]->init(m_overlay, 0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i);
+		addChild(m_vpBtn[i]);
 	}
 
-	for (int i = 0; i<BUTTON_COUNT; i++)
-	{	
-		ImageButton* pBtn = new ImageButton ;
-		pBtn->init (overlaySK, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i) ;
-		pBtn->setImage ("ogreborder") ;
-		addChild (pBtn) ;
+   for(int i = 0; i < BUTTON_COUNT; i++)
+	{		
+		CImageButton *pBtn = new CImageButton();
+		pBtn->init(m_overlay, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i);
+		addChild(pBtn);
 	}
-/*
-	ImageButton* pBtn = new ImageButton ;
-	pBtn->init (w-CELL_SIZE/2, 0, CELL_SIZE/2, CELL_SIZE/2, 14) ;
-	pBtn->str = "X" ;
-	addChild (pBtn) ;
-*/
-	TextArea* pTA = new TextArea ;
-	pTA->init (overlaySK, w/2, 0, w, CELL_SIZE) ;
-	pTA->setText ("技能表", 1, 1, 1) ;
-	addChild (pTA) ;
 
-	for (int i = 0; i<TEXT_COUNT; i++)
+	CTextAreaOgre *pTA = new CTextAreaOgre();
+	pTA->init(m_overlay, w/2, 0, w, CELL_SIZE);
+	pTA->setText("技能表", 1, 1, 1);
+	addChild(pTA);
+
+	for(int i = 0; i < TEXT_COUNT; i++)
 	{
-		pTA = new TextArea ;
-		pTA->init (overlaySK, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE) ;
-
-		if (i == 0)
-		{			
-			pTA->setText ("火球術    耗費10MP", 1, 0, 0) ;
-		}else if (i == 1)
-		{
-			pTA->setText ("治癒術    耗費15MP", 1, 0, 0) ;
-		}else
-		{
-		}
-
-		addChild (pTA) ;
+		m_vpText[i] = new CTextAreaOgre();
+		m_vpText[i]->init(m_overlay, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE);
+		addChild(m_vpText[i]);
 	}
 
 #else _GAMEENGINE_2D_	
-	for (int i = 0; i<BUTTON_COUNT; i++)
+	for(int i = 0; i < BUTTON_COUNT; i++)
 	{		
-		CTextButton* pBtn = new CTextButton ;
-		pBtn->init (0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i) ;
-		addChild (pBtn) ;
+		m_vpBtn[i] = new CTextButton();
+		m_vpBtn[i]->init(0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i);
+		addChild(m_vpBtn[i]);
 	}
 
-	for (int i = 0; i<BUTTON_COUNT; i++)
+   for(int i = 0; i < BUTTON_COUNT; i++)
 	{		
-		CTextButton* pBtn = new CTextButton ;
-		pBtn->init (CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i) ;
-		addChild (pBtn) ;
+		CTextButton *pBtn = new CTextButton();
+		pBtn->init(CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i);
+		addChild(pBtn);
 	}
 
-	CTextArea* pTA = new CTextArea ;
-	pTA->init (w/2, 0, w, CELL_SIZE) ;
-	pTA->setText ("技能表", 1, 1, 1) ;
-	addChild (pTA) ;
+	CTextArea *pTA = new CTextArea();
+	pTA->init(w/2, 0, w, CELL_SIZE);
+	pTA->setText("技能表", 1, 1, 1);
+	addChild(pTA);
 
-	for (int i = 0; i<TEXT_COUNT; i++)
+	for(int i = 0; i < TEXT_COUNT; i++)
 	{
-		vpText[i] = new CTextArea ;
-		vpText[i]->init (CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE) ;
-		addChild (vpText[i]) ;
+		m_vpText[i] = new CTextArea();
+		m_vpText[i]->init(CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE);
+		addChild(m_vpText[i]);
 	}
-#endif
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
+
+   show(false);
+   update();
 }
 
-bool CSkillWnd::canDrag (int tx, int ty)
+bool CSkillWnd::canDrag(int tx, int ty)
 {
 	return ty < CELL_SIZE ;
 }
 
-void CSkillWnd::onCommand (int id)
+void CSkillWnd::onLCommand(int btnID)
 {
 }
-
-#ifdef _GAMEENGINE_3D_
-void CSkillWnd::onMove ()
-{
-	overlaySK.setPos (x, y) ;
-}
-
-void CSkillWnd::setZOrder (int z)
-{
-	overlaySK.setZOrder (z) ;
-}
-#endif
 
 WindowClassType CSkillWnd::getClassType()
 {
    return WND_SKILL;
 }
 
-#ifdef _GAMEENGINE_2D_
-void CSkillWnd::draw(HDC hdc, int ox, int oy)
+void CSkillWnd::update()
 {
-   std::vector<CSkill> vtSkill = pPlayer->getSkill();
+   std::vector<CSkill> vtSkill = m_pPlayer->getSkill();
    for(int i = 0; i < TEXT_COUNT; i++) {
       if(i < (int)vtSkill.size()) {
          CSkillInfo *pSkillInfo = vtSkill.at(i).getInfo();
+         
+         if(pSkillInfo != NULL) {
+#ifdef _GAMEENGINE_3D_
+            m_vpBtn[i]->setImage(pSkillInfo->geticonName());
+#elif _GAMEENGINE_2D_
+            m_vpBtn[i]->str = pSkillInfo->getName();
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-         vpText[i]->setText(pSkillInfo->getName() + "\n" + pSkillInfo->getDesc(), 1, 1, 1);
+            m_vpText[i]->setText(pSkillInfo->getName() + "\n" + pSkillInfo->getDesc(), 1, 1, 1);
+         }
       }
-      else
-         vpText[i]->setText("", 1, 1, 1);
+      else {
+#ifdef _GAMEENGINE_3D_
+         m_vpBtn[i]->setImage("Examples/ogreborder");
+#elif _GAMEENGINE_2D_
+         m_vpBtn[i]->str = "";
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
+         m_vpText[i]->setText("", 1, 1, 1);
+      }
    }
-
-   CWindow::draw(hdc, ox, oy);
 }
-#endif
+
+void CSkillWnd::show(bool bShow)
+{
+   CWindow::show(bShow);
+
+#ifdef _GAMEENGINE_3D_
+   if(bShow)
+      m_overlay.getOverlay()->show();
+   else
+      m_overlay.getOverlay()->hide();
+#endif  // #ifdef _GAMEENGINE_3D_
+}
+
+void CSkillWnd::onDrag()
+{
+#ifdef _GAMEENGINE_3D_
+	m_overlay.setPos(x, y);
+#endif  // #ifdef _GAMEENGINE_3D_
+}
+
+#ifdef _GAMEENGINE_3D_
+void CSkillWnd::setZOrder(int order)
+{
+	m_overlay.setZOrder(order);
+}
+#endif  // #ifdef _GAMEENGINE_3D_

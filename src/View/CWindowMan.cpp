@@ -2,102 +2,103 @@
 
 CWindowMan::CWindowMan ()
 {
-	pDragWnd = NULL ;
-	bInDrag = false ;
+	m_pDragWnd = NULL ;
+	m_bInDrag = false ;
+   m_pWindowList = new std::list<CWindow *>();
 }
 
-void CWindowMan::addWnd (CWindow* pw)
+CWindowMan::~CWindowMan()
 {
-	pw->pParent = NULL ;
-	vpWindow.push_back (pw) ;
+   if(m_pWindowList != NULL) {
+      deleteAllWindow();
+      delete m_pWindowList;
+      m_pWindowList = NULL;
+   }
 }
 
-void CWindowMan::doDrag (HWND hWnd, CKeyMan& keyMan)
+void CWindowMan::addWnd(CWindow *pWnd)
 {
-	//拖曳視窗中
-	if (keyMan.isDown (KEY_LBUTTON))
-	{
-		//繼續壓著
-		int dx = clientX - dragX ;//滑鼠拖曳多遠
-		int dy = clientY - dragY ;//滑鼠拖曳多遠
+	pWnd->pParent = NULL;
+	m_pWindowList->push_back(pWnd);
+   pWnd->setWindowMan(this);
+}
 
-		pDragWnd->x += dx ;
-		pDragWnd->y += dy ;
-
-		pDragWnd->onMove () ;
-
-		dragX = clientX ;
-		dragY = clientY ;
-	}else
-	{
-		//放開
-		bInDrag = false ;
+void CWindowMan::deleteAllWindow()
+{
+	std::list<CWindow *>::reverse_iterator it = m_pWindowList->rbegin();
+	while(it != m_pWindowList->rend ()) {
+		delete (*it);
+		it++;
 	}
+   m_pWindowList->clear();
 }
 
-bool CWindowMan::work (HWND hWnd, 
-							CKeyMan& keyMan)
+void CWindowMan::update()
 {
-	bool bPressWindow = false ;
+   std::list<CWindow *>::iterator it = m_pWindowList->begin();
+   while(it != m_pWindowList->end()) {
+	   (*it)->update();
 
-	getMouseScreenPos (screenX, screenY) ;
-	getMousePos (hWnd, clientX, clientY) ;
+      it++;
+   }
+}
 
-	if (bInDrag)
-	{
-		doDrag (hWnd, keyMan) ;
-	}else
-	{
-		//不是拖曳視窗
-		if (keyMan.isPress (KEY_LBUTTON))
-		{
+#ifdef _GAMEENGINE_2D_
+bool CWindowMan::work(HWND hWnd, CKeyMan &keyMan)
+{
+	bool bPressWindow = false;
+
+	getMousePos(hWnd, m_iClientX, m_iClientY);
+
+	if(m_bInDrag) {
+		doDrag(hWnd, keyMan);
+	}
+   else {
+		//不是拖曳動作
+
+		if(keyMan.isPress(KEY_LBUTTON)) {
 			//壓下去的瞬間
-			VP_WINDOW::iterator pi = vpWindow.begin () ;
-			while (pi != vpWindow.end ())
-			{
-				if ((*pi)->checkPoint (clientX, clientY))
-				{
-					int tx = clientX ;
-					int ty = clientY ;
 
-					if ((*pi)->canDrag (tx-(*pi)->x, 
-										ty-(*pi)->y))
-					{
+			std::list<CWindow *>::iterator it = m_pWindowList->begin();
+			while(it != m_pWindowList->end ()) {
+				if((*it)->checkPoint(m_iClientX, m_iClientY)) {
+					int tx = m_iClientX;
+					int ty = m_iClientY;
+
+					if((*it)->canDrag(tx - (*it)->x, ty - (*it)->y)) {
 						//可以拖曳
-						bInDrag = true ;
-					}else
-					{
+						m_bInDrag = true;
+					}
+               else {
 						//不可以拖曳
-						(*pi)->onLClick (tx, ty) ;
+						(*it)->onLClick(tx, ty);
 					}
 
 					//有按到
-					bPressWindow = true ;
+					bPressWindow = true;
 
-					dragX = clientX ;
-					dragY = clientY ;
+					m_iDragX = m_iClientX;
+					m_iDragY = m_iClientY;
 
-					vpWindow.push_front (*pi) ;
-
-					vpWindow.erase (pi) ;
-					pDragWnd = vpWindow.front () ;
-
+					m_pWindowList->push_front(*it);
+					m_pWindowList->erase(it);
+					m_pDragWnd = m_pWindowList->front();
 					break ;
 				}
 
-				++ pi ;
+				it++;
 			}
 		}
       else if(keyMan.isPress(KEY_RBUTTON)) {
          //壓下去的瞬間
-			VP_WINDOW::iterator pi = vpWindow.begin();
-         while(pi != vpWindow.end()) {
-            if((*pi)->checkPoint(clientX, clientY)) {
-					int tx = clientX;
-					int ty = clientY;
+			std::list<CWindow *>::iterator it = m_pWindowList->begin();
+         while(it != m_pWindowList->end()) {
+            if((*it)->checkPoint(m_iClientX, m_iClientY)) {
+					int tx = m_iClientX;
+					int ty = m_iClientY;
 
-               bInDrag = false;
-               (*pi)->onRClick(tx, ty);
+               m_bInDrag = false;
+               (*it)->onRClick(tx, ty);
 
                //有按到
 					bPressWindow = true;
@@ -105,41 +106,41 @@ bool CWindowMan::work (HWND hWnd,
                break;
             }
 
-            pi++;
+            it++;
          }
 		}
       else if(keyMan.isPress(KEY_P)) {
          bool bPlayerInfoWndVisible = false;
-         VP_WINDOW::iterator pi = vpWindow.begin();
-         while(pi != vpWindow.end()) {
-            if((*pi)->getClassType() == WND_PLAYERINFO) {
-               (*pi)->bVisible = !(*pi)->bVisible;
-               bPlayerInfoWndVisible = (*pi)->bVisible;
+         std::list<CWindow *>::iterator it = m_pWindowList->begin();
+         while(it != m_pWindowList->end()) {
+            if((*it)->getClassType() == WND_PLAYERINFO) {
+               (*it)->show(!(*it)->getVisible());
+               bPlayerInfoWndVisible = (*it)->getVisible();
             }
-            else if((*pi)->getClassType() == WND_BACKPACK)
-               (*pi)->bVisible = bPlayerInfoWndVisible;
+            else if((*it)->getClassType() == WND_BACKPACK)
+               (*it)->show(bPlayerInfoWndVisible);
 
-            pi++;
+            it++;
          }
       }
       else if(keyMan.isPress(KEY_B)) {
-         VP_WINDOW::iterator pi = vpWindow.begin();
-         while(pi != vpWindow.end()) {
-            if((*pi)->getClassType() == WND_BACKPACK) {
-               (*pi)->bVisible = !(*pi)->bVisible;
+         std::list<CWindow *>::iterator it = m_pWindowList->begin();
+         while(it != m_pWindowList->end()) {
+            if((*it)->getClassType() == WND_BACKPACK) {
+               (*it)->show(!(*it)->getVisible());
                break;
             }
-            pi++;
+            it++;
          }
       }
       else if(keyMan.isPress(KEY_K)) {
-         VP_WINDOW::iterator pi = vpWindow.begin();
-         while(pi != vpWindow.end()) {
-            if((*pi)->getClassType() == WND_SKILL) {
-               (*pi)->bVisible = !(*pi)->bVisible;
+         std::list<CWindow *>::iterator it = m_pWindowList->begin();
+         while(it != m_pWindowList->end()) {
+            if((*it)->getClassType() == WND_SKILL) {
+               (*it)->show(!(*it)->getVisible());
                break;
             }
-            pi++;
+            it++;
          }
       }
 	}
@@ -147,27 +148,40 @@ bool CWindowMan::work (HWND hWnd,
 	return bPressWindow ;
 }
 
+void CWindowMan::draw(HDC hdc)
+{
+   std::list<CWindow *>::reverse_iterator it = m_pWindowList->rbegin();
+   while(it != m_pWindowList->rend()) {
+      if((*it)->getVisible())
+	      (*it)->draw(hdc, 0, 0);
+
+      it++;
+   }
+}
+#endif  // #ifdef _GAMEENGINE_2D_
+
 #ifdef _GAMEENGINE_2D_
-void CWindowMan::draw (HDC hdc)
+void CWindowMan::doDrag(HWND hWnd, CKeyMan &keyMan)
 {
-	VP_WINDOW::reverse_iterator pi = vpWindow.rbegin () ;
-	while (pi != vpWindow.rend ())
-	{
-		if ((*pi)->bVisible)
-			(*pi)->draw (hdc, 0, 0) ;
-		++ pi ;
+	//拖曳視窗中
+	if(keyMan.isDown(KEY_LBUTTON)) {
+		//繼續壓著
+
+		int dx = m_iClientX - m_iDragX;  //滑鼠拖曳多遠
+		int dy = m_iClientY - m_iDragY;  //滑鼠拖曳多遠
+
+		m_pDragWnd->x += dx;
+		m_pDragWnd->y += dy;
+
+		m_pDragWnd->onDrag();
+
+		m_iDragX = m_iClientX;
+		m_iDragY = m_iClientY;
+	}
+   else {
+		//放開
+
+		m_bInDrag = false;
 	}
 }
-#endif
-
-void CWindowMan::deleteAllWindow ()
-{
-	VP_WINDOW::reverse_iterator pi = 
-			vpWindow.rbegin () ;
-	while (pi != vpWindow.rend ())
-	{
-		delete *pi ;
-
-		++pi ;
-	}
-}
+#endif  // #ifdef _GAMEENGINE_2D_

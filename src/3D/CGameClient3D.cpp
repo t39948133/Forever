@@ -6,28 +6,39 @@
   * @email  darren.z32@msa.hinet.net
   * @date   2012/12/04 */
 #include "CGameClient3D.h"
+#include "CPlayerInfoWnd.h"
+#include "CBackpackWnd.h"
+#include "CSkillWnd.h"
+
 #include <OgreMeshManager.h>
 #include <OgreMath.h>
 
 CGameClient3D::CGameClient3D() : CGameClient()
 {
-   m_pRenderCore = CRenderLoader::getInstance()->getGraphicsRender("RenderEngine::OGRE");
-
-   if(m_pRenderCore != NULL) {
-      m_pRenderCore->addGameFlowListener(this);
-      m_pRenderCore->addMouseEventListener(this);
-   }
-
    m_pPlayer = NULL;
    m_fPivotPitch = 0;
    m_pTerrain = new CTerrain();
    m_pRayQuery = NULL;
+   m_pWindowMan = new CWindowMan3D();
+
+   m_pRenderCore = CRenderLoader::getInstance()->getGraphicsRender("RenderEngine::OGRE");
+   if(m_pRenderCore != NULL) {
+      m_pRenderCore->addGameFlowListener(this);
+      m_pRenderCore->addMouseEventListener(this);
+   }
 }
 
 CGameClient3D::~CGameClient3D()
 {
-   delete m_pTerrain;
-   m_pTerrain = NULL;
+   if(m_pWindowMan != NULL) {
+      delete m_pWindowMan;
+      m_pWindowMan = NULL;
+   }
+
+   if(m_pTerrain != NULL) {
+      delete m_pTerrain;
+      m_pTerrain = NULL;
+   }
 
    m_pRenderCore = NULL;
    CRenderLoader::releaseInstance();
@@ -36,6 +47,23 @@ CGameClient3D::~CGameClient3D()
 void CGameClient3D::run()
 {
    m_pRenderCore->run();
+}
+
+void CGameClient3D::initUI()
+{
+   CPlayer *pPlayer2D = this->getScene()->getMainPlayer();
+
+   CPlayerInfoWnd *pPlayerInfoWnd = new CPlayerInfoWnd();
+   pPlayerInfoWnd->init(10, 10, pPlayer2D);
+   m_pWindowMan->addWnd(pPlayerInfoWnd);
+
+   CBackpackWnd *pBackpackWnd = new CBackpackWnd();
+   pBackpackWnd->init(10, 411, pPlayer2D);
+   m_pWindowMan->addWnd(pBackpackWnd);
+
+   CSkillWnd *pSkillWnd = new CSkillWnd();
+   pSkillWnd->init(500, 10, pPlayer2D);
+   m_pWindowMan->addWnd(pSkillWnd);
 }
 
 void CGameClient3D::createScene()
@@ -76,6 +104,8 @@ bool CGameClient3D::frameRenderingQueued(float timeSinceLastFrame)
 
 void CGameClient3D::destoryScene()
 {
+   m_pWindowMan->deleteAllWindow();
+
    if(m_pPlayer != NULL) {
       delete m_pPlayer;
       m_pPlayer = NULL;
@@ -92,33 +122,35 @@ void CGameClient3D::destoryScene()
 
 void CGameClient3D::mouseDown(const OIS::MouseEvent &evt)
 {
-   if(evt.state.buttonDown(OIS::MB_Left)) {
+   if(evt.state.buttonDown(OIS::MB_Left)) {   
       int xPos = evt.state.X.abs;
       int yPos = evt.state.Y.abs;
       int width = evt.state.width;
       int height = evt.state.height;
 
-      Ogre::Camera *pCamera = m_pRenderCore->getCamera();
+      if(m_pWindowMan->isPressWindow(xPos, yPos) == false) {
+         Ogre::Camera *pCamera = m_pRenderCore->getCamera();
 
-      // 從camera到滑鼠點擊的X,Y座標為依據產生一條射線
-      Ogre::Ray mouseRay = pCamera->getCameraToViewportRay(xPos / (float)width, yPos / (float)height);
-      m_pRayQuery->setRay(mouseRay);
+         // 從camera到滑鼠點擊的X,Y座標為依據產生一條射線
+         Ogre::Ray mouseRay = pCamera->getCameraToViewportRay(xPos / (float)width, yPos / (float)height);
+         m_pRayQuery->setRay(mouseRay);
 
-      // 尋找這條射線打到什麼3D物件
-      Ogre::RaySceneQueryResult &result = m_pRayQuery->execute();
-      Ogre::RaySceneQueryResult::iterator it = result.begin();
-      while(it != result.end()) {
-         std::string nodeName = (*it).movable->getName();
-         if(nodeName.find("ETTerrain") != std::string::npos) {
-            // 滑鼠點到地板
+         // 尋找這條射線打到什麼3D物件
+         Ogre::RaySceneQueryResult &result = m_pRayQuery->execute();
+         Ogre::RaySceneQueryResult::iterator it = result.begin();
+         while(it != result.end()) {
+            std::string nodeName = (*it).movable->getName();
+            if(nodeName.find("ETTerrain") != std::string::npos) {
+               // 滑鼠點到地板
 
-            Ogre::Vector3 newPos;
-            m_pTerrain->getRayPos(mouseRay, newPos);
-            m_pPlayer->setMouseTargetPosition(newPos);
-            break;
+               Ogre::Vector3 newPos;
+               m_pTerrain->getRayPos(mouseRay, newPos);
+               m_pPlayer->setMouseTargetPosition(newPos);
+               break;
+            }
+
+            it++;
          }
-
-         it++;
       }
    }
 }
@@ -127,43 +159,47 @@ void CGameClient3D::mouseMove(const OIS::MouseEvent &evt)
 {
    // 滑鼠右鍵按著不放
    if(evt.state.buttonDown(OIS::MB_Right)) { 
-      /** 改變Y軸旋轉方向
-        * evt.state.X 為滑鼠移動的X變動量 */
-      Ogre::Real dx = (float)evt.state.X.rel;
+      int xPos = evt.state.X.abs;
+      int yPos = evt.state.Y.abs;
+      if(m_pWindowMan->isPressWindow(xPos, yPos) == false) {
+         /** 改變Y軸旋轉方向
+           * evt.state.X 為滑鼠移動的X變動量 */
+         Ogre::Real dx = (float)evt.state.X.rel;
 
-      /** 改變X軸旋轉方向
-        * evt.state.Y 為滑鼠移動的Y變動量 */
-      Ogre::Real dy = (float)evt.state.Y.rel;
+         /** 改變X軸旋轉方向
+           * evt.state.Y 為滑鼠移動的Y變動量 */
+         Ogre::Real dy = (float)evt.state.Y.rel;
 
-      if(abs(dx) > abs(dy)) {
-         // 若X座標變動量大於Y座標變動量, 便以X座標變動量為準
+         if(abs(dx) > abs(dy)) {
+            // 若X座標變動量大於Y座標變動量, 便以X座標變動量為準
 
-         /** 以主角為中心點旋轉Y軸 (視角水平旋轉)
-           * 滑鼠往左移動, 攝影機以主角的Y軸為軸心向右旋轉
-           * 滑鼠往右移動, 攝影機以主角的Y軸為軸心向左旋轉 */
-         dx *= -1.0f;
+            /** 以主角為中心點旋轉Y軸 (視角水平旋轉)
+              * 滑鼠往左移動, 攝影機以主角的Y軸為軸心向右旋轉
+              * 滑鼠往右移動, 攝影機以主角的Y軸為軸心向左旋轉 */
+            dx *= -1.0f;
 
-         m_pCameraPivot->yaw(Ogre::Degree(dx), Ogre::Node::TS_WORLD);  
-      }
-      else {
-         // 若Y座標變動量大於X座標變動量, 便以Y座標變動量為準
+            m_pCameraPivot->yaw(Ogre::Degree(dx), Ogre::Node::TS_WORLD);  
+         }
+         else {
+            // 若Y座標變動量大於X座標變動量, 便以Y座標變動量為準
 
-         /** tanθ = y / x, 求θ角度可以知道翻轉到角色腳下最大角度(與地板的角度)
-           * 用途: 攝影機向下翻轉時卡到地板就不再翻轉, 免得鏡頭會轉到底板底下 */
-         Ogre::Real x = m_pCameraGoal->_getDerivedPosition().distance(m_pCameraPivot->_getDerivedPosition());
-         Ogre::Real y = abs(m_pCameraGoal->_getDerivedPosition().y);
-         Ogre::Real withGroundRadian = atan(y / x);  // θ = tan-1(y / x)算出的是弧度
-         Ogre::Real withGroundDegree = withGroundRadian * 180 / Ogre::Math::PI;  // 角度=弧度*180/PI;
+            /** tanθ = y / x, 求θ角度可以知道翻轉到角色腳下最大角度(與地板的角度)
+              * 用途: 攝影機向下翻轉時卡到地板就不再翻轉, 免得鏡頭會轉到底板底下 */
+            Ogre::Real x = m_pCameraGoal->_getDerivedPosition().distance(m_pCameraPivot->_getDerivedPosition());
+            Ogre::Real y = abs(m_pCameraGoal->_getDerivedPosition().y);
+            Ogre::Real withGroundRadian = atan(y / x);  // θ = tan-1(y / x)算出的是弧度
+            Ogre::Real withGroundDegree = withGroundRadian * 180 / Ogre::Math::PI;  // 角度=弧度*180/PI;
 
-         /** 以主角為中心點旋轉X軸, 限制最大俯視角度為70度與仰視角度為withGroundDegree度 (視角垂直旋轉)
-           * 滑鼠往下移動, 攝影機以主角的X軸為軸心向上翻轉到角色頭頂
-           * 滑鼠往上移動, 攝影機以主角的X軸為軸心向下翻轉到角色腳下 */
-         dy *= -1.0f;
+            /** 以主角為中心點旋轉X軸, 限制最大俯視角度為70度與仰視角度為withGroundDegree度 (視角垂直旋轉)
+              * 滑鼠往下移動, 攝影機以主角的X軸為軸心向上翻轉到角色頭頂
+              * 滑鼠往上移動, 攝影機以主角的X軸為軸心向下翻轉到角色腳下 */
+            dy *= -1.0f;
 
-         if(!(m_fPivotPitch + dy < -60 && dy < 0) &&              // 限制翻轉到頭頂的角度最大60度
-            !(m_fPivotPitch + dy > withGroundDegree && dy > 0)) { // 限制翻轉到腳底的角度
-               m_pCameraPivot->pitch(Ogre::Degree(dy));
-               m_fPivotPitch += dy;
+            if(!(m_fPivotPitch + dy < -60 && dy < 0) &&              // 限制翻轉到頭頂的角度最大60度
+               !(m_fPivotPitch + dy > withGroundDegree && dy > 0)) { // 限制翻轉到腳底的角度
+                  m_pCameraPivot->pitch(Ogre::Degree(dy));
+                  m_fPivotPitch += dy;
+            }
          }
       }
    }

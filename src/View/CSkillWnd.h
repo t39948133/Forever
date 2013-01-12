@@ -1,44 +1,56 @@
+/** This source file is part of Forever
+  * Copyright(c) 2012-2013 The DCI's Forever Team
+  *
+  * @file   CSkillWnd.h
+  * @author 林有良
+  * @date   2012/12/21
+  *         2013/01/05 整合與修正 by Darren Chen */
 #ifndef _CSKILLWND_H_
 #define _CSKILLWND_H_
 #include "CWindow.h"
 #include "CPlayer.h"
+
+#ifdef _GAMEENGINE_3D_
+#include "CImageButton.h"
+#include "CTextAreaOgre.h"
+#include "COverlayUI.h"
+#elif _GAMEENGINE_2D_
+#include "CTextButton.h"
 #include "CTextArea.h"
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
 class CSkillWnd : public CWindow
 {
    public:
 	   enum {BUTTON_COUNT = 7, CELL_SIZE = 60, TEXT_COUNT = 7} ;
-   	
-#ifdef _GAMEENGINE_3D_
-		OverlayUI overlaySK ;//管理overlay
-#endif
-	 
-	   CPlayer* pPlayer ;
-
+   	 
 	   ~CSkillWnd () {};
 
-	   void init (int _x, int _y, CPlayer* pb) ;
+	   void init (int _x, int _y, CPlayer *pb);
 
-	   bool canDrag (int tx, int ty) ;
-	   void onCommand (int) ;
+	   // CWindow
+	   /* virtual */ bool canDrag(int tx, int ty);
+      /* virtual */ void onLCommand(int btnID);
+      /* virtual */ WindowClassType getClassType();
+      /* virtual */ void update();
+      /* virtual */ void show(bool bShow);
+      /* virtual */ void onDrag();
 
 #ifdef _GAMEENGINE_3D_
-	   void onMove () ;
-
-	   void setZOrder (int z) ;
+	   void setZOrder(int order);
 #endif
 
-   //	void onClick (int tx, int ty) ;
+   private:
+      CPlayer *m_pPlayer;
 
-      // Add by Darren Chen on 2013/01/07 {
-      CTextArea* vpText[TEXT_COUNT];
-
-      WindowClassType getClassType();
-
-#ifdef _GAMEENGINE_2D_
-      void draw(HDC hdc, int ox, int oy);
+#ifdef _GAMEENGINE_3D_	
+	   CImageButton   *m_vpBtn[BUTTON_COUNT] ;
+      CTextAreaOgre  *m_vpText[TEXT_COUNT];
+      COverlayUI      m_overlay;  //管理overlay
+#elif _GAMEENGINE_2D_
+	   CTextButton    *m_vpBtn[BUTTON_COUNT] ;
+      CTextArea      *m_vpText[TEXT_COUNT];
 #endif
-      // } Add by Darren Chen on 2013/01/07
 };
 
 #endif  // #ifndef _CSKILLWND_H_

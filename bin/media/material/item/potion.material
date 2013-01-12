@@ -1,0 +1,13 @@
+material Potion/HP02_1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture icon_item_potion_hp02_1.dds
+			}
+		}
+	}
+}

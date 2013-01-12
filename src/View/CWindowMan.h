@@ -8,39 +8,39 @@
 #ifndef _CWINDOWMAN_H_
 #define _CWINDOWMAN_H_
 #include "CWindow.h"
+
+#ifdef _GAMEENGINE_2D_
 #include "CKeyMan.h"
+#endif
 
 //視窗管理者(manager)
 class CWindowMan
 {
-   protected:
-	   typedef std::list <CWindow*> VP_WINDOW ;
-	   VP_WINDOW vpWindow ;
-	   CWindow* pDragWnd ;//拖曳中的視窗
-
-	   bool bInDrag ;//代表視窗是否在拖曳中
-	   int dragX, dragY ;
-
-	   int screenX, screenY ;
-
-	   int clientX, clientY ;
-
    public:
-	   CWindowMan () ;
+	   CWindowMan();
+      ~CWindowMan();
 
-	   void addWnd (CWindow* pw) ;
-
-   private:
-	   void doDrag (HWND hWnd, CKeyMan&) ;
-
-   public:
-	   bool work (HWND hWnd, CKeyMan&) ;
+	   virtual void addWnd(CWindow *pWnd);
+      void deleteAllWindow();
+      void update();            // 視窗資料更新
 
 #ifdef _GAMEENGINE_2D_
-	   void draw(HDC hdc) ;
+      bool work(HWND hWnd, CKeyMan &keyMan);
+	   void draw(HDC hdc);
 #endif
 
-	   void deleteAllWindow () ;
+   protected:
+#ifdef _GAMEENGINE_2D_
+	   void doDrag(HWND hWnd, CKeyMan &keyMan);
+#endif
+
+	   std::list<CWindow *> *m_pWindowList;  // 視窗列表
+	   CWindow *m_pDragWnd;   // 拖曳中的視窗
+	   bool     m_bInDrag;    // 視窗是否在拖曳中
+	   int      m_iDragX;     // 拖曳的座標X
+      int      m_iDragY;     // 拖曳的座標Y 
+      int      m_iClientX;   // 滑鼠點擊的座標X
+      int      m_iClientY;   // 滑鼠點擊的座標Y
 };
 
 #endif  // #ifndef _CWINDOWMAN_H_

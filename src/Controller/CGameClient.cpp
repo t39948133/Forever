@@ -8,9 +8,12 @@
 #include "CGameClient.h"
 #include "CItem.h"
 #include "CSkill.h"
+
+#ifdef _GAMEENGINE_2D_
 #include "CPlayerInfoWnd.h"
 #include "CBackpackWnd.h"
 #include "CSkillWnd.h"
+#endif  // #ifdef _GAMEENGINE_2D_
 
 CGameClient::CGameClient()
 {
@@ -108,6 +111,25 @@ CScene* CGameClient::getScene()
    return m_pScene;
 }
 
+void CGameClient::initUI()
+{
+#ifdef _GAMEENGINE_2D_
+   CPlayer *pPlayer = m_pScene->getMainPlayer();
+
+   CPlayerInfoWnd *pPlayerInfoWnd = new CPlayerInfoWnd();
+   pPlayerInfoWnd->init(10, 10, pPlayer);
+   m_pWindowMan->addWnd(pPlayerInfoWnd);
+
+   CBackpackWnd *pBackpackWnd = new CBackpackWnd();
+   pBackpackWnd->init(10, 411, pPlayer);
+   m_pWindowMan->addWnd(pBackpackWnd);
+
+   CSkillWnd *pSkillWnd = new CSkillWnd();
+   pSkillWnd->init(500, 10, pPlayer);
+   m_pWindowMan->addWnd(pSkillWnd);
+#endif  // #ifdef _GAMEENGINE_2D_
+}
+
 //void CGameClient::workLogin()
 //{
 //   m_pNetStream->procPackage();
@@ -164,23 +186,6 @@ void CGameClient::workPlay(float timePass, HWND hWnd)
    //      // Todo: 與Scene Server之間的封包處理
    //   }
    //}
-}
-
-void CGameClient::initUI()
-{
-   CPlayer *pPlayer = m_pScene->getMainPlayer();
-
-   CPlayerInfoWnd *pPlayerInfoWnd = new CPlayerInfoWnd();
-   pPlayerInfoWnd->init(10, 10, pPlayer);
-   m_pWindowMan->addWnd(pPlayerInfoWnd);
-
-   CBackpackWnd *pBackpackWnd = new CBackpackWnd();
-   pBackpackWnd->init(10, 411, pPlayer);
-   m_pWindowMan->addWnd(pBackpackWnd);
-
-   CSkillWnd *pSkillWnd = new CSkillWnd();
-   pSkillWnd->init(500, 10, pPlayer);
-   m_pWindowMan->addWnd(pSkillWnd);
 }
 
 //void CGameClient::onRecvChangeScene(GP::NetStream *pNetStream, CPacketChangeScene *pPacket)

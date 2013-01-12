@@ -22,7 +22,7 @@ void CItem::initItem ()
 		baseAttr.iHIT = 5;
 		extendAttr.iHP = 80;
 		extendAttr.iMPMax = 8;
-		pw->initWeaponInfo("刀子", "", SWORD, true, 1, 1, 20, 50, COMMON,
+		pw->initWeaponInfo("長劍", "Weapon/Sword_C01", SWORD, true, 1, 1, 20, 50, COMMON,
 			baseAttr, extendAttr, ONE_HAND);
 		addInfo(pw);
 
@@ -34,16 +34,16 @@ void CItem::initItem ()
 		baseAttr.iHIT = 7;
 		extendAttr.iHP = 90;
 		extendAttr.iMPMax = 0;
-		pa->initArmorInfo("袍", "", CLOTH, false, 5, 1, 10, 70, COMMON,
+		pa->initArmorInfo("胸甲", "Armor/PL_Torso_C01", CLOTH, false, 10, 1, 10, 70, COMMON,
 			baseAttr, extendAttr, CLOTHES);
 		addInfo(pa);
 
 		CConsumableInfo* pc = new CConsumableInfo();
-		pc->initConsumableInfo("生命藥水", "", POTION, false, 1, 10, 5, 10, "回復生命50點", EDIBLE_HP, 50);
+		pc->initConsumableInfo("生命藥水", "Potion/HP02_1", POTION, false, 1, 10, 5, 10, "回復生命37點", EDIBLE_HP, 37);
       addInfo(pc);
 
       CConsumableInfo* pb = new CConsumableInfo();
-		pb->initConsumableInfo("技能書", "", SCROLL, false, 1, 1, 5, 10, "主神盔甲", EDIBLE_SKILL, 0);
+		pb->initConsumableInfo("技能書", "Scroll/Skillbook_01", SCROLL, false, 1, 1, 5, 10, "主神盔甲", EDIBLE_SKILL, 0);
       addInfo(pb);
 	}
 

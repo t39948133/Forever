@@ -254,11 +254,15 @@ void COgreRender::createFrameListener()
 
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mMouse, this);
     mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
+    OgreBites::Label *pLabel = mTrayMgr->createLabel(OgreBites::TL_BOTTOMRIGHT, "Forver", "v0.2", 50);
+    Ogre::TextAreaOverlayElement *pTextArea = (Ogre::TextAreaOverlayElement*)((Ogre::OverlayContainer*)pLabel->getOverlayElement())->getChild(pLabel->getName() + "/LabelCaption");
+    pTextArea->setFontName("NCTaiwanFont");
+    pTextArea->setCharHeight(16);
     //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     //mTrayMgr->hideCursor();
 
     // create a params panel for displaying sample details
-    Ogre::StringVector items;
+    /*Ogre::StringVector items;
     items.push_back("cam.pX");
     items.push_back("cam.pY");
     items.push_back("cam.pZ");
@@ -274,7 +278,7 @@ void COgreRender::createFrameListener()
     mDetailsPanel = mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 200, items);
     mDetailsPanel->setParamValue(9, "Bilinear");
     mDetailsPanel->setParamValue(10, "Solid");
-    mDetailsPanel->hide();
+    mDetailsPanel->hide();*/
 
     mRoot->addFrameListener(this);
 }
@@ -293,7 +297,7 @@ bool COgreRender::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     mTrayMgr->frameRenderingQueued(evt);
 
-    if (!mTrayMgr->isDialogVisible())
+    /*if (!mTrayMgr->isDialogVisible())
     {
         mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
         if (mDetailsPanel->isVisible())   // if details panel is visible, then update its contents
@@ -306,7 +310,7 @@ bool COgreRender::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
             mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
         }
-    }
+    }*/
 
     std::set<IGameFlowListener *>::iterator it = m_gameFlowListeners.begin();
     while(it != m_gameFlowListeners.end()) {

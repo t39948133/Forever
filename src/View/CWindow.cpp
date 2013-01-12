@@ -5,7 +5,8 @@ CWindow::CWindow() : pParent(NULL),
                      y(0),
                      w(0),
                      h(0),
-                     bVisible(true)
+                     m_bVisible(true),
+                     m_pWindowMan(NULL)
 {
 }
 
@@ -16,8 +17,8 @@ CWindow::~CWindow()
 
 bool CWindow::checkPoint(int tx, int ty)
 {
-	if (bVisible == false)
-		return false ;
+	if(m_bVisible == false)
+		return false;
 
 	if ((tx >= x) && (tx < (x+w)) &&
 		(ty >= y) && (ty < (y+h)))
@@ -26,10 +27,10 @@ bool CWindow::checkPoint(int tx, int ty)
 		return false ;
 }
 
-void CWindow::addChild(CWindow* pw)
+void CWindow::addChild(CWindow* pChildWnd)
 {
-	pw->pParent = this ;
-	vpWnd.push_back (pw) ;
+	pChildWnd->pParent = this;
+	vpWnd.push_back(pChildWnd);
 }
 
 bool CWindow::canDrag(int tx, int ty)
@@ -37,22 +38,26 @@ bool CWindow::canDrag(int tx, int ty)
 	return true ;
 }
 
+void CWindow::onDrag()
+{
+}
+
 void CWindow::onLClick(int tx, int ty)
 {
 	tx -= x ;
 	ty -= y ;
 
-	VP_WND::iterator pi = vpWnd.begin () ;
+	VP_WND::iterator pi = vpWnd.begin();
 	while (pi != vpWnd.end ())
 	{
-		if ((*pi)->bVisible)
-			if ((*pi)->checkPoint (tx, ty))
+		if ((*pi)->m_bVisible)
+			if ((*pi)->checkPoint(tx, ty))
 			{
-				(*pi)->onLClick (tx, ty) ;
-				break ;
+				(*pi)->onLClick(tx, ty);
+				break;
 			}
 
-		++ pi ;
+		++ pi;
 	}
 
 	if (pi == vpWnd.end ())
@@ -63,26 +68,34 @@ void CWindow::onLClick(int tx, int ty)
 
 void CWindow::onRClick(int tx, int ty)
 {
-   tx -= x ;
-	ty -= y ;
+   tx -= x;
+	ty -= y;
 
-	VP_WND::iterator pi = vpWnd.begin () ;
-	while (pi != vpWnd.end ())
+	VP_WND::iterator pi = vpWnd.begin();
+	while(pi != vpWnd.end())
 	{
-		if ((*pi)->bVisible)
-			if ((*pi)->checkPoint (tx, ty))
+		if((*pi)->m_bVisible)
+			if((*pi)->checkPoint(tx, ty))
 			{
-				(*pi)->onRClick (tx, ty) ;
-				break ;
+				(*pi)->onRClick(tx, ty);
+				break;
 			}
 
-		++ pi ;
+		++pi;
 	}
 
-	if (pi == vpWnd.end ())
+	if(pi == vpWnd.end())
 	{
 		//沒按到子視窗
 	}
+}
+
+void CWindow::onLCommand(int btnID)
+{
+}
+
+void CWindow::onRCommand(int btnID)
+{
 }
 
 WindowClassType CWindow::getClassType()
@@ -90,7 +103,30 @@ WindowClassType CWindow::getClassType()
    return WND_NULL;
 }
 
-#ifdef _GAMEENGINE_2D_
+void CWindow::update()
+{
+}
+
+void CWindow::setWindowMan(CWindowMan *pWndMan)
+{
+   m_pWindowMan = pWndMan;
+}
+
+bool CWindow::getVisible()
+{
+   return m_bVisible;
+}
+
+void CWindow::show(bool bShow)
+{
+   m_bVisible = bShow;
+}
+
+#ifdef _GAMEENGINE_3D_
+void CWindow::setZOrder(int order)
+{
+}
+#elif _GAMEENGINE_2D_
 void CWindow::draw(HDC hdc, int ox, int oy)
 {
 	Rectangle (hdc, x+ox, y+oy, x+ox+w, y+oy+h) ;
@@ -98,10 +134,14 @@ void CWindow::draw(HDC hdc, int ox, int oy)
 	VP_WND::iterator pi = vpWnd.begin () ;
 	while (pi != vpWnd.end ())
 	{
-		if ((*pi)->bVisible)
+		if ((*pi)->m_bVisible)
 			(*pi)->draw (hdc, x+ox, y+oy) ;
 		++ pi ;
 	}
 }
 #endif
 
+CWindowMan* CWindow::getWindowMan()
+{
+   return m_pWindowMan;
+}

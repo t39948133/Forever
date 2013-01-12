@@ -12,6 +12,7 @@
 #include "CPlayer3D.h"
 #include "CTerrain.h"
 #include "CGameClient.h"
+#include "CWindowMan3D.h"
 
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
@@ -28,6 +29,10 @@ class CGameClient3D : public IGameFlowListener,
       ~CGameClient3D();
 
       void run();
+
+   protected:
+      // CGameClient
+      /* virtual */ void initUI();
 
    private:
       // IGameFlowListener
@@ -52,6 +57,8 @@ class CGameClient3D : public IGameFlowListener,
 
       /** @brief 釋放攝影機 */
       void releaseCamera();
+
+      CWindowMan3D        *m_pWindowMan;     // UI視窗管理
 
       CPlayer3D           *m_pPlayer;        // 玩家操控
       CTerrain            *m_pTerrain;       // 3D地形

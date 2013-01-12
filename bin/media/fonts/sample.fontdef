@@ -1,0 +1,20 @@
+NCTaiwanFont
+{
+	type truetype
+	source NCTaiwanFont.ttf
+	size 18
+	resolution 96
+	code_points 19968-40869 33-255 65292-65292 12289-12289 12290-12290 65281-65281 65307-65307 65306-65306 65311-65311
+}
+
+StarWars
+{
+	// Now this one I agree with ;)
+	// A Star Wars font :)
+	type 		truetype
+	source 		solo5.ttf
+	size 		16
+	resolution 	96
+}
+
+

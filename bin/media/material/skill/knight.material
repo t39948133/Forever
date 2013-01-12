@@ -1,0 +1,13 @@
+material Skill/Knight/Stonebody_g1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture cbt_kn_stonebody_g1.dds
+			}
+		}
+	}
+}

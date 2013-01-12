@@ -4,7 +4,7 @@
   * @file   CWindow.h
   * @author 林有良
   * @date   2012/12/21
-  *         2013/01/05 整合與修正 by Darren Chen */
+  *         2013/01/05 - 2013/01/09 [Darren Chen] 整合與修正 */
 #ifndef _CWINDOW_H_
 #define _CWINDOW_H_
 #include "Common.h"
@@ -16,13 +16,15 @@ typedef enum WINDOW_CLASS_TYPE {
    WND_SKILL,       // 技能視窗
 } WindowClassType;
 
+class CWindowMan;
+
 //代表一個遊戲介面視窗
 //將來可以被擴充成為背包介面,狀態介面,任務界面
 class CWindow
 {
    public:
-      CWindow ();
-	   virtual ~CWindow ();
+      CWindow();
+	   virtual ~CWindow();
 
 	   CWindow* pParent ;//父親視窗
 	   typedef std::list <CWindow*> VP_WND ;
@@ -31,28 +33,37 @@ class CWindow
 	   int x, y ;//視窗的座標,左上角的
 	   int w, h ;//視窗的寬高
 
-	   bool bVisible ;
+	   bool checkPoint(int tx, int ty);
+      void addChild(CWindow *pChildWnd);
 
-	   bool checkPoint (int tx, int ty) ;
+	   virtual bool canDrag(int tx, int ty);   // 是否可以拖曳視窗
+      virtual void onDrag();                  // 視窗拖曳過程中
 
-	   virtual void onMove () {} ;
-
-	   virtual bool canDrag (int tx, int ty) ;
-	   virtual void onLClick (int tx, int ty);  // 滑鼠左鍵Click
-      virtual void onRClick(int tx, int ty);   // 滑鼠右鍵Click
+	   virtual void onLClick(int tx, int ty);  // 滑鼠左鍵Click
+      virtual void onRClick(int tx, int ty);  // 滑鼠右鍵Click
    	
-	   virtual void setZOrder (int) {} ;
+      virtual void onLCommand(int btnID);  //子視窗,按鈕button,通知 (滑鼠左鍵按下)
+      virtual void onRCommand(int btnID);  //子視窗,按鈕button,通知 (滑鼠右鍵按下)
 
-	   void addChild (CWindow*) ;
+      virtual WindowClassType getClassType();  // 取得視窗型態
+      virtual void update();  // 資料更新
+      void setWindowMan(CWindowMan *pWndMan);
 
-	   virtual void onLCommand (int) {} ;//子視窗,按鈕button,通知 (滑鼠左鍵按下)
-      virtual void onRCommand (int) {} ;//子視窗,按鈕button,通知 (滑鼠右鍵按下)
+      bool getVisible();
+      virtual void show(bool bShow);
 
-      virtual WindowClassType getClassType();
+#ifdef _GAMEENGINE_3D_
+	   virtual void setZOrder(int order);
+#elif _GAMEENGINE_2D_
+      virtual void draw(HDC hdc, int ox, int oy);
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-#ifdef _GAMEENGINE_2D_
-      virtual void draw (HDC hdc, int ox, int oy) ;
-#endif 
+   protected:
+      CWindowMan* getWindowMan();
+
+   private:
+      bool        m_bVisible;
+      CWindowMan *m_pWindowMan;
 };
 
 #endif  // #ifndef _CWINDOW_H_

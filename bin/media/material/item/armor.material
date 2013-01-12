@@ -1,0 +1,13 @@
+material Armor/PL_Torso_C01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_PL_Torso_C01.dds
+			}
+		}
+	}
+}
