@@ -23,7 +23,7 @@ void CSkill::initSkill()
 
 		ps->initSkillInfo(TYPE_ACTIVE, 1, "Skill/Knight/Stonebody_g1", "主神盔甲",
 			"回復自身25%生命力，在3分鐘內，最大生命提高50%、生命回復速度提升50點",
-			-1, 0, 6, 0, SELF, adv, preAttr, 0, -1, -1, false, false);
+			-1, 113, 0, 6, 0, SELF, adv, preAttr, 0, -1, -1, false, false);
         addInfo(ps);
 	}
 }
@@ -47,6 +47,10 @@ bool CSkill::getAvailable()
 
 void CSkill::create(unsigned int id)
 {
+    if(false == SKILL_INFO::checkID(id))
+    {
+        return;
+    }
 	SKILL_INFO::create(id);
 
 	CSkillInfo* pInfo = getInfo();

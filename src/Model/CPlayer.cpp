@@ -203,7 +203,7 @@ void CPlayer::updateEquipAttr()
 {
 	std::map<EquipSlot , int>::iterator pi = m_mEquip.begin();
 	AdvancedAttribute advAttr;
-	AttributeClear(advAttr);
+	AttributeSet(advAttr);
 	ObscureAttribute obsAttr;
 	AttributeClear(obsAttr);
 	BasisAttributeSet(getLevel(), getBasAttr(), advAttr, obsAttr);		//取得角色初始素質
@@ -219,8 +219,14 @@ void CPlayer::updateEquipAttr()
 		
 		pi++;
 	}
+	advAttr.iHP = getHP();
+	advAttr.iMP = getMP();
 	setAdvAttr(advAttr);
+	updateSkillAvailable();
+}
 
+void CPlayer::updateSkillAvailable()
+{
     std::vector<CSkill>::iterator ps = m_vSkill.begin();
     while(m_vSkill.end() != ps)
     {
@@ -338,8 +344,14 @@ void CPlayer::useItem(unsigned int id)
          if(pConsumableInfo->getEffect() == EDIBLE_SKILL)
             addSkill(pConsumableInfo->getMuch());  // 學習某項技能   
          else if(pConsumableInfo->getEffect() == EDIBLE_HP)
+         {
+             if(getHPMax() == getHP())
+             {
+                 return;
+             }
             addHP(pConsumableInfo->getMuch());     // 補血
             // Todo: 藥水是否有CD時間
+         }
          else
             return;
 

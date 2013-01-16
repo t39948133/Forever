@@ -8,8 +8,9 @@ class CSkillInfo
 public:
     void                initSkillInfo(tagSKILL_TYPE type, int level, std::string icomName, 
                                   std::string name, std::string desc, int actionID,
-								  float castTime, float coolTime, float castRange,
-								  AttackTarget target, AdvancedAttribute effectAttr,
+								  int castMP, float castTime, float coolTime,
+                                  float castRange, AttackTarget target,
+                                  AdvancedAttribute effectAttr,
 								  FloatPrecentAttribute effectAttrPercent, int bufID,
 								  int motionEffects,int triggerMotion,bool weapon,
                                   bool shield);   //初始設定
@@ -19,6 +20,7 @@ public:
     std::string         getName();          //取得名字
     std::string         getDesc();          //取得說明
 	int					getActionID();		//取得技能動作ID
+    int                 getCastMP();        //取得消耗
     float               getCastTime();      //取得施法時間
     float               getCoolDown();      //取得冷卻時間
     float               getCastRange();     //取得施展距離
@@ -45,15 +47,16 @@ private:
 	std::string       m_strName;	//名字
 	std::string       m_strDesc;	//說明
     int               m_iActionID;  //技能動作ID
+    int               m_iCastMP;    //消耗
 	float             m_fCastTime;	//施法時間	
 	float             m_fCoolDown;	//冷卻時間
 	float             m_fCastRange;	//施展距離
-	AttackTarget      m_target;	    //目標
+	AttackTarget      m_target;	    //目標類型
 	AdvancedAttribute m_effectAttr; //影響的屬性
     FloatPrecentAttribute m_effectAttrPercent;	//百分比屬性
     int               m_iBuffID;    //BuffID
 	int				  m_iMotionEffects;	//狀態效果
-	int				  m_iTriggerMotion;	//觸發狀態
+	int				  m_iTriggerMotion;	//如果有這狀態增加觸發
 	bool              m_bWeapon;	//需要武器
     bool              m_bShield;	//需要盾牌    
     

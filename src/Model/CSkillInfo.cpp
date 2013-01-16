@@ -2,7 +2,7 @@
 
 void CSkillInfo::initSkillInfo(tagSKILL_TYPE type, int level, std::string icomName, 
                        std::string name, std::string desc, int actionID,
-					   float castTime, float coolTime, float castRange,
+					   int castMP, float castTime, float coolTime, float castRange,
 					   AttackTarget target, AdvancedAttribute effectAttr,
 					   FloatPrecentAttribute effectAttrPercent, int bufID,
 					   int motionEffects,int triggerMotion,bool weapon,
@@ -14,6 +14,7 @@ void CSkillInfo::initSkillInfo(tagSKILL_TYPE type, int level, std::string icomNa
 	m_strName = name;
 	m_strDesc = desc;
 	m_iActionID = actionID;
+    m_iCastMP = castMP;
 	m_fCastTime = castTime;
 	m_fCoolDown = coolTime;
 	m_fCastRange = castRange;
@@ -55,6 +56,11 @@ std::string CSkillInfo::getDesc()
 int CSkillInfo::getActionID()
 {
 	return m_iActionID;
+}
+
+int CSkillInfo::getCastMP()
+{
+    return m_iCastMP;
 }
 
 float CSkillInfo::getCastTime()
@@ -141,6 +147,8 @@ void CSkillInfo::read(FILE *pFile)
 SkillClassType CSkillInfo::getClassType()
 {
     return SKILL;
-}CSkillInfo::~CSkillInfo()
+}
+
+CSkillInfo::~CSkillInfo()
 {
 }

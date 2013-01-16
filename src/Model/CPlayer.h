@@ -41,6 +41,7 @@ private:
    // } Add by Darren Chen on 2013/01/06
 
 	void updateEquipAttr(); //更新裝備造成的角色屬性
+	void updateSkillAvailable();
 
    /** @brief 穿到裝備欄上
      * @param es 裝備部位

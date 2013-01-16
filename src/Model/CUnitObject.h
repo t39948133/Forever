@@ -10,13 +10,15 @@
 typedef struct tagPOSITION {
    float fX;
    float fY;
-} POSITION;
+} FPOS;
 // } Add by Darren Chen on 2012/12/22
 
 class CUnitObject
 {
    public:
-      CUnitObject(std::string strName, long long uid, char level = 0); //建立角色 傳入名字、等級(預設建立後為0級)
+	CUnitObject(std::string strName, long long uid, char level = 0); //建立角色 傳入名字、
+                                                                     //等級(預設建立後為
+                                                                     //0級)
 
       long long getUID();	   //取得唯一編號
       std::string getName();	//取得角色名字
@@ -32,7 +34,7 @@ class CUnitObject
 
       void setAdvAttr(AdvancedAttribute advAttr);	//設定屬性
       AdvancedAttribute getAdvAttr();	            //取得屬性
-      BasisAttribute getBasAttr();                 //取得基礎屬性
+	BasisAttribute      getBasAttr();                           //取得基礎素質
 
       std::list<CBuff> getBuff();      //取得身上的Buff表
       void addBuff(unsigned int id);   //增加Buff
@@ -66,7 +68,7 @@ class CUnitObject
 
       /** @brief 取得位置
         * @return 位置 */
-      const POSITION& getPosition();
+    const FPOS&         getPosition();
 
       /** @brief 設定目標點位置
         * @param x x座標
@@ -83,7 +85,7 @@ class CUnitObject
 
       /** @brief 取得目標點位置
         * @return 位置 */
-      const POSITION& getTargetPosition();
+    const FPOS&         getTargetPosition();
 
       /** @brief 是否到達目標點
         * @return true  - 是
@@ -112,6 +114,8 @@ class CUnitObject
       // } Add by Darren Chen on 2012/12/22
 
    protected:
+    void                setBasAttr(BasisAttribute basAttr);     //設定基本素質
+
       std::vector<CSkill>  m_vSkill;         //擁有的技能
 
       // Add by Darren Chen on 2012/12/27 {
@@ -125,8 +129,9 @@ class CUnitObject
       BasisAttribute        m_basAttr;	//基本數值
       AdvancedAttribute     m_advAttr;	//屬性
       ObscureAttribute      m_obsAttr;	//隱藏數值
-      ComplexAttribute      m_comAttr;	//狀態屬性
-      FloatPrecentAttribute m_preAttr; //浮點數百分比屬性
+	ComplexAttribute        m_comAttr;		                //狀態造成屬性變化暫存
+    FloatPrecentAttribute   m_preAttr;                      //狀態造成屬性浮點數(百分比)
+                                                            //變化暫存
       std::list<CBuff>      m_lBuff;	//身上的Buff
 
       int getHPR();   //取得回復的生命力點
@@ -145,14 +150,18 @@ class CUnitObject
         * @param targetX  目標點X座標
         * @param targetY  目標點Y座標
         * @param bFaceTarget 是否面對目標點 */
-      void move(float timePass, float targetX, float targetY, bool bFaceTarget);
+      void                  move(float timePass, float targetX, float targetY,
+                                bool bFaceTarget);
 
       bool     m_bFaceTarget;     // 是否面對目標
 #endif
 
-      POSITION m_position;        // 角色X,Y座標 (2D)
-      POSITION m_targetPosition;  // 目標點X,Y座標 (2D)
-      float    m_fDirection;      // 角色方向(單位: 弧度), 逆時針方向旋轉為+, 順時針方向旋轉為-, 方向為0是朝下
+      FPOS                  m_position;                     // 角色X,Y座標 (2D)
+      FPOS                  m_targetPosition;               // 目標點X,Y座標 (2D)
+      float                 m_fDirection;                   // 角色方向(單位: 弧度),
+                                                            //逆時針方向旋轉為+,
+                                                            //順時針方向旋轉為-,
+                                                            //方向為0是朝下
       // } Add by Darren Chen on 2012/12/22
 };
 

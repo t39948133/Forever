@@ -4,12 +4,9 @@
 CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_strName(strName),m_uid(uid),m_level(level)
 {
    AttributeClear(m_basAttr);
-   AttributeClear(m_advAttr);
+	AttributeSet(m_advAttr);
    AttributeClear(m_obsAttr);
    AttributeClear(m_comAttr);
-   m_comAttr.AdvAttr.fATKSpeed = 0.0f;
-   m_comAttr.AdvAttr.fCasting = 0.0f;
-   m_comAttr.AdvAttr.fMove = 0.0f;
    AttributeClear(m_preAttr);
 
    // Add by Darren Chen on 2012/12/22 {
@@ -66,7 +63,7 @@ void CUnitObject::setPosition(float x, float y)
    m_position.fY = y;
 }
 
-const POSITION& CUnitObject::getPosition()
+const FPOS& CUnitObject::getPosition()
 {
    return m_position;
 }
@@ -86,7 +83,7 @@ void CUnitObject::setTargetPosition(float x, float y, bool bFaceTarget)
 }
 #endif
 
-const POSITION& CUnitObject::getTargetPosition()
+const FPOS& CUnitObject::getTargetPosition()
 {
    return m_targetPosition;
 }
@@ -249,6 +246,12 @@ int CUnitObject::getMPR()
    }
 
    return mpr;
+}
+  
+void CUnitObject::setBasAttr(BasisAttribute basAttr)
+{
+    m_basAttr = basAttr;
+    BasisAttributeSet(m_level, basAttr, m_advAttr, m_obsAttr);
 }
   
 void CUnitObject::setAdvAttr(AdvancedAttribute advattr)

@@ -109,9 +109,9 @@ enum EquipQuality
 {
 	COMMON,	//普通
 	RARE,	   //稀有
-	LEGEND,	//傳說
+	LEGEND,	//傳承
 	UNIQUE,	//獨特
-	EPIC	   //史詩
+	EPIC	//英雄
 };
 
 //單持武器/雙持
@@ -205,6 +205,31 @@ enum SkillClassType
 enum BuffClassType
 {
 	BUFF,
+};
+
+enum MonsterType
+{
+    MONSTER_ACTIVE,     //主動
+    MONSTER_PASSIVE,    //被動
+};
+
+enum MonsterGrade
+{
+    REGULAR_GRADE, //普通
+    ELITE_GRADE,  //菁英
+    HERO_GRADE,   //英雄
+    LEGEND_GRADE, //傳說
+};
+
+enum MonsterClass
+{
+    MONSTER,
+};
+
+struct AngerValue
+{
+    long long uid;
+    int iHatred;
 };
 
 const int BACK_ROW = 9;		//row橫 

@@ -62,7 +62,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="OgreMain_d.lib OIS_d.lib wsock32.lib"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;..\..\lib\ogre_v1-8-1\lib\$(ConfigurationName)&quot;;&quot;..\..\lib\ogre_v1-8-1\boost\lib&quot;;..\..\lib\gp_framework"
 				GenerateDebugInformation="true"
 				SubSystem="2"

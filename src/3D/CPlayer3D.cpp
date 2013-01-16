@@ -344,7 +344,8 @@ void CPlayer3D::move(float timeSinceLastFrame, Ogre::Vector3 &offsetDirection)
 
 void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
 {
-   switch(evt.key) {
+   switch(evt.key)
+   {
       case OIS::KC_W: {
          m_keyDirection.z = -1;
 

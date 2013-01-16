@@ -17,9 +17,9 @@ void AttributeClear (AdvancedAttribute& attr)
 	attr.iSDEF = 0;
 	attr.iWDEF = 0;
 	attr.iFlee = 0;
-	attr.fMove = 6.0f;
-	attr.fATKSpeed = 1.5f;
-	attr.fCasting = 1.0f;
+	attr.fMove = 0.0f;
+	attr.fATKSpeed = 0.0f;
+	attr.fCasting = 0.0f;
 }
 
 void AttributeClear (ObscureAttribute& obs)

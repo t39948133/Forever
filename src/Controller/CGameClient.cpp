@@ -13,12 +13,16 @@
 #include "CPlayerInfoWnd.h"
 #include "CBackpackWnd.h"
 #include "CSkillWnd.h"
+#include "CBuff.h"
+#include "CMonster.h"
 #endif  // #ifdef _GAMEENGINE_2D_
 
 CGameClient::CGameClient()
 {
    CItem::initItem();    // 建立物品表
    CSkill::initSkill();  // 建立技能表
+   CBuff::initBuff();
+   CMonster::initMonster(); //建立怪物表
 
    //m_pNetStream = NULL;
    m_pScene = new CScene();
@@ -266,7 +270,7 @@ void CGameClient::doKeyControl()
    else {
       if(m_keyMove == true) {
          // 停止移動
-         POSITION curPos = pPlayer->getPosition();
+         FPOS curPos = pPlayer->getPosition();
          pPlayer->setTargetPosition(curPos.fX, curPos.fY);
 
          CActionEvent actEvent;
@@ -294,7 +298,7 @@ void CGameClient::doUI(HWND hWnd)
       else {
          if(pPlayer != NULL) {
             if(m_keyMove == true) {
-               POSITION curPos = pPlayer->getPosition();
+            FPOS curPos = pPlayer->getPosition();
                pPlayer->setTargetPosition(curPos.fX, curPos.fY);
 
                CActionEvent actEvent;
