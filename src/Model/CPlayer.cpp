@@ -7,6 +7,15 @@
 
 CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
 {
+    BasisAttribute basAttr;
+    AttributeClear(basAttr);
+    basAttr.iSTR = 115;
+    basAttr.iVIT = 110;
+    basAttr.iDEX = 100;
+    basAttr.iAGI = 100;
+    basAttr.iINT = 90;
+    basAttr.iWIL = 105;
+    setBasAttr(basAttr);
    m_backPack.initBack();
    updateEquipAttr();
    // Add by Darren Chen on 2013/01/05 {

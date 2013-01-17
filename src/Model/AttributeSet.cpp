@@ -254,4 +254,7 @@ void BasisAttributeSet (int leve, BasisAttribute bas, AdvancedAttribute& adv, Ob
 
 	adv.iMPMax = ((leve * 70) + bas.iWIL + 10);
 	obs.iMPR = (int) ((leve * 0.3f) + (bas.iWIL * 0.05f));
+
+    adv.iHP = adv.iHPMax;
+    adv.iMP = adv.iMPMax;
 }

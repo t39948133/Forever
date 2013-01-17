@@ -55,40 +55,31 @@ bool CMonster::create(unsigned int id)
     return false;
 }
 
-void CMonster::addHate(AngerValue hate)
+void CMonster::addHate(long long uid, int ihp)
 {
+    int iHatred =(int) abs(ihp) / 20 ;
 	std::list<AngerValue>::iterator pi = m_lHatred.begin();
 	while(m_lHatred.end() != pi)
 	{
-		if(pi->uid == hate.uid)
+		if(pi->uid == uid)
 		{
-			pi->iHatred += hate.iHatred;
+			pi->iHatred += iHatred;
 			break;
 		}
 		pi++;
 	}
+    targetUpdate();
 }
 
 long long CMonster::getTarget()
 {
-	std::list<AngerValue>::iterator pi = m_lHatred.begin();
-	AngerValue hate;
-	hate.iHatred = 0;
-	hate.uid = -1;
-	while(m_lHatred.end() != pi)
-	{
-		if(hate.iHatred < pi->iHatred)
-		{
-			hate = (*pi);
-		}
-		pi++;
-	}
-	return hate.uid;
+	return m_Target;
 }
 
 int CMonster::getReware()
 {
-	return rand() % m_vReware.size();
+    int offset = (rand() % m_vReware.size());
+	return m_vReware[offset];
 }
 
 long long CMonster::getMoney()
@@ -102,6 +93,48 @@ unsigned int CMonster::getXP()
 {
     CMonsterInfo* pInfo = MONSTER_INFO::getInfo();
     return (pInfo->getxp() * getLevel());
+}
+
+void CMonster::work(float timePass)
+{
+    //AI
+    //仇恨值表內玩家攻擊外行為造成仇恨
+    CUnitObject::work(timePass);
+}
+
+void CMonster::targetUpdate()
+{
+    std::list<AngerValue>::iterator pi = m_lHatred.begin();
+	AngerValue hate;
+    AngerValue hateSec;
+	hate.iHatred = -1;
+	hate.uid = -1;
+    hateSec.iHatred = -1;
+    hateSec.uid = -1;
+	while(m_lHatred.end() != pi)
+	{
+		if(hate.iHatred < pi->iHatred)
+		{
+            hateSec = hate;
+			hate = (*pi);
+		}
+		pi++;
+	}
+    if((-1) == hateSec.uid)
+    {
+        m_Target = hate.uid;
+    }
+    else if(hateSec.uid == m_Target)
+    {
+        if(hate.iHatred > (hateSec.iHatred + 15))
+        {
+            m_Target = hate.uid;
+        }
+    }
+    else if(hate.uid != m_Target)
+    {
+        m_Target = hate.uid;
+    }
 }
 
 #ifdef _GAMEENGINE_2D_
