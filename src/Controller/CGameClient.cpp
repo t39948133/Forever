@@ -8,13 +8,15 @@
 #include "CGameClient.h"
 #include "CItem.h"
 #include "CSkill.h"
+#include "CBuff.h"
+#include "CMonster.h"
 
 #ifdef _GAMEENGINE_2D_
 #include "CPlayerInfoWnd.h"
 #include "CBackpackWnd.h"
 #include "CSkillWnd.h"
-#include "CBuff.h"
-#include "CMonster.h"
+#include "CHotKeyWnd.h"
+#include "CPlayerStateWnd.h"
 #endif  // #ifdef _GAMEENGINE_2D_
 
 CGameClient::CGameClient()
@@ -72,6 +74,7 @@ void CGameClient::init()
 
    //單機版用
    CPlayer *pPlayer = m_pScene->addPlayer(1, true);
+   m_pScene->addMonster(2, 0, 400.0f, 400.0f);
 
    initUI();
 }
@@ -131,6 +134,18 @@ void CGameClient::initUI()
    CSkillWnd *pSkillWnd = new CSkillWnd();
    pSkillWnd->init(500, 10, pPlayer);
    m_pWindowMan->addWnd(pSkillWnd);
+
+   CHotKeyWnd *pHotKeyWnd = new CHotKeyWnd();
+   pHotKeyWnd->init(250, 860, pPlayer);
+   m_pWindowMan->addWnd(pHotKeyWnd);
+
+   m_pTargetInfoWnd = new CTargetInfoWnd();
+   m_pTargetInfoWnd->init(300, 0, m_pScene, pPlayer);
+   m_pWindowMan->addWnd(m_pTargetInfoWnd);
+
+   CPlayerStateWnd *pPlayerStateWnd = new CPlayerStateWnd();
+   pPlayerStateWnd->init(20, 900 - 78, pPlayer);
+   m_pWindowMan->addWnd(pPlayerStateWnd);
 #endif  // #ifdef _GAMEENGINE_2D_
 }
 
@@ -288,6 +303,13 @@ void CGameClient::doUI(HWND hWnd)
 
    CPlayer *pPlayer = m_pScene->getMainPlayer();
 
+   if(m_mouseMove == true) {
+      if(pPlayer->isCastSkill() == true) {
+         m_mouseMove = false;
+         pPlayer->setTargetPosition(pPlayer->getPosition().fX, pPlayer->getPosition().fY);
+      }
+   }
+
    if(m_keyMan.isPress(KEY_LBUTTON)) {
       int mx, my;
       getMousePos(hWnd, mx, my);
@@ -296,24 +318,32 @@ void CGameClient::doUI(HWND hWnd)
          // 點到介面
       }
       else {
-         if(pPlayer != NULL) {
-            if(m_keyMove == true) {
-            FPOS curPos = pPlayer->getPosition();
-               pPlayer->setTargetPosition(curPos.fX, curPos.fY);
+         CUnitObject *pUnitObject = m_pScene->getUnitObject((float)mx, (float)my);
+         if(pUnitObject != NULL) {
+            m_pTargetInfoWnd->setTarget(pUnitObject->getUID());
+         }
+         else {
+            m_pTargetInfoWnd->setTarget(-1);
+
+            if(pPlayer != NULL) {
+               if(m_keyMove == true) {
+                  FPOS curPos = pPlayer->getPosition();
+                  pPlayer->setTargetPosition(curPos.fX, curPos.fY);
+
+                  CActionEvent actEvent;
+                  actEvent.m_event = AET_KEY_WASD;
+                  actEvent.m_iKeyUpID = 'W';
+                  CActionDispatch::getInstance()->sendEvnet(pPlayer->getUID(), actEvent);
+                  m_keyMove = false;
+               }
+
+               pPlayer->setTargetPosition((float)mx, (float)my, true);
 
                CActionEvent actEvent;
-               actEvent.m_event = AET_KEY_WASD;
-               actEvent.m_iKeyUpID = 'W';
+               actEvent.m_event = AET_NOT_REACH;
                CActionDispatch::getInstance()->sendEvnet(pPlayer->getUID(), actEvent);
-               m_keyMove = false;
+               m_mouseMove = true;
             }
-
-            pPlayer->setTargetPosition((float)mx, (float)my, true);
-
-            CActionEvent actEvent;
-            actEvent.m_event = AET_NOT_REACH;
-            CActionDispatch::getInstance()->sendEvnet(pPlayer->getUID(), actEvent);
-            m_mouseMove = true;
          }
       }
    }

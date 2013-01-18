@@ -6,6 +6,7 @@
   * @email  darren.z32@msa.hinet.net
   * @date   2012/12/20 */
 #include "CAction.h"
+#include "CSkill.h"
 
 CAction::CAction() : m_iID(0),
                      m_fTime(0.0f),
@@ -57,8 +58,25 @@ int CAction::work(float fCurTime, CActionEvent *pEvent, std::list<int> *pKeyDown
       // 檢查受影響的事件有沒有被觸發, 有被觸發就需要換相對應的動作
       std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
       while(it != m_pvtEventHandlerSet->end()) {
-         if((*it)->check(pEvent, pKeyDownList) == true)
-            return (*it)->getNextActionID();
+         if((*it)->check(pEvent, pKeyDownList) == true) {
+            int nextActionID = (*it)->getNextActionID();
+            
+            // 判斷要施展那個技能動作
+            if((m_iID == 4) && (pEvent->m_bCastSkill == true)) {
+               CSkillInfo *pSkillInfo = CSkill::getInfo(pEvent->m_iCastSkillID);
+               if(pSkillInfo != NULL) {
+                  if(pEvent->m_fCastSkillTime == 0)  // 立即施展, 無吟唱動作
+                     nextActionID = pSkillInfo->getActionID();
+                  else {
+                     // 有吟唱動作
+                     // Todo: 還沒做
+                  }
+               }
+            }
+
+            return nextActionID;
+         }
+
          it++;
       }
 

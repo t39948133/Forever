@@ -1,15 +1,15 @@
 /** This source file is part of Forever
   * Copyright(c) 2012-2013 The DCI's Forever Team
   *
-  * @file   CSkillWnd.h
+  * @file   CTargetInfoWnd.h
   * @author 林有良
   * @date   2012/12/21
   * @version
-  *         2013/01/05 Darren Chen - 整合與修正 */
-#ifndef _CSKILLWND_H_
-#define _CSKILLWND_H_
+  *         2013/01/14 Darren Chen - 整合與修正 */
+#ifndef _CTARGETINFOWND_H_
+#define _CTARGETINFOWND_H_
 #include "CWindow.h"
-#include "CPlayer.h"
+#include "CScene.h"
 #include "IModelEventListener.h"
 
 #ifdef _GAMEENGINE_3D_
@@ -21,24 +21,18 @@
 #include "CTextArea.h"
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-class CSkillWnd : public CWindow,
-                  public IModelEventListener
+class CTargetInfoWnd : public CWindow,
+                       public IModelEventListener
 {
    public:
-	   enum {BUTTON_COUNT = 7, CELL_SIZE = 60, TEXT_COUNT = 7} ;
-   	 
-	   ~CSkillWnd();
+      void init(int _x, int _y, CScene *pScene, CPlayer *pPlayer);
 
-	   void init(int _x, int _y, CPlayer *pb);
-
-	   // CWindow
+      // CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
-      /* virtual */ void onLCommand(int btnID);
       /* virtual */ WindowClassType getClassType();
       /* virtual */ void show(bool bShow);
-      /* virtual */ void onDrag();
 #ifdef _GAMEENGINE_3D_
-	   void setZOrder(int order);
+	   /* virtual */ void setZOrder(int order);
 #endif
 
       // IModelEventListener
@@ -48,17 +42,22 @@ class CSkillWnd : public CWindow,
       /* virtual */ void updateHotKeyItem(int field, HotKeyItem *pHotKeyItem);
       /* virtual */ void updateCoolDown(CSkill *pSkill);
 
+      void setTarget(long long uid);
+      CUnitObject* getTarget();
+
    private:
-      CPlayer *m_pPlayer;
+      CScene    *m_pScene;
+      CPlayer   *m_pPlayer;
+      long long  m_targetUID;
 
 #ifdef _GAMEENGINE_3D_	
-	   CImageButton   *m_vpBtn[BUTTON_COUNT] ;
-      CTextAreaOgre  *m_vpText[TEXT_COUNT];
+	   CImageButton   *m_pBtn;
+      CTextAreaOgre  *m_pText;
       COverlayUI      m_overlay;  //管理overlay
 #elif _GAMEENGINE_2D_
-	   CTextButton    *m_vpBtn[BUTTON_COUNT] ;
-      CTextArea      *m_vpText[TEXT_COUNT];
+	   CTextButton    *m_pBtn;
+      CTextArea      *m_pText;
 #endif
 };
 
-#endif  // #ifndef _CSKILLWND_H_
+#endif  // #ifndef _CTARGETINFOWND_H_

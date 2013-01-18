@@ -1,13 +1,13 @@
 /** This source file is part of Forever
   * Copyright(c) 2012-2013 The DCI's Forever Team
   *
-  * @file   CSkillWnd.h
+  * @file   CPlayerStateWnd.h
   * @author 林有良
   * @date   2012/12/21
   * @version
-  *         2013/01/05 Darren Chen - 整合與修正 */
-#ifndef _CSKILLWND_H_
-#define _CSKILLWND_H_
+  *         2013/01/16 Darren Chen - 整合與修正 */
+#ifndef _CPLAYERSTATEWND_H_
+#define _CPLAYERSTATEWND_H_
 #include "CWindow.h"
 #include "CPlayer.h"
 #include "IModelEventListener.h"
@@ -21,24 +21,22 @@
 #include "CTextArea.h"
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-class CSkillWnd : public CWindow,
-                  public IModelEventListener
+class CPlayerStateWnd : public CWindow,
+                        public IModelEventListener
 {
    public:
-	   enum {BUTTON_COUNT = 7, CELL_SIZE = 60, TEXT_COUNT = 7} ;
-   	 
-	   ~CSkillWnd();
+      enum {BUTTON_COUNT = 3, CELL_SIZE = 20, TEXT_COUNT = 3};
 
-	   void init(int _x, int _y, CPlayer *pb);
+      ~CPlayerStateWnd();
 
-	   // CWindow
+      void init(int _x, int _y, CPlayer *pPlr);
+
+      // CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
-      /* virtual */ void onLCommand(int btnID);
       /* virtual */ WindowClassType getClassType();
       /* virtual */ void show(bool bShow);
-      /* virtual */ void onDrag();
 #ifdef _GAMEENGINE_3D_
-	   void setZOrder(int order);
+	   /* virtual */ void setZOrder(int order);
 #endif
 
       // IModelEventListener
@@ -52,13 +50,13 @@ class CSkillWnd : public CWindow,
       CPlayer *m_pPlayer;
 
 #ifdef _GAMEENGINE_3D_	
-	   CImageButton   *m_vpBtn[BUTTON_COUNT] ;
+	   CImageButton   *m_vpBtn[BUTTON_COUNT];
       CTextAreaOgre  *m_vpText[TEXT_COUNT];
       COverlayUI      m_overlay;  //管理overlay
 #elif _GAMEENGINE_2D_
-	   CTextButton    *m_vpBtn[BUTTON_COUNT] ;
+	   CTextButton    *m_vpBtn[BUTTON_COUNT];
       CTextArea      *m_vpText[TEXT_COUNT];
 #endif
 };
 
-#endif  // #ifndef _CSKILLWND_H_
+#endif  // #ifndef _CPLAYERSTATEWND_H_

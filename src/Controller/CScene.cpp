@@ -6,25 +6,18 @@
   * @email  darren.z32@msa.hinet.net
   * @date   2012/12/12 */
 #include "CScene.h"
+#include "AttributeSet.h"
 
 CScene::CScene()
 {
    m_pvtPlayer = new std::list<CPlayer *>();
+   m_pvtMonster = new std::list<CMonster *>();
    m_pMainPlayer = NULL;
 }
 
 CScene::~CScene()
 {
-   std::list<CPlayer *>::iterator it = m_pvtPlayer->begin();
-   while(it != m_pvtPlayer->end()) {
-      delete (*it);
-      it++;
-   }
-   m_pvtPlayer->clear();
-   delete m_pvtPlayer;
-   m_pvtPlayer = NULL;
-
-   m_pMainPlayer = NULL;
+   removeAll();
 }
 
 CPlayer* CScene::addPlayer(long long uid, bool bMainPlayer)
@@ -50,14 +43,34 @@ void CScene::removePlayer(long long uid)
    }
 }
 
+CMonster* CScene::addMonster(long long uid, int kindID, float x, float y)
+{
+   CMonster *pMonster = new CMonster(kindID, uid, 2, x, y, 300);
+
+   m_pvtMonster->push_back(pMonster);
+
+   return pMonster;
+}
+
 void CScene::removeAll()
 {
-   std::list<CPlayer *>::iterator it = m_pvtPlayer->begin();
-   while(it != m_pvtPlayer->end()) {
-      delete (*it);
-      it++;
+   std::list<CPlayer *>::iterator itPlayer = m_pvtPlayer->begin();
+   while(itPlayer != m_pvtPlayer->end()) {
+      delete (*itPlayer);
+      itPlayer++;
    }
    m_pvtPlayer->clear();
+   delete m_pvtPlayer;
+   m_pvtPlayer = NULL;
+
+   std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
+   while(itMonster != m_pvtMonster->end()) {
+      delete (*itMonster);
+      itMonster++;
+   }
+   m_pvtMonster->clear();
+   delete m_pvtMonster;
+   m_pvtMonster = NULL;
 
    m_pMainPlayer = NULL;
 }
@@ -72,22 +85,116 @@ CPlayer* CScene::getMainPlayer()
    return m_pMainPlayer;
 }
 
-void CScene::work(float timePass)
+CPlayer* CScene::getPlayer(long long uid)
 {
    std::list<CPlayer *>::iterator it = m_pvtPlayer->begin();
    while(it != m_pvtPlayer->end()) {
-      (*it)->work(timePass);
+      if((*it)->getUID() == uid)
+         return (*it);
+  
       it++;
+   }
+
+   return NULL;
+}
+
+CMonster* CScene::getMonster(long long uid)
+{
+   std::list<CMonster *>::iterator it = m_pvtMonster->begin();
+   while(it != m_pvtMonster->end()) {
+      if((*it)->getUID() == uid)
+         return (*it);
+  
+      it++;
+   }
+
+   return NULL;
+}
+
+CUnitObject* CScene::getUnitObject(long long uid)
+{
+   CUnitObject *pUnitObject = NULL;
+
+   pUnitObject = getPlayer(uid);
+   if(pUnitObject != NULL)
+      return pUnitObject;
+
+   pUnitObject = getMonster(uid);
+   if(pUnitObject != NULL)
+      return pUnitObject;
+
+   return NULL;
+}
+
+void CScene::work(float timePass)
+{
+   std::list<CPlayer *>::iterator itPlayer = m_pvtPlayer->begin();
+   while(itPlayer != m_pvtPlayer->end()) {
+      (*itPlayer)->work(timePass);
+      itPlayer++;
+   }
+
+   std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
+   while(itMonster != m_pvtMonster->end()) {
+      (*itMonster)->work(timePass);
+      itMonster++;
    }
 }
 
 #ifdef _GAMEENGINE_2D_
-void CScene::draw(HDC hdc)
+CPlayer* CScene::getPlayer(float x, float y)
 {
    std::list<CPlayer *>::iterator it = m_pvtPlayer->begin();
    while(it != m_pvtPlayer->end()) {
-      (*it)->draw(hdc);
+      if((*it)->isClick(x, y) == true)
+         return (*it);
+  
       it++;
+   }
+
+   return NULL;
+}
+
+CMonster* CScene::getMonster(float x, float y)
+{
+   std::list<CMonster *>::iterator it = m_pvtMonster->begin();
+   while(it != m_pvtMonster->end()) {
+      if((*it)->isClick(x, y) == true)
+         return (*it);
+  
+      it++;
+   }
+
+   return NULL;
+}
+
+CUnitObject* CScene::getUnitObject(float x, float y)
+{
+   CUnitObject *pUnitObject = NULL;
+
+   pUnitObject = getPlayer(x, y);
+   if(pUnitObject != NULL)
+      return pUnitObject;
+
+   pUnitObject = getMonster(x, y);
+   if(pUnitObject != NULL)
+      return pUnitObject;
+
+   return NULL;
+}
+
+void CScene::draw(HDC hdc)
+{
+   std::list<CPlayer *>::iterator itPlayer = m_pvtPlayer->begin();
+   while(itPlayer != m_pvtPlayer->end()) {
+      (*itPlayer)->draw(hdc);
+      itPlayer++;
+   }
+
+   std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
+   while(itMonster != m_pvtMonster->end()) {
+      (*itMonster)->draw(hdc);
+      itMonster++;
    }
 }
 #endif  // #ifdef _GAMEENGINE_2D_

@@ -19,6 +19,7 @@
 #include "CFPS.h"
 #include "CKeyMan.h"
 #include "CWindowMan.h"
+#include "CTargetInfoWnd.h"
 #endif  // #ifdef _GAMEENGINE_2D_
 
 //typedef enum tagGAME_STATE {
@@ -97,11 +98,12 @@ class CGameClient
       void doKeyControl();              // 按鍵控制
       void doUI(HWND hWnd);
 
-      CFPS           m_fps;             // FPS產生器
-      CKeyMan        m_keyMan;          // 鍵盤/滑鼠監控管理員
-      CWindowMan    *m_pWindowMan;      // 視窗管理員
-      bool           m_mouseMove;
-      bool           m_keyMove;
+      CFPS            m_fps;             // FPS產生器
+      CKeyMan         m_keyMan;          // 鍵盤/滑鼠監控管理員
+      CWindowMan     *m_pWindowMan;      // 視窗管理員
+      CTargetInfoWnd *m_pTargetInfoWnd;  // 目標視窗
+      bool            m_mouseMove;
+      bool            m_keyMove;
 #endif  // #ifdef _GAMEENGINE_2D_
 };
 

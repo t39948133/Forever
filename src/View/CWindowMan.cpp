@@ -2,7 +2,8 @@
 
 CWindowMan::CWindowMan ()
 {
-	m_pDragWnd = NULL ;
+	m_pDragWnd = NULL;
+   m_pBackpackWnd = NULL;
 	m_bInDrag = false ;
    m_pWindowList = new std::list<CWindow *>();
 }
@@ -21,6 +22,9 @@ void CWindowMan::addWnd(CWindow *pWnd)
 	pWnd->pParent = NULL;
 	m_pWindowList->push_back(pWnd);
    pWnd->setWindowMan(this);
+
+   if(pWnd->getClassType() == WND_BACKPACK)
+      m_pBackpackWnd = pWnd;
 }
 
 void CWindowMan::deleteAllWindow()
@@ -31,16 +35,9 @@ void CWindowMan::deleteAllWindow()
 		it++;
 	}
    m_pWindowList->clear();
-}
 
-void CWindowMan::update()
-{
-   std::list<CWindow *>::iterator it = m_pWindowList->begin();
-   while(it != m_pWindowList->end()) {
-	   (*it)->update();
-
-      it++;
-   }
+   m_pDragWnd = NULL;
+   m_pBackpackWnd = NULL;
 }
 
 #ifdef _GAMEENGINE_2D_
@@ -114,12 +111,19 @@ bool CWindowMan::work(HWND hWnd, CKeyMan &keyMan)
          std::list<CWindow *>::iterator it = m_pWindowList->begin();
          while(it != m_pWindowList->end()) {
             if((*it)->getClassType() == WND_PLAYERINFO) {
-               (*it)->show(!(*it)->getVisible());
-               bPlayerInfoWndVisible = (*it)->getVisible();
+               (*it)->show(!(*it)->isVisible());
+               bPlayerInfoWndVisible = (*it)->isVisible();
+               break;
             }
-            else if((*it)->getClassType() == WND_BACKPACK)
-               (*it)->show(bPlayerInfoWndVisible);
+            it++;
+         }
 
+         it = m_pWindowList->begin();
+         while(it != m_pWindowList->end()) {
+            if((*it)->getClassType() == WND_BACKPACK) {
+               (*it)->show(bPlayerInfoWndVisible);
+               break;
+            }
             it++;
          }
       }
@@ -127,7 +131,7 @@ bool CWindowMan::work(HWND hWnd, CKeyMan &keyMan)
          std::list<CWindow *>::iterator it = m_pWindowList->begin();
          while(it != m_pWindowList->end()) {
             if((*it)->getClassType() == WND_BACKPACK) {
-               (*it)->show(!(*it)->getVisible());
+               (*it)->show(!(*it)->isVisible());
                break;
             }
             it++;
@@ -137,7 +141,7 @@ bool CWindowMan::work(HWND hWnd, CKeyMan &keyMan)
          std::list<CWindow *>::iterator it = m_pWindowList->begin();
          while(it != m_pWindowList->end()) {
             if((*it)->getClassType() == WND_SKILL) {
-               (*it)->show(!(*it)->getVisible());
+               (*it)->show(!(*it)->isVisible());
                break;
             }
             it++;
@@ -152,7 +156,7 @@ void CWindowMan::draw(HDC hdc)
 {
    std::list<CWindow *>::reverse_iterator it = m_pWindowList->rbegin();
    while(it != m_pWindowList->rend()) {
-      if((*it)->getVisible())
+      if((*it)->isVisible() == true)
 	      (*it)->draw(hdc, 0, 0);
 
       it++;
@@ -173,7 +177,17 @@ void CWindowMan::doDrag(HWND hWnd, CKeyMan &keyMan)
 		m_pDragWnd->x += dx;
 		m_pDragWnd->y += dy;
 
-		m_pDragWnd->onDrag();
+      if(m_pDragWnd->getClassType() == WND_PLAYERINFO) {
+		   m_pDragWnd->onDrag();
+
+         if(m_pBackpackWnd->isVisible() == true) {
+            m_pBackpackWnd->x = m_pDragWnd->x;
+            m_pBackpackWnd->y = m_pDragWnd->y + m_pDragWnd->h + 1;
+            m_pBackpackWnd->onDrag();
+         }
+      }
+      else
+         m_pDragWnd->onDrag();
 
 		m_iDragX = m_iClientX;
 		m_iDragY = m_iClientY;

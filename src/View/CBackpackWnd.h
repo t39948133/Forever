@@ -4,11 +4,13 @@
   * @file   CBackpackWnd.h
   * @author 林有良
   * @date   2012/12/21
-  *         2013/01/05 整合與修正 by Darren Chen */
+  * @version
+  *         2013/01/05 Darren Chen - 整合與修正 */
 #ifndef _CBACKPACKWND_H_
 #define _CBACKPACKWND_H_
 #include "CWindow.h"
 #include "CPlayer.h"
+#include "IModelEventListener.h"
 
 #ifdef _GAMEENGINE_3D_
 #include "CImageButton.h"
@@ -19,26 +21,33 @@
 #include "CTextArea.h"
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-class CBackpackWnd : public CWindow
+class CBackpackWnd : public CWindow,
+                     public IModelEventListener
 {
    public:
 	   enum {BUTTON_COUNT = BACK_MAX, CELL_SIZE = 60, TEXT_COUNT = BACK_MAX + 2} ;
    	
-	   ~CBackpackWnd () {};
+	   ~CBackpackWnd();
 
       void init(int _x, int _y, CPlayer *pb);
 
 	   // CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
+      /* virtual */ void onLCommand(int btnID);
 	   /* virtual */ void onRCommand(int btnID);
       /* virtual */ WindowClassType getClassType();
-      /* virtual */ void update();
       /* virtual */ void show(bool bShow);
       /* virtual */ void onDrag();
-
 #ifdef _GAMEENGINE_3D_
 	   /* virtual */ void setZOrder(int order);
 #endif
+
+      // IModelEventListener
+      /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
+      /* virtual */ void updateBackpack(CUnitObject *pUnitObject);
+      /* virtual */ void updateSkill(CUnitObject *pUnitObject);
+      /* virtual */ void updateHotKeyItem(int field, HotKeyItem *pHotKeyItem);
+      /* virtual */ void updateCoolDown(CSkill *pSkill);
 
    private:
       CPlayer *m_pPlayer;

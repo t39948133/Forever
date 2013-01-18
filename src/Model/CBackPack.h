@@ -5,16 +5,20 @@
 
 class CBackPack
 {
-public:
-	void setGrid(int grid, CItem& itm);		          //砞﹚いず甧琌ぐ或(net packㄏノ)
-	CItem* getItem(int grid);					          //眔硂ず甧
-    CItemInfo* getItemInfo(int grid);                       //眔硂ず甧
-	void addItem(int id, int& stack, int& grid);	    //糤珇 id 珇絪腹 stack 计秖
+   public:
+	   void setGrid(int grid, CItem& itm);		       //砞﹚いず甧琌ぐ或(net packㄏノ)
+	   CItem* getItem(int grid);					       //眔硂ず甧
+      CItemInfo* getItemInfo(int grid);             //眔硂ず甧
+	   void addItem(int id, int& stack, int& grid);	 //糤珇 id 珇絪腹 stack 计秖
 
-	void initBack();								          //箇砞à︹ミΤ珇
+      // Add by Darren Chen on 2013/01/13 {
+      int getSize();                    // 眔璉羆计
+      // } Add by Darren Chen on 2013/01/13
 
-private:
-	CItem m_itemBack[BACK_MAX];
+	   void initBack();								          //箇砞à︹ミΤ珇
+
+   private:
+	   CItem m_itemBack[BACK_MAX];
 };
 
 #endif

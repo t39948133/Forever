@@ -4,7 +4,8 @@
   * @file   CWindowMan.h
   * @author 林有良
   * @date   2012/12/21
-  *         2013/01/05 整合與修正 by Darren Chen */
+  * @version
+  *         2013/01/05 Darren Chen - 整合與修正 */
 #ifndef _CWINDOWMAN_H_
 #define _CWINDOWMAN_H_
 #include "CWindow.h"
@@ -22,7 +23,6 @@ class CWindowMan
 
 	   virtual void addWnd(CWindow *pWnd);
       void deleteAllWindow();
-      void update();            // 視窗資料更新
 
 #ifdef _GAMEENGINE_2D_
       bool work(HWND hWnd, CKeyMan &keyMan);
@@ -35,12 +35,13 @@ class CWindowMan
 #endif
 
 	   std::list<CWindow *> *m_pWindowList;  // 視窗列表
-	   CWindow *m_pDragWnd;   // 拖曳中的視窗
-	   bool     m_bInDrag;    // 視窗是否在拖曳中
-	   int      m_iDragX;     // 拖曳的座標X
-      int      m_iDragY;     // 拖曳的座標Y 
-      int      m_iClientX;   // 滑鼠點擊的座標X
-      int      m_iClientY;   // 滑鼠點擊的座標Y
+	   CWindow *m_pDragWnd;     // 拖曳中的視窗
+      CWindow *m_pBackpackWnd; // 背包視窗
+	   bool     m_bInDrag;      // 視窗是否在拖曳中
+	   int      m_iDragX;       // 拖曳的座標X
+      int      m_iDragY;       // 拖曳的座標Y 
+      int      m_iClientX;     // 滑鼠點擊的座標X
+      int      m_iClientY;     // 滑鼠點擊的座標Y
 };
 
 #endif  // #ifndef _CWINDOWMAN_H_

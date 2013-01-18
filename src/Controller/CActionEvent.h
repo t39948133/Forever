@@ -34,6 +34,11 @@ class CActionEvent
       // AET_KEY_COMBIN (多個按鍵)
       int               m_iKeyDownID;  // 按下按鍵(使用Virtual key)
       int               m_iKeyUpID;    // 放開按鍵(使用Virtual key)
+
+      // AET_CAST_SKILL (技能施展)
+      bool              m_bCastSkill;      // 是否施展技能
+      unsigned int      m_iCastSkillID;    // 技能編號
+      float             m_fCastSkillTime;  // 施展時間
 };
 
 #endif  // #ifndef _CACTIONEVENT_H_

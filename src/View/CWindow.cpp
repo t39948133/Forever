@@ -103,16 +103,12 @@ WindowClassType CWindow::getClassType()
    return WND_NULL;
 }
 
-void CWindow::update()
-{
-}
-
 void CWindow::setWindowMan(CWindowMan *pWndMan)
 {
    m_pWindowMan = pWndMan;
 }
 
-bool CWindow::getVisible()
+bool CWindow::isVisible()
 {
    return m_bVisible;
 }

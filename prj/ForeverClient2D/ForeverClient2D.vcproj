@@ -330,11 +330,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CHotKeyWnd.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CPlayerInfoWnd.cpp"
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CPlayerStateWnd.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CSkillWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CTargetInfoWnd.cpp"
 					>
 				</File>
 				<File
@@ -512,6 +524,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\IModelEventListener.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\obj_mTable.h"
 					>
 				</File>
@@ -535,11 +551,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CHotKeyWnd.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CPlayerInfoWnd.h"
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CPlayerStateWnd.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CSkillWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CTargetInfoWnd.h"
 					>
 				</File>
 				<File

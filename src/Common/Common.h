@@ -17,11 +17,12 @@
 // Add by Darren Chen on 2012/12/22 {
 #include <list>
 #include <map>
+#include <set>
 #include <time.h>
 #include <math.h>
 // } Add by Darren Chen on 2012/12/22
 
-struct BasisAttribute
+struct BasicAttribute
 {
 	int iSTR;	//力量
 	int iVIT;	//體力
@@ -236,6 +237,7 @@ const int BACK_ROW = 9;		//row橫
 const int BACK_COLUMN = 3;	//column直
 const int BACK_MAX = BACK_ROW * BACK_COLUMN;	//格數
 const int longStrSize = 256;
+const int UI_HOTKEY_NUM = 10;
 
 // Add by Darren Chen on 2012/12/13 {
 /** @brief 取得目前系統的日期與時間
@@ -280,6 +282,7 @@ typedef enum tagACTION_EVENT_TYPE {
    AET_NOT_REACH,    // 未到達目標點 (座標更動中)
    AET_KEY,          // 快捷鍵
    AET_KEY_WASD,     // WASD按鍵
+   AET_CAST_SKILL,   // 施展技能
 } ACTION_EVENT_TYPE;  // 動作事件種類
 // } Add by Darren Chen on 2012/12/13
 

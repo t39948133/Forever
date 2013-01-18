@@ -115,13 +115,6 @@ void CActionSystem::changeAction(int newActionID)
 
 void CActionSystem::sendEvent(CActionEvent &actEvent)
 {
-   std::vector<CActionEvent *>::iterator it = m_pvtEventQueue->begin();
-   while(it != m_pvtEventQueue->end()) {
-      delete (*it);
-      it++;
-   }
-   m_pvtEventQueue->clear();
-
    CActionEvent *pEvent = new CActionEvent();
    *pEvent = actEvent;
    m_pvtEventQueue->push_back(pEvent);

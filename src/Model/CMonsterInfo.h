@@ -18,16 +18,16 @@ public:
     MonsterGrade        getLevelGrade();    //取得階級類型
     float               getAlert();         //取得警戒範圍
     float               getRegress();       //取得追擊範圍
-    BasisAttribute      getBasAttr();       //取得基本素質
-    void                initMonsterInfo(std::string name, std::string desc,
-        std::string meshName, std::string meshTexture, char wistom,
-        unsigned int xp, MonsterType atkType, MonsterGrade levelGrade, float alert,
-		float regress, BasisAttribute basAttr);  //初始設定
+    BasicAttribute      getBasAttr();       //取得基本素質
+    void initMonsterInfo(std::string name, std::string desc,
+                         std::string meshName, std::string meshTexture, char wistom,
+                         unsigned int xp, MonsterType atkType, MonsterGrade levelGrade, float alert,
+		                   float regress, BasicAttribute basAttr);  //初始設定
 
     void                read(FILE* pFile);  //讀檔
     void                write(FILE* pFile); //寫檔
     MonsterClass        getClassType();     //取得型態類別
-protected:
+
 private:
     std::string         m_strName;          //名稱
     std::string         m_strDesc;          //說明
@@ -40,7 +40,7 @@ private:
     MonsterGrade        m_LevelGrade;       //階級
     float               m_fAlert;           //警戒範圍
     float               m_fRegress;         //追擊範圍
-    BasisAttribute      m_basAttr;          //基本素質
+    BasicAttribute      m_basAttr;          //基本素質
 };
 
 #endif

@@ -4,7 +4,8 @@
   * @file   CWindow.h
   * @author 林有良
   * @date   2012/12/21
-  *         2013/01/05 - 2013/01/09 [Darren Chen] 整合與修正 */
+  * @version
+  *         2013/01/05 Darren Chen - 整合與修正 */
 #ifndef _CWINDOW_H_
 #define _CWINDOW_H_
 #include "Common.h"
@@ -14,6 +15,9 @@ typedef enum WINDOW_CLASS_TYPE {
    WND_PLAYERINFO,  // 人物資訊視窗
    WND_BACKPACK,    // 背包視窗
    WND_SKILL,       // 技能視窗
+   WND_HOTKEY,      // 快捷鍵視窗
+   WND_TARGETINFO,  // 目標視窗
+   WND_PLAYERSTATE, // 人物狀態視窗
 } WindowClassType;
 
 class CWindowMan;
@@ -46,10 +50,9 @@ class CWindow
       virtual void onRCommand(int btnID);  //子視窗,按鈕button,通知 (滑鼠右鍵按下)
 
       virtual WindowClassType getClassType();  // 取得視窗型態
-      virtual void update();  // 資料更新
       void setWindowMan(CWindowMan *pWndMan);
 
-      bool getVisible();
+      bool isVisible();
       virtual void show(bool bShow);
 
 #ifdef _GAMEENGINE_3D_

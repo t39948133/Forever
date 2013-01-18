@@ -43,8 +43,12 @@ void CItem::initItem ()
       addInfo(pc);
 
       CConsumableInfo* pb = new CConsumableInfo();
-		pb->initConsumableInfo("技能書", "Scroll/Skillbook_01", SCROLL, false, 1, 1, 5, 10, "主神盔甲", EDIBLE_SKILL, 0);
+		pb->initConsumableInfo("主神盔甲", "Scroll/Skillbook_01", SCROLL, false, 1, 1, 5, 10, "可以學習主神盔甲技能", EDIBLE_SKILL, 0);
       addInfo(pb);
+
+      CConsumableInfo* pd = new CConsumableInfo();
+		pd->initConsumableInfo("猛烈一擊", "Scroll/Skillbook_01", SCROLL, false, 1, 1, 5, 10, "可以學習猛烈一擊技能", EDIBLE_SKILL, 1);
+      addInfo(pd);
 	}
 
 }

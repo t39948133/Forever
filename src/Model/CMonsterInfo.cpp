@@ -14,7 +14,7 @@ void CMonsterInfo::initMonsterInfo(std::string name, std::string desc,
                                    std::string meshName, std::string meshTexture,
                                    char wistom, unsigned int xp, MonsterType atkType,
                                    MonsterGrade levelGrade, float alert, float regress,
-								   BasisAttribute basAttr)
+								           BasicAttribute basAttr)
 {
     m_strName = name;
     m_strDesc = desc;
@@ -79,7 +79,7 @@ float CMonsterInfo::getRegress()
     return m_fRegress;
 }
 
-BasisAttribute CMonsterInfo::getBasAttr()
+BasicAttribute CMonsterInfo::getBasAttr()
 {
     return m_basAttr;
 }

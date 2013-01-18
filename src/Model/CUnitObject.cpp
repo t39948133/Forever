@@ -1,5 +1,6 @@
 #include "CUnitObject.h"
 #include "AttributeSet.h"
+#include "CMonster.h"
 
 CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_strName(strName),m_uid(uid),m_level(level)
 {
@@ -15,6 +16,12 @@ CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_str
    m_position.fY = 450.0f;
    m_targetPosition.fX = 450.0f;
    m_targetPosition.fY = 450.0f;
+
+   m_bCastSkill = false;
+   m_pTargetObject = NULL;
+   m_iCastSkillID = 0;
+   m_fCastSkillTime = 0.0f;
+
    m_pActionSystem = new CActionSystem(uid);
 
 #ifdef _GAMEENGINE_2D_
@@ -26,20 +33,195 @@ CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_str
 // Add by Darren Chen on 2012/12/22 {
 CUnitObject::~CUnitObject()
 {
+   m_modelEventListeners.clear();
+
    if(m_pActionSystem) {
       delete m_pActionSystem;
       m_pActionSystem = NULL;
    }
+
+   std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
+   while(itSkill != m_vSkill.end()) {
+      delete (*itSkill);
+      itSkill++;
+   }
+   m_vSkill.clear();
+
+   m_pTargetObject = NULL;
+}
+
+bool CUnitObject::canUseSkill(unsigned int skillID)
+{
+   CSkill *pUseSkill = NULL;
+   std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
+   while(itSkill != m_vSkill.end()) {
+      if((*itSkill)->getID() == skillID) {
+         pUseSkill = (*itSkill);
+         break;
+      }
+
+      itSkill++;
+   }
+
+   if(pUseSkill != NULL) {
+      if(pUseSkill->getAvailable() == true) {  // 確定該項技能因裝備關係而可以使用
+         if(pUseSkill->isReady() == true) {    // 確定該項技能的冷卻時間已經完成
+            CSkillInfo *pUseSkillInfo = pUseSkill->getInfo();
+            if(getMP() >= pUseSkillInfo->getCastMP()) {      // 確定角色的MP足夠使用該項技能
+               if((pUseSkillInfo->getTarget() == ENEMY) ||   // 技能目標是怪物
+                  (pUseSkillInfo->getTarget() == GROUND)) {  // 技能目標是範圍
+                  if(m_pTargetObject != NULL) {
+                     CMonster *pTargetMonster = dynamic_cast<CMonster *>(m_pTargetObject);
+                     if(pTargetMonster != NULL) {
+                        float distance = getDistance(m_position.fX, m_position.fY, pTargetMonster->getPosition().fX, pTargetMonster->getPosition().fY);
+                        if(distance > pUseSkillInfo->getCastRange())
+                           return false;  // 離目標物距離遠過技能施展距離
+                        else
+                           return true;
+                     }
+                     else
+                        return false;  // 目標物不是怪物
+                  }
+                  else
+                     return false;  // 沒有指定怪物
+               }
+               else if((pUseSkillInfo->getTarget() == SELF) ||  // 技能目標是自己
+                       (pUseSkillInfo->getTarget() == TEAM)) {  // 技能目標是自己含隊友
+                  return true;
+               }
+               else
+                  return false;
+            }
+            else
+               return false;
+         }
+         else
+            return false;
+      }
+      else
+         return false;
+   }
+   else
+      return false;
+}
+
+void CUnitObject::startCastSkill(unsigned int skillID)
+{
+   CSkill *pUseSkill = NULL;
+   std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
+   while(itSkill != m_vSkill.end()) {
+      if((*itSkill)->getID() == skillID) {
+         pUseSkill = (*itSkill);
+         break;
+      }
+
+      itSkill++;
+   }
+
+   if(pUseSkill != NULL) {
+      CSkillInfo *pUseSkillInfo = pUseSkill->getInfo();
+      if(pUseSkillInfo != NULL) {
+         m_iCastSkillID = skillID;
+         m_fCastSkillTime = pUseSkillInfo->getCastTime();
+         m_bCastSkill = true;
+      }
+   }
+}
+
+void CUnitObject::useSkill(unsigned int skillID)
+{
+   CSkill *pUseSkill = NULL;
+   std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
+   while(itSkill != m_vSkill.end()) {
+      if((*itSkill)->getID() == skillID) {
+         pUseSkill = (*itSkill);
+         break;
+      }
+
+      itSkill++;
+   }
+
+   if(pUseSkill != NULL) {
+      CSkillInfo *pUseSkillInfo = pUseSkill->getInfo();
+      if(pUseSkillInfo != NULL) {
+         if(pUseSkillInfo->getTarget() == ENEMY) {      // 技能目標是怪物
+            if(m_pTargetObject != NULL) {
+               AdvancedAttribute effectAttr = pUseSkillInfo->getEffectAttr();
+               AdvancedAttribute targetAttr = m_pTargetObject->getAdvAttr();
+               AttributeAdd(targetAttr, effectAttr);
+
+               FloatPrecentAttribute effectPrecentAttr = pUseSkillInfo->getEffectAttrPercent();
+               AttributeMulti(targetAttr, effectPrecentAttr);
+               m_pTargetObject->setAdvAttr(targetAttr);
+            }
+         }
+         else if(pUseSkillInfo->getTarget() == SELF) {  // 技能目標是自己
+            AdvancedAttribute effectAttr = pUseSkillInfo->getEffectAttr();
+            AdvancedAttribute playerAttr = getAdvAttr();
+            AttributeAdd(playerAttr, effectAttr);
+
+            FloatPrecentAttribute effectPrecentAttr = pUseSkillInfo->getEffectAttrPercent();
+            AttributeMulti(playerAttr, effectPrecentAttr);
+
+            setAdvAttr(playerAttr);
+
+            //Todo: 技能產生Buff問題還沒處理
+         }
+
+         // 扣除MP
+         addMP(-pUseSkillInfo->getCastMP());
+
+         // 技能冷卻時間開始
+         pUseSkill->startCoolDown();
+      }
+   }
+}
+
+bool CUnitObject::isCastSkill()
+{
+   return m_bCastSkill;
 }
 
 void CUnitObject::work(float timePass)
 {
+   SkillCoolDown(timePass);
    m_pActionSystem->work(timePass);
 
 #ifdef _GAMEENGINE_2D_
    if(m_pActionSystem->isMove() == true)
       move(timePass, m_targetPosition.fX, m_targetPosition.fY, m_bFaceTarget);
 #endif  // #ifdef _GAMEENGINE_2D_
+
+   if(m_bCastSkill == true) {
+      CAction *pAction = m_pActionSystem->getCurAction();
+      if(pAction->getID() == 1) { // 等待
+         CActionEvent actEvent;
+         actEvent.m_event = AET_CAST_SKILL;
+         actEvent.m_bCastSkill = true;
+         actEvent.m_iCastSkillID = m_iCastSkillID;
+         actEvent.m_fCastSkillTime = m_fCastSkillTime;
+         CActionDispatch::getInstance()->sendEvnet(m_uid, actEvent);
+      }
+      else if(pAction->getID() == 2) {  // 跑步
+         CActionEvent actEvent;
+         actEvent.m_event = AET_REACH;
+         CActionDispatch::getInstance()->sendEvnet(m_uid, actEvent);
+      }
+      else if(pAction->getID() == 4) {  // 戰鬥姿勢
+         CActionEvent actEvent;
+         actEvent.m_event = AET_CAST_SKILL;
+         actEvent.m_bCastSkill = true;
+         actEvent.m_iCastSkillID = m_iCastSkillID;
+         actEvent.m_fCastSkillTime = m_fCastSkillTime;
+         CActionDispatch::getInstance()->sendEvnet(m_uid, actEvent);
+
+         useSkill(m_iCastSkillID);
+
+         m_bCastSkill = false;
+         m_iCastSkillID = 0;
+         m_fCastSkillTime = 0.0f;
+      }
+   }
 }
 
 void CUnitObject::addDirection(float offsetDirection)
@@ -123,7 +305,38 @@ bool CUnitObject::isMove()
       return false;
 }
 
+void CUnitObject::setTargetObject(CUnitObject *pUnitObject)
+{
+   m_pTargetObject = pUnitObject;
+}
+
+CUnitObject* CUnitObject::getTargetObject()
+{
+   return m_pTargetObject;
+}
+
+void CUnitObject::addModelEventListener(IModelEventListener *pListener)
+{
+   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.find(pListener);
+   if(it == m_modelEventListeners.end())
+      m_modelEventListeners.insert(pListener);
+}
+
+void CUnitObject::removeModelEventListener(IModelEventListener *pListener)
+{
+   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.find(pListener);
+   if(it != m_modelEventListeners.end())
+      m_modelEventListeners.erase(it);
+}
+
 #ifdef _GAMEENGINE_2D_
+bool CUnitObject::isClick(float x, float y)
+{
+   int size = 20;
+   float L = getDistance(m_position.fX, m_position.fY, x, y);
+	return L <= size;
+}
+
 void CUnitObject::draw(HDC hdc)
 {
    int size = 20;
@@ -139,6 +352,33 @@ void CUnitObject::draw(HDC hdc)
    m_pActionSystem->draw(hdc, (int)m_position.fX - size, (int)m_position.fY + size + 22);
 }
 #endif  // #ifdef _GAMEENGINE_2D_
+
+void CUnitObject::notifyUpdateAdvAttr()
+{
+   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.begin();
+   while(it != m_modelEventListeners.end()) {
+      (*it)->updateAdvAttr(this);
+      it++;
+   }
+}
+
+void CUnitObject::notifyUpdateSkill()
+{
+   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.begin();
+   while(it != m_modelEventListeners.end()) {
+      (*it)->updateSkill(this);
+      it++;
+   }
+}
+
+void CUnitObject::notifyUpdateCoolDown(CSkill *pSkill)
+{
+   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.begin();
+   while(it != m_modelEventListeners.end()) {
+      (*it)->updateCoolDown(pSkill);
+      it++;
+   }
+}
 // } Add by Darren Chen on 2012/12/22
 
 long long CUnitObject::getUID()
@@ -168,6 +408,8 @@ void CUnitObject::addHP(int hp)
 	{
 		m_advAttr.iHP = getHPMax();
 	}
+
+   notifyUpdateAdvAttr();
 }
 
 int CUnitObject::getHP()
@@ -199,6 +441,8 @@ void CUnitObject::addMP(int mp)
 	{
 		m_advAttr.iMP = getMPMax();
 	}
+
+   notifyUpdateAdvAttr();
 }
 
 int CUnitObject::getMP()
@@ -248,23 +492,27 @@ int CUnitObject::getMPR()
    return mpr;
 }
   
-void CUnitObject::setBasAttr(BasisAttribute basAttr)
+void CUnitObject::setBasAttr(BasicAttribute basAttr)
 {
     m_basAttr = basAttr;
-    BasisAttributeSet(m_level, basAttr, m_advAttr, m_obsAttr);
+    BasicAttributeSet(m_level, basAttr, m_advAttr, m_obsAttr);
 }
   
 void CUnitObject::setAdvAttr(AdvancedAttribute advattr)
 {
    m_advAttr = advattr;	//設定屬性資料
+
    if(getHPMax() < m_advAttr.iHP)
-   {
       m_advAttr.iHP = getHPMax();
-   }
+   else if(m_advAttr.iHP < 0)
+      m_advAttr.iHP = 0;
+   
    if(getMPMax() < m_advAttr.iMP)
-   {
       m_advAttr.iMP = getMPMax();
-   }
+   else if(m_advAttr.iMP < 0)
+      m_advAttr.iMP = 0;
+
+   notifyUpdateAdvAttr();
 }
 
 AdvancedAttribute CUnitObject::getAdvAttr()
@@ -277,7 +525,7 @@ AdvancedAttribute CUnitObject::getAdvAttr()
    return attr;
 }
 
-BasisAttribute CUnitObject::getBasAttr()
+BasicAttribute CUnitObject::getBasAttr()
 {
 	return m_basAttr;
 }
@@ -323,28 +571,31 @@ void CUnitObject::addBuff(unsigned int id)
    updateBuff(0.0f);
 }
 
-std::vector<CSkill> CUnitObject::getSkill()
+std::vector<CSkill *> CUnitObject::getSkill()
 {
    return m_vSkill;
 }
 
 void CUnitObject::SkillCoolDown(float timepass)
 {
-    std::vector<CSkill>::iterator pi = m_vSkill.begin();
+   std::vector<CSkill *>::iterator pi = m_vSkill.begin();
    while(m_vSkill.end() != pi)
    {
-      pi->afterTime(timepass);
+      if((*pi)->updateCoolDown(timepass) == true)
+         notifyUpdateCoolDown((*pi));
+
       pi++;
    }
 }
 
-bool CUnitObject::addSkill(unsigned int id)
+bool CUnitObject::addSkill(unsigned int skillID)
 {
-    CSkill st ;
-   st.create(id);
-   if(st.canLearn(m_level))
+   CSkill *pSkill = new CSkill();
+   pSkill->create(skillID);
+   if(pSkill->canLearn(m_level))
    {
-      m_vSkill.push_back(st);
+      m_vSkill.push_back(pSkill);
+      notifyUpdateSkill();
       return true;
    }
    return false;
