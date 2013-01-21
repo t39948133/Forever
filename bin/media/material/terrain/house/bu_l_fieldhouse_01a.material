@@ -1,0 +1,304 @@
+material "filedhouse_01a_18"
+{
+	technique filedhouse_01a_18_technique
+	{
+		pass filedhouse_01a_18_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_18_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_018.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_6"
+{
+	technique filedhouse_01a_6_technique
+	{
+		pass filedhouse_01a_6_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_6_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_006.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_01"
+{
+	technique filedhouse_01a_01_technique
+	{
+		pass filedhouse_01a_01_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			alpha_rejection greater 128
+
+			texture_unit filedhouse_01a_01_Diffuse#0
+			{
+				texture na_l_flower_15o_01.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit filedhouse_01a_01_Unknown#1
+			{
+				texture na_l_flower_15o_01_alpha.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_08"
+{
+	technique filedhouse_01a_08_technique
+	{
+		pass filedhouse_01a_08_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_08_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_008.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_3"
+{
+	technique filedhouse_01a_3_technique
+	{
+		pass filedhouse_01a_3_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_3_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_003.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_21"
+{
+	technique filedhouse_01a_21_technique
+	{
+		pass filedhouse_01a_21_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_21_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_021.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_23"
+{
+	technique filedhouse_01a_23_technique
+	{
+		pass filedhouse_01a_23_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_23_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_024.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_14"
+{
+	technique filedhouse_01a_14_technique
+	{
+		pass filedhouse_01a_14_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_14_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_014.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_5"
+{
+	technique filedhouse_01a_5_technique
+	{
+		pass filedhouse_01a_5_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_5_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_005.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_16"
+{
+	technique filedhouse_01a_16_technique
+	{
+		pass filedhouse_01a_16_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_16_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_016.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_9"
+{
+	technique filedhouse_01a_9_technique
+	{
+		pass filedhouse_01a_9_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_9_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_009.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "filedhouse_01a_13"
+{
+	technique filedhouse_01a_13_technique
+	{
+		pass filedhouse_01a_13_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit filedhouse_01a_13_Diffuse#0
+			{
+				texture bu_l_fieldhouse_01a_013.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Na_L_bush_04d"
+{
+	technique Na_L_bush_04d_technique
+	{
+		pass Na_L_bush_04d_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			alpha_rejection greater 128
+
+			texture_unit Na_L_bush_04d_Diffuse#0
+			{
+				texture na_l_bush_04d_01.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit Na_L_bush_04d_Unknown#1
+			{
+				texture na_l_bush_04d_01_alpha.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

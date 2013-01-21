@@ -1,0 +1,20 @@
+material "wooden_box"
+{
+	technique wooden_box_technique
+	{
+		pass wooden_box_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit wooden_box_Diffuse#0
+			{
+				texture wooden_box_001.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

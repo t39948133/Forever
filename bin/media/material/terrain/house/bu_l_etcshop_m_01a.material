@@ -1,0 +1,132 @@
+material "Tile06"
+{
+	technique Tile06_technique
+	{
+		pass Tile06_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit Tile06_Diffuse#0
+			{
+				texture bu_l_outpostresta_01a_006.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Tile08"
+{
+	technique Tile08_technique
+	{
+		pass Tile08_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit Tile08_Diffuse#0
+			{
+				texture bu_l_outpostresta_01a_001.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Tile09"
+{
+	technique Tile09_technique
+	{
+		pass Tile09_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit Tile09_Diffuse#0
+			{
+				texture bu_l_outpostresta_01a_009.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Tile02"
+{
+	technique Tile02_technique
+	{
+		pass Tile02_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit Tile02_Diffuse#0
+			{
+				texture bu_l_outpostresta_01a_002.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Tile07"
+{
+	technique Tile07_technique
+	{
+		pass Tile07_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit Tile07_Diffuse#0
+			{
+				texture bu_l_outpostresta_01a_006.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "Basic"
+{
+	technique Basic_technique
+	{
+		pass Basic_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit Basic_Diffuse#0
+			{
+				texture bu_l_outpost_01a_001.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

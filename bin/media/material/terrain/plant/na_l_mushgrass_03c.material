@@ -1,0 +1,31 @@
+material "mushgrass03"
+{
+	technique mushgrass03_technique
+	{
+		pass mushgrass03_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			alpha_rejection greater 128
+
+			texture_unit mushgrass03_Diffuse#0
+			{
+				texture na_l_flower_19s_01.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit mushgrass03_Unknown#1
+			{
+				texture Na_L_flower_19s_01_alpha.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

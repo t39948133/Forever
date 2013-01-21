@@ -1,0 +1,31 @@
+material "Na_L_bush_02b"
+{
+	technique Na_L_bush_02b_technique
+	{
+		pass Na_L_bush_02b_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			alpha_rejection greater 128
+
+			texture_unit Na_L_bush_02b_Diffuse#0
+			{
+				texture na_l_bush_01a_01.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit Na_L_bush_02b_Unknown#1
+			{
+				texture Na_L_bush_01a_01_alpha.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

@@ -1,0 +1,32 @@
+material "mushgrass_04d"
+{
+	technique mushgrass_04d_technique
+	{
+		pass mushgrass_04d_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 0 0 0 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+			depth_write off
+
+			texture_unit mushgrass_04d_Diffuse#0
+			{
+				texture na_l_flower_19s_01.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit mushgrass_04d_Unknown#1
+			{
+				texture Na_L_flower_19s_01_alpha.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

@@ -1,0 +1,132 @@
+material "farmhouse_01"
+{
+	technique farmhouse_01_technique
+	{
+		pass farmhouse_01_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit farmhouse_01_Diffuse#0
+			{
+				texture bu_l_farmhouse_01a_002.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "farmhouse_02"
+{
+	technique farmhouse_02_technique
+	{
+		pass farmhouse_02_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit farmhouse_02_Diffuse#0
+			{
+				texture bu_l_farmhouse_01a_005.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "farmhouse_f"
+{
+	technique farmhouse_f_technique
+	{
+		pass farmhouse_f_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit farmhouse_f_Diffuse#0
+			{
+				texture bu_l_farmhouse_02b_008.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "farmhouse_top"
+{
+	technique farmhouse_top_technique
+	{
+		pass farmhouse_top_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit farmhouse_top_Diffuse#0
+			{
+				texture bu_l_farmhouse_01a_001.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "farmhouse_cao"
+{
+	technique farmhouse_cao_technique
+	{
+		pass farmhouse_cao_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit farmhouse_cao_Diffuse#0
+			{
+				texture bu_l_farmhouse_01a_006.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "farmhouse_wall01"
+{
+	technique farmhouse_wall01_technique
+	{
+		pass farmhouse_wall01_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit farmhouse_wall01_Diffuse#0
+			{
+				texture bu_l_farmhouse_01a_003.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

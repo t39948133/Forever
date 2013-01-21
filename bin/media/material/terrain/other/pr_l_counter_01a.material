@@ -1,0 +1,20 @@
+material "C001"
+{
+	technique C001_technique
+	{
+		pass C001_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit C001_Diffuse#0
+			{
+				texture pr_l_counter_01a_001.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

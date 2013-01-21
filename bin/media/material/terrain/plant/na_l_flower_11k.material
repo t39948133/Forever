@@ -1,0 +1,31 @@
+material "flower11k"
+{
+	technique flower11k_technique
+	{
+		pass flower11k_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			alpha_rejection greater 128
+
+			texture_unit flower11k_Diffuse#0
+			{
+				texture na_l_flower_07g_01.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit flower11k_Unknown#1
+			{
+				texture Na_L_flower_07g_01_alpha.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
