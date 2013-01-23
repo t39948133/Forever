@@ -45,7 +45,7 @@ void CScene::removePlayer(long long uid)
 
 CMonster* CScene::addMonster(long long uid, int kindID, float x, float y)
 {
-   CMonster *pMonster = new CMonster(kindID, uid, 2, x, y, 300);
+   CMonster *pMonster = new CMonster(kindID, uid, x, y);
 
    m_pvtMonster->push_back(pMonster);
 
@@ -136,9 +136,16 @@ void CScene::work(float timePass)
 
    std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
    while(itMonster != m_pvtMonster->end()) {
-      (*itMonster)->work(timePass);
+      (*itMonster)->work(timePass, *this);
+		if((*itMonster)->isDead())
+		{
+			itMonster = m_pvtMonster->erase(itMonster);
+		}
+		else
+		{
       itMonster++;
    }
+}
 }
 
 #ifdef _GAMEENGINE_2D_
@@ -181,6 +188,11 @@ CUnitObject* CScene::getUnitObject(float x, float y)
       return pUnitObject;
 
    return NULL;
+}
+
+std::list<CPlayer *> *CScene::getvtPlayer()
+{
+	return m_pvtPlayer;
 }
 
 void CScene::draw(HDC hdc)

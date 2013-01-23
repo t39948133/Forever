@@ -44,6 +44,8 @@ public:
    /** @brief 取得快捷鍵有幾個 */
    int getHotKeySize();
 
+   void skillDamage(AdvancedAttribute targetAttr);
+
 #ifdef _GAMEENGINE_2D_
    /** @brief Client端繪圖動作 
      * @param hdc 繪圖裝置 */

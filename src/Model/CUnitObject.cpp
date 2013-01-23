@@ -71,18 +71,21 @@ bool CUnitObject::canUseSkill(unsigned int skillID)
                if((pUseSkillInfo->getTarget() == ENEMY) ||   // 技能目標是怪物
                   (pUseSkillInfo->getTarget() == GROUND)) {  // 技能目標是範圍
                   if(m_pTargetObject != NULL) {
-                     CMonster *pTargetMonster = dynamic_cast<CMonster *>(m_pTargetObject);
+                    /* CMonster *pTargetMonster = dynamic_cast<CMonster *>(m_pTargetObject);
                      if(pTargetMonster != NULL) {
                         float distance = getDistance(m_position.fX, m_position.fY, pTargetMonster->getPosition().fX, pTargetMonster->getPosition().fY);
+                        */
+					  float distance = getDistance(m_position.fX, m_position.fY,
+						  m_pTargetObject->getPosition().fX, m_pTargetObject->getPosition().fY);
                         if(distance > pUseSkillInfo->getCastRange())
                            return false;  // 離目標物距離遠過技能施展距離
                         else
                            return true;
                      }
                      else
-                        return false;  // 目標物不是怪物
+                /*        return false;  // 目標物不是怪物
                   }
-                  else
+                  else*/
                      return false;  // 沒有指定怪物
                }
                else if((pUseSkillInfo->getTarget() == SELF) ||  // 技能目標是自己
@@ -152,7 +155,8 @@ void CUnitObject::useSkill(unsigned int skillID)
 
                FloatPrecentAttribute effectPrecentAttr = pUseSkillInfo->getEffectAttrPercent();
                AttributeMulti(targetAttr, effectPrecentAttr);
-               m_pTargetObject->setAdvAttr(targetAttr);
+               skillDamage(targetAttr);
+               //m_pTargetObject->setAdvAttr(targetAttr);
             }
          }
          else if(pUseSkillInfo->getTarget() == SELF) {  // 技能目標是自己
@@ -175,6 +179,11 @@ void CUnitObject::useSkill(unsigned int skillID)
          pUseSkill->startCoolDown();
       }
    }
+}
+
+void CUnitObject::skillDamage(AdvancedAttribute targetAttr)
+{
+    m_pTargetObject->setAdvAttr(targetAttr);
 }
 
 bool CUnitObject::isCastSkill()
@@ -496,6 +505,8 @@ void CUnitObject::setBasAttr(BasicAttribute basAttr)
 {
     m_basAttr = basAttr;
     BasicAttributeSet(m_level, basAttr, m_advAttr, m_obsAttr);
+	 
+   notifyUpdateAdvAttr();
 }
   
 void CUnitObject::setAdvAttr(AdvancedAttribute advattr)
@@ -503,12 +514,16 @@ void CUnitObject::setAdvAttr(AdvancedAttribute advattr)
    m_advAttr = advattr;	//設定屬性資料
 
    if(getHPMax() < m_advAttr.iHP)
+    {
       m_advAttr.iHP = getHPMax();
+    }
    else if(m_advAttr.iHP < 0)
       m_advAttr.iHP = 0;
    
    if(getMPMax() < m_advAttr.iMP)
+    {
       m_advAttr.iMP = getMPMax();
+    }
    else if(m_advAttr.iMP < 0)
       m_advAttr.iMP = 0;
 
@@ -598,6 +613,7 @@ bool CUnitObject::addSkill(unsigned int skillID)
       notifyUpdateSkill();
       return true;
    }
+//delete pSkill;
    return false;
 }
 

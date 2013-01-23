@@ -174,7 +174,8 @@ void CBackpackWnd::updateBackpack(CUnitObject *pUnitObject)
 	   for(int i = 0; i <BACK_COLUMN; i++) {
 		   for(int m = 0; m < BACK_ROW; m++) {		
             CItem *pItem = backpack.getItem(i * BACK_ROW + m);
-			   if(pItem != NULL) {
+			   if(pItem != NULL) 
+{
                CItemInfo *pItemInfo = pItem->getInfo();
 
 #ifdef _GAMEENGINE_3D_

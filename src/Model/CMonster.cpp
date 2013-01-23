@@ -1,22 +1,28 @@
 #include "CMonster.h"
 #include "AttributeSet.h"
+#include "CSkill.h"
+#include "CScene.h"
+#include "CActionDispatch.h"
 
-/*CMonster::CMonster(int kindID, long long uid, char level, float dx, float dy,
-                   std::vector<CSkill *> vSkill, std::list<AngerValue> lHatred,
-                   std::vector<int> vReware, long long money) :
-                   CUnitObject(MONSTER_INFO::getInfo(id)->getName(), uid, level)*/
-CMonster::CMonster(int kindID, long long uid, char level, float dx, float dy, long long money) :
-                   CUnitObject(MONSTER_INFO::getInfo(kindID)->getName(), uid, level)
+const int idelRandRange = 5000;
+
+CMonster::CMonster(int kindID, long long uid, float fx, float fy) :
+            CUnitObject(MONSTER_INFO::getInfo(kindID)->getName(), uid, 
+            MONSTER_INFO::getInfo(kindID)->getLevel()),
+                        m_state(ESTABLISH)
 {
    if(create(kindID))
    {
-     setPosition(dx, dy);
-     setTargetPosition(dx, dy);
-     //m_vSkill = vSkill;
-     //m_lHatred = lHatred;
-     //m_vReware = vReware;
-     m_Money = money;
-   }
+		 setPosition(fx, fy);
+         setTargetPosition(fx, fy);
+         m_state = IDLE;
+         m_vSkill = getSkill();
+		 m_bonPosition.fX = fx;
+		 m_bonPosition.fY = fy;
+		 m_anchorPosition.fX = 0.0f;
+		 m_anchorPosition.fY = 0.0f;
+
+		 srand((unsigned int)time(NULL));
 
    ACTION_DATA actData;
    CActionEvent actEvent;
@@ -59,6 +65,7 @@ CMonster::CMonster(int kindID, long long uid, char level, float dx, float dy, lo
 
    m_pActionSystem->addAction(pAction);
 }
+}
 
 CMonster::~CMonster()
 {
@@ -81,8 +88,16 @@ void CMonster::initMonster()
         basAttr.iWIL = 0;
 
         CMonsterInfo* pm = new CMonsterInfo();
-        pm->initMonsterInfo("斑紋凱魯賓", "普通怪", "", "", 1, 350, MONSTER_ACTIVE,
-            REGULAR_GRADE, 100, 500, basAttr);
+        std::vector<int> reware;
+        std::vector<CSkill*> skill;
+        reware.push_back(0);
+        reware.push_back(1);
+        reware.push_back(2);
+        CSkill* pskill = new CSkill();
+        pskill->create(1);
+        skill.push_back(pskill);
+        pm->initMonsterInfo("斑紋凱魯賓", "普通怪", "", "", "", 1, 1, 350, MONSTER_ACTIVE,
+            REGULAR_GRADE, 100, 500, basAttr, 100, reware, skill);
         addInfo(pm);
     }
 }
@@ -98,8 +113,6 @@ bool CMonster::create(unsigned int kindID)
     if(NULL != pInfo)
     {
         m_lHatred.clear();
-        m_vReware.clear();
-        m_Money = 0;
         setBasAttr(pInfo->getBasAttr());
         return true;
     }
@@ -108,7 +121,25 @@ bool CMonster::create(unsigned int kindID)
 
 void CMonster::addHate(long long uid, int damage)
 {
+    if(RETURN == m_state)//回歸途中不計算仇恨值
+    {
+        return;
+    }
+    if(IDLE == m_state)//idle狀態 被攻擊切換取得目標
+    {
+        m_state = GOALS;
+        m_anchorPosition.fX = getPosition().fX;
+        m_anchorPosition.fY = getPosition().fY;
+    }
    int iHatred =(int) abs(damage) / 20 ;
+    if(0 == m_lHatred.size())
+    {
+        AngerValue anger;
+        anger.uid = uid;
+        anger.iHatred = iHatred;
+        m_lHatred.push_back(anger);
+        return;
+    }
 	std::list<AngerValue>::iterator pi = m_lHatred.begin();
 	while(m_lHatred.end() != pi)
 	{
@@ -119,23 +150,23 @@ void CMonster::addHate(long long uid, int damage)
 		}
 		pi++;
 	}
-    targetUpdate();
 }
 
 long long CMonster::getTarget()
 {
-	return m_Target;
+	return getTargetObject()->getUID();
 }
 
 int CMonster::getReware()
 {
-    int offset = (rand() % m_vReware.size());
-	return m_vReware[offset];
+    std::vector<int> reware = MONSTER_INFO::getInfo()->getReware();
+    int offset = (rand() % reware.size());
+	return reware[offset];
 }
 
 long long CMonster::getMoney()
 {
-    long long money = m_Money;
+    long long money = MONSTER_INFO::getInfo()->getMoney();
     money -= (int) (money * (rand() % 10) * 0.1f);
 	return money;
 }
@@ -146,15 +177,30 @@ unsigned int CMonster::getXP()
     return (pInfo->getxp() * getLevel());
 }
 
-void CMonster::work(float timePass)
+void CMonster::work(float timePass, CScene& scene)
 {
-    //AI
-    //仇恨值表內玩家攻擊外行為造成仇恨
+    targetUpdate(scene);
     CUnitObject::work(timePass);
+    AIAction(timePass, scene);
+    //仇恨值表內玩家攻擊外行為造成仇恨    
 }
 
-void CMonster::targetUpdate()
+bool CMonster::isDead()
 {
+	return 0 >= getAdvAttr().iHP;
+}
+
+std::vector<CSkill*> CMonster::getSkill()
+{
+   return MONSTER_INFO::getInfo()->getSkill();
+}
+
+void CMonster::targetUpdate(CScene& scene)
+{
+	if(0 == m_lHatred.size())
+	{
+		return;
+	}
    std::list<AngerValue>::iterator pi = m_lHatred.begin();
    AngerValue hate;
    AngerValue hateSec;
@@ -173,24 +219,254 @@ void CMonster::targetUpdate()
 	}
    if((-1) == hateSec.uid)
    {
-     m_Target = hate.uid;
+        CUnitObject* punit = scene.getUnitObject(hate.uid);
+        setTargetObject(punit);
    }
-   else if(hateSec.uid == m_Target)
+    else if(hateSec.uid == getTarget())
    {
-     if(hate.iHatred > (hateSec.iHatred + 15))
+		int compare = hateSec.iHatred +
+			((int) (hateSec.iHatred * 0.05f));
+        if(hate.iHatred > compare)//用%數比較不會跳
      {
-         m_Target = hate.uid;
+            CUnitObject* punit = scene.getUnitObject(hate.uid);
+            setTargetObject(punit);
      }
    }
-   else if(hate.uid != m_Target)
+    else if(hate.uid != getTarget())
    {
-     m_Target = hate.uid;
+        CUnitObject* punit = scene.getUnitObject(hate.uid);
+        setTargetObject(punit);
+    }
+}
+
+void CMonster::AIAction(float timePass, CScene& scene)
+{    
+	CMonsterInfo* pInfo = MONSTER_INFO::getInfo();
+	if(NULL == pInfo)
+	{
+		return;
+	}
+	if(IDLE == m_state)
+	{
+		if(MONSTER_ACTIVE == pInfo->getATKtype())
+		{
+			std::list<CPlayer*>* playerList = scene.getvtPlayer();
+			std::list<CPlayer*>::iterator pp = playerList->begin();
+			float distance = pInfo->getAlert();
+			long long playerID = -1;
+			while(playerList->end() != pp)
+			{
+				float dis = getDistance(getPosition().fX, getPosition().fY,
+										(*pp)->getPosition().fX, (*pp)->getPosition().fY);
+				if(pInfo->getAlert() > dis)
+				{
+					if(distance > dis)
+					{
+						distance = dis;
+						playerID = (*pp)->getUID();
+					}
+				}
+				pp++;
+			}
+			if(-1 != playerID)
+			{
+				addHate(playerID, 0);
+				return;
+			}
+		}
+		if(isReachTarget())
+		{
+			int pass = rand() % idelRandRange;
+			if(3 == pass)
+			{
+				float range = pInfo->getAlert();
+				int fx = (rand() % (int) (range * 2)) - (int) (range);
+				int fy = (rand() % (int) (range * 2)) - (int) (range);
+				float ftx = m_bonPosition.fX + fx;
+				float fty = m_bonPosition.fY + fy;
+				setTargetPosition(ftx, fty, true);
+
+				CActionEvent actEvent;
+				actEvent.m_event = AET_NOT_REACH;
+				CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+			}
+			else
+			{
+				setTargetPosition(getPosition().fX, getPosition().fY);
+
+				CActionEvent actEvent;
+				actEvent.m_event = AET_REACH;
+				CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+			}
+		}
+		return;
+	}
+    if(RETURN == m_state)//回歸原位 檢查到了沒 到了開始idle
+    {
+       setBasAttr(pInfo->getBasAttr());
+       if(isReachTarget())
+       {
+           m_state = IDLE;
+       }
+       return;
+    }
+    if(GOALS == m_state)
+    {
+        CUnitObject* punit = getTargetObject();
+        if(NULL == punit)
+	    {
+		    return;
    }
+	    float fx = punit->getPosition().fX;
+	    float fy = punit->getPosition().fY;
+       setTargetPosition(fx, fy, true);
+
+        CActionEvent actEvent;
+        actEvent.m_event = AET_NOT_REACH;
+        CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+
+        m_state = DOLLY;
+        return;
+    }
+	if(DOLLY == m_state)
+	{
+		CUnitObject* punit = getTargetObject();
+      if(NULL == punit)
+	   {
+		   return;
+	   }
+	   float fx = punit->getPosition().fX;
+	   float fy = punit->getPosition().fY;
+      setTargetPosition(fx, fy, true);
+
+		float distance = getDistance(getPosition().fX, getPosition().fY, fx, fy);
+      if(getBack())//離開太遠回歸
+      {
+           return;
+      }
+#ifdef _GAMEENGINE_2D_
+		if(35.0f > distance)
+		{
+			//setTargetPosition(getPosition().fX, getPosition().fY);
+         CActionEvent actEvent;
+         actEvent.m_event = AET_REACH;
+         CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+			m_state = ATTACK;
+		}
+		return;
+#endif //#ifdef _GAMEENGINE_2D_
+	}
+    if(ATTACK == m_state)
+    {
+#ifdef _GAMEENGINE_2D_
+       float fx = getTargetObject()->getPosition().fX;
+       float fy = getTargetObject()->getPosition().fY;
+       float distance = getDistance(getPosition().fX, getPosition().fY, fx, fy);
+       if(40.0f < distance)
+       {
+          m_state = GOALS;
+          return;
+       }
+#endif //#ifdef _GAMEENGINE_2D_
+       std::vector<CSkill*> vskill = getSkill();
+       std::vector<CSkill*>::iterator pskill = vskill.begin();
+       switch(pInfo->getWistom())
+       {
+       case 1:
+			 while (vskill.end() != pskill)
+			 {
+             if((*pskill)->isReady())
+				 {
+                useSkill((*pskill)->getID());
+					 break;
+				 }
+				 pskill++;
+			  }
+		     break;
+		 case 2:  
+			 {   //選強技能用 菁英
+          int hp = 0;
+          int no = -1;
+          while(vskill.end() != pskill)
+          {
+             if((*pskill)->isReady())
+             {
+                CSkillInfo* pInfo = (*pskill)->getInfo();
+                AdvancedAttribute effectAttr = pInfo->getEffectAttr();
+                FloatPrecentAttribute effectPrecentAttr = pInfo->getEffectAttrPercent();
+                AttributeMulti(effectAttr, effectPrecentAttr);
+                if(hp < effectAttr.iHP)
+                {
+                   hp = effectAttr.iHP;
+                   no = (*pskill)->getID();
+                }
+             }
+             pskill++;
+          }
+          useSkill(no);
+		    break;
+		 }
+		 case 3: 
+			 {    //王
+			 int hp = 0;
+          int no = -1;
+          while(vskill.end() != pskill)
+          {
+             if((*pskill)->isReady())
+             {
+                CSkillInfo* pInfo = (*pskill)->getInfo();
+                AdvancedAttribute effectAttr = pInfo->getEffectAttr();
+                FloatPrecentAttribute effectPrecentAttr = pInfo->getEffectAttrPercent();
+                AttributeMulti(effectAttr, effectPrecentAttr);
+                if(hp < effectAttr.iHP)
+                {
+                   hp = effectAttr.iHP;
+                   no = (*pskill)->getID();
+                }
+             }
+             pskill++;
+          }
+          useSkill(no);
+			 break;
+	    }
+		}
+    }
+}
+
+bool CMonster::getBack()
+{
+   if(0 == m_lHatred.size())
+   {
+      return false;
+   }
+    CMonsterInfo* pInfo = MONSTER_INFO::getInfo();
+    if(NULL == pInfo)
+    {
+        return false;
+    }
+    float range = pInfo->getRegress() * 0.6f;
+    float fx = getTargetPosition().fX;
+    float fy = getTargetPosition().fY;
+    float fbx = m_anchorPosition.fX;
+    float fby = m_anchorPosition.fY;
+    float distance = getDistance(fbx, fby, fx, fy);
+    if(range < distance)
+    {
+        //轉換追擊在範圍內的仇恨玩家
+        m_state = RETURN;
+        m_lHatred.clear();
+        setTargetObject(NULL);
+        setTargetPosition(fbx, fby, true);
+        return true;
+    }
+    return false;
 }
 
 #ifdef _GAMEENGINE_2D_
 void CMonster::draw(HDC hdc)
 {
+    
+	//Ellipse(hdc, 300, 300, 500, 500);
    CUnitObject::draw(hdc);
 
    int size = 20;

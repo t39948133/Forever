@@ -233,6 +233,16 @@ struct AngerValue
     int iHatred;
 };
 
+enum MonsterState
+{
+    IDLE,       //閒置
+    DOLLY,      //移動
+    GOALS,      //得到攻擊目標
+    ATTACK,     //攻擊
+    RETURN,     //返回
+    ESTABLISH,  //建立中
+};
+
 const int BACK_ROW = 9;		//row橫 
 const int BACK_COLUMN = 3;	//column直
 const int BACK_MAX = BACK_ROW * BACK_COLUMN;	//格數

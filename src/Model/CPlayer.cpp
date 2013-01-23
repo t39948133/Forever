@@ -4,6 +4,7 @@
 #include "CArmorInfo.h"
 #include "CConsumableInfo.h"
 #include "AttributeSet.h"
+#include "CMonster.h"
 
 CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
 {
@@ -178,6 +179,12 @@ CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(s
    pActionEventHandler->init(actEvent, 4);
    pAction->addEventHandler(pActionEventHandler);
 
+   actEvent.clear();
+    actEvent.m_event      = AET_NOT_REACH;
+    pActionEventHandler = new CActionEventHandler();
+    pActionEventHandler->init(actEvent, 2);
+    pAction->addEventHandler(pActionEventHandler);
+
    m_pActionSystem->addAction(pAction);
 
    actData.iID           = 5;
@@ -345,10 +352,12 @@ void CPlayer::useItem(unsigned int itemID)
       if(this->getLevel() >= pConsumableInfo->getLevel()) {
          if(pConsumableInfo->getEffect() == EDIBLE_SKILL)
             addSkill(pConsumableInfo->getMuch());  // 學習某項技能   
-         else if(pConsumableInfo->getEffect() == EDIBLE_HP) {
+         else if(pConsumableInfo->getEffect() == EDIBLE_HP)
+         {
             if(getHPMax() == getHP())
+             {
                  return;
-
+             }
             addHP(pConsumableInfo->getMuch());     // 補血
             // Todo: 藥水是否有CD時間
          }
@@ -423,6 +432,17 @@ int CPlayer::getHotKeySize()
    return (int)m_pvtHotKey->size();
 }
 
+void CPlayer::skillDamage(AdvancedAttribute targetAttr)
+{
+    CMonster *pTargetMonster = dynamic_cast<CMonster *>(getTargetObject());
+    if(pTargetMonster != NULL)
+    {
+		  AdvancedAttribute monsterAdv = pTargetMonster->getAdvAttr();
+        pTargetMonster->addHate(getUID(), targetAttr.iHP - monsterAdv.iHP);
+    }
+    CUnitObject::skillDamage(targetAttr);
+}
+
 #ifdef _GAMEENGINE_2D_
 void CPlayer::draw(HDC hdc)
 {
@@ -458,6 +478,7 @@ void CPlayer::updateEquipAttr()
 	}
 	advAttr.iHP = getHP();
 	advAttr.iMP = getMP();
+	//advAttr.fMove = 18.0f;
 	setAdvAttr(advAttr);
 	updateSkillAvailable();
 }

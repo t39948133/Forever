@@ -64,7 +64,7 @@ class CUnitObject
 
       /** @brief 邏輯動作
         * @param timePass 一個frame幾秒 */
-      void work(float timePass);
+    virtual void        work(float timePass);
 
       /** @brief 加一個方向偏移量來改變角色方向
         * @param offsetDirection 方向偏移量(弧度) */
@@ -151,6 +151,8 @@ class CUnitObject
       virtual void draw(HDC hdc);
 #endif
       // } Add by Darren Chen on 2012/12/22
+
+      virtual void skillDamage(AdvancedAttribute targetAttr);
 
    protected:
       void setBasAttr(BasicAttribute basAttr);  //設定基本素質

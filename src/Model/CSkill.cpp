@@ -94,8 +94,9 @@ bool CSkill::updateCoolDown(float timePass)
 
 	m_fSurplus -= timePass;
 	if(0.0f > m_fSurplus)
+	{
 		m_fSurplus =  0.0f;
-
+	}
    return true;
 }
 

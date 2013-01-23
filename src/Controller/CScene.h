@@ -83,6 +83,8 @@ class CScene
         * @return 作戰單位物件 */
       CUnitObject* getUnitObject(float x, float y);
 
+		std::list<CPlayer *> *getvtPlayer();
+
       void draw(HDC hdc);
 #endif  // #ifdef _GAMEENGINE_2D_
 
