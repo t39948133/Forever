@@ -54,6 +54,7 @@ CMonster* CScene::addMonster(long long uid, int kindID, float x, float y)
 
 void CScene::removeAll()
 {
+	if(m_pvtPlayer != NULL) {
    std::list<CPlayer *>::iterator itPlayer = m_pvtPlayer->begin();
    while(itPlayer != m_pvtPlayer->end()) {
       delete (*itPlayer);
@@ -62,7 +63,9 @@ void CScene::removeAll()
    m_pvtPlayer->clear();
    delete m_pvtPlayer;
    m_pvtPlayer = NULL;
+	}
 
+	if(m_pvtMonster != NULL) {
    std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
    while(itMonster != m_pvtMonster->end()) {
       delete (*itMonster);
@@ -71,6 +74,7 @@ void CScene::removeAll()
    m_pvtMonster->clear();
    delete m_pvtMonster;
    m_pvtMonster = NULL;
+	}
 
    m_pMainPlayer = NULL;
 }

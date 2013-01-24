@@ -44,17 +44,17 @@ CGameClient::~CGameClient()
    //   m_pNetStream = NULL;
    //}
 
-   if(m_pScene != NULL) {
-      delete m_pScene;
-      m_pScene = NULL;
-   }
-
 #ifdef _GAMEENGINE_2D_
    if(m_pWindowMan != NULL) {
       delete m_pWindowMan;
       m_pWindowMan = NULL;
    }
 #endif  // #ifdef _GAMEENGINE_2D_
+
+	if(m_pScene != NULL) {
+      delete m_pScene;
+      m_pScene = NULL;
+   }
 
    CItem::release();
    CSkill::release();
