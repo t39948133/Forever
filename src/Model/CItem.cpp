@@ -22,7 +22,7 @@ void CItem::initItem ()
 		baseAttr.iHIT = 5;
 		extendAttr.iHP = 80;
 		extendAttr.iMPMax = 8;
-		pw->initWeaponInfo("ªø¼C", "Weapon/Sword_C01", SWORD, true, 1, 1, 20, 50, COMMON,
+		pw->initWeaponInfo("ªø¼C", "Weapon/Sword_C01", "", SWORD, true, 1, 1, 20, 50, COMMON,
 			baseAttr, extendAttr, ONE_HAND);
 		addInfo(pw);
 
@@ -34,7 +34,7 @@ void CItem::initItem ()
 		baseAttr.iHIT = 7;
 		extendAttr.iHP = 90;
 		extendAttr.iMPMax = 0;
-		pa->initArmorInfo("¯Ý¥Ò", "Armor/PL_Torso_C01", CLOTH, false, 10, 1, 10, 70, COMMON,
+		pa->initArmorInfo("¯Ý¥Ò", "Armor/PL_Torso_C01", "", CLOTH, false, 10, 1, 10, 70, COMMON,
 			baseAttr, extendAttr, CLOTHES);
 		addInfo(pa);
 

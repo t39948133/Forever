@@ -5,10 +5,11 @@ ArmorWearType CArmorInfo::getWear()
 	return m_wear;
 }
 
-void CArmorInfo::initArmorInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
-                           char level, int stackLimit, int sellPrice, int buyPrice,
-                           EquipQuality quality, AdvancedAttribute baseAttr,
-                           AdvancedAttribute extendAttr, ArmorWearType wear)
+void CArmorInfo::initArmorInfo(std::string name, std::string iconName, std::string mesh,
+										 ItemType type, bool soulBind, char level, int stackLimit,
+										 int sellPrice, int buyPrice, EquipQuality quality,
+										 AdvancedAttribute baseAttr, AdvancedAttribute extendAttr,
+										 ArmorWearType wear)
 {
 	setName(name);
 	seticonName(iconName);
@@ -21,6 +22,7 @@ void CArmorInfo::initArmorInfo(std::string name, std::string iconName, ItemType 
 	setQuality(quality);
 	setBaseAttr(baseAttr);
 	setExtendAttr(extendAttr);
+	setMeshName(mesh);
 	m_wear = wear;
 }
 

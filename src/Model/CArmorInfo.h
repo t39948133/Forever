@@ -7,10 +7,11 @@ class CArmorInfo : public CEquipInfo
 {
 public:
 	ArmorWearType getWear();
-	void initArmorInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
-					char level, int stackLimit, int sellPrice, int buyPrice,
-					EquipQuality quality, AdvancedAttribute baseAttr,
-					AdvancedAttribute extendAttr, ArmorWearType wear);
+	void initArmorInfo(std::string name, std::string iconName, std::string mesh,
+					ItemType type, bool soulBind, char level, int stackLimit,
+					int sellPrice, int buyPrice, EquipQuality quality,
+					AdvancedAttribute baseAttr, AdvancedAttribute extendAttr,
+					ArmorWearType wear);
 
 	~CArmorInfo();
 	ItemClassType getClassType ();

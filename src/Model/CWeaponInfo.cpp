@@ -5,10 +5,11 @@ WeaponWieldType CWeaponInfo::getWield()
 	return m_wield;
 }
 
-void CWeaponInfo::initWeaponInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
-                             char level, int stackLimit, int sellPrice, int buyPrice,
-                             EquipQuality quality, AdvancedAttribute baseAttr,
-                             AdvancedAttribute extendAttr, WeaponWieldType wield)
+void CWeaponInfo::initWeaponInfo(std::string name, std::string iconName, std::string mesh,
+											ItemType type, bool soulBind, char level, int stackLimit,
+											int sellPrice, int buyPrice, EquipQuality quality,
+											AdvancedAttribute baseAttr, AdvancedAttribute extendAttr,
+											WeaponWieldType wield)
 {
 	setName(name);
 	seticonName(iconName);
@@ -21,6 +22,7 @@ void CWeaponInfo::initWeaponInfo(std::string name, std::string iconName, ItemTyp
 	setQuality(quality);
 	setBaseAttr(baseAttr);
 	setExtendAttr(extendAttr);
+	setMeshName(mesh);
 	m_wield = wield;
 }
 

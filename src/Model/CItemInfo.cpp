@@ -113,7 +113,9 @@ void CItemInfo::read(FILE* pFile)
 	fread (&version, sizeof(version), 1, pFile);
 
 	fread (&m_strName, sizeof(m_strName), 1, pFile);
-	fread (&m_iconName, sizeof(m_iconName), 1, pFile);
+	char buf[longStrSize];
+	fread (buf, sizeof(buf), 1, pFile);
+	m_iconName = buf;
 	fread (&m_type, sizeof(m_type), 1, pFile);
 	fread (&m_bSoulBind, sizeof(m_bSoulBind), 1, pFile);
 	fread (&m_level, sizeof(m_level), 1, pFile);
@@ -129,7 +131,7 @@ void CItemInfo::write(FILE* pFile)
 	fwrite (&version, sizeof(version), 1, pFile);
 
 	fwrite (&m_strName, sizeof(m_strName), 1, pFile);
-	fwrite (&m_iconName, sizeof(m_iconName), 1, pFile);
+	fwrite (const_cast<char*> (m_iconName.c_str()), longStrSize, 1, pFile);
 	fwrite (&m_type, sizeof(m_type), 1, pFile);
 	fwrite (&m_bSoulBind, sizeof(m_bSoulBind), 1, pFile);
 	fwrite (&m_level, sizeof(m_level), 1, pFile);

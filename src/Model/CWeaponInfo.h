@@ -7,10 +7,11 @@ class CWeaponInfo : public CEquipInfo
 {
 public:
 	WeaponWieldType getWield();
-	void initWeaponInfo(std::string name, std::string iconName, ItemType type, bool soulBind,
-					char level, int stackLimit, int sellPrice, int buyPrice,
-					EquipQuality quality, AdvancedAttribute baseAttr,
-					AdvancedAttribute extendAttr, WeaponWieldType wield);
+	void initWeaponInfo(std::string name, std::string iconName, std::string mesh,
+					ItemType type, bool soulBind, char level, int stackLimit,
+					int sellPrice, int buyPrice, EquipQuality quality,
+					AdvancedAttribute baseAttr, AdvancedAttribute extendAttr,
+					WeaponWieldType wield);
 	
 	~CWeaponInfo();
 	ItemClassType getClassType ();
