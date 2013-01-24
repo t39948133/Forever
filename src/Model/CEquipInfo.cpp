@@ -40,3 +40,16 @@ void CEquipInfo::read(FILE* pFile)
 	fread (&m_baseAttr, sizeof(m_baseAttr), 1, pFile);
 	fread (&m_extendAttr, sizeof(m_extendAttr), 1, pFile);
 }
+
+#ifdef _GAMEENGINE_2D_EDITOR_
+void CEquipInfo::write(FILE* pFile)
+{
+	CItemInfo::write(pFile);
+	int version = 0;
+	fwrite (&version, sizeof(version), 1, pFile);
+
+	fwrite (&m_quality, sizeof(m_quality), 1, pFile);
+	fwrite (&m_baseAttr, sizeof(m_baseAttr), 1, pFile);
+	fwrite (&m_extendAttr, sizeof(m_extendAttr), 1, pFile);
+}
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_

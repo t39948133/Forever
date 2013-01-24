@@ -6,11 +6,11 @@
   * @date   2012/12/21
   * @version
   *         2013/01/05 Darren Chen - 整合與修正 */
-#ifndef _CBUTTON_H_
-#define _CBUTTON_H_
+#ifndef _CFBUTTON_H_
+#define _CFBUTTON_H_
 #include "CWindow.h"
 
-class CButton : public CWindow
+class CFButton : public CWindow
 {
    public:
 	   int id ;
@@ -20,4 +20,4 @@ class CButton : public CWindow
       virtual void onRClick (int tx, int ty) ;
 };
 
-#endif  // #ifndef _CBUTTON_H_
+#endif  // #ifndef _CFBUTTON_H_

@@ -16,9 +16,15 @@ public:
 	ItemClassType getClassType ();
 
 	void read(FILE* pFile);
+#ifdef _GAMEENGINE_2D_EDITOR_
+	void write(FILE* pFile);
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 
 private:
 	WeaponWieldType m_wield;	//®³¨ú¤è¦¡
+#ifdef _GAMEENGINE_2D_EDITOR_
+	friend class WeaponPage;
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 };
 
 #endif  // #ifndef _CWEAPONINFO_H_

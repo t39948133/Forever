@@ -121,3 +121,21 @@ void CItemInfo::read(FILE* pFile)
 	fread (&m_iSellPrice, sizeof(m_iSellPrice), 1, pFile);
 	fread (&m_iBuyPrice, sizeof(m_iBuyPrice), 1, pFile);
 }
+
+#ifdef _GAMEENGINE_2D_EDITOR_
+void CItemInfo::write(FILE* pFile)
+{ 
+	int version = 0;
+	fwrite (&version, sizeof(version), 1, pFile);
+
+	fwrite (&m_strName, sizeof(m_strName), 1, pFile);
+	fwrite (&m_iconName, sizeof(m_iconName), 1, pFile);
+	fwrite (&m_type, sizeof(m_type), 1, pFile);
+	fwrite (&m_bSoulBind, sizeof(m_bSoulBind), 1, pFile);
+	fwrite (&m_level, sizeof(m_level), 1, pFile);
+	fwrite (&m_iStackLimit, sizeof(m_iStackLimit), 1, pFile);
+	fwrite (&m_iSellPrice, sizeof(m_iSellPrice), 1, pFile);
+	fwrite (&m_iBuyPrice, sizeof(m_iBuyPrice), 1, pFile);
+
+}
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_

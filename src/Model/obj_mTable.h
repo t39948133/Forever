@@ -48,7 +48,32 @@ public:
       }else
          return false ;
 	}
+#ifdef _GAMEENGINE_2D_EDITOR_
+	static void write (const char* name)
+	{
+		FILE* pFile ; 
+		fopen_s (&pFile, name, "wb") ;
 
+		int version = 0 ;
+		fwrite (&version, sizeof (version), 1, pFile) ;
+
+		int count = vInfo.size () ;
+		fwrite (&count, sizeof (count), 1, pFile) ;
+
+
+		V_INFO::iterator pi = vInfo.begin () ;
+		while (pi != vInfo.end ())
+		{
+			int type = (*pi)->getClassType () ;
+			fwrite (&type, sizeof (type), 1, pFile) ;
+
+			(*pi)->write (pFile) ;
+			++ pi ;
+		}
+
+		fclose (pFile) ;
+	}
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 	static int getInfoCount ()
 	{
 		return vInfo.size () ;

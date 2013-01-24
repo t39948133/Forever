@@ -12,6 +12,9 @@ public:
 	AdvancedAttribute getExtendAttr();	//取得額外能力
 		
 	virtual void read(FILE* pFile);
+#ifdef _GAMEENGINE_2D_EDITOR_
+	virtual void write(FILE* pFile);
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 
 protected:
 	void setQuality(EquipQuality quality);

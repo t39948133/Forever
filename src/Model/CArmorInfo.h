@@ -16,9 +16,15 @@ public:
 	ItemClassType getClassType ();
 
 	void read(FILE* pFile);
+#ifdef _GAMEENGINE_2D_EDITOR_
+	void write(FILE* pFile);
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 
 private:
 	ArmorWearType m_wear;	//¸Ë³Æ¦ì¸m
+#ifdef _GAMEENGINE_2D_EDITOR_
+	friend class ArmorPage;
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 };
 
 #endif  // #ifndef _CARMORINFO_H_

@@ -73,6 +73,22 @@ void CBuffInfo::read(FILE* pFile)
 	fread (&m_bHarmful, sizeof (m_bHarmful), 1, pFile) ;
 }
 
+#ifdef _GAMEENGINE_2D_EDITOR_
+void CBuffInfo::write(FILE* pFile)
+{
+    int version = 0 ;
+	fwrite (&version, sizeof (version), 1, pFile) ;
+
+	fwrite (&m_strName, sizeof (m_strName), 1, pFile) ;
+	fwrite (&m_iconName, sizeof (m_iconName), 1, pFile) ;
+	fwrite (const_cast<char *>(m_strDesc.c_str()), longStrSize, 1, pFile) ;
+	fwrite (&m_Attr, sizeof (m_Attr), 1, pFile) ;
+	fwrite (&m_AttrPercent, sizeof (m_AttrPercent), 1, pFile) ;
+	fwrite (&m_fContinued, sizeof (m_fContinued), 1, pFile) ;
+	fwrite (&m_bHarmful, sizeof (m_bHarmful), 1, pFile) ;
+}
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
+
 BuffClassType CBuffInfo::getClassType()
 {
 	return BUFF;

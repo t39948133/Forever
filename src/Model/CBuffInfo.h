@@ -21,7 +21,9 @@ public:
     ~CBuffInfo();
 
     void read(FILE* pFile);				//讀黨
-
+#ifdef _GAMEENGINE_2D_EDITOR_
+    void write(FILE* pFile);			//寫黨
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 	BuffClassType getClassType();
 
 private:
@@ -32,7 +34,9 @@ private:
     FloatPrecentAttribute m_AttrPercent;		//百分比屬性
     float m_fContinued;					//持續時間
     bool m_bHarmful;					//有害/增益
-
+#ifdef _GAMEENGINE_2D_EDITOR_
+    friend class DLGBuff;
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 };
 
 #endif

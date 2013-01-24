@@ -145,6 +145,33 @@ void CSkillInfo::read(FILE *pFile)
    fread (&m_bRequireShield, sizeof (m_bRequireShield), 1, pFile);
 }
 
+#ifdef _GAMEENGINE_2D_EDITOR_
+void CSkillInfo::write(FILE *pFile)
+{
+    int version = 0 ;
+	fwrite (&version, sizeof (version), 1, pFile) ;
+
+    fwrite (&m_type, sizeof (m_type), 1, pFile);
+    fwrite (&m_iLevel, sizeof (m_iLevel), 1, pFile);
+    fwrite (const_cast<char*> (m_iconName.c_str()), longStrSize, 1, pFile);
+    fwrite (&m_strName, sizeof (m_strName), 1, pFile);
+    fwrite (const_cast<char*> (m_strDesc.c_str()), longStrSize, 1, pFile);
+	 fwrite (&m_iActionID, sizeof(m_iActionID), 1, pFile);
+    fwrite (&m_iCastMP, sizeof(m_iCastMP), 1, pFile);
+    fwrite (&m_fCastTime, sizeof (m_fCastTime), 1, pFile);
+    fwrite (&m_fCoolDown, sizeof (m_fCoolDown), 1, pFile);
+    fwrite (&m_fCastRange, sizeof (m_fCastRange), 1, pFile);
+    fwrite (&m_target, sizeof (m_target), 1, pFile);
+    fwrite (&m_effectAttr, sizeof (m_effectAttr), 1, pFile);
+    fwrite (&m_effectAttrPercent, sizeof (m_effectAttrPercent), 1, pFile);
+    fwrite (&m_iBuffID, sizeof (m_iBuffID), 1, pFile);
+    fwrite (&m_iMotionEffects, sizeof (m_iMotionEffects), 1, pFile);
+    fwrite (&m_iTriggerMotion, sizeof (m_iTriggerMotion), 1, pFile);
+    fwrite (&m_bRequireWeapon, sizeof (m_bRequireWeapon), 1, pFile);
+    fwrite (&m_bRequireShield, sizeof (m_bRequireShield), 1, pFile);
+}
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
+
 SkillClassType CSkillInfo::getClassType()
 {
     return SKILL;

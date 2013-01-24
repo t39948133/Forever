@@ -41,3 +41,14 @@ void CWeaponInfo::read(FILE* pFile)
 
 	fread (&m_wield, sizeof(m_wield), 1, pFile);
 }
+
+#ifdef _GAMEENGINE_2D_EDITOR_
+void CWeaponInfo::write(FILE* pFile)
+{
+	CEquipInfo::write(pFile);
+	int version = 0;
+	fwrite (&version, sizeof(version), 1, pFile);
+
+	fwrite (&m_wield, sizeof(m_wield), 1, pFile);
+}
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_

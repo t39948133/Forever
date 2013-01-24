@@ -52,3 +52,15 @@ void CConsumableInfo::read(FILE* pFile)
 	fread (&m_effect, sizeof(m_effect), 1, pFile);
 	fread (&m_iMuch, sizeof(m_iMuch), 1, pFile);
 }
+
+#ifdef _GAMEENGINE_2D_EDITOR_
+void CConsumableInfo::write(FILE* pFile)
+{
+    CItemInfo::write(pFile);
+	int version = 0;
+	fwrite (&version, sizeof(version), 1, pFile);
+	fwrite (const_cast<char*>(m_strDesc.c_str()), longStrSize, 1, pFile);
+	fwrite (&m_effect, sizeof(m_effect), 1, pFile);
+	fwrite (&m_iMuch, sizeof(m_iMuch), 1, pFile);
+}
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_

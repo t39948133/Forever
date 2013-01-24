@@ -17,12 +17,18 @@ public:
 	ItemClassType getClassType ();
 
 	virtual void read(FILE* pFile);
+#ifdef _GAMEENGINE_2D_EDITOR_
+	virtual void write(FILE* pFile);
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 
 
 private:
 	std::string m_strDesc;		//物品描述
 	EdibleEffectType m_effect;	//效果種類
 	int m_iMuch;				//影響數值
+#ifdef _GAMEENGINE_2D_EDITOR_
+	friend class ConsumablePage;
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 };
 
 #endif  // #ifndef _CCONSUMABLEINFO_H_

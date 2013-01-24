@@ -326,7 +326,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\View\CButton.cpp"
+					RelativePath="..\..\src\View\CFButton.cpp"
 					>
 				</File>
 				<File
@@ -547,7 +547,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath="..\..\src\View\CButton.h"
+					RelativePath="..\..\src\View\CFButton.h"
 					>
 				</File>
 				<File

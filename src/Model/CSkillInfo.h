@@ -35,6 +35,9 @@ class CSkillInfo
       bool                  isRequireShield();       //是否需要盾牌
 
       void                  read(FILE* pFile);  //讀檔
+#ifdef _GAMEENGINE_2D_EDITOR_
+    void                write(FILE* pFile); //寫檔
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 
       SkillClassType        getClassType();
       ~CSkillInfo();
@@ -60,6 +63,9 @@ class CSkillInfo
       int				       m_iTriggerMotion;	  //如果有這狀態增加觸發
       bool                  m_bRequireWeapon;	  //需要武器
       bool                  m_bRequireShield;	  //需要盾牌    
+#ifdef _GAMEENGINE_2D_EDITOR_
+    friend class DLGSkill;
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 };
 
 #endif

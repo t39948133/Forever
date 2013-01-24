@@ -169,6 +169,7 @@ void CMonsterInfo::read(FILE *pFile)
     }
 }
 
+#ifdef _GAMEENGINE_2D_EDITOR_
 void CMonsterInfo::write(FILE *pFile)
 {
     int version = 0;
@@ -207,6 +208,7 @@ void CMonsterInfo::write(FILE *pFile)
         fwrite(&skillID, sizeof(skillID), 1, pFile);
     }
 }
+#endif //#ifdef _GAMEENGINE_2D_EDITOR_
 
 MonsterClass CMonsterInfo::getClassType()
 {
