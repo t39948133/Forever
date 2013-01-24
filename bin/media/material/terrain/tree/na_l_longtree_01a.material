@@ -1,8 +1,8 @@
-material "na_l_longtree_01a_1"
+material "Na_L_longtree_01a_1"
 {
-	technique na_l_longtree_01a_1_technique
+	technique Na_L_longtree_01a_1_technique
 	{
-		pass na_l_longtree_01a_1_standard
+		pass Na_L_longtree_01a_1_standard
 		{
 			cull_hardware none
 			cull_software none
@@ -13,14 +13,14 @@ material "na_l_longtree_01a_1"
 
 			alpha_rejection greater 128
 
-			texture_unit na_l_longtree_01a_1_Diffuse#0
+			texture_unit Na_L_longtree_01a_1_Diffuse#0
 			{
 				texture na_l_longtree_01a_03.dds
 				tex_coord_set 0
 				colour_op modulate
 			}
 
-			texture_unit na_l_longtree_01a_1_Unknown#1
+			texture_unit Na_L_longtree_01a_1_Unknown#1
 			{
 				texture na_l_longtree_01a_03_alpha.png
 				tex_coord_set 0
@@ -29,11 +29,11 @@ material "na_l_longtree_01a_1"
 		}
 	}
 }
-material "na_l_longtree_01a_2"
+material "Na_L_longtree_01a_2"
 {
-	technique na_l_longtree_01a_2_technique
+	technique Na_L_longtree_01a_2_technique
 	{
-		pass na_l_longtree_01a_2_standard
+		pass Na_L_longtree_01a_2_standard
 		{
 			cull_hardware none
 			cull_software none
@@ -42,7 +42,7 @@ material "na_l_longtree_01a_2"
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit na_l_longtree_01a_2_Diffuse#0
+			texture_unit Na_L_longtree_01a_2_Diffuse#0
 			{
 				texture na_l_longtree_01a_01.dds
 				tex_coord_set 0

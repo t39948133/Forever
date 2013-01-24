@@ -1,4 +1,4 @@
-material Potion/HP02_1
+material Potion/HP02_2
 {
 	technique
 	{
@@ -6,7 +6,21 @@ material Potion/HP02_1
 		{
 			texture_unit
 			{
-				texture icon_item_potion_hp02_1.dds
+				texture icon_item_potion_hp02_2.dds
+			}
+		}
+	}
+}
+
+material Potion/MP02_2
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture icon_item_potion_mp02_2.dds
 			}
 		}
 	}

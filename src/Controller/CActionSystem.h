@@ -45,6 +45,14 @@ class CActionSystem
       void draw(HDC hdc, int x, int y);
 #endif
 
+      /** @brief 存檔
+        * @param fileName 檔案名稱 */
+      void write(std::string fileName);
+
+      /** @brief 讀檔
+        * @param fileName 檔案名稱 */
+      bool read(std::string fileName);
+
    private:
       /** @brief 切換動作
         * @param newActionID 新動作編號 */
@@ -55,6 +63,7 @@ class CActionSystem
       void sendEvent(CActionEvent &actEvent);
 
       friend class CActionDispatch;  // 允許CActionDispatch來存取此物件的private成員
+      friend class CActionEditorDlg; // 允許動作編輯器來存取此物件
 
       float     m_fCurTime;      // 目前的時間
       int       m_iCurAction;    // 目前動作

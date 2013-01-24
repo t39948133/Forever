@@ -51,7 +51,7 @@ CGameClient::~CGameClient()
    }
 #endif  // #ifdef _GAMEENGINE_2D_
 
-	if(m_pScene != NULL) {
+   if(m_pScene != NULL) {
       delete m_pScene;
       m_pScene = NULL;
    }

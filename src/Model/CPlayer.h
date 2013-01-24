@@ -2,10 +2,15 @@
 #define _CPLAYER_H_
 #include "CUnitObject.h"
 #include "CBackPack.h"
+#include "IPlayerAttrEventListener.h"
+#include "IPlayerEquipEventListener.h"
+#include "IPlayerBackpackEventListener.h"
+#include "IPlayerHotKeyEventListener.h"
 
 // Add by Darren Chen on 2013/01/12 {
 typedef struct tagHOTKEYITEM {
-   CItem *pItem;    // 要放入HotKey列表內的物品
+   int     iField;  // 哪一個欄位的快捷鍵
+   CItem  *pItem;   // 要放入HotKey列表內的物品
    CSkill *pSkill;  // 要放入HotKey列表內的技能
 } HotKeyItem;
 // } Add by Darren Chen on 2013/01/12
@@ -32,9 +37,8 @@ public:
    void useItem(unsigned int itemID);   // 使用id號物品(含武器/防具/消耗性道具)
 
    /** @brief 新增快捷鍵資料
-     * @param field         哪個欄位快捷鍵
      * @param newHotKeyItem 快捷鍵資料 */
-   void addHotKeyItem(int field, HotKeyItem &newHotKeyItem);
+   void addHotKeyItem(HotKeyItem &newHotKeyItem);
 
    /** @brief 取得快捷鍵資料
      * @param field 哪個欄位快捷鍵
@@ -46,6 +50,38 @@ public:
 
    void skillDamage(AdvancedAttribute targetAttr);
 
+   /** @brief 加入監聽玩家屬性事件的物件
+        * @param pListener 監聽者 */
+   void addPlayerAttrEventListener(IPlayerAttrEventListener *pListener);
+
+   /** @brief 移除監聽玩家屬性事件的物件
+        * @param pListener 監聽者 */
+   void removePlayerAttrEventListener(IPlayerAttrEventListener *pListener);
+
+   /** @brief 加入監聽玩家裝備事件的物件
+        * @param pListener 監聽者 */
+   void addPlayerEquipEventListener(IPlayerEquipEventListener *pListener);
+
+   /** @brief 移除監聽玩家裝備事件的物件
+        * @param pListener 監聽者 */
+   void removePlayerEquipEventListener(IPlayerEquipEventListener *pListener);
+
+   /** @brief 加入監聽玩家背包事件的物件
+        * @param pListener 監聽者 */
+   void addPlayerBackpackEventListener(IPlayerBackpackEventListener *pListener);
+
+   /** @brief 移除監聽玩家背包事件的物件
+        * @param pListener 監聽者 */
+   void removePlayerBackpackEventListener(IPlayerBackpackEventListener *pListener);
+
+   /** @brief 加入監聽玩家快捷鍵事件的物件
+        * @param pListener 監聽者 */
+   void addPlayerHotKeyEventListener(IPlayerHotKeyEventListener *pListener);
+
+   /** @brief 移除監聽玩家快捷鍵事件的物件
+        * @param pListener 監聽者 */
+   void removePlayerHotKeyEventListener(IPlayerHotKeyEventListener *pListener);
+
 #ifdef _GAMEENGINE_2D_
    /** @brief Client端繪圖動作 
      * @param hdc 繪圖裝置 */
@@ -55,7 +91,7 @@ public:
 
 private:
 	void updateEquipAttr(); //更新裝備造成的角色屬性
-        void updateSkillAvailable();
+   void updateSkillAvailable();
 
    /** @brief 穿到裝備欄上
      * @param es 裝備部位
@@ -64,14 +100,18 @@ private:
 	void wearToEquipSlot(EquipSlot es, unsigned int id);
 
    // Add by Darren Chen on 2013/01/17 {
-   /** @brief 通知監聽者本物件的背包有更新 */
-   void notifyUpdateBackpack();
-   void notifyUpdateBackpack(CItem *pItem);
+   /** @brief 通知玩家屬性(xp, money)有更新 */
+   void notifyPlayerAttrUpdate();
 
-   /** @brief 通知監聽者本物件的HotKeyItem有更新
-     * @param field       哪個欄位快捷鍵
-     * @param pHotKeyItem 更新的項目 */
-   void notifyUpdateHotKeyItem(int field, HotKeyItem *pHotKeyItem);
+   /** @brief 通知玩家裝備有更新 */
+   void notifyPlayerEquipUpdate();
+
+   /** @brief 通知玩家背包有更新 */
+   void notifyPlayerBackpackUpdate();
+
+   /** @brief 通知玩家的快捷鍵有更新
+     * @param pHotKeyItem 更新的快捷鍵 */
+   void notifyPlayerHotKeyUpdate(HotKeyItem *pHotKeyItem);
    // } Add by Darren Chen on 2013/01/17
 
    unsigned int               m_xp;	       //經驗值
@@ -83,6 +123,11 @@ private:
    // Add by Darren Chen on 2013/01/06 {
    long long                  m_money;     // 錢
    std::vector<HotKeyItem *> *m_pvtHotKey; // 快捷鍵資料
+
+   std::set<IPlayerAttrEventListener *>     m_playerAttrEventListeners;     // 監聽玩家屬性改變的監聽者列表
+   std::set<IPlayerEquipEventListener *>    m_playerEquipEventListeners;    // 監聽玩家裝備改變的監聽者列表
+   std::set<IPlayerBackpackEventListener *> m_playerBackpackEventListeners; // 監聽玩家背包改變的監聽者列表
+   std::set<IPlayerHotKeyEventListener *>   m_playerHotKeyEventListeners;   // 監聽玩家快捷鍵改變的監聽者列表
    // } Add by Darren Chen on 2013/01/06
 };
 

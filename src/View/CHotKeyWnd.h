@@ -10,7 +10,9 @@
 #define _CHOTKEYWND_H_
 #include "CWindow.h"
 #include "CPlayer.h"
-#include "IModelEventListener.h"
+#include "IPlayerHotKeyEventListener.h"
+#include "IItemEventListener.h"
+#include "ISkillEventListener.h"
 
 #ifdef _GAMEENGINE_3D_
 #include "CImageButton.h"
@@ -22,7 +24,9 @@
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
 class CHotKeyWnd : public CWindow,
-                   public IModelEventListener
+                   public IPlayerHotKeyEventListener,
+                   public IItemEventListener,
+                   public ISkillEventListener
 {
    public:
       enum {BUTTON_COUNT = 10, CELL_SIZE = 40, TEXT_COUNT = 20};
@@ -41,15 +45,19 @@ class CHotKeyWnd : public CWindow,
 	   /* virtual */ void setZOrder(int order);
 #endif
 
-      // IModelEventListener
-      /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
-      /* virtual */ void updateBackpack(CUnitObject *pUnitObject);
+      // IPlayerHotKeyEventListener
+      /* virtual */ void updatePlayerHotKey(HotKeyItem *pHotKeyItem);
+
+      // IItemEventListener
+      /* virtual */ void updateItemData(CItem *pItem);
+
+      // ISkillEventListener
       /* virtual */ void updateSkill(CUnitObject *pUnitObject);
-      /* virtual */ void updateHotKeyItem(int field, HotKeyItem *pHotKeyItem);
-      /* virtual */ void updateCoolDown(CSkill *pSkill);
+      /* virtual */ void updateSkillCoolDown(CSkill *pSkill);
 
    private:
 	   CPlayer *m_pPlayer;
+      std::map<void *, int> m_table;
    	
 #ifdef _GAMEENGINE_3D_	
 	   CImageButton   *m_vpBtn[BUTTON_COUNT] ;

@@ -123,7 +123,6 @@ void CItemInfo::read(FILE* pFile)
 	fread (&m_iSellPrice, sizeof(m_iSellPrice), 1, pFile);
 	fread (&m_iBuyPrice, sizeof(m_iBuyPrice), 1, pFile);
 }
-
 #ifdef _GAMEENGINE_2D_EDITOR_
 void CItemInfo::write(FILE* pFile)
 { 

@@ -74,7 +74,17 @@ class CAction
         * @return 動作名稱 */
       std::string getName();
 
+      /** @brief 存檔
+        * @param pFile 檔案 */
+      void write(FILE *pFile);
+
+      /** @brief 讀檔
+        * @param pFile 檔案 */
+      void read(FILE *pFile);
+
    private:
+      friend class CActionEditorDlg; // 允許動作編輯器來存取此物件
+
       int         m_iID;            // 動作編號
       std::string m_name;           // 動作名稱
       float       m_fTime;          // 動作時間

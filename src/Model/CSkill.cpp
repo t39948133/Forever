@@ -11,6 +11,24 @@ void CSkill::initSkill()
 	{
       AdvancedAttribute adv;
       FloatPrecentAttribute preAttr;
+      CSkillInfo *ps = NULL;
+
+      // 普通攻擊
+      AttributeClear(adv);
+      adv.iHP = -10;
+      adv.fATKSpeed = 0.0f;
+      adv.fCasting = 0.0f;
+      adv.fMove = 0.0f;
+
+      AttributeClear(preAttr);
+
+      ps = new CSkillInfo();
+      ps->initSkillInfo(TYPE_ACTIVE, 1, "Skill/Common/Action_operation", "普通攻擊",
+	      "攻擊敵人",
+	      6, 0, 0, 0, 50.0f, ENEMY, adv, preAttr, 0, -1, -1, true, false);   // ActionID 要改
+      addInfo(ps);
+
+      // --------------------------------------------
 
       // 主神盔甲
       AttributeClear(adv);
@@ -22,10 +40,10 @@ void CSkill::initSkill()
       preAttr.fHP = 25;    // 生命力恢復25%
 
       // buff: 在3分鐘內，最大生命提高50%、生命回復速度提升50點 (還沒做)
-      CSkillInfo* ps = new CSkillInfo();
+      ps = new CSkillInfo();
       ps->initSkillInfo(TYPE_ACTIVE, 1, "Skill/Knight/Stonebody_g1", "主神盔甲",
 	      "回復自身25%生命力，在3分鐘內，最大生命提高50%、生命回復速度提升50點",
-	      6, 0, 0, 6.0f * 60.0f, 0, SELF, adv, preAttr, 0, -1, -1, false, false);    //mp = 113
+	      7, 0, 0, 6.0f * 60.0f, 0, SELF, adv, preAttr, 0, -1, -1, false, false);    //mp = 113
       addInfo(ps);
 
       //-----------------------------------------------
@@ -39,10 +57,10 @@ void CSkill::initSkill()
 
       AttributeClear(preAttr);
 
-      CSkillInfo *psc = new CSkillInfo();
-      psc->initSkillInfo(TYPE_ACTIVE, 1, "Skill/Knight/Robusthit_g1", "猛烈一擊", "對目標造成 138 的物理傷害",
-         7, 0, 0, 10.0f, 50.0f, ENEMY, adv, preAttr, 0, -1, -1, true, false);
-      addInfo(psc);
+      ps = new CSkillInfo();
+      ps->initSkillInfo(TYPE_ACTIVE, 1, "Skill/Knight/Robusthit_g1", "猛烈一擊", "對目標造成 138 的物理傷害",
+         8, 0, 0, 10.0f, 50.0f, ENEMY, adv, preAttr, 0, -1, -1, true, false);
+      addInfo(ps);
 	}
 }
 
@@ -87,17 +105,16 @@ void CSkill::startCoolDown()
       m_fSurplus = pInfo->getCoolDown();
 }
 
-bool CSkill::updateCoolDown(float timePass)
+void CSkill::updateCoolDown(float timePass)
 {
    if(m_fSurplus == 0.0f)
-      return false;
+      return;
 
 	m_fSurplus -= timePass;
 	if(0.0f > m_fSurplus)
-	{
 		m_fSurplus =  0.0f;
-	}
-   return true;
+
+   notifySkillCoolDownUpdate();
 }
 
 bool CSkill::isReady()
@@ -155,3 +172,28 @@ void CSkill::checkAvailable(std::map<EquipSlot, int> equip)
       }
    }
 }
+
+// Add by Darren Chen on 2013/01/21 {
+void CSkill::addSkillEventListener(ISkillEventListener *pListener)
+{
+   std::set<ISkillEventListener *>::iterator it = m_skillEventListeners.find(pListener);
+   if(it == m_skillEventListeners.end())
+      m_skillEventListeners.insert(pListener);
+}
+
+void CSkill::removeSkillEventListener(ISkillEventListener *pListener)
+{
+   std::set<ISkillEventListener *>::iterator it = m_skillEventListeners.find(pListener);
+   if(it != m_skillEventListeners.end())
+      m_skillEventListeners.erase(it);
+}
+
+void CSkill::notifySkillCoolDownUpdate()
+{
+   std::set<ISkillEventListener *>::iterator it = m_skillEventListeners.begin();
+   while(it != m_skillEventListeners.end()) {
+      (*it)->updateSkillCoolDown(this);
+      it++;
+   }
+}
+// } Add by Darren Chen on 2013/01/21

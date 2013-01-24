@@ -6,7 +6,8 @@
 #include "CBuff.h"
 // Add by Darren Chen on 2012/12/22 {
 #include "CActionDispatch.h"
-#include "IModelEventListener.h"
+#include "IAdvAttrEventListener.h"
+#include "ISkillEventListener.h"
 
 typedef struct tagPOSITION {
    float fX;
@@ -64,7 +65,7 @@ class CUnitObject
 
       /** @brief 邏輯動作
         * @param timePass 一個frame幾秒 */
-    virtual void        work(float timePass);
+      virtual void work(float timePass);
 
       /** @brief 加一個方向偏移量來改變角色方向
         * @param offsetDirection 方向偏移量(弧度) */
@@ -130,13 +131,21 @@ class CUnitObject
       /** @brief 取得目標物 */
       CUnitObject* getTargetObject();
 
-      /** @brief 加入Model事件的監聽者
+      /** @brief 加入監聽進階屬性事件的物件
         * @param pListener 監聽者 */
-      void addModelEventListener(IModelEventListener *pListener);
+      void addAdvAttrEventListener(IAdvAttrEventListener *pListener);
 
-      /** @brief 移除Model事件的監聽者
+      /** @brief 移除監聽進階屬性事件的物件
         * @param pListener 監聽者 */
-      void removeModelEventListener(IModelEventListener *pListener);
+      void removeAdvAttrEventListener(IAdvAttrEventListener *pListener);
+
+      /** @brief 加入監聽技能事件的物件
+        * @param pListener 監聽者 */
+      void addSkillEventListener(ISkillEventListener *pListener);
+
+      /** @brief 移除監聽技能事件的物件
+           * @param pListener 監聽者 */
+      void removeSkillEventListener(ISkillEventListener *pListener);
 
 #ifdef _GAMEENGINE_2D_
       /** @brief 是否被點選
@@ -159,18 +168,7 @@ class CUnitObject
       std::vector<CSkill *>  m_vSkill;          //擁有的技能
 
       // Add by Darren Chen on 2012/12/27 {
-      /** @brief 通知監聽者本物件的AdvAttr有更新 */
-      void notifyUpdateAdvAttr();
-
-      /** @brief 通知監聽者本物件的Skill有更新 */
-      void notifyUpdateSkill();
-
-      /** @brief 通知監聽者本物件的技能冷卻時間有更新
-        * @param pSkill 技能 */
-      void notifyUpdateCoolDown(CSkill *pSkill);
-
       CActionSystem                   *m_pActionSystem;        // 動作系統
-      std::set<IModelEventListener *>  m_modelEventListeners;  // 本物件資料變動時有哪些監聽者要知道
       // } Add by Darren Chen on 2012/12/27
 
    private:
@@ -195,6 +193,12 @@ class CUnitObject
       //friend class CPacketPlayerData;  // 允許CPacketPlayerData物件直接對private/protected成員做存取
       //friend class CPacketPlayerInit;  // 允許CPacketPlayerInit物件直接對private/protected成員做存取
 
+      /** @brief 通知AdvAttr有更新 */
+      void notifyAdvAttrUpdate();
+
+      /** @brief 通知技能有更新 */
+      void notifySkillUpdate();
+
 #ifdef _GAMEENGINE_2D_
       /** @brief 2D版本移動
         * @param timePass 一個frame幾秒
@@ -214,6 +218,9 @@ class CUnitObject
       CUnitObject  *m_pTargetObject;   // 目標物
       unsigned int  m_iCastSkillID;    // 施展技能的編號
       float         m_fCastSkillTime;  // 施展技能的吟唱時間
+
+      std::set<IAdvAttrEventListener *>  m_advAttrEventListeners;  // 監聽AdvancedAttribute改變的監聽者列表
+      std::set<ISkillEventListener *>    m_skillEventListeners;    // 監聽技能改變的監聽者列表
       // } Add by Darren Chen on 2012/12/22
 };
 

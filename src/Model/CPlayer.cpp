@@ -31,192 +31,13 @@ CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(s
       pHotKeyItem->pSkill = NULL;
       m_pvtHotKey->push_back(pHotKeyItem);
    }
+
+   // 讀取玩家動作檔
+   m_pActionSystem->read("../player.acs");
+
+   // 玩家擁有技能
+   addSkill(0);
    // } Add by Darren Chen on 2013/01/05
-
-   // Add by Darren Chen on 2012/12/27 {
-   ACTION_DATA actData;
-   CActionEvent actEvent;
-   CAction *pAction = NULL;
-   CActionEventHandler *pActionEventHandler = NULL;
-
-   // Idle動作->(座標更動)->跑步動作
-   actData.iID           = 1;
-   actData.name          = "等待";
-   actData.fTime         = 4.33333f;
-   actData.animationName = "lm_nidle_001";
-   actData.iNextActID    = 0;  // 沒有下一個動作
-   actData.bMove         = false;
-   pAction = new CAction();
-   pAction->init(actData);
-
-   actEvent.clear();
-   actEvent.m_event      = AET_KEY_WASD;
-   actEvent.m_iKeyDownID = 'W';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 2);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event      = AET_KEY_WASD;
-   actEvent.m_iKeyDownID = 'A';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 2);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event      = AET_KEY_WASD;
-   actEvent.m_iKeyDownID = 'S';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 2);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event      = AET_KEY_WASD;
-   actEvent.m_iKeyDownID = 'D';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 2);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event      = AET_NOT_REACH;
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 2);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event      = AET_KEY;
-   actEvent.m_iKeyID     = 'X';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 3);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event      = AET_CAST_SKILL;
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 3);
-   pAction->addEventHandler(pActionEventHandler);
-
-   m_pActionSystem->addAction(pAction);
-
-   //----------------------------------------------------------------
-
-   // 跑步動作->(座標無更動)->Idle動作
-   actData.iID           = 2;
-   actData.name          = "跑步";
-   actData.fTime         = 1.46667f;
-   actData.animationName = "lm_nrun_001";
-   actData.iNextActID    = 0;  // 沒有下一個動作
-   actData.bMove         = true;
-   pAction = new CAction();
-   pAction->init(actData);
-
-   actEvent.clear();
-   actEvent.m_event    = AET_KEY_WASD;
-   actEvent.m_iKeyUpID = 'W';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 1);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event    = AET_KEY_WASD;
-   actEvent.m_iKeyUpID = 'A';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 1);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event    = AET_KEY_WASD;
-   actEvent.m_iKeyUpID = 'S';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 1);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event    = AET_KEY_WASD;
-   actEvent.m_iKeyUpID = 'D';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 1);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event    = AET_REACH;
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 1);
-   pAction->addEventHandler(pActionEventHandler);
-
-   m_pActionSystem->addAction(pAction);
-
-   // Idle動作->(拔出武器快捷鍵)->戰鬥姿態動作
-   actData.iID           = 3;
-   actData.name          = "拔出武器";
-   actData.fTime         = 1.33333f;
-   actData.animationName = "lm_cdraw_2weapon_001";
-   actData.iNextActID    = 4;  
-   actData.bMove         = false;
-   pAction = new CAction();
-   pAction->init(actData);
-   m_pActionSystem->addAction(pAction);
-
-   actData.iID           = 4;
-   actData.name          = "戰鬥姿勢";
-   actData.fTime         = 1.0f;
-   actData.animationName = "lm_cidle_2weapon_001";
-   actData.iNextActID    = 0;  // 沒有下一個動作
-   actData.bMove         = false;
-   pAction = new CAction();
-   pAction->init(actData);
-
-   actEvent.clear();
-   actEvent.m_event      = AET_KEY;
-   actEvent.m_iKeyID     = 'X';
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 5);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-   actEvent.m_event      = AET_CAST_SKILL;
-   pActionEventHandler = new CActionEventHandler();
-   pActionEventHandler->init(actEvent, 4);
-   pAction->addEventHandler(pActionEventHandler);
-
-   actEvent.clear();
-    actEvent.m_event      = AET_NOT_REACH;
-    pActionEventHandler = new CActionEventHandler();
-    pActionEventHandler->init(actEvent, 2);
-    pAction->addEventHandler(pActionEventHandler);
-
-   m_pActionSystem->addAction(pAction);
-
-   actData.iID           = 5;
-   actData.name          = "收回武器";
-   actData.fTime         = 1.66667f;
-   actData.animationName = "lm_nputin_2weapon_001";
-   actData.iNextActID    = 1;  
-   actData.bMove         = false;
-   pAction = new CAction();
-   pAction->init(actData);
-   m_pActionSystem->addAction(pAction);
-
-   actData.iID           = 6;
-   actData.name          = "主神盔甲";
-   actData.fTime         = 1.66667f;
-   actData.animationName = "";
-   actData.iNextActID    = 4;  
-   actData.bMove         = false;
-   pAction = new CAction();
-   pAction->init(actData);
-   m_pActionSystem->addAction(pAction);
-
-   actData.iID           = 7;
-   actData.name          = "猛烈一擊";
-   actData.fTime         = 1.66667f;
-   actData.animationName = "";
-   actData.iNextActID    = 4;  
-   actData.bMove         = false;
-   pAction = new CAction();
-   pAction->init(actData);
-   m_pActionSystem->addAction(pAction);
-   // } Add by Darren Chen on 2012/12/27
 }
 
 // Add by Darren Chen on 2013/01/12 {
@@ -243,7 +64,7 @@ void CPlayer::addXP(unsigned int xp)
 		m_xp -= m_xpMax;
 		//升級function
 	}
-   notifyUpdateAdvAttr();
+   notifyPlayerAttrUpdate();
 }
 
 unsigned int CPlayer::getXP()
@@ -270,8 +91,11 @@ void CPlayer::shedEquip(EquipSlot grid)
 	int st = 1;
 	int gr = 0;
 	m_backPack.addItem(it->second, st, gr);
-   notifyUpdateBackpack();
+   notifyPlayerBackpackUpdate();
+
 	m_mEquip.erase(grid);
+   notifyPlayerEquipUpdate();
+
 	updateEquipAttr();
 }
 
@@ -299,7 +123,7 @@ int CPlayer::getEquip(EquipSlot equip)
 void CPlayer::addMoney(long long money)
 {
    m_money += money;
-   notifyUpdateBackpack();
+   notifyPlayerAttrUpdate();
 }
 
 long long CPlayer::getMoney()
@@ -352,13 +176,18 @@ void CPlayer::useItem(unsigned int itemID)
       if(this->getLevel() >= pConsumableInfo->getLevel()) {
          if(pConsumableInfo->getEffect() == EDIBLE_SKILL)
             addSkill(pConsumableInfo->getMuch());  // 學習某項技能   
-         else if(pConsumableInfo->getEffect() == EDIBLE_HP)
-         {
+         else if(pConsumableInfo->getEffect() == EDIBLE_HP) {
             if(getHPMax() == getHP())
-             {
                  return;
-             }
+
             addHP(pConsumableInfo->getMuch());     // 補血
+            // Todo: 藥水是否有CD時間
+         }
+         else if(pConsumableInfo->getEffect() == EDIBLE_MP) {
+            if(getMP() == getMPMax())
+               return;
+
+            addMP(pConsumableInfo->getMuch());     // 補魔
             // Todo: 藥水是否有CD時間
          }
          else
@@ -370,7 +199,7 @@ void CPlayer::useItem(unsigned int itemID)
             if(pFindItem->getInfo() == pItemInfo) {
                pFindItem->taken();
 
-               notifyUpdateBackpack(pFindItem);
+               notifyPlayerBackpackUpdate();
                break;
             }
          }
@@ -378,16 +207,17 @@ void CPlayer::useItem(unsigned int itemID)
    }
 }
 
-void CPlayer::addHotKeyItem(int field, HotKeyItem &newHotKeyItem)
+void CPlayer::addHotKeyItem(HotKeyItem &newHotKeyItem)
 {
-   if(field >= 0 && field < (int)m_pvtHotKey->size()) {
-      HotKeyItem *pHotKeyItem = m_pvtHotKey->at(field);
+   if(newHotKeyItem.iField >= 0 && newHotKeyItem.iField < (int)m_pvtHotKey->size()) {
+      HotKeyItem *pHotKeyItem = m_pvtHotKey->at(newHotKeyItem.iField);
       if(pHotKeyItem != NULL) {
          if(newHotKeyItem.pItem != NULL) {
             for(int i = 0; i < m_backPack.getSize(); i++) {
                CItem *pBackpackItem = m_backPack.getItem(i);
                if(pBackpackItem != NULL) {
                   if(newHotKeyItem.pItem->getID() == pBackpackItem->getID()) {
+                     pHotKeyItem->iField = newHotKeyItem.iField;
                      pHotKeyItem->pItem = pBackpackItem;
                      pHotKeyItem->pSkill = NULL;
                      break;
@@ -399,6 +229,7 @@ void CPlayer::addHotKeyItem(int field, HotKeyItem &newHotKeyItem)
             std::vector<CSkill *>::iterator it = m_vSkill.begin();
             while(it != m_vSkill.end()) {
                if(newHotKeyItem.pSkill->getID() == (*it)->getID()) {
+                  pHotKeyItem->iField = newHotKeyItem.iField;
                   pHotKeyItem->pSkill = (*it);
                   pHotKeyItem->pItem = NULL;
 
@@ -409,11 +240,12 @@ void CPlayer::addHotKeyItem(int field, HotKeyItem &newHotKeyItem)
             }
          }
          else {
+            pHotKeyItem->iField = newHotKeyItem.iField;
             pHotKeyItem->pItem = NULL;
             pHotKeyItem->pSkill = NULL;
          }
 
-         notifyUpdateHotKeyItem(field, pHotKeyItem);
+         notifyPlayerHotKeyUpdate(pHotKeyItem);
       }
    }
 }
@@ -441,6 +273,62 @@ void CPlayer::skillDamage(AdvancedAttribute targetAttr)
         pTargetMonster->addHate(getUID(), targetAttr.iHP - monsterAdv.iHP);
     }
     CUnitObject::skillDamage(targetAttr);
+}
+
+void CPlayer::addPlayerAttrEventListener(IPlayerAttrEventListener *pListener)
+{
+   std::set<IPlayerAttrEventListener *>::iterator it = m_playerAttrEventListeners.find(pListener);
+   if(it == m_playerAttrEventListeners.end())
+      m_playerAttrEventListeners.insert(pListener);
+}
+
+void CPlayer::removePlayerAttrEventListener(IPlayerAttrEventListener *pListener)
+{
+   std::set<IPlayerAttrEventListener *>::iterator it = m_playerAttrEventListeners.find(pListener);
+   if(it != m_playerAttrEventListeners.end())
+      m_playerAttrEventListeners.erase(it);
+}
+
+void CPlayer::addPlayerEquipEventListener(IPlayerEquipEventListener *pListener)
+{
+   std::set<IPlayerEquipEventListener *>::iterator it = m_playerEquipEventListeners.find(pListener);
+   if(it == m_playerEquipEventListeners.end())
+      m_playerEquipEventListeners.insert(pListener);
+}
+
+void CPlayer::removePlayerEquipEventListener(IPlayerEquipEventListener *pListener)
+{
+   std::set<IPlayerEquipEventListener *>::iterator it = m_playerEquipEventListeners.find(pListener);
+   if(it != m_playerEquipEventListeners.end())
+      m_playerEquipEventListeners.erase(it);
+}
+
+void CPlayer::addPlayerBackpackEventListener(IPlayerBackpackEventListener *pListener)
+{
+   std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.find(pListener);
+   if(it == m_playerBackpackEventListeners.end())
+      m_playerBackpackEventListeners.insert(pListener);
+}
+
+void CPlayer::removePlayerBackpackEventListener(IPlayerBackpackEventListener *pListener)
+{
+   std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.find(pListener);
+   if(it != m_playerBackpackEventListeners.end())
+      m_playerBackpackEventListeners.erase(it);
+}
+
+void CPlayer::addPlayerHotKeyEventListener(IPlayerHotKeyEventListener *pListener)
+{
+   std::set<IPlayerHotKeyEventListener *>::iterator it = m_playerHotKeyEventListeners.find(pListener);
+   if(it == m_playerHotKeyEventListeners.end())
+      m_playerHotKeyEventListeners.insert(pListener);
+}
+
+void CPlayer::removePlayerHotKeyEventListener(IPlayerHotKeyEventListener *pListener)
+{
+   std::set<IPlayerHotKeyEventListener *>::iterator it = m_playerHotKeyEventListeners.find(pListener);
+   if(it != m_playerHotKeyEventListeners.end())
+      m_playerHotKeyEventListeners.erase(it);
 }
 
 #ifdef _GAMEENGINE_2D_
@@ -478,7 +366,6 @@ void CPlayer::updateEquipAttr()
 	}
 	advAttr.iHP = getHP();
 	advAttr.iMP = getMP();
-	//advAttr.fMove = 18.0f;
 	setAdvAttr(advAttr);
 	updateSkillAvailable();
 }
@@ -505,13 +392,14 @@ void CPlayer::wearToEquipSlot(EquipSlot es, unsigned int id)
          CItem *pItem = m_backPack.getItem(i);
          if(pItem->getInfo() == pFindItemInfo) {
             pItem->taken();
-            notifyUpdateBackpack(pItem);
+            notifyPlayerBackpackUpdate();
             break;
          }
       }
 
       // 物品裝備到裝備欄上
 		m_mEquip.insert(std::make_pair(es, id));
+      notifyPlayerEquipUpdate();
 	}
 	else
 	{
@@ -519,56 +407,48 @@ void CPlayer::wearToEquipSlot(EquipSlot es, unsigned int id)
 		int st = 1;
 		int bu = 0;
 		m_backPack.addItem(it->second, st, bu);
-      notifyUpdateBackpack();
+      notifyPlayerBackpackUpdate();
 
       // 新物品裝備到裝備欄上
 		m_mEquip.insert(std::make_pair(es, id));
+      notifyPlayerEquipUpdate();
 	}
 }
 // } Modify by Darren Chen on 2013/01/07
 
 // Add by Darren Chen on 2013/01/17 {
-void CPlayer::notifyUpdateBackpack()
+void CPlayer::notifyPlayerAttrUpdate()
 {
-   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.begin();
-   while(it != m_modelEventListeners.end()) {
-      (*it)->updateBackpack(this);
+   std::set<IPlayerAttrEventListener *>::iterator it = m_playerAttrEventListeners.begin();
+   while(it != m_playerAttrEventListeners.end()) {
+      (*it)->updatePlayerAttr(this);
       it++;
    }
 }
 
-void CPlayer::notifyUpdateBackpack(CItem *pItem)
+void CPlayer::notifyPlayerEquipUpdate()
 {
-   notifyUpdateBackpack();
-   
-   for(int i = 0; (size_t)i < m_pvtHotKey->size(); i++) {
-      HotKeyItem *pHotKeyItem = m_pvtHotKey->at(i);
-      if(pHotKeyItem != NULL) {
-         if(pHotKeyItem->pItem == pItem) {
-            if(pHotKeyItem->pItem->getID() == -1) {
-               HotKeyItem newHotKeyItem;
-               newHotKeyItem.pSkill = NULL;
-               newHotKeyItem.pItem = NULL;
-               addHotKeyItem(i, newHotKeyItem);
-            }
-            else {
-               HotKeyItem newHotKeyItem;
-               newHotKeyItem.pSkill = NULL;
-               newHotKeyItem.pItem = pHotKeyItem->pItem;
-               addHotKeyItem(i, newHotKeyItem);
-            }
-
-            return;
-         }
-      }
+   std::set<IPlayerEquipEventListener *>::iterator it = m_playerEquipEventListeners.begin();
+   while(it != m_playerEquipEventListeners.end()) {
+      (*it)->updatePlayerEquip(this);
+      it++;
    }
 }
 
-void CPlayer::notifyUpdateHotKeyItem(int field, HotKeyItem *pHotKeyItem)
+void CPlayer::notifyPlayerBackpackUpdate()
 {
-   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.begin();
-   while(it != m_modelEventListeners.end()) {
-      (*it)->updateHotKeyItem(field, pHotKeyItem);
+   std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.begin();
+   while(it != m_playerBackpackEventListeners.end()) {
+      (*it)->updatePlayerBackpack(this);
+      it++;
+   }
+}
+
+void CPlayer::notifyPlayerHotKeyUpdate(HotKeyItem *pHotKeyItem)
+{
+   std::set<IPlayerHotKeyEventListener *>::iterator it = m_playerHotKeyEventListeners.begin();
+   while(it != m_playerHotKeyEventListeners.end()) {
+      (*it)->updatePlayerHotKey(pHotKeyItem);
       it++;
    }
 }

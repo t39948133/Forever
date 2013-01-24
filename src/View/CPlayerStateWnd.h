@@ -10,7 +10,8 @@
 #define _CPLAYERSTATEWND_H_
 #include "CWindow.h"
 #include "CPlayer.h"
-#include "IModelEventListener.h"
+#include "IAdvAttrEventListener.h"
+#include "IPlayerAttrEventListener.h"
 
 #ifdef _GAMEENGINE_3D_
 #include "CImageButton.h"
@@ -22,7 +23,8 @@
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
 class CPlayerStateWnd : public CWindow,
-                        public IModelEventListener
+                        public IAdvAttrEventListener,
+                        public IPlayerAttrEventListener
 {
    public:
       enum {BUTTON_COUNT = 3, CELL_SIZE = 20, TEXT_COUNT = 3};
@@ -39,9 +41,12 @@ class CPlayerStateWnd : public CWindow,
 	   /* virtual */ void setZOrder(int order);
 #endif
 
-      // IModelEventListener
+      // IAdvAttrEventListener
       /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
-      /* virtual */ void updateBackpack(CUnitObject *pUnitObject);
+
+      // IPlayerAttrEventListener
+      /* virtual */ void updatePlayerAttr(CPlayer *pPlayer);
+
       /* virtual */ void updateSkill(CUnitObject *pUnitObject);
       /* virtual */ void updateHotKeyItem(int field, HotKeyItem *pHotKeyItem);
       /* virtual */ void updateCoolDown(CSkill *pSkill);

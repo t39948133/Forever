@@ -76,6 +76,7 @@ class CPlayer3D : public IKeyEventListener
       Ogre::Vector3       m_keyDirection;     // 鍵盤移動方向與偏移量
       Ogre::Vector3       m_goalDirection;    // 目標方向
       float               m_fTurnSpeed;       // 模型轉方向的速度
+      bool                m_bMouseMove;       // 滑鼠點選新座標使角色移動
 
       // 3D模型相關參數
       Ogre::Entity       *m_pHairEntity;      // 頭髮模型

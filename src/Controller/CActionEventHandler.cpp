@@ -112,3 +112,101 @@ bool CActionEventHandler::check(CActionEvent *pEvent, std::list<int> *pKeyDownLi
    else
       return false;
 }
+
+void CActionEventHandler::write(FILE *pFile)
+{
+   int version = 0;
+	fwrite(&version, sizeof(version), 1, pFile);
+
+   int iEvent = 0;
+   switch(m_triggerEvent.m_event) {
+      case AET_NULL:
+         iEvent = 0;
+         break;
+
+      case AET_REACH:
+         iEvent = 1;
+         break;
+
+      case AET_NOT_REACH:
+         iEvent = 2;
+         break;
+
+      case AET_KEY:
+         iEvent = 3;
+         break;
+
+      case AET_KEY_WASD:
+         iEvent = 4;
+         break;
+
+      case AET_CAST_SKILL:
+         iEvent = 5;
+         break;
+   }
+   fwrite(&iEvent, sizeof(iEvent), 1, pFile);
+
+   fwrite(&(m_triggerEvent.m_iKeyID), sizeof(m_triggerEvent.m_iKeyID), 1, pFile);
+   fwrite(&(m_triggerEvent.m_iKeyDownID), sizeof(m_triggerEvent.m_iKeyDownID), 1, pFile);
+   fwrite(&(m_triggerEvent.m_iKeyUpID), sizeof(m_triggerEvent.m_iKeyUpID), 1, pFile);
+
+   int iCastSkill = 0;
+   if(m_triggerEvent.m_bCastSkill == true)
+      iCastSkill = 1;
+   else
+      iCastSkill = 0;
+   fwrite(&iCastSkill, sizeof(iCastSkill), 1, pFile);
+
+   fwrite(&(m_triggerEvent.m_iCastSkillID), sizeof(m_triggerEvent.m_iCastSkillID), 1, pFile);
+   fwrite(&(m_triggerEvent.m_fCastSkillTime), sizeof(m_triggerEvent.m_fCastSkillTime), 1, pFile);
+   fwrite(&m_iNextActionID, sizeof(m_iNextActionID), 1, pFile);
+}
+
+void CActionEventHandler::read(FILE *pFile)
+{
+   int version = 0;
+	fread(&version, sizeof(version), 1, pFile);
+
+   int iEvent = 0;
+   fread(&iEvent, sizeof(iEvent), 1, pFile);
+   switch(iEvent) {
+      case 0:
+         m_triggerEvent.m_event = AET_NULL;
+         break;
+
+      case 1:
+         m_triggerEvent.m_event = AET_REACH;
+         break;
+
+      case 2:
+         m_triggerEvent.m_event = AET_NOT_REACH;
+         break;
+
+      case 3:
+         m_triggerEvent.m_event = AET_KEY;
+         break;
+
+      case 4:
+         m_triggerEvent.m_event = AET_KEY_WASD;
+         break;
+
+      case 5:
+         m_triggerEvent.m_event = AET_CAST_SKILL;
+         break;
+   }
+
+   fread(&(m_triggerEvent.m_iKeyID), sizeof(m_triggerEvent.m_iKeyID), 1, pFile);
+   fread(&(m_triggerEvent.m_iKeyDownID), sizeof(m_triggerEvent.m_iKeyDownID), 1, pFile);
+   fread(&(m_triggerEvent.m_iKeyUpID), sizeof(m_triggerEvent.m_iKeyUpID), 1, pFile);
+
+   int iCastSkill = 0;
+   fread(&iCastSkill, sizeof(iCastSkill), 1, pFile);
+   if(iCastSkill == 0)
+      m_triggerEvent.m_bCastSkill = false;
+   else if(iCastSkill == 1)
+      m_triggerEvent.m_bCastSkill = true;
+
+   fread(&(m_triggerEvent.m_iCastSkillID), sizeof(m_triggerEvent.m_iCastSkillID), 1, pFile);
+   fread(&(m_triggerEvent.m_fCastSkillTime), sizeof(m_triggerEvent.m_fCastSkillTime), 1, pFile);
+   fread(&m_iNextActionID, sizeof(m_iNextActionID), 1, pFile);
+}

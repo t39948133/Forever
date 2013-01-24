@@ -1,17 +1,17 @@
 #include "CSkillWnd.h"
 #include "CSkill.h"
-#include "CWindowMan.h"
 
 CSkillWnd::~CSkillWnd()
 {
    if(m_pPlayer != NULL)
-      m_pPlayer->removeModelEventListener(this);
+      m_pPlayer->removeSkillEventListener(this);
 }
 
 void CSkillWnd::init(int _x, int _y, CPlayer *pb)
 {
 	m_pPlayer = pb;
-   m_pPlayer->addModelEventListener(this);
+   if(m_pPlayer != NULL)
+      m_pPlayer->addSkillEventListener(this);
 	
 	x = _x ;
 	y = _y ;
@@ -21,15 +21,13 @@ void CSkillWnd::init(int _x, int _y, CPlayer *pb)
 #ifdef _GAMEENGINE_3D_
 	m_overlay.init(x, y, w, h);
 
-	for(int i = 0; i < BUTTON_COUNT; i++)
-	{	
+	for(int i = 0; i < BUTTON_COUNT; i++) {	
 		m_vpBtn[i] = new CImageButton();
 		m_vpBtn[i]->init(m_overlay, 0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i);
 		addChild(m_vpBtn[i]);
 	}
 
-   for(int i = 0; i < BUTTON_COUNT; i++)
-	{		
+   for(int i = 0; i < BUTTON_COUNT; i++) {		
 		CImageButton *pBtn = new CImageButton();
 		pBtn->init(m_overlay, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i);
 		addChild(pBtn);
@@ -40,8 +38,7 @@ void CSkillWnd::init(int _x, int _y, CPlayer *pb)
 	pTA->setText("§Þ¯àªí", 1, 1, 1);
 	addChild(pTA);
 
-	for(int i = 0; i < TEXT_COUNT; i++)
-	{
+   for(int i = 0; i < TEXT_COUNT; i++) {
 		m_vpText[i] = new CTextAreaOgre();
 		m_vpText[i]->init(m_overlay, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE);
 		addChild(m_vpText[i]);
@@ -96,9 +93,10 @@ void CSkillWnd::onLCommand(int btnID)
             if(pHotKeyItem != NULL) {
                if((pHotKeyItem->pItem == NULL) && (pHotKeyItem->pSkill == NULL)) {
                   HotKeyItem newHotKeyItem;
+                  newHotKeyItem.iField = i;
                   newHotKeyItem.pSkill = pSkill;
                   newHotKeyItem.pItem = NULL;
-                  m_pPlayer->addHotKeyItem(i, newHotKeyItem);
+                  m_pPlayer->addHotKeyItem(newHotKeyItem);
 
                   break;
                }
@@ -139,49 +137,34 @@ void CSkillWnd::setZOrder(int order)
 }
 #endif  // #ifdef _GAMEENGINE_3D_
 
-void CSkillWnd::updateAdvAttr(CUnitObject *pUnitObject)
-{
-}
-
-void CSkillWnd::updateBackpack(CUnitObject *pUnitObject)
-{
-}
-
 void CSkillWnd::updateSkill(CUnitObject *pUnitObject)
 {
-   CPlayer *pPlayer = dynamic_cast<CPlayer *>(pUnitObject);
-   if(pPlayer != NULL) {
-      std::vector<CSkill *> vtSkill = pPlayer->getSkill();
-      for(int i = 0; i < TEXT_COUNT; i++) {
-         if(i < (int)vtSkill.size()) {
-            CSkillInfo *pSkillInfo = vtSkill.at(i)->getInfo();
-            
-            if(pSkillInfo != NULL) {
+   std::vector<CSkill *> vtSkill = pUnitObject->getSkill();
+   for(int i = 0; i < TEXT_COUNT; i++) {
+      if(i < (int)vtSkill.size()) {
+         CSkillInfo *pSkillInfo = vtSkill.at(i)->getInfo();
+         
+         if(pSkillInfo != NULL) {
 #ifdef _GAMEENGINE_3D_
-               m_vpBtn[i]->setImage(pSkillInfo->geticonName());
+            m_vpBtn[i]->setImage(pSkillInfo->geticonName());
 #elif _GAMEENGINE_2D_
-               m_vpBtn[i]->str = pSkillInfo->getName();
+            m_vpBtn[i]->str = pSkillInfo->getName();
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-               m_vpText[i]->setText(pSkillInfo->getName() + "\n" + pSkillInfo->getDesc(), 1, 1, 1);
-            }
+            m_vpText[i]->setText(pSkillInfo->getName() + "\n" + pSkillInfo->getDesc(), 1, 1, 1);
          }
-         else {
+      }
+      else {
 #ifdef _GAMEENGINE_3D_
-            m_vpBtn[i]->setImage("Examples/ogreborder");
+         m_vpBtn[i]->setImage("Examples/ogreborder");
 #elif _GAMEENGINE_2D_
-            m_vpBtn[i]->str = "";
+         m_vpBtn[i]->str = "";
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
-            m_vpText[i]->setText("", 1, 1, 1);
-         }
+         m_vpText[i]->setText("", 1, 1, 1);
       }
    }
 }
 
-void CSkillWnd::updateHotKeyItem(int field, HotKeyItem *pHotKeyItem)
-{
-}
-
-void CSkillWnd::updateCoolDown(CSkill *pSkill)
+void CSkillWnd::updateSkillCoolDown(CSkill *pSkill)
 {
 }

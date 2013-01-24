@@ -1,17 +1,21 @@
 #include "CBackpackWnd.h"
 #include "CBackPack.h"
-#include "CWindowMan.h"
 
 CBackpackWnd::~CBackpackWnd()
 {
-   if(m_pPlayer != NULL)
-      m_pPlayer->removeModelEventListener(this);
+   if(m_pPlayer != NULL) {
+      m_pPlayer->removePlayerAttrEventListener(this);
+      m_pPlayer->removePlayerBackpackEventListener(this);
+   }
 }
 
 void CBackpackWnd::init(int _x, int _y, CPlayer *pb)
 {	
 	m_pPlayer = pb ;
-   m_pPlayer->addModelEventListener(this);
+   if(m_pPlayer != NULL) {
+      m_pPlayer->addPlayerAttrEventListener(this);
+      m_pPlayer->addPlayerBackpackEventListener(this);
+   }
 
    x = _x;
    y = _y;
@@ -22,10 +26,8 @@ void CBackpackWnd::init(int _x, int _y, CPlayer *pb)
 	m_overlay.init(x, y, w, h);
    m_overlay.setBackImage("Examples/KAMEN-setup");
 
-	for(int i = 0; i < BACK_COLUMN; i++)
-   {
-		for(int m = 0; m < BACK_ROW; m++)
-		{	
+	for(int i = 0; i < BACK_COLUMN; i++) {
+      for(int m = 0; m < BACK_ROW; m++) {	
          // 背包欄位
 			m_vpBtn[i * BACK_ROW + m] = new CImageButton();
 			m_vpBtn[i * BACK_ROW + m]->init(m_overlay, m*CELL_SIZE, i*CELL_SIZE+CELL_SIZE/2, CELL_SIZE, CELL_SIZE, i * BACK_ROW + m) ;
@@ -39,18 +41,16 @@ void CBackpackWnd::init(int _x, int _y, CPlayer *pb)
    }
 
 	//顯示此介面名稱(背包)及多少金幣	
-	for(int i = BACK_MAX; i < BACK_MAX + 2; i++)
-	{
+   for(int i = BACK_MAX; i < BACK_MAX + 2; i++) {
 		m_vpText[i] = new CTextAreaOgre();
-		if (i == BACK_MAX)
-		{
+		if(i == BACK_MAX) {
 			m_vpText[i]->init (m_overlay, w/2-30, 0, w, CELL_SIZE) ;
 			m_vpText[i]->setText ("背包", 1, 0, 0) ;
-		}else if (i == BACK_MAX + 1)
-		{
+		}
+      else if(i == BACK_MAX + 1) {
 			m_vpText[i]->init (m_overlay, CELL_SIZE*3, CELL_SIZE*3+CELL_SIZE/2, w, CELL_SIZE) ;
 		}
-		addChild (m_vpText[i]) ;
+		addChild(m_vpText[i]) ;
 	}
 #elif _GAMEENGINE_2D_
 	for(int i = 0; i < BACK_COLUMN; i++)
@@ -85,7 +85,8 @@ void CBackpackWnd::init(int _x, int _y, CPlayer *pb)
 	}
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-   updateBackpack(m_pPlayer);
+   updatePlayerBackpack(m_pPlayer);
+   updatePlayerAttr(m_pPlayer);
    show(false);
 }
 
@@ -105,9 +106,10 @@ void CBackpackWnd::onLCommand(int btnID)
          if(pHotKeyItem != NULL) {
             if((pHotKeyItem->pItem == NULL) && (pHotKeyItem->pSkill == NULL)) {
                HotKeyItem newHotKeyItem;
+               newHotKeyItem.iField = i;
                newHotKeyItem.pItem = pItem;
                newHotKeyItem.pSkill = NULL;
-               m_pPlayer->addHotKeyItem(i, newHotKeyItem);
+               m_pPlayer->addHotKeyItem(newHotKeyItem);
 
                break;
             }
@@ -160,60 +162,43 @@ void CBackpackWnd::setZOrder(int order)
 }
 #endif  // #ifdef _GAMEENGINE_3D_
 
-void CBackpackWnd::updateAdvAttr(CUnitObject *pUnitObject)
+void CBackpackWnd::updatePlayerBackpack(CPlayer *pPlayer)
 {
-}
+   CBackPack backpack = pPlayer->getBackPack();
 
-void CBackpackWnd::updateBackpack(CUnitObject *pUnitObject)
-{
-   CPlayer *pPlayer = dynamic_cast<CPlayer *>(pUnitObject);
-   if(pPlayer != NULL) {
-      CBackPack backpack = pPlayer->getBackPack();
-
-      //更新背包裡的道具/堆疊數量
-	   for(int i = 0; i <BACK_COLUMN; i++) {
-		   for(int m = 0; m < BACK_ROW; m++) {		
-            CItem *pItem = backpack.getItem(i * BACK_ROW + m);
-			   if(pItem != NULL) 
-{
-               CItemInfo *pItemInfo = pItem->getInfo();
+   //更新背包裡的道具/堆疊數量
+   for(int i = 0; i <BACK_COLUMN; i++) {
+	   for(int m = 0; m < BACK_ROW; m++) {		
+         CItem *pItem = backpack.getItem(i * BACK_ROW + m);
+		   if(pItem != NULL) {
+            CItemInfo *pItemInfo = pItem->getInfo();
 
 #ifdef _GAMEENGINE_3D_
-               if(pItemInfo != NULL)
-                  m_vpBtn[i * BACK_ROW + m]->setImage(pItemInfo->geticonName());
-               else
-                  m_vpBtn[i * BACK_ROW + m]->setImage("Examples/ogreborder");
+            if(pItemInfo != NULL)
+               m_vpBtn[i * BACK_ROW + m]->setImage(pItemInfo->geticonName());
+            else
+               m_vpBtn[i * BACK_ROW + m]->setImage("Examples/ogreborder");
 #elif _GAMEENGINE_2D_
-               //道具
-				   if(pItemInfo != NULL) 
-                  m_vpBtn[i * BACK_ROW + m]->str = pItemInfo->getName();
-               else
-                  m_vpBtn[i * BACK_ROW + m]->str = "";
+            //道具
+			   if(pItemInfo != NULL) 
+               m_vpBtn[i * BACK_ROW + m]->str = pItemInfo->getName();
+            else
+               m_vpBtn[i * BACK_ROW + m]->str = "";
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-               //堆疊數量
-               char buf[10] ;
-				   sprintf_s(buf, sizeof(buf), "%d", pItem->getStack());
-				   m_vpText[i * BACK_ROW + m]->setText (buf, 1, 1, 1);
-			   }
+            //堆疊數量
+            char buf[10] ;
+			   sprintf_s(buf, sizeof(buf), "%d", pItem->getStack());
+			   m_vpText[i * BACK_ROW + m]->setText (buf, 1, 1, 1);
 		   }
-      }
-
-      //更新多少金幣			
-	   char buf[20] ;
-      sprintf_s(buf, sizeof(buf), "金幣      %d元", pPlayer->getMoney());
-	   m_vpText[BACK_MAX + 1]->setText(buf, 1, 0, 0);
+	   }
    }
 }
 
-void CBackpackWnd::updateSkill(CUnitObject *pUnitObject)
+void CBackpackWnd::updatePlayerAttr(CPlayer *pPlayer)
 {
-}
-
-void CBackpackWnd::updateHotKeyItem(int field, HotKeyItem *pHotKeyItem)
-{
-}
-
-void CBackpackWnd::updateCoolDown(CSkill *pSkill)
-{
+   //更新多少金幣			
+   char buf[20] ;
+   sprintf_s(buf, sizeof(buf), "金幣      %d元", pPlayer->getMoney());
+   m_vpText[BACK_MAX + 1]->setText(buf, 1, 0, 0);
 }

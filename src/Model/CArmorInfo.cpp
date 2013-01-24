@@ -43,7 +43,6 @@ void CArmorInfo::read(FILE* pFile)
 
 	fread (&m_wear, sizeof(m_wear), 1, pFile);
 }
-
 #ifdef _GAMEENGINE_2D_EDITOR_
 void CArmorInfo::write(FILE* pFile)
 {

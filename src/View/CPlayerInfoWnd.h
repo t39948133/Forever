@@ -10,7 +10,9 @@
 #define _CPLAYERINFOWND_H_
 #include "CWindow.h"
 #include "CPlayer.h"
-#include "IModelEventListener.h"
+#include "IAdvAttrEventListener.h"
+#include "IPlayerAttrEventListener.h"
+#include "IPlayerEquipEventListener.h"
 
 #ifdef _GAMEENGINE_3D_
 #include "CImageButton.h"
@@ -22,7 +24,9 @@
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
 class CPlayerInfoWnd : public CWindow,
-                       public IModelEventListener
+                       public IAdvAttrEventListener,
+                       public IPlayerAttrEventListener,
+                       public IPlayerEquipEventListener
 {
    public:
 	   enum {BUTTON_SPAULDER, BUTTON_GLOVE, BUTTON_WEAPON, BUTTON_CLOTHES,
@@ -45,12 +49,14 @@ class CPlayerInfoWnd : public CWindow,
 	   /* virtual */ void setZOrder(int order);
 #endif
 
-      // IModelEventListener
+      // IAdvAttrEventListener
       /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
-      /* virtual */ void updateBackpack(CUnitObject *pUnitObject);
-      /* virtual */ void updateSkill(CUnitObject *pUnitObject);
-      /* virtual */ void updateHotKeyItem(int field, HotKeyItem *pHotKeyItem);
-      /* virtual */ void updateCoolDown(CSkill *pSkill);
+
+      // IPlayerAttrEventListener
+      /* virtual */ void updatePlayerAttr(CPlayer *pPlayer);
+
+      // IPlayerEquipEventListener
+      /* virtual */ void updatePlayerEquip(CPlayer *pPlayer);
 
    private:
 	   CPlayer *m_pPlayer;

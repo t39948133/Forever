@@ -31,6 +31,7 @@ CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager) : m_pP
    m_keyDirection = Ogre::Vector3::ZERO;
    m_goalDirection = Ogre::Vector3::ZERO;
    m_fTurnSpeed = 500.0f;
+   m_bMouseMove = false;
 
    m_pvtAnimationSet = new std::vector<Ogre::AnimationState *>();
 }
@@ -79,7 +80,7 @@ void CPlayer3D::setup()
    m_pPlayerNode->attachObject(m_pLegEntity);
 
    // 設定玩家位置
-   const POSITION pos = m_pPlayer2D->getPosition();
+   const FPOS pos = m_pPlayer2D->getPosition();
    m_pPlayerNode->setPosition(pos.fX, 0, pos.fY);
 
    // 設定玩家的方向 (臉朝向-Z軸與2D方向相同)
@@ -119,10 +120,11 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
    else {
       // 滑鼠移動
       if(m_pPlayer2D->isMove() == true) {
-         POSITION targetPos = m_pPlayer2D->getTargetPosition();
-         POSITION curPos = m_pPlayer2D->getPosition();
+         m_bMouseMove = true;
+         FPOS targetPos = m_pPlayer2D->getTargetPosition();
+         FPOS curPos = m_pPlayer2D->getPosition();
 
-         POSITION offsetPos;
+         FPOS offsetPos;
          offsetPos.fX = targetPos.fX - curPos.fX;
          offsetPos.fY = targetPos.fY - curPos.fY;
 
@@ -133,13 +135,18 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
          move(timeSinceLastFrame, m_mouseDirection);
       }
       else {
-         POSITION targetPos = m_pPlayer2D->getTargetPosition();
-         m_pPlayer2D->setPosition(targetPos.fX, targetPos.fY);
-         m_pPlayerNode->setPosition(targetPos.fX, 0, targetPos.fY);
+         if(m_bMouseMove == true) {
+            if(m_pPlayer2D->isReachTarget() == true) {
+               m_bMouseMove = false;
+               FPOS targetPos = m_pPlayer2D->getTargetPosition();
+               m_pPlayer2D->setPosition(targetPos.fX, targetPos.fY);
+               m_pPlayerNode->setPosition(targetPos.fX, 0, targetPos.fY);
 
-         CActionEvent actEvent;
-         actEvent.m_event = AET_REACH;
-         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+               CActionEvent actEvent;
+               actEvent.m_event = AET_REACH;
+               CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+            }
+         }
       }
    }
 }
@@ -344,8 +351,7 @@ void CPlayer3D::move(float timeSinceLastFrame, Ogre::Vector3 &offsetDirection)
 
 void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
 {
-   switch(evt.key)
-   {
+   switch(evt.key) {
       case OIS::KC_W: {
          m_keyDirection.z = -1;
 

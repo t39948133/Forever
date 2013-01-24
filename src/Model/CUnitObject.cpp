@@ -33,8 +33,6 @@ CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_str
 // Add by Darren Chen on 2012/12/22 {
 CUnitObject::~CUnitObject()
 {
-   m_modelEventListeners.clear();
-
    if(m_pActionSystem) {
       delete m_pActionSystem;
       m_pActionSystem = NULL;
@@ -71,21 +69,14 @@ bool CUnitObject::canUseSkill(unsigned int skillID)
                if((pUseSkillInfo->getTarget() == ENEMY) ||   // 技能目標是怪物
                   (pUseSkillInfo->getTarget() == GROUND)) {  // 技能目標是範圍
                   if(m_pTargetObject != NULL) {
-                    /* CMonster *pTargetMonster = dynamic_cast<CMonster *>(m_pTargetObject);
-                     if(pTargetMonster != NULL) {
-                        float distance = getDistance(m_position.fX, m_position.fY, pTargetMonster->getPosition().fX, pTargetMonster->getPosition().fY);
-                        */
-					  float distance = getDistance(m_position.fX, m_position.fY,
-						  m_pTargetObject->getPosition().fX, m_pTargetObject->getPosition().fY);
-                        if(distance > pUseSkillInfo->getCastRange())
-                           return false;  // 離目標物距離遠過技能施展距離
-                        else
-                           return true;
-                     }
+                     float distance = getDistance(m_position.fX, m_position.fY,
+                                                  m_pTargetObject->getPosition().fX, m_pTargetObject->getPosition().fY);
+                     if(distance > pUseSkillInfo->getCastRange())
+                        return false;  // 離目標物距離遠過技能施展距離
                      else
-                /*        return false;  // 目標物不是怪物
+                        return true;
                   }
-                  else*/
+                  else
                      return false;  // 沒有指定怪物
                }
                else if((pUseSkillInfo->getTarget() == SELF) ||  // 技能目標是自己
@@ -156,7 +147,6 @@ void CUnitObject::useSkill(unsigned int skillID)
                FloatPrecentAttribute effectPrecentAttr = pUseSkillInfo->getEffectAttrPercent();
                AttributeMulti(targetAttr, effectPrecentAttr);
                skillDamage(targetAttr);
-               //m_pTargetObject->setAdvAttr(targetAttr);
             }
          }
          else if(pUseSkillInfo->getTarget() == SELF) {  // 技能目標是自己
@@ -324,18 +314,32 @@ CUnitObject* CUnitObject::getTargetObject()
    return m_pTargetObject;
 }
 
-void CUnitObject::addModelEventListener(IModelEventListener *pListener)
+void CUnitObject::addAdvAttrEventListener(IAdvAttrEventListener *pListener)
 {
-   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.find(pListener);
-   if(it == m_modelEventListeners.end())
-      m_modelEventListeners.insert(pListener);
+   std::set<IAdvAttrEventListener *>::iterator it = m_advAttrEventListeners.find(pListener);
+   if(it == m_advAttrEventListeners.end())
+      m_advAttrEventListeners.insert(pListener);
 }
 
-void CUnitObject::removeModelEventListener(IModelEventListener *pListener)
+void CUnitObject::removeAdvAttrEventListener(IAdvAttrEventListener *pListener)
 {
-   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.find(pListener);
-   if(it != m_modelEventListeners.end())
-      m_modelEventListeners.erase(it);
+   std::set<IAdvAttrEventListener *>::iterator it = m_advAttrEventListeners.find(pListener);
+   if(it != m_advAttrEventListeners.end())
+      m_advAttrEventListeners.erase(it);
+}
+
+void CUnitObject::addSkillEventListener(ISkillEventListener *pListener)
+{
+   std::set<ISkillEventListener *>::iterator it = m_skillEventListeners.find(pListener);
+   if(it == m_skillEventListeners.end())
+      m_skillEventListeners.insert(pListener);
+}
+
+void CUnitObject::removeSkillEventListener(ISkillEventListener *pListener)
+{
+   std::set<ISkillEventListener *>::iterator it = m_skillEventListeners.find(pListener);
+   if(it != m_skillEventListeners.end())
+      m_skillEventListeners.erase(it);
 }
 
 #ifdef _GAMEENGINE_2D_
@@ -361,33 +365,6 @@ void CUnitObject::draw(HDC hdc)
    m_pActionSystem->draw(hdc, (int)m_position.fX - size, (int)m_position.fY + size + 22);
 }
 #endif  // #ifdef _GAMEENGINE_2D_
-
-void CUnitObject::notifyUpdateAdvAttr()
-{
-   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.begin();
-   while(it != m_modelEventListeners.end()) {
-      (*it)->updateAdvAttr(this);
-      it++;
-   }
-}
-
-void CUnitObject::notifyUpdateSkill()
-{
-   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.begin();
-   while(it != m_modelEventListeners.end()) {
-      (*it)->updateSkill(this);
-      it++;
-   }
-}
-
-void CUnitObject::notifyUpdateCoolDown(CSkill *pSkill)
-{
-   std::set<IModelEventListener *>::iterator it = m_modelEventListeners.begin();
-   while(it != m_modelEventListeners.end()) {
-      (*it)->updateCoolDown(pSkill);
-      it++;
-   }
-}
 // } Add by Darren Chen on 2012/12/22
 
 long long CUnitObject::getUID()
@@ -418,7 +395,7 @@ void CUnitObject::addHP(int hp)
 		m_advAttr.iHP = getHPMax();
 	}
 
-   notifyUpdateAdvAttr();
+   notifyAdvAttrUpdate();
 }
 
 int CUnitObject::getHP()
@@ -451,7 +428,7 @@ void CUnitObject::addMP(int mp)
 		m_advAttr.iMP = getMPMax();
 	}
 
-   notifyUpdateAdvAttr();
+   notifyAdvAttrUpdate();
 }
 
 int CUnitObject::getMP()
@@ -505,8 +482,6 @@ void CUnitObject::setBasAttr(BasicAttribute basAttr)
 {
     m_basAttr = basAttr;
     BasicAttributeSet(m_level, basAttr, m_advAttr, m_obsAttr);
-	 
-   notifyUpdateAdvAttr();
 }
   
 void CUnitObject::setAdvAttr(AdvancedAttribute advattr)
@@ -514,20 +489,16 @@ void CUnitObject::setAdvAttr(AdvancedAttribute advattr)
    m_advAttr = advattr;	//設定屬性資料
 
    if(getHPMax() < m_advAttr.iHP)
-    {
       m_advAttr.iHP = getHPMax();
-    }
    else if(m_advAttr.iHP < 0)
       m_advAttr.iHP = 0;
    
    if(getMPMax() < m_advAttr.iMP)
-    {
       m_advAttr.iMP = getMPMax();
-    }
    else if(m_advAttr.iMP < 0)
       m_advAttr.iMP = 0;
 
-   notifyUpdateAdvAttr();
+   notifyAdvAttrUpdate();
 }
 
 AdvancedAttribute CUnitObject::getAdvAttr()
@@ -596,9 +567,7 @@ void CUnitObject::SkillCoolDown(float timepass)
    std::vector<CSkill *>::iterator pi = m_vSkill.begin();
    while(m_vSkill.end() != pi)
    {
-      if((*pi)->updateCoolDown(timepass) == true)
-         notifyUpdateCoolDown((*pi));
-
+      (*pi)->updateCoolDown(timepass);
       pi++;
    }
 }
@@ -610,14 +579,31 @@ bool CUnitObject::addSkill(unsigned int skillID)
    if(pSkill->canLearn(m_level))
    {
       m_vSkill.push_back(pSkill);
-      notifyUpdateSkill();
+      notifySkillUpdate();
       return true;
    }
-//delete pSkill;
    return false;
 }
 
 // Add by Darren Chen on 2013/01/01 {
+void CUnitObject::notifyAdvAttrUpdate()
+{
+   std::set<IAdvAttrEventListener *>::iterator it = m_advAttrEventListeners.begin();
+   while(it != m_advAttrEventListeners.end()) {
+      (*it)->updateAdvAttr(this);
+      it++;
+   }
+}
+
+void CUnitObject::notifySkillUpdate()
+{
+   std::set<ISkillEventListener *>::iterator it = m_skillEventListeners.begin();
+   while(it != m_skillEventListeners.end()) {
+      (*it)->updateSkill(this);
+      it++;
+   }
+}
+
 #ifdef _GAMEENGINE_2D_
 void CUnitObject::move(float timePass, float targetX, float targetY, bool bFaceTarget)
 {

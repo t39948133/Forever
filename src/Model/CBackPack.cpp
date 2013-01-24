@@ -50,9 +50,16 @@ int CBackPack::getSize()
 
 void CBackPack::initBack()
 {
-	m_itemBack[1].create(0, 1);
-	m_itemBack[2].create(1, 1);
-   m_itemBack[3].create(2, 10);
-   m_itemBack[5].create(3, 1);
-   m_itemBack[20].create(4, 1);
+   // 藥水
+   m_itemBack[0].create(3, 10);
+   m_itemBack[1].create(4, 10);
+
+   // 新手裝備
+	m_itemBack[3].create(0, 1);
+	m_itemBack[4].create(1, 1);
+   m_itemBack[5].create(2, 1);
+
+   // 技能書
+   m_itemBack[7].create(5, 1);
+   m_itemBack[8].create(6, 1);
 }

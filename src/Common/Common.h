@@ -20,6 +20,7 @@
 #include <set>
 #include <time.h>
 #include <math.h>
+#include <sstream>
 // } Add by Darren Chen on 2012/12/22
 
 struct BasicAttribute
@@ -280,6 +281,23 @@ float getDistance(float x1, float y1, float x2, float y2);
   * @param [in] y2     第二個座標點Y
   * @param [in] step   每次移動的距離 */   
 void movePoint(float &x1, float &y1, float x2, float y2, float step);
+
+template<class T>
+    std::string toString(const T& t)
+{
+     std::ostringstream stream;
+     stream << t;
+     return stream.str();
+}
+
+template<class T>
+    T fromString(const std::string& s)
+{
+     std::istringstream stream (s);
+     T t;
+     stream >> t;
+     return t;
+}
 
 typedef enum tagSCENE_TYPE {
    SCENE_POETA,     // 波伊塔 (新手村)

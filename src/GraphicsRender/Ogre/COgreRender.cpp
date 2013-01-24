@@ -33,16 +33,16 @@ COgreRender::~COgreRender()
    m_mouseEventListeners.clear();
    m_keyEventListeners.clear();
 
-    if(mTrayMgr) 
-       delete mTrayMgr;
+   if(mTrayMgr) 
+      delete mTrayMgr;
 
-    if(mCameraMan) 
-       delete mCameraMan;
+   if(mCameraMan) 
+      delete mCameraMan;
 
-    //Remove ourself as a Window listener
-    Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
-    windowClosed(mWindow);
-    delete mRoot;
+   //Remove ourself as a Window listener
+   Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
+   windowClosed(mWindow);
+   delete mRoot;
 }
 
 void COgreRender::addGameFlowListener(IGameFlowListener *listener)

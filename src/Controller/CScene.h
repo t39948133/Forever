@@ -64,6 +64,8 @@ class CScene
         * @param timePass 一個frame幾秒 */
       void work(float timePass);
 
+      std::list<CPlayer *>* getvtPlayer();
+
 #ifdef _GAMEENGINE_2D_
       /** @brief 取得玩家
         * @param x 滑鼠點擊的X座標
@@ -82,8 +84,6 @@ class CScene
         * @param y 滑鼠點擊的Y座標
         * @return 作戰單位物件 */
       CUnitObject* getUnitObject(float x, float y);
-
-		std::list<CPlayer *> *getvtPlayer();
 
       void draw(HDC hdc);
 #endif  // #ifdef _GAMEENGINE_2D_

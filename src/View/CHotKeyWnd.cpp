@@ -1,18 +1,18 @@
 #include "CHotKeyWnd.h"
 #include "CSkill.h"
 #include "CItem.h"
-#include "CWindowMan.h"
 
 CHotKeyWnd::~CHotKeyWnd()
 {
    if(m_pPlayer != NULL)
-      m_pPlayer->removeModelEventListener(this);
+      m_pPlayer->removePlayerHotKeyEventListener(this);
 }
 
 void CHotKeyWnd::init (int _x, int _y, CPlayer *pPlr)
 {
    m_pPlayer = pPlr;
-   m_pPlayer->addModelEventListener(this);
+   if(m_pPlayer != NULL)
+      m_pPlayer->addPlayerHotKeyEventListener(this);
 
    x = _x ;
 	y = _y ;
@@ -122,10 +122,27 @@ void CHotKeyWnd::onRCommand(int btnID)
 {
    // 移除HotKey上的物品或技能
    if(btnID >= 0 && btnID < m_pPlayer->getHotKeySize()) {
+      HotKeyItem *pOldHotKeyItem = m_pPlayer->getHotKeyItem(btnID);
+      if(pOldHotKeyItem->pSkill != NULL) {
+         pOldHotKeyItem->pSkill->removeSkillEventListener(this);
+
+         std::map<void *, int>::iterator it = m_table.find(pOldHotKeyItem->pSkill);
+         if(it != m_table.end())
+            m_table.erase(it);
+      }
+      else if(pOldHotKeyItem->pItem != NULL) {
+         pOldHotKeyItem->pItem->removeItemEventListener(this);
+
+         std::map<void *, int>::iterator it = m_table.find(pOldHotKeyItem->pItem);
+         if(it != m_table.end())
+            m_table.erase(it);
+      }
+
       HotKeyItem newHotKeyItem;
+      newHotKeyItem.iField = btnID;
       newHotKeyItem.pSkill = NULL;
       newHotKeyItem.pItem = NULL;
-      m_pPlayer->addHotKeyItem(btnID, newHotKeyItem);
+      m_pPlayer->addHotKeyItem(newHotKeyItem);
    }
 }
 
@@ -153,103 +170,109 @@ void CHotKeyWnd::setZOrder(int order)
 }
 #endif  // #ifdef _GAMEENGINE_3D_
 
-void CHotKeyWnd::updateAdvAttr(CUnitObject *pUnitObject)
+void CHotKeyWnd::updatePlayerHotKey(HotKeyItem *pHotKeyItem)
 {
+   if(pHotKeyItem->pSkill != NULL) {
+      pHotKeyItem->pSkill->addSkillEventListener(this);
+      CSkillInfo *pSkillInfo = pHotKeyItem->pSkill->getInfo();
+
+      if(pSkillInfo != NULL) {
+#ifdef _GAMEENGINE_3D_
+         m_vpBtn[pHotKeyItem->iField]->setImage(pSkillInfo->geticonName());
+#elif _GAMEENGINE_2D_
+         m_vpBtn[pHotKeyItem->iField]->str = pSkillInfo->getName();
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
+
+         m_table.insert(std::pair<void *, int>(pHotKeyItem->pSkill, pHotKeyItem->iField));
+      }
+   }
+   else if(pHotKeyItem->pItem != NULL) {
+      if(pHotKeyItem->pItem->getStack() > 0) {
+         pHotKeyItem->pItem->addItemEventListener(this);
+         CItemInfo *pItemInfo = pHotKeyItem->pItem->getInfo();
+
+         if(pItemInfo != NULL) {
+#ifdef _GAMEENGINE_3D_
+            m_vpBtn[pHotKeyItem->iField]->setImage(pItemInfo->geticonName());
+#elif _GAMEENGINE_2D_
+            m_vpBtn[pHotKeyItem->iField]->str = pItemInfo->getName();
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
+
+            //堆疊數量
+            char buf[10] ;
+			   sprintf_s(buf, sizeof (buf), "%d", pHotKeyItem->pItem->getStack());
+			   m_vpText[TEXT_COUNT/2 + pHotKeyItem->iField]->setText (buf, 1, 1, 1) ;
+
+            m_table.insert(std::pair<void *, int>(pHotKeyItem->pItem, pHotKeyItem->iField));
+         }
+      }
+   }
+   else {
+#ifdef _GAMEENGINE_3D_
+         m_vpBtn[pHotKeyItem->iField]->setImage("Examples/ogreborder");
+#elif _GAMEENGINE_2D_
+         m_vpBtn[pHotKeyItem->iField]->str = "";
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
+
+         m_vpText[TEXT_COUNT/2 + pHotKeyItem->iField]->setText("", 1, 1, 1);
+   }
 }
 
-void CHotKeyWnd::updateBackpack(CUnitObject *pUnitObject)
+void CHotKeyWnd::updateItemData(CItem *pItem)
 {
+   if(pItem != NULL) {
+      std::map<void *, int>::iterator it = m_table.find(pItem);
+      if(it != m_table.end()) {
+         int field = it->second;
+
+         if(pItem->getStack() > 0) {
+            CItemInfo *pItemInfo = pItem->getInfo();
+
+            if(pItemInfo != NULL) {
+#ifdef _GAMEENGINE_3D_
+               m_vpBtn[field]->setImage(pItemInfo->geticonName());
+#elif _GAMEENGINE_2D_
+               m_vpBtn[field]->str = pItemInfo->getName();
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
+
+               //堆疊數量
+               char buf[10] ;
+			      sprintf_s(buf, sizeof (buf), "%d", pItem->getStack());
+			      m_vpText[TEXT_COUNT/2 + field]->setText (buf, 1, 1, 1) ;
+            }
+         }
+         else {
+            m_table.erase(it);
+
+            HotKeyItem newHotKeyItem;
+            newHotKeyItem.iField = field;
+            newHotKeyItem.pSkill = NULL;
+            newHotKeyItem.pItem = NULL;
+            m_pPlayer->addHotKeyItem(newHotKeyItem);
+         }
+      }
+   }
 }
 
 void CHotKeyWnd::updateSkill(CUnitObject *pUnitObject)
 {
 }
 
-void CHotKeyWnd::updateHotKeyItem(int field, HotKeyItem *pHotKeyItem)
+void CHotKeyWnd::updateSkillCoolDown(CSkill *pSkill)
 {
-   if(pHotKeyItem->pSkill != NULL) {
-      CSkillInfo *pSkillInfo = pHotKeyItem->pSkill->getInfo();
+   if(pSkill != NULL) {
+      std::map<void *, int>::iterator it = m_table.find(pSkill);
+      if(it != m_table.end()) {
+         int field = it->second;
 
-      if(pSkillInfo != NULL) {
-#ifdef _GAMEENGINE_3D_
-         m_vpBtn[field]->setImage(pSkillInfo->geticonName());
-#elif _GAMEENGINE_2D_
-         m_vpBtn[field]->str = pSkillInfo->getName();
-#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
-
-         // 技能冷卻時間倒數
-         float surplusCoolDown = pHotKeyItem->pSkill->getSurplus();
+         float surplusCoolDown = pSkill->getSurplus();
          if(surplusCoolDown != 0.0f) {
             char buf[10] ;
-			   sprintf_s(buf, sizeof(buf), "%.2f", surplusCoolDown);
+		      sprintf_s(buf, sizeof(buf), "%.2f", surplusCoolDown);
             m_vpText[TEXT_COUNT/2 + field]->setText(buf, 1, 1, 1);
          }
          else
             m_vpText[TEXT_COUNT/2 + field]->setText("", 1, 1, 1);
-      }
-   }
-   else if(pHotKeyItem->pItem != NULL) {
-      if(pHotKeyItem->pItem->getStack() > 0) {
-         CItemInfo *pItemInfo = pHotKeyItem->pItem->getInfo();
-
-         if(pItemInfo != NULL) {
-#ifdef _GAMEENGINE_3D_
-            m_vpBtn[field]->setImage(pItemInfo->geticonName());
-#elif _GAMEENGINE_2D_
-            m_vpBtn[field]->str = pItemInfo->getName();
-#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
-
-            //堆疊數量
-            char buf[10] ;
-			   sprintf_s(buf, sizeof (buf), "%d", pHotKeyItem->pItem->getStack());
-			   m_vpText[TEXT_COUNT/2 + field]->setText (buf, 1, 1, 1) ;
-         }
-      }
-      else {
-         HotKeyItem newHotKeyItem;
-         newHotKeyItem.pSkill = NULL;
-         newHotKeyItem.pItem = NULL;
-         m_pPlayer->addHotKeyItem(field, newHotKeyItem);
-
-#ifdef _GAMEENGINE_3D_
-         m_vpBtn[field]->setImage("Examples/ogreborder");
-#elif _GAMEENGINE_2D_
-         m_vpBtn[field]->str = "";
-#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
-
-         m_vpText[TEXT_COUNT/2 + field]->setText("", 1, 1, 1);
-      }
-   }
-   else {
-#ifdef _GAMEENGINE_3D_
-         m_vpBtn[field]->setImage("Examples/ogreborder");
-#elif _GAMEENGINE_2D_
-         m_vpBtn[field]->str = "";
-#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
-
-         m_vpText[TEXT_COUNT/2 + field]->setText("", 1, 1, 1);
-   }
-}
-
-void CHotKeyWnd::updateCoolDown(CSkill *pSkill)
-{
-   int field = 0;
-   for(field = 0; field < m_pPlayer->getHotKeySize(); field++) {
-      HotKeyItem *pHotKeyItem = m_pPlayer->getHotKeyItem(field);
-      if(pHotKeyItem != NULL) {
-         if(pHotKeyItem->pSkill == pSkill) {
-            // 技能冷卻時間倒數
-            float surplusCoolDown = pHotKeyItem->pSkill->getSurplus();
-            if(surplusCoolDown != 0.0f) {
-               char buf[10] ;
-			      sprintf_s(buf, sizeof(buf), "%.2f", surplusCoolDown);
-               m_vpText[TEXT_COUNT/2 + field]->setText(buf, 1, 1, 1);
-            }
-            else
-               m_vpText[TEXT_COUNT/2 + field]->setText("", 1, 1, 1);
-
-            return;
-         }
       }
    }
 }

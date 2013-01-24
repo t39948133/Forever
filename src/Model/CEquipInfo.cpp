@@ -53,7 +53,6 @@ void CEquipInfo::read(FILE* pFile)
 	fread (buf, sizeof(buf), 1, pFile);
 	m_strMeshName = buf;
 }
-
 #ifdef _GAMEENGINE_2D_EDITOR_
 void CEquipInfo::write(FILE* pFile)
 {

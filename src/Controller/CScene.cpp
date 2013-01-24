@@ -54,27 +54,27 @@ CMonster* CScene::addMonster(long long uid, int kindID, float x, float y)
 
 void CScene::removeAll()
 {
-	if(m_pvtPlayer != NULL) {
-   std::list<CPlayer *>::iterator itPlayer = m_pvtPlayer->begin();
-   while(itPlayer != m_pvtPlayer->end()) {
-      delete (*itPlayer);
-      itPlayer++;
+   if(m_pvtPlayer != NULL) {
+      std::list<CPlayer *>::iterator itPlayer = m_pvtPlayer->begin();
+      while(itPlayer != m_pvtPlayer->end()) {
+         delete (*itPlayer);
+         itPlayer++;
+      }
+      m_pvtPlayer->clear();
+      delete m_pvtPlayer;
+      m_pvtPlayer = NULL;
    }
-   m_pvtPlayer->clear();
-   delete m_pvtPlayer;
-   m_pvtPlayer = NULL;
-	}
 
-	if(m_pvtMonster != NULL) {
-   std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
-   while(itMonster != m_pvtMonster->end()) {
-      delete (*itMonster);
-      itMonster++;
+   if(m_pvtMonster != NULL) {
+      std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
+      while(itMonster != m_pvtMonster->end()) {
+         delete (*itMonster);
+         itMonster++;
+      }
+      m_pvtMonster->clear();
+      delete m_pvtMonster;
+      m_pvtMonster = NULL;
    }
-   m_pvtMonster->clear();
-   delete m_pvtMonster;
-   m_pvtMonster = NULL;
-	}
 
    m_pMainPlayer = NULL;
 }
@@ -141,15 +141,16 @@ void CScene::work(float timePass)
    std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
    while(itMonster != m_pvtMonster->end()) {
       (*itMonster)->work(timePass, *this);
-		if((*itMonster)->isDead())
-		{
-			itMonster = m_pvtMonster->erase(itMonster);
-		}
-		else
-		{
-      itMonster++;
+      if((*itMonster)->isDead())
+         itMonster = m_pvtMonster->erase(itMonster);
+      else
+         itMonster++;
    }
 }
+
+std::list<CPlayer *>* CScene::getvtPlayer()
+{
+	return m_pvtPlayer;
 }
 
 #ifdef _GAMEENGINE_2D_
@@ -192,11 +193,6 @@ CUnitObject* CScene::getUnitObject(float x, float y)
       return pUnitObject;
 
    return NULL;
-}
-
-std::list<CPlayer *> *CScene::getvtPlayer()
-{
-	return m_pvtPlayer;
 }
 
 void CScene::draw(HDC hdc)

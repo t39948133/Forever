@@ -10,7 +10,7 @@
 #define _CSKILLWND_H_
 #include "CWindow.h"
 #include "CPlayer.h"
-#include "IModelEventListener.h"
+#include "ISkillEventListener.h"
 
 #ifdef _GAMEENGINE_3D_
 #include "CImageButton.h"
@@ -22,7 +22,7 @@
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
 class CSkillWnd : public CWindow,
-                  public IModelEventListener
+                  public ISkillEventListener
 {
    public:
 	   enum {BUTTON_COUNT = 7, CELL_SIZE = 60, TEXT_COUNT = 7} ;
@@ -41,12 +41,9 @@ class CSkillWnd : public CWindow,
 	   void setZOrder(int order);
 #endif
 
-      // IModelEventListener
-      /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
-      /* virtual */ void updateBackpack(CUnitObject *pUnitObject);
+      // ISkillEventListener
       /* virtual */ void updateSkill(CUnitObject *pUnitObject);
-      /* virtual */ void updateHotKeyItem(int field, HotKeyItem *pHotKeyItem);
-      /* virtual */ void updateCoolDown(CSkill *pSkill);
+      /* virtual */ void updateSkillCoolDown(CSkill *pSkill);
 
    private:
       CPlayer *m_pPlayer;

@@ -100,6 +100,60 @@ void CActionSystem::draw(HDC hdc, int x, int y)
 }
 #endif
 
+void CActionSystem::write(std::string fileName)
+{
+   FILE *pFile; 
+   fopen_s(&pFile, fileName.c_str(), "wb");
+
+	int version = 0;
+	fwrite(&version, sizeof(version), 1, pFile);
+
+	int count = m_pvtActionSet->size();
+	fwrite(&count, sizeof(count), 1, pFile);
+
+   std::vector<CAction *>::iterator it = m_pvtActionSet->begin();
+   while(it != m_pvtActionSet->end()) {
+      (*it)->write(pFile);
+      it++;
+   }
+
+	fclose(pFile);
+}
+
+bool CActionSystem::read(std::string fileName)
+{
+   FILE *pFile; 
+   fopen_s(&pFile, fileName.c_str(), "rb");
+
+   if(pFile == NULL)
+      return false;
+
+   int version = 0;
+	fread(&version, sizeof(version), 1, pFile);
+
+	int count = 0;
+	fread(&count, sizeof(count), 1, pFile);
+   for(int i = 0; i < count; i++) {
+      ACTION_DATA actData;
+      memset(&actData, 0, sizeof(actData));
+
+      CAction *pAction = new CAction();
+      pAction->init(actData);
+
+      addAction(pAction);
+   }
+
+   std::vector<CAction *>::iterator it = m_pvtActionSet->begin();
+   while(it != m_pvtActionSet->end()) {
+      (*it)->read(pFile);
+      it++;
+   }
+
+	fclose(pFile);
+
+   return true;
+}
+
 void CActionSystem::changeAction(int newActionID)
 {
    for(int i = 0; i < (int)m_pvtActionSet->size(); i++) {

@@ -98,3 +98,92 @@ std::string CAction::getName()
 {
    return m_name;
 }
+
+void CAction::write(FILE *pFile)
+{
+   int version = 0;
+	fwrite(&version, sizeof(version), 1, pFile);
+
+   fwrite(&m_iID, sizeof(m_iID), 1, pFile);
+   
+   int nameSize = m_name.size();
+   fwrite(&nameSize, sizeof(nameSize), 1, pFile);
+   fwrite(m_name.c_str(), m_name.size(), 1, pFile);
+
+   fwrite(&m_fTime, sizeof(m_fTime), 1, pFile);
+
+   int animationNameSize = m_animationName.size();
+   fwrite(&animationNameSize, sizeof(animationNameSize), 1, pFile);
+   fwrite(m_animationName.c_str(), m_animationName.size(), 1, pFile);
+
+   fwrite(&m_iNextActID, sizeof(m_iNextActID), 1, pFile);
+
+   int iMove = 0;
+   if(m_bMove == true) {
+      iMove = 1;
+      fwrite(&iMove, sizeof(iMove), 1, pFile);
+   }
+   else if(m_bMove == false) {
+      iMove = 0;
+      fwrite(&iMove, sizeof(iMove), 1, pFile);
+   }
+
+   int count = m_pvtEventHandlerSet->size();
+	fwrite(&count, sizeof(count), 1, pFile);
+
+   std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
+   while(it != m_pvtEventHandlerSet->end()) {
+      (*it)->write(pFile);
+      it++;
+   }
+}
+
+void CAction::read(FILE *pFile)
+{
+   int version = 0;
+	fread(&version, sizeof(version), 1, pFile);
+
+   fread(&m_iID, sizeof(m_iID), 1, pFile);
+
+   int nameSize = 0;
+   fread(&nameSize, sizeof(nameSize), 1, pFile);
+   char buf[256];
+   memset(buf, 0, sizeof(buf));
+   fread(buf, nameSize, 1, pFile);
+   m_name = buf;
+
+   fread(&m_fTime, sizeof(m_fTime), 1, pFile);
+
+   int animationNameSize = 0;
+   fread(&animationNameSize, sizeof(animationNameSize), 1, pFile);
+   char buf1[256];
+   memset(buf1, 0, sizeof(buf1));
+   fread(buf1, animationNameSize, 1, pFile);
+   m_animationName = buf1;
+
+   fread(&m_iNextActID, sizeof(m_iNextActID), 1, pFile);
+
+   int iMove = 0;
+   fread(&iMove, sizeof(iMove), 1, pFile);
+   if(iMove == 0)
+      m_bMove = false;
+   else if(iMove == 1)
+      m_bMove = true;
+
+   int count = 0;
+	fread(&count, sizeof(count), 1, pFile);
+   for(int i = 0; i < count; i++) {
+      CActionEvent actEvent;
+
+      CActionEventHandler *pActionEventHandler = new CActionEventHandler();
+      pActionEventHandler->init(actEvent, 0);
+
+      addEventHandler(pActionEventHandler);
+   }
+
+   std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
+   while(it != m_pvtEventHandlerSet->end()) {
+      (*it)->read(pFile);
+      it++;
+   }
+}

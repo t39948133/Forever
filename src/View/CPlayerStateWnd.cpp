@@ -2,14 +2,19 @@
 
 CPlayerStateWnd::~CPlayerStateWnd()
 {
-   if(m_pPlayer != NULL)
-      m_pPlayer->removeModelEventListener(this);
+   if(m_pPlayer != NULL) {
+      m_pPlayer->removeAdvAttrEventListener(this);
+      m_pPlayer->removePlayerAttrEventListener(this);
+   }
 }
 
 void CPlayerStateWnd::init(int _x, int _y, CPlayer *pPlr)
 {
    m_pPlayer = pPlr;
-   m_pPlayer->addModelEventListener(this);
+   if(m_pPlayer != NULL) {
+      m_pPlayer->addAdvAttrEventListener(this);
+      m_pPlayer->addPlayerAttrEventListener(this);
+   }
 
    x = _x;
 	y = _y;
@@ -91,6 +96,7 @@ void CPlayerStateWnd::init(int _x, int _y, CPlayer *pPlr)
 #endif
 
    updateAdvAttr(m_pPlayer);
+   updatePlayerAttr(m_pPlayer);
    show(true);
 }
 
@@ -125,39 +131,22 @@ void CPlayerStateWnd::setZOrder(int order)
 
 void CPlayerStateWnd::updateAdvAttr(CUnitObject *pUnitObject)
 {
-   CPlayer *pPlayer = dynamic_cast<CPlayer *>(pUnitObject);
-   if(pPlayer != NULL) {
-      char buf[50];
-      for(int i = 0; i<TEXT_COUNT; i++) {
-         memset(buf, 0, sizeof(buf));
-         if(i == 0) {
-            sprintf_s(buf, sizeof(buf), "%5d / %5d", pPlayer->getHP(), pPlayer->getHPMax());
-            m_vpText[i]->setText(buf, 1, 1, 1);
-         }
-         else if(i == 1) {
-            sprintf_s(buf, sizeof(buf), "%5d / %5d", pPlayer->getMP(), pPlayer->getMPMax());
-            m_vpText[i]->setText(buf, 1, 1, 1);
-         }
-         else {	
-            sprintf_s(buf, sizeof(buf), "%5d / %5d", pPlayer->getXP(), pPlayer->getXPMax());
-            m_vpText[i]->setText(buf, 1, 1, 1) ;
-         }
-      }
-   }
+   char buf[50];
+
+   memset(buf, 0, sizeof(buf));
+   sprintf_s(buf, sizeof(buf), "%5d / %5d", pUnitObject->getHP(), pUnitObject->getHPMax());
+   m_vpText[0]->setText(buf, 1, 1, 1);
+
+   memset(buf, 0, sizeof(buf));
+   sprintf_s(buf, sizeof(buf), "%5d / %5d", pUnitObject->getMP(), pUnitObject->getMPMax());
+   m_vpText[1]->setText(buf, 1, 1, 1);
 }
 
-void CPlayerStateWnd::updateBackpack(CUnitObject *pUnitObject)
+void CPlayerStateWnd::updatePlayerAttr(CPlayer *pPlayer)
 {
-}
+   char buf[50];
 
-void CPlayerStateWnd::updateSkill(CUnitObject *pUnitObject)
-{
-}
-
-void CPlayerStateWnd::updateHotKeyItem(int field, HotKeyItem *pHotKeyItem)
-{
-}
-
-void CPlayerStateWnd::updateCoolDown(CSkill *pSkill)
-{
+   memset(buf, 0, sizeof(buf));
+   sprintf_s(buf, sizeof(buf), "%5d / %5d", pPlayer->getXP(), pPlayer->getXPMax());
+   m_vpText[2]->setText(buf, 1, 1, 1) ;
 }

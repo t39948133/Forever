@@ -106,11 +106,6 @@ void CGameClient3D::destoryScene()
 {
    m_pWindowMan->deleteAllWindow();
 
-   if(m_pPlayer != NULL) {
-      delete m_pPlayer;
-      m_pPlayer = NULL;
-   }
-
    m_pSceneManager->destroyQuery(m_pRayQuery);
    m_pRayQuery = NULL;
 
@@ -118,6 +113,11 @@ void CGameClient3D::destoryScene()
 
    m_pTerrain->release();
    getScene()->removeAll();
+
+   if(m_pPlayer != NULL) {
+      delete m_pPlayer;
+      m_pPlayer = NULL;
+   }
 }
 
 void CGameClient3D::mouseDown(const OIS::MouseEvent &evt)

@@ -1,16 +1,22 @@
 #include "CPlayerInfoWnd.h"
-#include "CWindowMan.h"
 
 CPlayerInfoWnd::~CPlayerInfoWnd()
 {
-   if(m_pPlayer != NULL)
-      m_pPlayer->removeModelEventListener(this);
+   if(m_pPlayer != NULL) {
+      m_pPlayer->removeAdvAttrEventListener(this);
+      m_pPlayer->removePlayerAttrEventListener(this);
+      m_pPlayer->removePlayerEquipEventListener(this);
+   }
 }
 
 void CPlayerInfoWnd::init (int _x, int _y, CPlayer *pPlr)
 {
 	m_pPlayer = pPlr;
-   m_pPlayer->addModelEventListener(this);
+   if(m_pPlayer != NULL) {
+      m_pPlayer->addPlayerAttrEventListener(this);
+      m_pPlayer->addAdvAttrEventListener(this);
+      m_pPlayer->addPlayerEquipEventListener(this);
+   }
    
    x = _x;
    y = _y;
@@ -163,6 +169,8 @@ void CPlayerInfoWnd::init (int _x, int _y, CPlayer *pPlr)
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
    updateAdvAttr(m_pPlayer);
+   updatePlayerAttr(m_pPlayer);
+   updatePlayerEquip(m_pPlayer);
    show(false);
 }
 
@@ -244,220 +252,203 @@ void CPlayerInfoWnd::setZOrder(int order)
 
 void CPlayerInfoWnd::updateAdvAttr(CUnitObject *pUnitObject)
 {
-   CPlayer *pPlayer = dynamic_cast<CPlayer *>(pUnitObject);
-   if(pPlayer != NULL) {
-#ifdef _GAMEENGINE_3D_
-      //更新裝備欄
-      for (int i = 0; i<BUTTON_COUNT; i++)
-	   {
-		   if (i == 0)
-		   {
-            int itemID = pPlayer->getEquip(SHOULDER);
-            if(itemID == -1)
-               m_vpBtn[i]->setImage("Examples/ogreborder");
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->setImage(pItemInfo->geticonName());
-            }
-		   }else if (i == 1)
-		   {
-            int itemID = pPlayer->getEquip(GLOVE);
-            if(itemID == -1)
-               m_vpBtn[i]->setImage("Examples/ogreborder");
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->setImage(pItemInfo->geticonName());
-            }
-		   }else if (i == 2)
-		   {
-            int itemID = pPlayer->getEquip(MAIN_HAND);
-            if(itemID == -1)
-               m_vpBtn[i]->setImage("Examples/ogreborder");
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->setImage(pItemInfo->geticonName());
-            }
-		   }else if (i == 3)
-		   {
-            int itemID = pPlayer->getEquip(CHEST);
-            if(itemID == -1)
-               m_vpBtn[i]->setImage("Examples/ogreborder");
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->setImage(pItemInfo->geticonName());
-            }
-		   }else if (i == 4)
-		   {
-            int itemID = pPlayer->getEquip(LEGS);
-            if(itemID == -1)
-               m_vpBtn[i]->setImage("Examples/ogreborder");
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->setImage(pItemInfo->geticonName());
-            }
-		   }else if (i == 5)
-		   {
-            int itemID = pPlayer->getEquip(OFF_HAND);
-            if(itemID == -1)
-               m_vpBtn[i]->setImage("Examples/ogreborder");
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->setImage(pItemInfo->geticonName());
-            }
-		   }else if (i == 6)
-		   {
-            int itemID = pPlayer->getEquip(BOOT);
-            if(itemID == -1)
-               m_vpBtn[i]->setImage("Examples/ogreborder");
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->setImage(pItemInfo->geticonName());
-            }
-		   }
-	   }
-#elif _GAMEENGINE_2D_
-      //更新裝備欄
-      for(int i = 0; i < BUTTON_COUNT; i++) {
-		   if(i == 0) {
-            int itemID = pPlayer->getEquip(SHOULDER);
-            if(itemID == -1)
-			      m_vpBtn[i]->str = "肩甲" ;
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->str = pItemInfo->getName();
-            }
-		   }
-         else if(i == 1) {
-            int itemID = pPlayer->getEquip(GLOVE);
-            if(itemID == -1)
-			      m_vpBtn[i]->str = "手套" ;
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->str = pItemInfo->getName();
-            }
-		   }
-         else if(i == 2) {
-            int itemID = pPlayer->getEquip(MAIN_HAND);
-            if(itemID == -1)
-			      m_vpBtn[i]->str = "主手武器" ;
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->str = pItemInfo->getName();
-            }
-		   }
-         else if(i == 3) {
-            int itemID = pPlayer->getEquip(CHEST);
-            if(itemID == -1)
-			      m_vpBtn[i]->str = "衣服" ;
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->str = pItemInfo->getName();
-            }
-		   }
-         else if(i == 4) {
-            int itemID = pPlayer->getEquip(LEGS);
-            if(itemID == -1)
-			      m_vpBtn[i]->str = "褲子" ;
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->str = pItemInfo->getName();
-            }
-		   }
-         else if(i == 5) {
-            int itemID = pPlayer->getEquip(OFF_HAND);
-            if(itemID == -1)
-			      m_vpBtn[i]->str = "副手武器" ;
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->str = pItemInfo->getName();
-            }
-		   }
-         else if(i == 6) {
-            int itemID = pPlayer->getEquip(BOOT);
-            if(itemID == -1)
-			      m_vpBtn[i]->str = "鞋子" ;
-            else {
-               CItemInfo *pItemInfo = CItem::getInfo(itemID);
-               m_vpBtn[i]->str = pItemInfo->getName();
-            }
-		   }
-	   }
-#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
+   //更新基本資訊
+   char buf[50];
+   memset(buf, 0, sizeof(buf));
+   m_vpText[1]->setText(pUnitObject->getName(), 1, 1, 1);
+	   
 
-      //更新基本資訊
-	   for(int i = 1; i < 3; i++) {
-		   char buf[50];
-         memset(buf, 0, sizeof(buf));
+   // 更新屬性資料
+   AdvancedAttribute advAttr = pUnitObject->getAdvAttr();
+   for(int i = 3; i < TEXT_COUNT; i++) {
+	   char buf[50];
+      memset(buf, 0, sizeof(buf));
 
-		   if(i == 1) {
-            m_vpText[i]->setText(pPlayer->getName(), 1, 1, 1);
-		   }
-         else if(i == 2) {
-            sprintf_s(buf, sizeof(buf), "等級 %3d/經驗值 %3d", pPlayer->getLevel(), pPlayer->getXP());
-			   m_vpText[i]->setText(buf, 1, 1, 1);
-		   }
-	   }
-
-      // 更新屬性資料
-      AdvancedAttribute advAttr = pPlayer->getAdvAttr();
-	   for(int i = 3; i < TEXT_COUNT; i++) {
-		   char buf[50];
-         memset(buf, 0, sizeof(buf));
-
-		   if(i == 3)
-            sprintf_s (buf, sizeof (buf), "生命力   %5d", advAttr.iHP) ;  
-		   else if (i == 4)
-            sprintf_s (buf, sizeof (buf), "精神力   %5d", advAttr.iMP) ;  
-		   else if (i == 5)
-            sprintf_s (buf, sizeof (buf), "最大生命力 %5d", advAttr.iHPMax) ;  
-		   else if (i == 6)
-            sprintf_s (buf, sizeof (buf), "最大精神力 %5d", advAttr.iMPMax) ;  
-		   else if (i == 7)
-            sprintf_s (buf, sizeof (buf), "物理攻擊力 %5d", advAttr.iATK) ;  
-		   else if (i == 8)
-			   sprintf_s (buf, sizeof (buf), "物理防禦力 %5d", advAttr.iDEF) ;  
-		   else if (i == 9)
-            sprintf_s (buf, sizeof (buf), "物理命中率 %5d", advAttr.iHIT) ;  
-		   else if (i == 10)
-            sprintf_s (buf, sizeof (buf), "物理暴擊率 %5d", advAttr.iCRI) ;  
-		   else if (i == 11)
-            sprintf_s (buf, sizeof (buf), "魔法攻擊力 %5d", advAttr.iMATK) ;  
-		   else if (i == 12)
-            sprintf_s (buf, sizeof (buf), "魔法防禦力 %5d", advAttr.iMDEF) ;  
-		   else if (i == 13)
-            sprintf_s (buf, sizeof (buf), "魔法命中率 %5d", advAttr.iMHIT) ;  
-		   else if (i == 14)
-            sprintf_s (buf, sizeof (buf), "魔法暴擊率 %5d", advAttr.iMCRI) ;  
-		   else if (i == 15)
-            sprintf_s (buf, sizeof (buf), "盾牌防禦力 %5d", advAttr.iSDEF) ;  
-		   else if (i == 16)
-            sprintf_s (buf, sizeof (buf), "武器防禦力 %5d", advAttr.iWDEF) ;  
-		   else if (i == 17)
-            sprintf_s (buf, sizeof (buf), "迴避率   %5d", advAttr.iFlee) ;  
-		   else if (i == 18)
-            sprintf_s (buf, sizeof (buf), "移動速度  %5.1f", advAttr.fMove) ;  
-		   else if (i == 19)
-            sprintf_s (buf, sizeof (buf), "攻擊速度  %5.1f", advAttr.fATKSpeed) ;  
-		   else if (i == 20)
-            sprintf_s (buf, sizeof (buf), "施展速度  %5.1f", advAttr.fCasting) ;  
-		   
-		   m_vpText[i]->setText (buf, 1, 1, 1) ;
-	   }
+	   if(i == 3)
+         sprintf_s (buf, sizeof (buf), "生命力   %5d", advAttr.iHP) ;  
+	   else if (i == 4)
+         sprintf_s (buf, sizeof (buf), "精神力   %5d", advAttr.iMP) ;  
+	   else if (i == 5)
+         sprintf_s (buf, sizeof (buf), "最大生命力 %5d", advAttr.iHPMax) ;  
+	   else if (i == 6)
+         sprintf_s (buf, sizeof (buf), "最大精神力 %5d", advAttr.iMPMax) ;  
+	   else if (i == 7)
+         sprintf_s (buf, sizeof (buf), "物理攻擊力 %5d", advAttr.iATK) ;  
+	   else if (i == 8)
+		   sprintf_s (buf, sizeof (buf), "物理防禦力 %5d", advAttr.iDEF) ;  
+	   else if (i == 9)
+         sprintf_s (buf, sizeof (buf), "物理命中率 %5d", advAttr.iHIT) ;  
+	   else if (i == 10)
+         sprintf_s (buf, sizeof (buf), "物理暴擊率 %5d", advAttr.iCRI) ;  
+	   else if (i == 11)
+         sprintf_s (buf, sizeof (buf), "魔法攻擊力 %5d", advAttr.iMATK) ;  
+	   else if (i == 12)
+         sprintf_s (buf, sizeof (buf), "魔法防禦力 %5d", advAttr.iMDEF) ;  
+	   else if (i == 13)
+         sprintf_s (buf, sizeof (buf), "魔法命中率 %5d", advAttr.iMHIT) ;  
+	   else if (i == 14)
+         sprintf_s (buf, sizeof (buf), "魔法暴擊率 %5d", advAttr.iMCRI) ;  
+	   else if (i == 15)
+         sprintf_s (buf, sizeof (buf), "盾牌防禦力 %5d", advAttr.iSDEF) ;  
+	   else if (i == 16)
+         sprintf_s (buf, sizeof (buf), "武器防禦力 %5d", advAttr.iWDEF) ;  
+	   else if (i == 17)
+         sprintf_s (buf, sizeof (buf), "迴避率   %5d", advAttr.iFlee) ;  
+	   else if (i == 18)
+         sprintf_s (buf, sizeof (buf), "移動速度  %5.1f", advAttr.fMove) ;  
+	   else if (i == 19)
+         sprintf_s (buf, sizeof (buf), "攻擊速度  %5.1f", advAttr.fATKSpeed) ;  
+	   else if (i == 20)
+         sprintf_s (buf, sizeof (buf), "施展速度  %5.1f", advAttr.fCasting) ;  
+	   
+	   m_vpText[i]->setText (buf, 1, 1, 1) ;
    }
 }
 
-void CPlayerInfoWnd::updateBackpack(CUnitObject *pUnitObject)
+void CPlayerInfoWnd::updatePlayerAttr(CPlayer *pPlayer)
 {
+   //更新基本資訊
+   char buf[50];
+   memset(buf, 0, sizeof(buf));
+   sprintf_s(buf, sizeof(buf), "等級 %3d/經驗值 %3d", pPlayer->getLevel(), pPlayer->getXP());
+	m_vpText[2]->setText(buf, 1, 1, 1);
 }
 
-void CPlayerInfoWnd::updateSkill(CUnitObject *pUnitObject)
+void CPlayerInfoWnd::updatePlayerEquip(CPlayer *pPlayer)
 {
-}
-
-void CPlayerInfoWnd::updateHotKeyItem(int field, HotKeyItem *pHotKeyItem)
-{
-}
-
-void CPlayerInfoWnd::updateCoolDown(CSkill *pSkill)
-{
+#ifdef _GAMEENGINE_3D_
+   //更新裝備欄
+   for(int i = 0; i < BUTTON_COUNT; i++) {
+	   if(i == 0) {
+         int itemID = pPlayer->getEquip(SHOULDER);
+         if(itemID == -1)
+            m_vpBtn[i]->setImage("Examples/ogreborder");
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+         }
+	   }
+      else if(i == 1) {
+         int itemID = pPlayer->getEquip(GLOVE);
+         if(itemID == -1)
+            m_vpBtn[i]->setImage("Examples/ogreborder");
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+         }
+	   }
+      else if(i == 2) {
+         int itemID = pPlayer->getEquip(MAIN_HAND);
+         if(itemID == -1)
+            m_vpBtn[i]->setImage("Examples/ogreborder");
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+         }
+	   }
+      else if(i == 3) {
+         int itemID = pPlayer->getEquip(CHEST);
+         if(itemID == -1)
+            m_vpBtn[i]->setImage("Examples/ogreborder");
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+         }
+	   }
+      else if(i == 4) {
+         int itemID = pPlayer->getEquip(LEGS);
+         if(itemID == -1)
+            m_vpBtn[i]->setImage("Examples/ogreborder");
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+         }
+	   }
+      else if(i == 5) {
+         int itemID = pPlayer->getEquip(OFF_HAND);
+         if(itemID == -1)
+            m_vpBtn[i]->setImage("Examples/ogreborder");
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+         }
+	   }
+      else if(i == 6) {
+         int itemID = pPlayer->getEquip(BOOT);
+         if(itemID == -1)
+            m_vpBtn[i]->setImage("Examples/ogreborder");
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+         }
+	   }
+   }
+#elif _GAMEENGINE_2D_
+   //更新裝備欄
+   for(int i = 0; i < BUTTON_COUNT; i++) {
+	   if(i == 0) {
+         int itemID = pPlayer->getEquip(SHOULDER);
+         if(itemID == -1)
+		      m_vpBtn[i]->str = "肩甲" ;
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->str = pItemInfo->getName();
+         }
+	   }
+      else if(i == 1) {
+         int itemID = pPlayer->getEquip(GLOVE);
+         if(itemID == -1)
+		      m_vpBtn[i]->str = "手套" ;
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->str = pItemInfo->getName();
+         }
+	   }
+      else if(i == 2) {
+         int itemID = pPlayer->getEquip(MAIN_HAND);
+         if(itemID == -1)
+		      m_vpBtn[i]->str = "主手武器" ;
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->str = pItemInfo->getName();
+         }
+	   }
+      else if(i == 3) {
+         int itemID = pPlayer->getEquip(CHEST);
+         if(itemID == -1)
+		      m_vpBtn[i]->str = "衣服" ;
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->str = pItemInfo->getName();
+         }
+	   }
+      else if(i == 4) {
+         int itemID = pPlayer->getEquip(LEGS);
+         if(itemID == -1)
+		      m_vpBtn[i]->str = "褲子" ;
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->str = pItemInfo->getName();
+         }
+	   }
+      else if(i == 5) {
+         int itemID = pPlayer->getEquip(OFF_HAND);
+         if(itemID == -1)
+		      m_vpBtn[i]->str = "副手武器" ;
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->str = pItemInfo->getName();
+         }
+	   }
+      else if(i == 6) {
+         int itemID = pPlayer->getEquip(BOOT);
+         if(itemID == -1)
+		      m_vpBtn[i]->str = "鞋子" ;
+         else {
+            CItemInfo *pItemInfo = CItem::getInfo(itemID);
+            m_vpBtn[i]->str = pItemInfo->getName();
+         }
+	   }
+   }
+#endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 }

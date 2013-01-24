@@ -11,6 +11,10 @@ CWindowMan3D::CWindowMan3D() : CWindowMan()
    }
 }
 
+CWindowMan3D::~CWindowMan3D()
+{
+}
+
 void CWindowMan3D::addWnd(CWindow *pWnd)
 {
    CWindowMan::addWnd(pWnd);
@@ -32,14 +36,22 @@ void CWindowMan3D::keyDown(const OIS::KeyEvent &evt)
          std::list<CWindow *>::iterator it = m_pWindowList->begin();
          while(it != m_pWindowList->end()) {
             if((*it)->getClassType() == WND_PLAYERINFO) {
-               (*it)->show(!(*it)->getVisible());
-               bPlayerInfoWndVisible = (*it)->getVisible();
+               (*it)->show(!(*it)->isVisible());
+               bPlayerInfoWndVisible = (*it)->isVisible();
+               break;
             }
-            else if((*it)->getClassType() == WND_BACKPACK)
-               (*it)->show(bPlayerInfoWndVisible);
-
             it++;
          }
+
+         it = m_pWindowList->begin();
+         while(it != m_pWindowList->end()) {
+            if((*it)->getClassType() == WND_BACKPACK) {
+               (*it)->show(bPlayerInfoWndVisible);
+               break;
+            }
+            it++;
+         }
+
          break;
       }
 
@@ -47,7 +59,7 @@ void CWindowMan3D::keyDown(const OIS::KeyEvent &evt)
          std::list<CWindow *>::iterator it = m_pWindowList->begin();
          while(it != m_pWindowList->end()) {
             if((*it)->getClassType() == WND_BACKPACK) {
-               (*it)->show(!(*it)->getVisible());
+               (*it)->show(!(*it)->isVisible());
                break;
             }
 
@@ -60,7 +72,7 @@ void CWindowMan3D::keyDown(const OIS::KeyEvent &evt)
          std::list<CWindow *>::iterator it = m_pWindowList->begin();
          while(it != m_pWindowList->end()) {
             if((*it)->getClassType() == WND_SKILL) {
-               (*it)->show(!(*it)->getVisible());
+               (*it)->show(!(*it)->isVisible());
                break;
             }
 

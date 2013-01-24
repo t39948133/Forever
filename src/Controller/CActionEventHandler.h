@@ -32,7 +32,17 @@ class CActionEventHandler
         * @return true - 相符合 / false - 不符合 */
       bool check(CActionEvent *pEvent, std::list<int> *pKeyDownList);
 
+      /** @brief 存檔
+        * @param pFile 檔案 */
+      void write(FILE *pFile);
+
+      /** @brief 讀檔
+        * @param pFile 檔案 */
+      void read(FILE *pFile);
+
    private:
+      friend class CActionEditorDlg; // 允許動作編輯器來存取此物件
+
       CActionEvent m_triggerEvent;   // 觸發訊息
       int          m_iNextActionID;  // 觸發後要執行某個動作
 };

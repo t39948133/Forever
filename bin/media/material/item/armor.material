@@ -11,3 +11,17 @@ material Armor/PL_Torso_C01
 		}
 	}
 }
+
+material Armor/PL_Pants_C01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_PL_Pants_C01.dds
+			}
+		}
+	}
+}

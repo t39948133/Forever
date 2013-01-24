@@ -10,7 +10,7 @@
 #define _CTARGETINFOWND_H_
 #include "CWindow.h"
 #include "CScene.h"
-#include "IModelEventListener.h"
+#include "IAdvAttrEventListener.h"
 
 #ifdef _GAMEENGINE_3D_
 #include "CImageButton.h"
@@ -22,9 +22,11 @@
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
 class CTargetInfoWnd : public CWindow,
-                       public IModelEventListener
+                       public IAdvAttrEventListener
 {
    public:
+      ~CTargetInfoWnd();
+
       void init(int _x, int _y, CScene *pScene, CPlayer *pPlayer);
 
       // CWindow
@@ -35,12 +37,8 @@ class CTargetInfoWnd : public CWindow,
 	   /* virtual */ void setZOrder(int order);
 #endif
 
-      // IModelEventListener
+      // IAdvAttrEventListener
       /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
-      /* virtual */ void updateBackpack(CUnitObject *pUnitObject);
-      /* virtual */ void updateSkill(CUnitObject *pUnitObject);
-      /* virtual */ void updateHotKeyItem(int field, HotKeyItem *pHotKeyItem);
-      /* virtual */ void updateCoolDown(CSkill *pSkill);
 
       void setTarget(long long uid);
       CUnitObject* getTarget();

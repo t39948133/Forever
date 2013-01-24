@@ -19,7 +19,7 @@ class CWindowMan
 {
    public:
 	   CWindowMan();
-      ~CWindowMan();
+      virtual ~CWindowMan();
 
 	   virtual void addWnd(CWindow *pWnd);
       void deleteAllWindow();

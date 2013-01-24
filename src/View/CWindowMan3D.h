@@ -18,6 +18,7 @@ class CWindowMan3D : public CWindowMan,
 {
    public:
       CWindowMan3D();
+      virtual ~CWindowMan3D();
 
       // CWindowMan
       /* virtual */ void addWnd(CWindow *pWnd);

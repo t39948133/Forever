@@ -1,5 +1,9 @@
 #include "CTargetInfoWnd.h"
 
+CTargetInfoWnd::~CTargetInfoWnd()
+{
+}
+
 void CTargetInfoWnd::init(int _x, int _y, CScene *pScene, CPlayer *pPlayer)
 {
    m_pPlayer = pPlayer;
@@ -76,22 +80,6 @@ void CTargetInfoWnd::updateAdvAttr(CUnitObject *pUnitObject)
       m_pText->setText("", 1, 1, 1);
 }
 
-void CTargetInfoWnd::updateBackpack(CUnitObject *pUnitObject)
-{
-}
-
-void CTargetInfoWnd::updateSkill(CUnitObject *pUnitObject)
-{
-}
-
-void CTargetInfoWnd::updateHotKeyItem(int field, HotKeyItem *pHotKeyItem)
-{
-}
-
-void CTargetInfoWnd::updateCoolDown(CSkill *pSkill)
-{
-}
-
 void CTargetInfoWnd::setTarget(long long uid)
 {
    if(uid != m_targetUID) {
@@ -100,14 +88,14 @@ void CTargetInfoWnd::setTarget(long long uid)
       // 把舊的監控取消
       CUnitObject *pOldTargetObject = getTarget();
       if(pOldTargetObject != NULL)
-         pOldTargetObject->removeModelEventListener(this);
+         pOldTargetObject->removeAdvAttrEventListener(this);
    }
 
    m_targetUID = uid;
    CUnitObject *pTargetObject = getTarget();
    m_pPlayer->setTargetObject(pTargetObject);   // 設定玩家目標物
    if(pTargetObject != NULL)
-      pTargetObject->addModelEventListener(this);  // 監聽目標物的資料變動
+      pTargetObject->addAdvAttrEventListener(this);  // 監聽目標物的資料變動
       
    updateAdvAttr(pTargetObject);
 
