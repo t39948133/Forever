@@ -1,0 +1,20 @@
+material "LMCH_C101_Leg"
+{
+	technique LMCH_C101_Leg_technique
+	{
+		pass LMCH_C101_Leg_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit LMCH_C101_Leg_Diffuse#0
+			{
+				texture lmch_c101_leg.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

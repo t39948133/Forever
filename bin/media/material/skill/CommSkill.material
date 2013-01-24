@@ -1,0 +1,13 @@
+material Skill/Common/Action_operation
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture icon_action_operation.dds
+			}
+		}
+	}
+}

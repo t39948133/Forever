@@ -1,0 +1,22 @@
+material "Cherubim"
+{
+	technique Cherubim_technique
+	{
+		pass Cherubim_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			texture_unit Cherubim_Diffuse#0
+			{
+				texture cherubim.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

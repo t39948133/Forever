@@ -1,0 +1,23 @@
+material "body"
+{
+	technique body_technique
+	{
+		pass body_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 0 0 0 0.99
+			diffuse 1 1 1 0.99
+			specular 0 0 0 0 0
+			emissive 0 0 0 0.99
+
+			texture_unit body_Diffuse#0
+			{
+				texture dragon_rudra01.dds
+				tex_coord_set 0
+				colour_op_ex blend_manual src_texture src_current 0.99
+				colour_op_multipass_fallback one zero
+			}
+		}
+	}
+}

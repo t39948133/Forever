@@ -1,0 +1,265 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#ifndef APSTUDIO_INVOKED
+#include "targetver.h"
+#endif
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (Taiwan) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_TRADITIONAL
+#pragma code_page(950)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#ifndef APSTUDIO_INVOKED\r\n"
+    "#include ""targetver.h""\r\n"
+    "#endif\r\n"
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)\r\n"
+    "LANGUAGE 4, 1\r\n"
+    "#pragma code_page(950)\r\n"
+    "#include ""res\\ActionEditor.rc2""  // 非 Microsoft Visual C++ 編輯過的資源\r\n"
+    "#include ""l.CHT\\afxres.rc""      // 標準元件\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\ActionEditor.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 170, 62
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "關於 ActionEditor"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,14,14,21,20
+    LTEXT           "ActionEditor, 1.0 版",IDC_STATIC,42,14,114,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2013",IDC_STATIC,42,26,114,8
+    DEFPUSHBUTTON   "確定",IDOK,113,41,50,14,WS_GROUP
+END
+
+IDD_ACTIONEDITOR_DIALOG DIALOGEX 0, 0, 427, 237
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "ActionEditor"
+FONT 9, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "離開",IDOK,370,216,50,14
+    LISTBOX         LST_ACTIONLIST,7,17,79,150,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "動作列表",IDC_STATIC,7,7,28,8
+    LTEXT           "動作ID：",IDC_STATIC,94,18,28,8
+    EDITTEXT        EDT_ACTIONID,130,14,66,14,ES_AUTOHSCROLL
+    LTEXT           "動作名稱：",IDC_STATIC,94,33,35,8
+    LTEXT           "動畫名稱：",IDC_STATIC,94,49,35,8
+    LTEXT           "動畫時間：",IDC_STATIC,94,65,35,8
+    LTEXT           "是否可移動：",IDC_STATIC,94,81,42,8
+    LTEXT           "下一個動作ID：",IDC_STATIC,94,97,49,8
+    EDITTEXT        EDT_ACTIONNAME,130,30,67,14,ES_AUTOHSCROLL
+    EDITTEXT        EDT_ANINAME,130,46,67,14,ES_AUTOHSCROLL
+    EDITTEXT        EDT_ANITIME,130,62,67,14,ES_AUTOHSCROLL
+    COMBOBOX        CMB_MOVE,136,79,61,54,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        EDT_NEXTACTIONID,142,94,55,14,ES_AUTOHSCROLL
+    GROUPBOX        "因動作訊息而觸發切換訊息",IDC_STATIC,201,12,214,160
+    LTEXT           "觸發訊息：",IDC_STATIC,300,35,35,8
+    LTEXT           "按鍵：",IDC_STATIC,305,82,22,8
+    EDITTEXT        EDT_KEY,341,79,40,14,ES_AUTOHSCROLL
+    LTEXT           "按下按鍵：",IDC_STATIC,305,98,35,8
+    LTEXT           "放開按鍵：",IDC_STATIC,305,113,35,8
+    GROUPBOX        "按鍵相關設定",IDC_STATIC,299,68,86,62
+    EDITTEXT        EDT_KEYDOWN,341,95,40,14,ES_AUTOHSCROLL
+    EDITTEXT        EDT_KEYUP,341,111,40,14,ES_AUTOHSCROLL
+    LISTBOX         LST_EVENTLIST,206,34,88,112,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "訊息列表",IDC_STATIC,207,24,28,8
+    LTEXT           "觸發後下一個動作ID：",IDC_STATIC,300,51,70,8
+    EDITTEXT        EDT_EVENTNEXTACTIONID,370,48,40,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "新增/更新訊息",BTN_NEWEVENT,352,133,61,16
+    PUSHBUTTON      "刪除訊息",BTN_DELEVENT,352,152,50,16
+    PUSHBUTTON      "新增/更新動作",BTN_NEWACTION,93,112,64,14
+    PUSHBUTTON      "刪除動作",BTN_DELACTION,93,133,50,14
+    PUSHBUTTON      "存檔",BTN_SAVE,7,205,50,18
+    PUSHBUTTON      "讀檔",BTN_LOAD,61,205,50,18
+    COMBOBOX        CMB_EVENT,336,31,73,85,CBS_DROPDOWNLIST | CBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "取消動作列表選擇",BTN_CANCELSELACTIONLIST,7,169,79,14
+    PUSHBUTTON      "取消訊息列表選擇",BTN_CANCELSELEVENTLIST,205,148,90,14
+    CONTROL         "檔名：",TXT_FILENAME,"Static",SS_LEFTNOWORDWRAP | WS_GROUP,7,189,245,12
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040403b6"
+        BEGIN
+            VALUE "CompanyName", "TODO: <公司名稱>"
+            VALUE "FileDescription", "TODO: <檔案說明>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "ActionEditor.exe"
+            VALUE "LegalCopyright", "TODO: (c) <公司名稱>.  All rights reserved."
+            VALUE "OriginalFilename", "ActionEditor.exe"
+            VALUE "ProductName", "TODO: <產品名稱>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x404, 950
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 163
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_ACTIONEDITOR_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 420
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 230
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_ACTIONEDITOR_DIALOG DLGINIT
+BEGIN
+    CMB_MOVE, 0x403, 3, 0
+0x4fac, "\000" 
+    CMB_MOVE, 0x403, 3, 0
+0x5fa7, "\000" 
+    CMB_EVENT, 0x403, 9, 0
+0x4541, 0x5f54, 0x554e, 0x4c4c, "\000" 
+    CMB_EVENT, 0x403, 10, 0
+0x4541, 0x5f54, 0x4552, 0x4341, 0x0048, 
+    CMB_EVENT, 0x403, 14, 0
+0x4541, 0x5f54, 0x4f4e, 0x5f54, 0x4552, 0x4341, 0x0048, 
+    CMB_EVENT, 0x403, 8, 0
+0x4541, 0x5f54, 0x454b, 0x0059, 
+    CMB_EVENT, 0x403, 13, 0
+0x4541, 0x5f54, 0x454b, 0x5f59, 0x4157, 0x4453, "\000" 
+    CMB_EVENT, 0x403, 15, 0
+0x4541, 0x5f54, 0x4143, 0x5453, 0x535f, 0x494b, 0x4c4c, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "關於 ActionEditor(&A)..."
+END
+
+#endif    // Chinese (Taiwan) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
+LANGUAGE 4, 1
+#pragma code_page(950)
+#include "res\ActionEditor.rc2"  // 非 Microsoft Visual C++ 編輯過的資源
+#include "l.CHT\afxres.rc"      // 標準元件
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

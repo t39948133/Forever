@@ -1,0 +1,31 @@
+material "LMCH_C101_Body"
+{
+	technique LMCH_C101_Body_technique
+	{
+		pass LMCH_C101_Body_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			alpha_rejection greater 128
+
+			texture_unit LMCH_C101_Body_Diffuse#0
+			{
+				texture lmch_c101_body.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit LMCH_C101_Body_Unknown#1
+			{
+				texture lmch_c101_body_alpha.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
