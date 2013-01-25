@@ -18,7 +18,7 @@ CImageButton::~CImageButton()
 void CImageButton::init(COverlayUI& ovl, 
 			int _x, int _y, int _w, int _h, int _id)
 {
-	CButton::init (_x, _y, _w, _h, _id) ;
+	CFButton::init (_x, _y, _w, _h, _id) ;
 
    Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
 

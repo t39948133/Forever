@@ -8,9 +8,9 @@
   *         2013/01/05 Darren Chen - 整合與修正 */
 #ifndef _CTEXTBUTTON_H_
 #define _CTEXTBUTTON_H_
-#include "CButton.h"
+#include "CFButton.h"
 
-class CTextButton : public CButton
+class CTextButton : public CFButton
 {
    public:
       std::string str ;

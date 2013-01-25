@@ -1,10 +1,10 @@
 #ifndef _CIMAGEBUTTON_H_
 #define _CIMAGEBUTTON_H_
 #ifdef _GAMEENGINE_3D_
-#include "CButton.h"
+#include "CFButton.h"
 #include "COverlayUI.h"
 
-class CImageButton : public CButton
+class CImageButton : public CFButton
 {
    public:
 	   CImageButton();
