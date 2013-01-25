@@ -25,3 +25,387 @@ material Armor/PL_Pants_C01
 		}
 	}
 }
+
+//上衣
+//蘇埃倫之金屬胸甲 
+material STR_PL_TORSO_D_N_C1_Q_18A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_TORSO_D_N_C1_Q_18A.jpg
+			}
+		}
+	}
+}
+
+//納巴魯之金屬胸甲 
+material STR_PL_TORSO_D_N_R0_Q_23A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_TORSO_D_N_R0_Q_23A.jpg
+			}
+		}
+	}
+}
+
+//阿卡斯泰司之金屬胸甲 
+material STR_PL_TORSO_D_N_L0_Q_45B
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_TORSO_D_N_L0_Q_45B.jpg
+			}
+		}
+	}
+}
+
+//英吉森金屬胸甲 
+material STR_PL_TORSO_N_U1_Q_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_TORSO_N_U1_Q_53A.jpg
+			}
+		}
+	}
+}
+
+//名人之閃光的鉆質金屬胸甲 
+material STR_PL_TORSO_N_E1_P_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_TORSO_N_E1_P_53A.jpg
+			}
+		}
+	}
+}
+
+
+//褲子
+//斯帕塔洛斯之金屬腿甲 
+material STR_PL_PANTS_N_C1_Q_18A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_PANTS_N_C1_Q_18A.jpg
+			}
+		}
+	}
+}
+
+//約克之金屬腿甲 
+material STR_PL_PANTS_D_N_R0_Q_18A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_PANTS_D_N_R0_Q_18A.jpg
+			}
+		}
+	}
+}
+
+//特爾賽迪之金屬腿甲 
+material STR_PL_PANTS_N_L1_Q_52A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_PANTS_N_L1_Q_52A.jpg
+			}
+		}
+	}
+}
+
+//英吉森金屬腿甲 
+material STR_PL_PANTS_N_U1_Q_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_PANTS_N_U1_Q_53A.jpg
+			}
+		}
+	}
+}
+
+//名人之閃光的鉆質金屬腿甲 
+material STR_PL_PANTS_N_E1_P_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_PANTS_N_E1_P_53A.jpg
+			}
+		}
+	}
+}
+ 
+ 
+//肩甲
+//巴魯艾琳之金屬肩甲 
+material STR_PL_SHOULDER_D_N_C1_Q_17A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOULDER_D_N_C1_Q_17A.jpg
+			}
+		}
+	}
+}
+
+//姬格莉特之金屬肩甲 
+material STR_PL_SHOULDER_D_N_R0_Q_34A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOULDER_D_N_R0_Q_34A.jpg
+			}
+		}
+	}
+}
+
+//阿卡斯泰司之金屬肩甲 
+material STR_PL_SHOULDER_D_N_L0_Q_45B
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOULDER_D_N_L0_Q_45B.jpg
+			}
+		}
+	}
+}
+
+//英吉森金屬肩甲 
+material STR_PL_SHOULDER_N_U1_Q_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOULDER_N_U1_Q_53A.jpg
+			}
+		}
+	}
+}
+
+//名人之閃光的鉆質金屬肩甲 
+material STR_PL_SHOULDER_N_E1_P_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOULDER_N_E1_P_53A.jpg
+			}
+		}
+	}
+}
+
+
+//手套
+//斯帕塔洛斯之金屬手套 
+material STR_PL_GLOVE_N_C2_Q_14A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_GLOVE_N_C2_Q_14A.jpg
+			}
+		}
+	}
+}
+
+//諾奇薩爾之金屬手套 
+material STR_PL_GLOVE_D_N_R0_Q_15A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_GLOVE_D_N_R0_Q_15A.jpg
+			}
+		}
+	}
+}
+
+//卡伊里烏斯之金屬手套 
+material STR_PL_GLOVE_N_L1_Q_51A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_GLOVE_N_L1_Q_51A.jpg
+			}
+		}
+	}
+}
+
+//英吉森金屬手套 
+material STR_PL_GLOVE_N_U1_Q_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_GLOVE_N_U1_Q_53A.jpg
+			}
+		}
+	}
+}
+
+//名人之閃光的鉆質金屬手套 
+material STR_PL_GLOVE_N_E1_P_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_GLOVE_N_E1_P_53A.jpg
+			}
+		}
+	}
+}
+
+
+//長靴
+//諾奇薩爾之金屬長靴 
+material STR_PL_SHOES_D_N_C1_Q_12A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOES_D_N_C1_Q_12A.jpg
+			}
+		}
+	}
+}
+
+//瑟蓮尼提之金屬長靴 
+material STR_PL_SHOES_D_N_R0_Q_24A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOES_D_N_R0_Q_24A.jpg
+			}
+		}
+	}
+}
+
+//艾爾米提亞之金屬長靴 
+material STR_PL_SHOES_N_L1_Q_51A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOES_N_L1_Q_51A.jpg
+			}
+		}
+	}
+}
+
+//英吉森金屬長靴 
+material STR_PL_SHOES_N_U1_Q_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOES_N_U1_Q_53A.jpg
+			}
+		}
+	}
+}
+
+//名人之閃光的鉆質金屬長靴 
+material STR_PL_SHOES_N_E1_P_53A
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture STR_PL_SHOES_N_E1_P_53A.jpg
+			}
+		}
+	}
+}
