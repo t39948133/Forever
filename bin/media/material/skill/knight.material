@@ -25,3 +25,454 @@ material Skill/Knight/Robusthit_g1
 		}
 	}
 }
+
+//挑釁
+material CBT_WA_Provoke_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_WA_Provoke_G1.jpg
+			}
+		}
+	}
+}
+
+//盾牌強擊
+material CBT_KN_ShieldCharge_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_ShieldCharge_G1.jpg
+			}
+		}
+	}
+}
+
+//主神盔甲
+material CBT_KN_StoneBody_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_StoneBody_G1.jpg
+			}
+		}
+	}
+}
+
+//弱化猛擊
+material CBT_WA_ArmorBreak_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_WA_ArmorBreak_G1.jpg
+			}
+		}
+	}
+}
+
+//閃光斬
+material CBT_KN_ShineSlash_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_ShineSlash_G1.jpg
+			}
+		}
+	}
+}
+
+//挑釁猛擊
+material CBT_KN_BrainBreak_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_BrainBreak_G1.jpg
+			}
+		}
+	}
+}
+
+//銅牆鐵壁
+material CBT_KN_BlessedShield_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_BlessedShield_G1.jpg
+			}
+		}
+	}
+}
+
+//突擊
+material CBT_WA_Dash_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_WA_Dash_G1.jpg
+			}
+		}
+	}
+}
+
+雙重盔甲
+material CBT_KN_IronBody_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_IronBody_G1.jpg
+			}
+		}
+	}
+}
+
+//快速盾
+material CBT_KN_PurifyWing_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_PurifyWing_G1.jpg
+			}
+		}
+	}
+}
+
+//盾牌打擊
+material LIVE_KN_ShieldSwing_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture LIVE_KN_ShieldSwing_G1.jpg
+			}
+		}
+	}
+}
+
+//極限猛擊 
+material LIVE_KN_SlashDown_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture LIVE_KN_SlashDown_G1.jpg
+			}
+		}
+	}
+}
+
+//飛行：物理防禦力強化 
+material CBT_KN_SeraphicDefence_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_SeraphicDefence_G1.jpg
+			}
+		}
+	}
+}
+
+//生命力強化 
+material CBT_P_StatBoostPhysicalDefense_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_P_StatBoostPhysicalDefense_G1.jpg
+			}
+		}
+	}
+}
+
+//敵對值上升量增加
+material CBT_P_BoostHate_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_P_BoostHate_G1.jpg
+			}
+		}
+	}
+}
+
+
+//盾牌防禦率強化
+material CBT_P_StatBoostBlock_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_P_StatBoostBlock_G1.jpg
+			}
+		}
+	}
+}
+
+//物理攻擊力強化
+material CBT_P_StatBoostPhysicalOffense_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_P_StatBoostPhysicalOffense_G1.jpg
+			}
+		}
+	}
+}
+
+//飛行：守護神之祝福
+material CBT_KN_KnightGift_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_KnightGift_G1.jpg
+			}
+		}
+	}
+}
+
+//命中率增加
+material CBT_P_StatBoostHitAccuracy_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_P_StatBoostHitAccuracy_G1.jpg
+			}
+		}
+	}
+}
+
+//猛烈一擊
+material CBT_WA_RobustHit_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_WA_RobustHit_G1.jpg
+			}
+		}
+	}
+}
+
+//盾牌鑿擊
+material CBT_KN_AvengingBash_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_AvengingBash_G1.jpg
+			}
+		}
+	}
+}
+
+//會心一擊
+material CBT_WA_RobustBlow_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_WA_RobustBlow_G1.jpg
+			}
+		}
+	}
+}
+
+//氣合
+material CBT_WA_Rage_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_WA_Rage_G1.jpg
+			}
+		}
+	}
+}
+
+//必死一擊
+material CBT_KN_ShineBlade_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_ShineBlade_G1.jpg
+			}
+		}
+	}
+}
+
+//盾牌反擊
+material CBT_WA_AvengingCrash_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_WA_AvengingCrash_G1.jpg
+			}
+		}
+	}
+}
+
+//膺懲一擊
+material CBT_KN_AvengingBlade_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_AvengingBlade_G1.jpg
+			}
+		}
+	}
+}
+
+//連續亂打
+material CBT_KN_CrossBlade_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_CrossBlade_G1.jpg
+			}
+		}
+	}
+}
+
+//無力猛擊
+material CBT_KN_WeaponBreak_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_WeaponBreak_G1.jpg
+			}
+		}
+	}
+}
+
+//盾牌突擊
+material CBT_KN_ShieldImpact_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_ShieldImpact_G1.jpg
+			}
+		}
+	}
+}
+
+//鈍化猛擊
+material CBT_KN_LegBreak_G1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture CBT_KN_LegBreak_G1.jpg
+			}
+		}
+	}
+}
