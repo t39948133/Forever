@@ -86,3 +86,79 @@ material Icon_Item_Sword_E01
 		}
 	}
 }
+
+
+//草原之盾
+material Icon_Item_Shield_C02
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Shield_C02.jpg
+			}
+		}
+	}
+}
+
+//森林守衛盾牌 
+material Icon_Item_Shield_R01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Shield_R01.jpg
+			}
+		}
+	}
+}
+
+//匠人之閃光的鈦質盾
+material Icon_Item_Shield_L01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Shield_L01.jpg
+			}
+		}
+	}
+}
+
+//撒旦之盾 
+material Icon_Item_Shield_U01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Shield_U01.jpg
+			}
+		}
+	}
+}
+
+//塔哈巴達之盾 
+material Icon_Item_Shield_E01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Shield_E01.jpg
+			}
+		}
+	}
+}
