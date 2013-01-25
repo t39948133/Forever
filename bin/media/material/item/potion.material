@@ -25,3 +25,33 @@ material Potion/MP02_2
 		}
 	}
 }
+
+//hpÃÄ¤ô 
+material Icon_Item_Potion_HP02_1
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Potion_HP02_1.jpg
+			}
+		}
+	}
+}
+
+//mpÃÄ¤ô
+material Icon_Item_Potion_MP02_3
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Potion_MP02_3.jpg
+			}
+		}
+	}
+}
