@@ -11,3 +11,18 @@ material Scroll/Skillbook_01
 		}
 	}
 }
+
+//©G¤å®Ñ
+material Incantation_book
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Incantation_book.jpg
+			}
+		}
+	}
+}
