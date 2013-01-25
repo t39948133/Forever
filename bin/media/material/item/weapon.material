@@ -11,3 +11,78 @@ material Weapon/Sword_C01
 		}
 	}
 }
+
+//訓練用長劍
+material Icon_Item_Sword_C01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Sword_C01.jpg
+			}
+		}
+	}
+}
+
+//吉卡南塔之劍
+material Icon_Item_Sword_R01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Sword_R01.jpg
+			}
+		}
+	}
+}
+
+//巴卡爾摩遠征隊之劍
+material Icon_Item_Sword_L01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Sword_L01.jpg
+			}
+		}
+	}
+}
+
+//赫拉納斯之劍
+material Icon_Item_Sword_U01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Sword_U01.jpg
+			}
+		}
+	}
+}
+
+//凱西內爾之恩寵長劍
+material Icon_Item_Sword_E01
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture Icon_Item_Sword_E01.jpg
+			}
+		}
+	}
+}
