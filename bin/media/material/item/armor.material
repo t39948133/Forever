@@ -1,34 +1,5 @@
-material Armor/PL_Torso_C01
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture Icon_Item_PL_Torso_C01.dds
-			}
-		}
-	}
-}
-
-material Armor/PL_Pants_C01
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture Icon_Item_PL_Pants_C01.dds
-			}
-		}
-	}
-}
-
-//上衣
-//蘇埃倫之金屬胸甲 
-material STR_PL_TORSO_D_N_C1_Q_18A
+// 金屬甲/上衣/普通等級(白裝)
+material Icon/Armor/PL_Torso_C01
 {
 	technique
 	{
@@ -42,8 +13,8 @@ material STR_PL_TORSO_D_N_C1_Q_18A
 	}
 }
 
-//納巴魯之金屬胸甲 
-material STR_PL_TORSO_D_N_R0_Q_23A
+// 金屬甲/上衣/稀有等級(綠裝)
+material Icon/Armor/PL_Torso_R01
 {
 	technique
 	{
@@ -57,8 +28,8 @@ material STR_PL_TORSO_D_N_R0_Q_23A
 	}
 }
 
-//阿卡斯泰司之金屬胸甲 
-material STR_PL_TORSO_D_N_L0_Q_45B
+// 金屬甲/上衣/傳承等級(藍裝)
+material Icon/Armor/PL_Torso_L01
 {
 	technique
 	{
@@ -72,8 +43,8 @@ material STR_PL_TORSO_D_N_L0_Q_45B
 	}
 }
 
-//英吉森金屬胸甲 
-material STR_PL_TORSO_N_U1_Q_53A
+// 金屬甲/上衣/獨特等級(金裝)
+material Icon/Armor/PL_Torso_U01
 {
 	technique
 	{
@@ -87,8 +58,8 @@ material STR_PL_TORSO_N_U1_Q_53A
 	}
 }
 
-//名人之閃光的鉆質金屬胸甲 
-material STR_PL_TORSO_N_E1_P_53A
+// 金屬甲/上衣/英雄等級(紅裝)
+material Icon/Armor/PL_Torso_E01
 {
 	technique
 	{
@@ -102,10 +73,8 @@ material STR_PL_TORSO_N_E1_P_53A
 	}
 }
 
-
-//褲子
-//斯帕塔洛斯之金屬腿甲 
-material STR_PL_PANTS_N_C1_Q_18A
+// 金屬甲/褲子/普通等級(白裝)
+material Icon/Armor/PL_Pants_C01
 {
 	technique
 	{
@@ -119,8 +88,8 @@ material STR_PL_PANTS_N_C1_Q_18A
 	}
 }
 
-//約克之金屬腿甲 
-material STR_PL_PANTS_D_N_R0_Q_18A
+// 金屬甲/褲子/稀有等級(綠裝)
+material Icon/Armor/PL_Pants_R01
 {
 	technique
 	{
@@ -134,8 +103,8 @@ material STR_PL_PANTS_D_N_R0_Q_18A
 	}
 }
 
-//特爾賽迪之金屬腿甲 
-material STR_PL_PANTS_N_L1_Q_52A
+// 金屬甲/褲子/傳承等級(藍裝)
+material Icon/Armor/PL_Pants_L01
 {
 	technique
 	{
@@ -149,8 +118,8 @@ material STR_PL_PANTS_N_L1_Q_52A
 	}
 }
 
-//英吉森金屬腿甲 
-material STR_PL_PANTS_N_U1_Q_53A
+// 金屬甲/褲子/獨特等級(金裝)
+material Icon/Armor/PL_Pants_U01
 {
 	technique
 	{
@@ -164,8 +133,8 @@ material STR_PL_PANTS_N_U1_Q_53A
 	}
 }
 
-//名人之閃光的鉆質金屬腿甲 
-material STR_PL_PANTS_N_E1_P_53A
+// 金屬甲/褲子/英雄等級(紅裝)
+material Icon/Armor/PL_Pants_E01
 {
 	technique
 	{
@@ -178,11 +147,9 @@ material STR_PL_PANTS_N_E1_P_53A
 		}
 	}
 }
- 
- 
-//肩甲
-//巴魯艾琳之金屬肩甲 
-material STR_PL_SHOULDER_D_N_C1_Q_17A
+
+// 金屬甲/肩甲/普通等級(白裝)
+material Icon/Armor/PL_Shoulder_C01
 {
 	technique
 	{
@@ -196,8 +163,8 @@ material STR_PL_SHOULDER_D_N_C1_Q_17A
 	}
 }
 
-//姬格莉特之金屬肩甲 
-material STR_PL_SHOULDER_D_N_R0_Q_34A
+// 金屬甲/肩甲/稀有等級(綠裝)
+material Icon/Armor/PL_Shoulder_R01
 {
 	technique
 	{
@@ -211,8 +178,8 @@ material STR_PL_SHOULDER_D_N_R0_Q_34A
 	}
 }
 
-//阿卡斯泰司之金屬肩甲 
-material STR_PL_SHOULDER_D_N_L0_Q_45B
+// 金屬甲/肩甲/傳承等級(藍裝)
+material Icon/Armor/PL_Shoulder_L01
 {
 	technique
 	{
@@ -226,8 +193,8 @@ material STR_PL_SHOULDER_D_N_L0_Q_45B
 	}
 }
 
-//英吉森金屬肩甲 
-material STR_PL_SHOULDER_N_U1_Q_53A
+// 金屬甲/肩甲/獨特等級(金裝)
+material Icon/Armor/PL_Shoulder_U01
 {
 	technique
 	{
@@ -241,8 +208,8 @@ material STR_PL_SHOULDER_N_U1_Q_53A
 	}
 }
 
-//名人之閃光的鉆質金屬肩甲 
-material STR_PL_SHOULDER_N_E1_P_53A
+// 金屬甲/肩甲/英雄等級(紅裝)
+material Icon/Armor/PL_Shoulder_E01
 {
 	technique
 	{
@@ -256,10 +223,8 @@ material STR_PL_SHOULDER_N_E1_P_53A
 	}
 }
 
-
-//手套
-//斯帕塔洛斯之金屬手套 
-material STR_PL_GLOVE_N_C2_Q_14A
+// 金屬甲/手套/普通等級(白裝)
+material Icon/Armor/PL_Glove_C01
 {
 	technique
 	{
@@ -273,8 +238,8 @@ material STR_PL_GLOVE_N_C2_Q_14A
 	}
 }
 
-//諾奇薩爾之金屬手套 
-material STR_PL_GLOVE_D_N_R0_Q_15A
+// 金屬甲/手套/稀有等級(綠裝)
+material Icon/Armor/PL_Glove_R01
 {
 	technique
 	{
@@ -288,8 +253,8 @@ material STR_PL_GLOVE_D_N_R0_Q_15A
 	}
 }
 
-//卡伊里烏斯之金屬手套 
-material STR_PL_GLOVE_N_L1_Q_51A
+// 金屬甲/手套/傳承等級(藍裝)
+material Icon/Armor/PL_Glove_L01
 {
 	technique
 	{
@@ -303,8 +268,8 @@ material STR_PL_GLOVE_N_L1_Q_51A
 	}
 }
 
-//英吉森金屬手套 
-material STR_PL_GLOVE_N_U1_Q_53A
+// 金屬甲/手套/獨特等級(金裝)
+material Icon/Armor/PL_Glove_U01
 {
 	technique
 	{
@@ -318,8 +283,8 @@ material STR_PL_GLOVE_N_U1_Q_53A
 	}
 }
 
-//名人之閃光的鉆質金屬手套 
-material STR_PL_GLOVE_N_E1_P_53A
+// 金屬甲/手套/英雄等級(紅裝)
+material Icon/Armor/PL_Glove_E01
 {
 	technique
 	{
@@ -333,10 +298,8 @@ material STR_PL_GLOVE_N_E1_P_53A
 	}
 }
 
-
-//長靴
-//諾奇薩爾之金屬長靴 
-material STR_PL_SHOES_D_N_C1_Q_12A
+// 金屬甲/鞋子/普通等級(白裝)
+material Icon/Armor/PL_Shoes_C01
 {
 	technique
 	{
@@ -350,8 +313,8 @@ material STR_PL_SHOES_D_N_C1_Q_12A
 	}
 }
 
-//瑟蓮尼提之金屬長靴 
-material STR_PL_SHOES_D_N_R0_Q_24A
+// 金屬甲/鞋子/稀有等級(綠裝)
+material Icon/Armor/PL_Shoes_R01
 {
 	technique
 	{
@@ -365,8 +328,8 @@ material STR_PL_SHOES_D_N_R0_Q_24A
 	}
 }
 
-//艾爾米提亞之金屬長靴 
-material STR_PL_SHOES_N_L1_Q_51A
+// 金屬甲/鞋子/傳承等級(藍裝)
+material Icon/Armor/PL_Shoes_L01
 {
 	technique
 	{
@@ -380,8 +343,8 @@ material STR_PL_SHOES_N_L1_Q_51A
 	}
 }
 
-//英吉森金屬長靴 
-material STR_PL_SHOES_N_U1_Q_53A
+// 金屬甲/鞋子/獨特等級(金裝)
+material Icon/Armor/PL_Shoes_U01
 {
 	technique
 	{
@@ -395,8 +358,8 @@ material STR_PL_SHOES_N_U1_Q_53A
 	}
 }
 
-//名人之閃光的鉆質金屬長靴 
-material STR_PL_SHOES_N_E1_P_53A
+// 金屬甲/鞋子/英雄等級(紅裝)
+material Icon/Armor/PL_Shoes_E01
 {
 	technique
 	{
