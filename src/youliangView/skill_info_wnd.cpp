@@ -9,7 +9,7 @@ void SkillInfoWnd::init (int _x, int _y)
 	x = _x ;
 	y = _y ;
 	w = 400 ;
-	h = 60 ;
+	h = 80 ;
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
 	overlayUI.show (false) ;
@@ -18,9 +18,9 @@ void SkillInfoWnd::init (int _x, int _y)
 
 	vpText[0] = new TextArea ;
 #ifdef _PROJECT_OGRE_3D_
-	vpText[0]->init (overlayUI, 0, 0, w, h) ;
+	vpText[0]->init (overlayUI, 5, 5, w, h) ;
 #else _PROJECT_GDI_
-	vpText[0]->init (0, 0, w, h) ;
+	vpText[0]->init (5, 5, w, h) ;
 #endif
 	addChild (vpText[0]) ;
 }

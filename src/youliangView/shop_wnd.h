@@ -13,7 +13,6 @@ private:
 	enum {CLOSE_BUTTON = 10, BUTTON_COUNT = 11, CLOSE_TEXT = 10, SHOP_TEXT = 11, TEXT_COUNT = 12, ICON_SIZE = 50} ;
 
 	ItemInfoWnd* pItemInfoWnd ;
-	WindowMan windowMan ;
 
 #ifdef _PROJECT_OGRE_3D_	
 	ImageButton* vpBtn[BUTTON_COUNT] ;
@@ -29,7 +28,7 @@ public:
 
 	~ShopWnd () {};
 
-	void init (int _x, int _y, Player* pb) ;
+	void init (int _x, int _y, Player* pb, ItemInfoWnd* pi) ;
 
 	bool canDrag (int tx, int ty) ;
 	void onCommand (int) ;

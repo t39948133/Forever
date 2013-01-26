@@ -15,7 +15,6 @@ public:
 	enum {BUTTON_COUNT = 25, ICON_SIZE = 50, TEXT_COUNT = 26} ;
 	
 	ItemInfoWnd* pItemInfoWnd ;
-	WindowMan windowMan ;
 
 	Player* pPlayer ;
 	HotKeyWnd* phkWnd ;
@@ -32,7 +31,7 @@ public:
 
 	void upDate (Player* pb) ;
 
-	void init (int _x, int _y, Player* pb, HotKeyWnd* pw, PlayerInfoWnd* ppinw) ;
+	void init (int _x, int _y, Player* pb, HotKeyWnd* pw, PlayerInfoWnd* ppinw, ItemInfoWnd* pItemInfoWnd) ;
 
 	bool canDrag (int tx, int ty) ;
 

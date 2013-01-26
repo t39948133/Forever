@@ -10,7 +10,7 @@ void BackpackWnd::upDate (Player* pb)
 	pPlayer = pb ;
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
-	overlayUI.getOverlay ()->hide () ;
+//	overlayUI.getOverlay ()->hide () ;
 	overlayUI.setImage ("backpack") ;
 
 	for (int i = 0; i<3; i++)
@@ -143,12 +143,13 @@ void BackpackWnd::upDate (Player* pb)
 }
 
 //­I¥]µøµ¡
-void BackpackWnd::init (int _x, int _y, Player* pb, HotKeyWnd* pw, PlayerInfoWnd* pw2)
+void BackpackWnd::init (int _x, int _y, Player* pb, HotKeyWnd* pw, PlayerInfoWnd* pw2 ,ItemInfoWnd* pi)
 {	
-	bVisible = false ;
+	bVisible = true ;
 	pPlayer = pb ;
 	phkWnd = pw ;
 	ppinWnd = pw2 ;
+	pItemInfoWnd = pi ;
 
 	x = _x ;
 	y = _y ;
@@ -156,10 +157,6 @@ void BackpackWnd::init (int _x, int _y, Player* pb, HotKeyWnd* pw, PlayerInfoWnd
 	h = 288 ;
 
 	upDate (pPlayer) ;
-
-	pItemInfoWnd = new ItemInfoWnd ;
-	pItemInfoWnd->init (x, y) ;
-	windowMan.addWnd (pItemInfoWnd) ;
 }
 
 bool BackpackWnd::canDrag (int tx, int ty)
@@ -202,7 +199,7 @@ void BackpackWnd::onCommandFocus (int id)
 		if (pInfo != NULL)
 		{
 			pItemInfoWnd->setItem (pInfo->name) ;	
-			pItemInfoWnd->setPos (x+(id%9)*58+ICON_SIZE, y+(id/9)*ICON_SIZE) ; 
+			pItemInfoWnd->setPos (x+(id%9)*58+65, y+(id/9)*59) ; 
 			setInfoWnd (pItemInfoWnd) ;
 			pItemInfoWnd->show (true) ;
 		}else

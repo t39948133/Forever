@@ -3,18 +3,15 @@
 #include "image_button.h"
 
 
-void ShopWnd::init (int _x, int _y, Player* pb)
+void ShopWnd::init (int _x, int _y, Player* pb, ItemInfoWnd* pi)
 {
 	bVisible = true ;
 	pPlayer = pb ;
+	pItemInfoWnd = pi ;
 	x = _x ;
 	y = _y ;
 	w = 410 ;
 	h = 351 ;
-
-	pItemInfoWnd = new ItemInfoWnd ;
-	pItemInfoWnd->init (x, y) ;
-	windowMan.addWnd (pItemInfoWnd) ;
 
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
@@ -115,7 +112,7 @@ void ShopWnd::onCommandFocus (int id)
 		if (pInfo != NULL)
 		{
 			pItemInfoWnd->setItem (pInfo->name) ;	
-			pItemInfoWnd->setPos (x+(id%2)*205+60, y+(id/2)*50+20) ; 
+			pItemInfoWnd->setPos (x+(id%2)*205+60, y+(id/2)*60+20) ; 
 			setInfoWnd (pItemInfoWnd) ;
 			pItemInfoWnd->show (true) ;
 		}else

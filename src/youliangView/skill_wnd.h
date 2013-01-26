@@ -24,8 +24,6 @@ public:
 	TextArea* vpText[TEXT_COUNT];
 
 	SkillInfoWnd* pSkillInfoWnd ;
-	WindowMan windowMan ;
-
 	TargetInfoWnd* pTargetInfoWnd ;
 	Player* pPlayer ;
 	GP::NetStream* pStream ;
@@ -38,7 +36,7 @@ public:
 	~SkillWnd () {};
 
 	void init (int _x, int _y, GP::NetStream*, Player* pb,
-				TargetInfoWnd*, Scene*, HotKeyWnd* pw) ;
+				TargetInfoWnd*, Scene*, HotKeyWnd* pw, SkillInfoWnd*) ;
 
 	bool canDrag (int tx, int ty) ;
 	void onCommand (int) ;

@@ -7,7 +7,7 @@
 
 //­I¥]µøµ¡
 void SkillWnd::init (int _x, int _y, GP::NetStream* pns, Player* pb,
-					TargetInfoWnd* pti, Scene* psc, HotKeyWnd* pw)
+					TargetInfoWnd* pti, Scene* psc, HotKeyWnd* pw, SkillInfoWnd* ps)
 {
 	bVisible = true ;
 	bPickGround = false ;
@@ -16,15 +16,13 @@ void SkillWnd::init (int _x, int _y, GP::NetStream* pns, Player* pb,
 	pPlayer = pb ;
 	pStream = pns ;
 	phkWnd = pw ;
+	pSkillInfoWnd = ps ;
 	x = _x ;
 	y = _y ;
 	w = 593 ;
 	h = 485 ;
 
-	pSkillInfoWnd = new SkillInfoWnd ;
-	pSkillInfoWnd->init (x, y) ;
-	windowMan.addWnd (pSkillInfoWnd) ;
-
+	
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
 //	overlayUI.getOverlay ()->hide () ;
@@ -253,7 +251,7 @@ void SkillWnd::onCommandFocus (int id)
 		if (pInfo != NULL)
 		{
 			pSkillInfoWnd->setItem (pInfo->name) ;	
-			pSkillInfoWnd->setPos (x+ICON_SIZE, y+(id%9)*ICON_SIZE+ICON_SIZE) ; 
+			pSkillInfoWnd->setPos (x+ICON_SIZE+7, y+(id%7)*57+ICON_SIZE) ; 
 			setInfoWnd (pSkillInfoWnd) ;
 			pSkillInfoWnd->show (true) ;
 		}else
