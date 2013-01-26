@@ -8,8 +8,8 @@ void HotKeyWnd::init (int _x, int _y, Player* pPlr)
 
 	x = _x ;
 	y = _y ;
-	w = BUTTON_COUNT*CELL_SIZE ;
-	h = CELL_SIZE ;
+	w = BUTTON_COUNT*ICON_SIZE ;
+	h = ICON_SIZE ;
 
 	for (int i = 0; i<BUTTON_COUNT; i++)
 	{
@@ -25,7 +25,9 @@ void HotKeyWnd::init (int _x, int _y, Player* pPlr)
 	for (int i = 0; i<BUTTON_COUNT; i++)
 	{
 		vpBtn[i] = new ImageButton ;
-		vpBtn[i]->init (overlayUI, i*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, i) ;
+		vpBtn[i]->init (overlayUI, i*35, 0, ICON_SIZE, ICON_SIZE, i) ;
+		ItemInfo* pInfo = Item::getInfo (i) ;
+		vpBtn[i]->setImage ((const Ogre::String)pInfo->image) ;
 		addChild (vpBtn[i]) ;
 	}
 
@@ -33,7 +35,7 @@ void HotKeyWnd::init (int _x, int _y, Player* pPlr)
 	for (int i = 0; i<TEXT_COUNT/2; i++)
 	{
 		vpText[i] = new TextArea ;
-		vpText[i]->init (overlayUI, i*CELL_SIZE, 0, CELL_SIZE/2, CELL_SIZE/2) ;
+		vpText[i]->init (overlayUI, i*35, 0, ICON_SIZE, ICON_SIZE) ;
 		char buf[256] ;
 		if (i == TEXT_COUNT/2-1)
 		{
@@ -51,7 +53,7 @@ void HotKeyWnd::init (int _x, int _y, Player* pPlr)
 	for (int i = TEXT_COUNT/2; i<TEXT_COUNT; i++)
 	{
 		vpText[i] = new TextArea ;
-		vpText[i]->init (overlayUI, (i-TEXT_COUNT/2)*CELL_SIZE+20, 20, CELL_SIZE/2, CELL_SIZE/2) ;		
+		vpText[i]->init (overlayUI, (i-TEXT_COUNT/2)*ICON_SIZE+20, 20, ICON_SIZE,ICON_SIZE) ;		
 		addChild (vpText[i]) ;
 	}	
 
@@ -60,7 +62,7 @@ void HotKeyWnd::init (int _x, int _y, Player* pPlr)
 	for (int i = 0; i<BUTTON_COUNT; i++)
 	{
 		vpBtn[i] = new TextButton ;
-		vpBtn[i]->init (i*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, i) ;
+		vpBtn[i]->init (i*ICON_SIZE, 0, ICON_SIZE, ICON_SIZE, i) ;
 		addChild (vpBtn[i]) ;
 	}
 
@@ -68,7 +70,7 @@ void HotKeyWnd::init (int _x, int _y, Player* pPlr)
 	for (int i = 0; i<TEXT_COUNT/2; i++)
 	{
 		vpText[i] = new TextArea ;
-		vpText[i]->init (i*CELL_SIZE, -18, CELL_SIZE/2, CELL_SIZE/2) ;
+		vpText[i]->init (i*ICON_SIZE, -18, ICON_SIZE, ICON_SIZE) ;
 		char buf[256] ;
 		if (i == TEXT_COUNT/2-1)
 		{
@@ -86,7 +88,7 @@ void HotKeyWnd::init (int _x, int _y, Player* pPlr)
 	for (int i = TEXT_COUNT/2; i<TEXT_COUNT; i++)
 	{
 		vpText[i] = new TextArea ;
-		vpText[i]->init ((i-TEXT_COUNT/2)*CELL_SIZE+20, 20, CELL_SIZE/2, CELL_SIZE/2) ;		
+		vpText[i]->init ((i-TEXT_COUNT/2)*ICON_SIZE+20, 20, ICON_SIZE, ICON_SIZE) ;		
 		addChild (vpText[i]) ;
 	}
 	
@@ -192,7 +194,7 @@ void HotKeyWnd::onCommandR (int id)
 			hotKeyInfo[i].itemID = -1 ;
 
 #ifdef _PROJECT_OGRE_3D_
-			vpBtn[i]->setImage ("ogreborder") ;
+			vpBtn[i]->setImage ("") ;
 #else _PROJECT_GDI_
 			vpBtn[i]->str = "" ;
 #endif

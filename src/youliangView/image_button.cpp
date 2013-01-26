@@ -28,7 +28,7 @@ void ImageButton::init (OverlayUI& ovl,
 	pImage->setMetricsMode(Ogre::GMM_PIXELS);
 	pImage->setPosition( _x, _y);
 	pImage->setDimensions( _w, _h);
-	pImage->setMaterialName ("drbunsen_head");
+	pImage->setMaterialName ("");
 	pImage->show () ;
 
 	ovl.addImage (*this) ;
@@ -37,6 +37,11 @@ void ImageButton::init (OverlayUI& ovl,
 Ogre::OverlayContainer* ImageButton::getImage ()
 {
 	return pImage ;
+}
+
+void ImageButton::setPos (int _x, int _y)
+{
+	pImage->setPosition( _x, _y);
 }
 
 void ImageButton::setImage (const Ogre::String& st)
@@ -63,6 +68,11 @@ void TextArea::init (OverlayUI& ui, int _x, int _y, int _w, int _h)
 void TextArea::setText (const char* text, float r, float g, float b)
 {
 	textOverlay.SetText (text, r, g, b) ;
+}
+
+void TextArea::setPos (int _x, int _y)
+{
+	textOverlay.SetPos (_x, _y) ;
 }
 
 Ogre::OverlayContainer* TextArea::getImage ()

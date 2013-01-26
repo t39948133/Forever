@@ -24,7 +24,7 @@ private:
 //	UnitData* pUnitData ;
 
 public:
-	enum {BUTTON_COUNT = 10, CELL_SIZE = 40, TEXT_COUNT = 20} ;
+	enum {BUTTON_COUNT = 10, ICON_SIZE = 30, TEXT_COUNT = 20} ;
 
 	HotKeyInfo hotKeyInfo[BUTTON_COUNT] ;
 

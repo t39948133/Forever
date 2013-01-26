@@ -1,5 +1,6 @@
 #include "window.h"
 
+
 bool Window::checkPoint (int tx, int ty)
 {
 	if (bVisible == false)
@@ -10,6 +11,11 @@ bool Window::checkPoint (int tx, int ty)
 		return true ;
 	else
 		return false ;
+}
+
+void Window::setInfoWnd (Window* pw)
+{
+	pWindowMan->setInfoWnd (pw) ;
 }
 
 bool Window::canDrag (int tx, int ty)
@@ -41,6 +47,82 @@ void Window::onClick (int tx, int ty)
 	}
 }
 
+void Window::onClickR (int tx, int ty)
+{
+	tx -= x ;
+	ty -= y ;
+
+	VP_WND::iterator pi = vpWnd.begin () ;
+	while (pi != vpWnd.end ())
+	{
+		if ((*pi)->bVisible)
+			if ((*pi)->checkPoint (tx, ty))
+			{
+				(*pi)->onClickR (tx, ty) ;
+				break ;
+			}
+
+		++ pi ;
+	}
+
+	if (pi == vpWnd.end ())
+	{
+		//沒按到子視窗
+	}
+}
+
+void Window::onMouseFocus (int tx, int ty)
+{
+	tx -= x ;
+	ty -= y ;
+
+	VP_WND::iterator pi = vpWnd.begin () ;
+	while (pi != vpWnd.end ())
+	{
+		if ((*pi)->bVisible)
+			if ((*pi)->checkPoint (tx, ty))
+			{
+				(*pi)->onMouseFocus (tx, ty) ;
+				break ;
+			}
+
+		++ pi ;
+	}
+
+	if (pi == vpWnd.end ())
+	{
+		//沒按到子視窗
+	}
+}
+
+void Window::show (bool b)
+{
+	bVisible = b ;
+
+	VP_WND::iterator pi = vpWnd.begin () ;
+	while (pi != vpWnd.end ())
+	{
+		(*pi)->show (bVisible) ;
+		++ pi ;
+	}
+}
+
+bool Window::isVisible ()
+{
+	return bVisible ;
+}
+
+void Window::addChild (Window* pw)
+{
+	pw->pParent = this ;
+	vpWnd.push_back (pw) ;
+}
+
+void Window::delChild (Window* pw)
+{
+	vpWnd.remove (pw) ;
+}
+
 void Window::draw (HDC hdc, int ox, int oy)
 {
 	Rectangle (hdc, x+ox, y+oy, x+ox+w, y+oy+h) ;
@@ -54,22 +136,20 @@ void Window::draw (HDC hdc, int ox, int oy)
 	}
 }
 
-void Window::addChild (Window* pw)
-{
-	pw->pParent = this ;
-	vpWnd.push_back (pw) ;
-}
 
 WindowMan::WindowMan ()
 {
 	pDragWnd = NULL ;
 	bInDrag = false ;
+	pInfoWindow = NULL ;
 
 //		keyLButton.setKey (VK_LBUTTON) ;
 }
 
 void WindowMan::addWnd (Window* pw)
 {
+	pw->pWindowMan = this ;
+
 	pw->pParent = NULL ;
 	vpWindow.push_back (pw) ;
 }
@@ -90,6 +170,18 @@ void Button::onClick (int tx, int ty)
 	pParent->onCommand (id) ;
 }
 
+
+void Button::onClickR (int tx, int ty)
+{
+	pParent->onCommandR (id) ;
+}
+
+void Button::onMouseFocus (int tx, int ty)
+{
+	pParent->onCommandFocus (id) ;
+}
+
+
 //########################
 
 void TextButton::draw (HDC hdc, int ox, int oy)
@@ -100,17 +192,23 @@ void TextButton::draw (HDC hdc, int ox, int oy)
 
 #ifdef _PROJECT_GDI_
 
-	void TextArea::init (int _x, int _y, int _w, int _h)
-	{
-		x = _x ;
-		y = _y ;
-		w = _w ;
-		h = _h ;
-	}
+void TextArea::init (int _x, int _y, int _w, int _h)
+{
+	x = _x ;
+	y = _y ;
+	w = _w ;
+	h = _h ;
+}
 
 void TextArea::setText (const char* ps, float, float, float)
 {
 	str = ps ;
+}
+
+void TextArea::setPos (int _x, int _y)
+{
+	x = _x ;
+	y = _y ;
 }
 
 void TextArea::draw (HDC hdc, int ox, int oy)
@@ -145,8 +243,7 @@ void WindowMan::doDrag (HWND hWnd, KeyMan& keyMan)
 	}
 }
 
-bool WindowMan::work (HWND hWnd, 
-							KeyMan& keyMan)
+bool WindowMan::work (HWND hWnd, KeyMan& keyMan)
 {
 	bool bPressWindow = false ;
 
@@ -187,10 +284,31 @@ bool WindowMan::work (HWND hWnd,
 					dragX = clientX ;
 					dragY = clientY ;
 
-					vpWindow.push_front (*pi) ;
+//					vpWindow.push_front (*pi) ;
 
-					vpWindow.erase (pi) ;
-					pDragWnd = vpWindow.front () ;
+//					vpWindow.erase (pi) ;
+//					pDragWnd = vpWindow.front () ;
+
+					pDragWnd = (*pi) ;
+
+					break ;
+				}
+
+				++ pi ;
+			}
+		}else if (keyMan.isPress (KEY_RBUTTON))
+		{
+			//壓下去的瞬間
+			VP_WINDOW::iterator pi = vpWindow.begin () ;
+			while (pi != vpWindow.end ())
+			{
+				if ((*pi)->checkPoint (clientX, clientY))
+				{							
+					//不可以拖曳
+					(*pi)->onClickR (clientX, clientY) ;				
+
+					//有按到
+					bPressWindow = true ;
 
 					break ;
 				}
@@ -199,6 +317,34 @@ bool WindowMan::work (HWND hWnd,
 			}
 		}else
 		{
+			//沒按左右鍵
+			//壓下去的瞬間
+			VP_WINDOW::iterator pi = vpWindow.begin () ;
+			while (pi != vpWindow.end ())
+			{
+				if ((*pi)->checkPoint (clientX, clientY))
+				{
+					int tx = clientX ;
+					int ty = clientY ;
+
+					//游標指到
+					(*pi)->onMouseFocus (tx, ty) ;
+
+					break ;
+				}else
+				{
+					if (pInfoWindow != NULL)
+						pInfoWindow->show (false) ;
+				}
+
+				++ pi ;
+			}
+
+/*			if (pi == vpWindow.end ())
+			{
+				if (pInfoWindow != NULL)
+					pInfoWindow->show (false) ;
+			}*/
 		}
 	}
 
@@ -206,25 +352,34 @@ bool WindowMan::work (HWND hWnd,
 }
 
 
-	void WindowMan::draw (HDC hdc)
+void WindowMan::setInfoWnd (Window* pw)//設定資訊視窗
+{
+	pInfoWindow = pw ;
+}
+
+void WindowMan::draw (HDC hdc)
+{
+	VP_WINDOW::reverse_iterator pi = vpWindow.rbegin () ;
+	while (pi != vpWindow.rend ())
 	{
-		VP_WINDOW::reverse_iterator pi = vpWindow.rbegin () ;
-		while (pi != vpWindow.rend ())
-		{
-			if ((*pi)->bVisible)
-				(*pi)->draw (hdc, 0, 0) ;
-			++ pi ;
-		}
+		if ((*pi)->bVisible)
+			(*pi)->draw (hdc, 0, 0) ;
+		++ pi ;
 	}
 
-	void WindowMan::deleteAllWindow ()
-	{
-		VP_WINDOW::reverse_iterator pi = 
-				vpWindow.rbegin () ;
-		while (pi != vpWindow.rend ())
-		{
-			delete *pi ;
+	if (pInfoWindow != NULL)
+		if (pInfoWindow->isVisible ())
+			pInfoWindow->draw (hdc, 0, 0) ;
+}
 
-			++pi ;
-		}
+void WindowMan::deleteAllWindow ()
+{
+	VP_WINDOW::reverse_iterator pi = 
+			vpWindow.rbegin () ;
+	while (pi != vpWindow.rend ())
+	{
+		delete *pi ;
+
+		++pi ;
 	}
+}

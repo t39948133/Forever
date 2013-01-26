@@ -8,33 +8,51 @@ void TargetInfoWnd::init (Scene* pscn, float tx, float ty)
 	x = int(tx) ;
 	y = int(ty) ;
 	w = 300 ;
-	h = 60 ;
+	h = 74 ;
 	targetUID = -1 ;
 
 
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
+	overlayUI.setImage ("target") ;
 
-	ImageButton* pBtn = new ImageButton ;
-	pBtn->init (overlayUI, 50, 15, 200, 15, 0) ;
-	pBtn->setImage ("ogreborder") ;
-	addChild (pBtn) ;
+	vpBtn[0] = new ImageButton ;
+	vpBtn[0]->init (overlayUI, 63, 31, 190, 9, 0) ;
+	vpBtn[0]->setImage ("hp") ;
+	addChild (vpBtn[0]) ;
 
-	TextArea* pTA = new TextArea ;
-	pTA->init (overlayUI, 50, 35, w, h) ;
-	pTA->setText ("¥vµÜ©i", 1, 1, 1) ;
-	addChild (pTA) ;
+	for (int i = 0; i<TEXT_COUNT; i++)
+	{
+		vpText[i] = new TextArea ;
+		if (i == 0)
+		{
+			vpText[i]->init (overlayUI, 100, 55, 200, 20) ;
+		}else
+		{
+			vpText[i]->init (overlayUI, 10, 29, 20, 20) ;
+			vpText[i]->setText ("1", 1, 1, 1) ;
+		}
+		addChild (vpText[i]) ;
+	}
 	
 #else _PROJECT_GDI_
-	TextButton* pBtn = new TextButton ;
-	pBtn->init (50, 15, 200, 15, 0) ;
-	addChild (pBtn) ;
-	
-	TextArea* pTA = new TextArea ;
-	pTA->init (50, 35, w, h) ;
-	pTA->setText ("¥vµÜ©i", 1, 1, 1) ;
-	addChild (pTA) ;
+	vpBtn[0] = new TextButton ;
+	vpBtn[0]->init (50, 15, 200, 15, 0) ;
+	addChild (vpBtn[0]) ;
 
+	for (int i = 0; i<TEXT_COUNT; i++)
+	{
+		vpText[i] = new TextArea ;
+		if (i == 0)
+		{
+			vpText[i]->init (50, 35, 200, 20) ;
+		}else
+		{
+			vpText[i]->init (10, 29, 20, 20) ;
+			vpText[i]->setText ("1", 1, 1, 1) ;
+		}
+		addChild (vpText[i]) ;
+	}
 #endif
 }
 
@@ -51,6 +69,9 @@ bool TargetInfoWnd::canDrag (int tx, int ty)
 void TargetInfoWnd::setTarget (long long id)
 {
 	targetUID = id ;
+
+	Monster* pm = pScene->getMonster (targetUID) ;
+	vpText[0]->setText (pm->getInfo()->name, 1, 1, 1) ;
 }
 
 void TargetInfoWnd::onCommand (int id)

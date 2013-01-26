@@ -4,6 +4,7 @@
 #include "window.h"
 #include "player.h"
 #include "image_button.h"
+#include "item_info_wnd.h"
 
 //­I¥]µøµ¡
 class HotKeyWnd ;
@@ -11,8 +12,11 @@ class PlayerInfoWnd ;
 class BackpackWnd:public Window
 {
 public:
-	enum {BUTTON_COUNT = 25, CELL_SIZE = 60, TEXT_COUNT = 26} ;
+	enum {BUTTON_COUNT = 25, ICON_SIZE = 50, TEXT_COUNT = 26} ;
 	
+	ItemInfoWnd* pItemInfoWnd ;
+	WindowMan windowMan ;
+
 	Player* pPlayer ;
 	HotKeyWnd* phkWnd ;
 	PlayerInfoWnd* ppinWnd ;
@@ -26,11 +30,14 @@ public:
 
 	~BackpackWnd () {};
 
+	void upDate (Player* pb) ;
+
 	void init (int _x, int _y, Player* pb, HotKeyWnd* pw, PlayerInfoWnd* ppinw) ;
 
 	bool canDrag (int tx, int ty) ;
 
 	void onCommand (int) ;
+	void onCommandFocus (int) ;
 
 #ifdef _PROJECT_OGRE_3D_	
 	void onMove () ;
@@ -39,9 +46,7 @@ public:
 	void onSwitch () ;
 
 #endif
-//	void onClick (int tx, int ty) ;
 
-//	void draw (HDC hdc, int ox, int oy) ;
 } ;
 
 #endif

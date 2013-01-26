@@ -21,10 +21,10 @@ void QuestWnd::init (int _x, int _y, Player* pb)
 		pTA->init (overlayUI, 0, i*CELL_SIZE, w, CELL_SIZE) ;
 		if (i == 0)
 		{	
-			pTA->setText ("任務名稱", 1, 1, 1) ;
+			pTA->setText ("任務名稱", 1, 1, 0) ;
 		}else if (i == 1)
 		{
-			pTA->setText ("任務解釋", 1, 1, 1) ;
+			pTA->setText ("任務說明....", 1, 1, 1) ;
 		}else
 		{
 		}
@@ -68,14 +68,12 @@ void QuestWnd::onCommand (int id)
 #ifdef _PROJECT_OGRE_3D_	
 void QuestWnd::onMove ()
 {
+	overlayUI.setPos (x, y) ;
 }
 
 void QuestWnd::setZOrder (int z)
 {
-}
-
-void QuestWnd::onSwitch ()
-{
+	overlayUI.setZOrder (z) ;
 }
 #endif
 

@@ -10,7 +10,7 @@ void ToolBarWnd::init (Window* pw0,  Window* pw1,
 					   Window* pw2, Window* pw3,
 					   int _x, int _y)
 {
-	pTA = NULL ;
+	pText = NULL ;
 
 	vpWnd[0] = pw0 ;
 	vpWnd[1] = pw1 ;
@@ -20,50 +20,51 @@ void ToolBarWnd::init (Window* pw0,  Window* pw1,
 	x = _x ;
 	y = _y ;
 
-	w = UI_COUNT*CELL_SIZE ;
-	h = CELL_SIZE ;
+	w = 300 ;
+	h = 71 ;
 
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
+	overlayUI.setImage ("toolbar") ;
 
 	for (int i = 0; i<UI_COUNT; i++)
 	{
 		ImageButton* pBtn = new ImageButton ;
-		pBtn->init (overlayUI, i*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, i) ;
-		pBtn->setImage ("droplet_x") ;
+		pBtn->init (overlayUI, (i*49)+60, 17, ICON_SIZE, ICON_SIZE, i) ;
+		if (i == 0)
+			pBtn->setImage ("") ;
+		else if (i == 1)
+			pBtn->setImage ("") ;
+		else if (i == 2)
+			pBtn->setImage ("") ;
+		else if (i == 3)
+			pBtn->setImage ("") ;
 		addChild (pBtn) ;
 	}
 #else _PROJECT_GDI_
 	for (int i = 0; i<UI_COUNT; i++)
 	{
 		TextButton* pBtn = new TextButton ;
-		pBtn->init (i*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, i) ;
+		pBtn->init (i*ICON_SIZE, 0, ICON_SIZE, ICON_SIZE, i) ;
 		addChild (pBtn) ;		
 	}	
-#endif
 
 	for (int i = 0; i<UI_COUNT; i++)
 	{
-		pTA = new TextArea ;
-
-#ifdef _PROJECT_OGRE_3D_
-		pTA->init (overlayUI, i*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE) ;
-		
-#else _PROJECT_GDI_
-		pTA->init (i*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE) ;		
-
-#endif
+		pText = new TextArea ;
+		pText->init (i*ICON_SIZE, 0, ICON_SIZE, ICON_SIZE) ;
 		if (i == 0)
-			pTA->setText ("背包", 1, 1, 1) ;
+			pText->setText ("背包", 1, 1, 1) ;
 		else if (i == 1)
-			pTA->setText ("主角", 1, 1, 1) ;
+			pText->setText ("主角", 1, 1, 1) ;
 		else if (i == 2)
-			pTA->setText ("技能", 1, 1, 1) ;
+			pText->setText ("技能", 1, 1, 1) ;
 		else if (i == 3)
-			pTA->setText ("地圖", 1, 1, 1) ;
+			pText->setText ("地圖", 1, 1, 1) ;
 		
-		addChild (pTA) ;
+		addChild (pText) ;
 	}
+#endif
 }
 
 bool ToolBarWnd::canDrag (int tx, int ty)
@@ -73,13 +74,12 @@ bool ToolBarWnd::canDrag (int tx, int ty)
 
 void ToolBarWnd::onCommand (int btnID)
 {
-//	pTA->setText ("???", 1, 1, 1) ;
-
-
 	vpWnd[btnID]->bVisible = 
 		!(vpWnd[btnID]->bVisible) ;
 
+#ifdef _PROJECT_OGRE_3D_
 	vpWnd[btnID]->onSwitch () ;
+#endif
 }
 
 void ToolBarWnd::onMove ()
@@ -95,32 +95,3 @@ void ToolBarWnd::setZOrder (int z)
 	overlayUI.setZOrder (z) ;
 #endif
 }
-
-/*
-void ToolBarWnd::onClick (int tx, int ty)
-{
-	int offset = (tx/CELL_SIZE)-1 ;
-	if (offset >= 0)
-	{
-		vpWnd[offset]->bVisible = 
-			!(vpWnd[offset]->bVisible) ;
-	}
-
-//	pPlayer->useItem (offset) ;
-}
-*/
-
-	/*
-	void ToolBarWnd::draw (HDC hdc)
-	{
-		Window::draw (hdc) ;
-
-		for (int i = 0; i<UI_COUNT; i++)
-		{
-			Rectangle (hdc, x+((i+1)*CELL_SIZE),
-							y, x+((i+2)*CELL_SIZE),
-							y+CELL_SIZE) ;
-		}
-
-	}
-	*/

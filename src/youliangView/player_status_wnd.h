@@ -9,8 +9,13 @@ class PlayerStatusWnd:public Window
 private:
 	Player* pPlayer ;
 	enum {BUTTON_HP, BUTTON_MP, BUTTON_XP, BUTTON_COUNT = 3, CELL_SIZE = 20, TEXT_COUNT = 3} ;
-	
-	TextButton* pvBtn[BUTTON_COUNT] ;
+
+#ifdef _PROJECT_OGRE_3D_
+	ImageButton* vpBtn[BUTTON_COUNT] ;
+#else _PROJECT_GDI_	
+	TextButton* vpBtn[BUTTON_COUNT] ;
+#endif
+	TextArea* vpText[TEXT_COUNT] ;
 public:
 	~PlayerStatusWnd () {};
 
@@ -20,7 +25,7 @@ public:
 
 	void onCommand (int) ;
 
-	void upDate () ;
+//	void upDate () ;
 
 
 #ifdef _PROJECT_OGRE_3D_	

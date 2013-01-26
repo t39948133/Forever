@@ -9,195 +9,123 @@ void ShopWnd::init (int _x, int _y, Player* pb)
 	pPlayer = pb ;
 	x = _x ;
 	y = _y ;
-	w = CELL_SIZE*8 ;
-	h = CELL_SIZE*6 ;
+	w = 410 ;
+	h = 351 ;
+
+	pItemInfoWnd = new ItemInfoWnd ;
+	pItemInfoWnd->init (x, y) ;
+	windowMan.addWnd (pItemInfoWnd) ;
 
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
-	overlayUI.setImage ("KAMEN-stup") ;
+	overlayUI.setImage ("shop") ;
 
 	for (int i = 0; i<5; i++)
 		for (int m = 0; m<2; m++)
 		{		
-			ImageButton* pBtn = new ImageButton ;
-			pBtn->init (overlayUI, m*CELL_SIZE*4, i*CELL_SIZE+CELL_SIZE/2,
-				CELL_SIZE, CELL_SIZE, i*2+m) ;
-			if (i == 0 && m == 0)
-			{
-				pBtn->setImage ("solution_1") ;		
-			}else if (i == 0 && m == 1)
-			{
-				pBtn->setImage ("sandwich") ;		
-			}else 
-			{
-				pBtn->setImage ("ogreborder") ;	
-			}
-			addChild (pBtn) ;
+			vpBtn[i*2+m] = new ImageButton ;
+			vpBtn[i*2+m]->init (overlayUI, m*205+4, i*60+55, ICON_SIZE, ICON_SIZE, i*2+m) ;
+			ItemInfo* pInfo = Item::getInfo (i*2+m) ;
+			vpBtn[i*2+m]->setImage ((const Ogre::String)pInfo->image) ;
+			addChild (vpBtn[i*2+m]) ;
 		}
+
+	//close button
+	vpBtn[CLOSE_BUTTON] = new ImageButton ;
+	vpBtn[CLOSE_BUTTON]->init (overlayUI, 400, 5, 20, 20, CLOSE_BUTTON) ;
+	vpBtn[CLOSE_BUTTON]->setImage ("") ;
+	addChild (vpBtn[CLOSE_BUTTON]) ;
 
 	for (int i = 0; i<5; i++)
 		for (int m = 0; m<2; m++)
 		{		
-			ImageButton* pBtn = new ImageButton ;
-			pBtn->init (overlayUI, m*CELL_SIZE*4+CELL_SIZE, i*CELL_SIZE+CELL_SIZE/2,
-				CELL_SIZE*3, CELL_SIZE, i*2+m) ;
-			if (i == 0 && m == 0)
-			{
-				pBtn->setImage ("ogreborder") ;		
-			}else if (i == 0 && m == 1)
-			{
-				pBtn->setImage ("ogreborder") ;		
-			}else 
-			{
-				pBtn->setImage ("ogreborder") ;	
-			}
-			
-			addChild (pBtn) ;
+			vpText[i*2+m] = new TextArea ;
+			vpText[i*2+m]->init (overlayUI, m*205+64, i*60+55, 180, 60) ;
+			ItemInfo* pInfo = Item::getInfo (i*2+m) ;
+			vpText[i*2+m]->setText (pInfo->name, 0, 0, 1) ;
+			addChild (vpText[i*2+m]) ;
 		}
 
-	for (int i = 0; i<2; i++)
-	{		
-		ImageButton* pBtn = new ImageButton ;
-		pBtn->init (overlayUI, i*CELL_SIZE*2+CELL_SIZE*4, CELL_SIZE*5+CELL_SIZE/2,
-			CELL_SIZE*2, CELL_SIZE/2, i) ;
-		pBtn->setImage ("ogreborder") ;	
-		addChild (pBtn) ;
-	}
-/*
-	ImageButton* pBtn = new ImageButton ;
-	pBtn->init (overlayUI, w-CELL_SIZE/3, 0, CELL_SIZE/3, CELL_SIZE/3, 22) ;
-	//pBtn->str = "X" ;
-	addChild (pBtn) ;
-*/
-	for (int i = 0; i<5; i++)
-		for (int m = 0; m<2; m++)
-		{		
-			TextArea* pTA = new TextArea ;
-			pTA->init (overlayUI, m*CELL_SIZE*4+CELL_SIZE, i*CELL_SIZE+CELL_SIZE/2,
-				CELL_SIZE*3, CELL_SIZE) ;
-			if (i == 0 && m == 0)
-			{
-				pTA->setText ("藥水", 0, 0, 1) ;	
-			}else if (i == 0 && m == 1)
-			{
-				pTA->setText ("", 0, 0, 1) ;	
-			}else 
-			{
-				pTA->setText ("", 0, 0, 1) ;
-			}
-				
-			addChild (pTA) ;
-		}
+	vpText[CLOSE_TEXT] = new TextArea ;
+	vpText[CLOSE_TEXT]->init (overlayUI, 400, 5, 20, 20) ;
+	vpText[CLOSE_TEXT]->setText ("X", 1, 1, 1) ;
+	addChild (vpText[CLOSE_TEXT]) ;
 
-	for (int i = 0; i<2; i++)
-	{		
-		TextArea* pTA = new TextArea ;
-		pTA->init (overlayUI, i*CELL_SIZE*2+CELL_SIZE*4+55, CELL_SIZE*5+CELL_SIZE/2+5,
-			CELL_SIZE*2, CELL_SIZE/2) ;
-		if (i == 0)
-		{
-			pTA->setText ("購買", 0, 0, 1) ;	
-		}else if (i == 1)
-		{
-			pTA->setText ("結束", 0, 0, 1) ;	
-		}
+	vpText[SHOP_TEXT] = new TextArea ;
+	vpText[SHOP_TEXT]->init (overlayUI, 185, 15, 40, 20) ;
+	vpText[SHOP_TEXT]->setText ("商店", 1, 1, 1) ;
+	addChild (vpText[SHOP_TEXT]) ;
 
-		addChild (pTA) ;
-	}
-
-	TextArea* pTA = new TextArea ;
-	pTA->init (overlayUI, w/2-30, 5, CELL_SIZE, CELL_SIZE) ;
-	pTA->setText ("商店", 1, 1, 1) ;
-	addChild (pTA) ;
 		
 #else _PROJECT_GDI_
 	for (int i = 0; i<5; i++)
 		for (int m = 0; m<2; m++)
 		{		
-			TextButton* pBtn = new TextButton ;
-			pBtn->init (m*CELL_SIZE*4, i*CELL_SIZE+CELL_SIZE/2,
-				CELL_SIZE, CELL_SIZE, i*2+m) ;
-
+			vpBtn[i*2+m] = new TextButton ;
+			vpBtn[i*2+m]->init (m*205+4, i*60+55, ICON_SIZE, ICON_SIZE, i*2+m) ;
 			ItemInfo* pInfo = Item::getInfo (i*2+m) ;
-			if (pInfo != NULL)
-			{
-				pBtn->str = pInfo->name ;				
-			}
-			addChild (pBtn) ;
+			vpBtn[i*2+m]->str = pInfo->name ;
+			addChild (vpBtn[i*2+m]) ;
 		}
+
+	//close button
+	vpBtn[CLOSE_BUTTON] = new TextButton ;
+	vpBtn[CLOSE_BUTTON]->init (400, 5, 20, 20, CLOSE_BUTTON) ;
+	vpBtn[CLOSE_BUTTON]->str = "" ;
+	addChild (vpBtn[CLOSE_BUTTON]) ;
 
 	for (int i = 0; i<5; i++)
 		for (int m = 0; m<2; m++)
 		{		
-			TextButton* pBtn = new TextButton ;
-			pBtn->init (m*CELL_SIZE*4+CELL_SIZE, i*CELL_SIZE+CELL_SIZE/2,
-				CELL_SIZE*3, CELL_SIZE, i*2+m) ;	
-		
-			addChild (pBtn) ;			
-		}	
-
-	for (int i = 0; i<2; i++)
-	{		
-		TextButton* pBtn = new TextButton ;
-		pBtn->init (i*CELL_SIZE*2+CELL_SIZE*4, CELL_SIZE*5+CELL_SIZE/2,
-			CELL_SIZE*2, CELL_SIZE/2, i) ;
-		addChild (pBtn) ;
-	}
-/*
-	TextButton* pBtn = new TextButton ;
-	pBtn->init (w-CELL_SIZE/3, 0, CELL_SIZE/3, CELL_SIZE/3, 22) ;
-	//pBtn->str = "X" ;
-	addChild (pBtn) ;
-*/
-	for (int i = 0; i<5; i++)
-		for (int m = 0; m<2; m++)
-		{		
-			TextArea* pTA = new TextArea ;
-			pTA->init (m*CELL_SIZE*4+CELL_SIZE, i*CELL_SIZE+CELL_SIZE/2,
-				CELL_SIZE*3, CELL_SIZE) ;
-
+			vpText[i*2+m] = new TextArea ;
+			vpText[i*2+m]->init (m*205+64, i*60+55, 180, 60) ;
 			ItemInfo* pInfo = Item::getInfo (i*2+m) ;
-			if (pInfo != NULL)
-			{
-				char buf[256] ;
-				sprintf_s (buf, sizeof (buf), "%s  價格 %d元", (const char*)pInfo->name, pInfo->money) ;
-				pTA->setText (buf, 0, 0, 1) ;	
-				addChild (pTA) ;
-			}
+			vpText[i*2+m]->setText (pInfo->name, 0, 0, 1) ;
+			addChild (vpText[i*2+m]) ;
 		}
 
-	for (int i = 0; i<2; i++)
-	{		
-		TextArea* pTA = new TextArea ;
-		pTA->init (i*CELL_SIZE*2+CELL_SIZE*4, CELL_SIZE*5+CELL_SIZE/2,
-			CELL_SIZE*2, CELL_SIZE/2) ;
-		if (i == 0)
-		{
-			pTA->setText ("購買", 0, 0, 1) ;	
-		}else if (i == 1)
-		{
-			pTA->setText ("結束", 0, 0, 1) ;	
-		}
+	vpText[CLOSE_TEXT] = new TextArea ;
+	vpText[CLOSE_TEXT]->init (400, 5, 20, 20) ;
+	vpText[CLOSE_TEXT]->setText ("X", 1, 1, 1) ;
+	addChild (vpText[CLOSE_TEXT]) ;
 
-		addChild (pTA) ;
-	}
-
-	TextArea* pTA = new TextArea ;
-	pTA->init (w/2-30, 5, CELL_SIZE, CELL_SIZE) ;
-	pTA->setText ("商店", 0, 0, 1) ;
-	addChild (pTA) ;
-	
+	vpText[SHOP_TEXT] = new TextArea ;
+	vpText[SHOP_TEXT]->init (185, 15, 40, 20) ;
+	vpText[SHOP_TEXT]->setText ("商店", 1, 1, 1) ;
+	addChild (vpText[SHOP_TEXT]) ;
 
 #endif
 }
 
 bool ShopWnd::canDrag (int tx, int ty)
 {
-	return ty < CELL_SIZE ;
+	return ty < 60 ;
 }
 
 void ShopWnd::onCommand (int id)
 {
+}
+
+void ShopWnd::onCommandFocus (int id)
+{
+	Item* pItem = pPlayer->backpack.getItem (id) ;
+	if (pItem != NULL)
+	{
+		ItemInfo* pInfo = pItem->getInfo () ;
+		if (pInfo != NULL)
+		{
+			pItemInfoWnd->setItem (pInfo->name) ;	
+			pItemInfoWnd->setPos (x+(id%2)*205+60, y+(id/2)*50+20) ; 
+			setInfoWnd (pItemInfoWnd) ;
+			pItemInfoWnd->show (true) ;
+		}else
+		{
+			pItemInfoWnd->show (false) ;
+		}
+	}else
+	{
+		pItemInfoWnd->show (false) ;
+	}
 }
 
 #ifdef _PROJECT_OGRE_3D_
@@ -219,62 +147,4 @@ void ShopWnd::onSwitch ()
 		overlayUI.getOverlay ()->hide () ;
 }
 #endif
-/*
-void ShopWnd::onClick (int tx, int ty)
-{
-	int offset = tx/CELL_SIZE+
-		(ty-CELL_SIZE)/CELL_SIZE*CELL_W_COUNT ;
 
-	ItemInfo* pinfo = Item::getInfo (offset) ;
-	if (pinfo != NULL)
-	{
-		enum {BUY_COUNT = 7} ;
-		int count = BUY_COUNT ;
-		int totalCost = BUY_COUNT*pinfo->money ;
-		if (totalCost <= pPlayer->money)
-		{
-			int pos = 0 ;
-			pPlayer->backpack.addItem (offset, pos, count) ;
-
-			pPlayer->money -= 
-				(BUY_COUNT-count)*pinfo->money ;
-		}
-	}
-}
-
-	void ShopWnd::draw (HDC hdc, int ox, int oy)
-	{
-		Window::draw (hdc, ox, oy) ;
-
-		char buf[256] ;
-
-		for (int i = 0; i<4; i++)
-			for (int m = 0; m<4; m++)
-			{
-				Rectangle (hdc, x+m*CELL_SIZE,
-								y+i*CELL_SIZE+CELL_SIZE,
-								x+(m+1)*CELL_SIZE,
-								y+(i+1)*CELL_SIZE+CELL_SIZE) ;
-			}
-
-		for (int i = 0; i<4; i++)
-			for (int m = 0; m<4; m++)
-			{
-				ItemInfo* pinfo = Item::getInfo (i*4+m) ;
-				if (pinfo != NULL)
-				{ 
-					_itoa_s (pinfo->money, buf, sizeof(buf), 10) ;
-					TextOut (hdc, x+m*CELL_SIZE,
-								y+i*CELL_SIZE+CELL_SIZE,
-								pinfo->name,
-								4) ;
-					TextOut (hdc, x+m*CELL_SIZE,
-								y+i*CELL_SIZE+CELL_SIZE+20,
-								buf, strlen (buf)) ;
-				}
-			}
-
-		_itoa_s (pPlayer->money, buf, sizeof(buf), 10) ;
-		TextOut (hdc, x+2, y+2, buf, strlen (buf)) ;
-	}
-*/

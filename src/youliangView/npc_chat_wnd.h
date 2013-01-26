@@ -32,9 +32,11 @@ public:
 	bool canDrag (int tx, int ty) ;
 
 	void onCommand (int) ;
-//	void onClick (int tx, int ty) ;
 
-//	void draw (HDC hdc, int ox, int oy) ;
+#ifdef _PROJECT_OGRE_3D_
+	void onMove () ;
+	void setZOrder (int z) ;
+#endif
 } ;
 
 #endif

@@ -6,6 +6,11 @@
 class MapWnd:public Window
 {
 private:
+#ifdef _PROJECT_OGRE_3D_
+	ImageButton* pBtn ;
+#else _PROJECT_GDI_
+	TextButton* pBtn ;
+#endif
 
 public:
 	enum {CELL_H_COUNT = 1, CELL_W_COUNT = 1,CELL_SIZE = 500} ;

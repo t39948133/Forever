@@ -13,6 +13,14 @@ public:
 	Scene* pScene ;
 	long long targetUID ;
 
+	enum {BUTTON_COUNT = 1, TEXT_COUNT = 2} ;
+#ifdef _PROJECT_OGRE_3D_	
+	ImageButton* vpBtn[BUTTON_COUNT] ;
+#else _PROJECT_GDI_
+	TextButton* vpBtn[BUTTON_COUNT] ;
+#endif
+	TextArea* vpText[TEXT_COUNT];
+
 public:
 	~TargetInfoWnd () {};
 

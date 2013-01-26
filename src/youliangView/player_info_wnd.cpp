@@ -4,69 +4,81 @@
 
 void PlayerInfoWnd::init (int _x, int _y, Player* pPlr)
 {
-	bVisible = false ;
+	bVisible = true ;
 	pPlayer = pPlr ;
 	x = _x ;
 	y = _y ;
-	w = CELL_SIZE*24 ;
-	h = CELL_SIZE*20 ;
+	w = 540 ;
+	h = 400 ;
 
 	for (int i = 0; i<BUTTON_COUNT; i++)
 		playerInfo[i].itemID = -1 ;
 
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
-	overlayUI.getOverlay ()->hide () ;
-	overlayUI.setImage ("KAMEN-stup") ;
+//	overlayUI.getOverlay ()->hide () ;
+	overlayUI.setImage ("playerInfo") ;
 
 for (int i = 0; i<BUTTON_COUNT; i++)
 	{
 		vpBtn[i] = new ImageButton ;
 
-		if (i == 0)
-		{//以下為裝備欄
-			vpBtn[i]->init (overlayUI, 0, CELL_SIZE*2, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->setImage ("ogreborder") ;
-		}else if (i == 1)
+		if (i == 0)//劍
 		{
-			vpBtn[i]->init (overlayUI, 0, CELL_SIZE*7, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->setImage ("ogreborder") ;
-		}else if (i == 2)
+			vpBtn[i]->init (overlayUI, 11, 67, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 1)//盾
 		{
-			vpBtn[i]->init (overlayUI, 0, CELL_SIZE*12, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->setImage ("ogreborder") ;
-		}else if (i == 3)
+			vpBtn[i]->init (overlayUI, 228, 67, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 2)//首飾
 		{
-			vpBtn[i]->init (overlayUI, CELL_SIZE*11, CELL_SIZE*2, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->setImage ("ogreborder") ;
-		}else if (i == 4)
+			vpBtn[i]->init (overlayUI, 11, 123, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 3)//首飾
 		{
-			vpBtn[i]->init (overlayUI, CELL_SIZE*11, CELL_SIZE*7, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->setImage ("ogreborder") ;
-		}else if (i == 5)
+			vpBtn[i]->init (overlayUI, 228, 123, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 4)//上衣
 		{
-			vpBtn[i]->init (overlayUI, CELL_SIZE*11, CELL_SIZE*12, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->setImage ("ogreborder") ;
-		}else if (i == 6)
+			vpBtn[i]->init (overlayUI, 11, 179, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 5)//肩甲
 		{
-			vpBtn[i]->init (overlayUI, CELL_SIZE*6-10, CELL_SIZE*17, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->setImage ("ogreborder") ;
-		}else if (i == 7)
-		{//UI名稱(主角資訊)
-			vpBtn[i]->init (overlayUI, 0, 0, w, CELL_SIZE, i) ;
-		}else if (i == 8)
-		{//主角名稱
-			vpBtn[i]->init (overlayUI, 0, CELL_SIZE, w/2, CELL_SIZE, i) ;
-		}else if (i == 9)
-		{//等級及經驗值
-			vpBtn[i]->init (overlayUI, w/2, CELL_SIZE, w/2, CELL_SIZE, i) ;
-		}else if (i == 10)
-		{//屬性
-			vpBtn[i]->init (overlayUI, CELL_SIZE*14, CELL_SIZE*2, CELL_SIZE*10, CELL_SIZE*18, i) ;
-		}else if (i == 11)
-		{//主角圖
-			vpBtn[i]->init (overlayUI, CELL_SIZE*3, CELL_SIZE*2, CELL_SIZE*8, CELL_SIZE*15, i) ;
-			vpBtn[i]->setImage ("tusk") ;
+			vpBtn[i]->init (overlayUI, 228, 179, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 6)//褲子
+		{
+			vpBtn[i]->init (overlayUI, 11, 235, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 7)//手套
+		{
+			vpBtn[i]->init (overlayUI, 228, 235, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 8)//戒指
+		{
+			vpBtn[i]->init (overlayUI, 11, 291, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 9)//戒指
+		{
+			vpBtn[i]->init (overlayUI, 228, 291, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 10)//鞋子
+		{
+			vpBtn[i]->init (overlayUI, 11, 347, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 11)//腰帶
+		{
+			vpBtn[i]->init (overlayUI, 228, 347, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 12)//屬性
+		{
+			vpBtn[i]->init (overlayUI, 285, 65, 250, 333, i) ;
+			vpBtn[i]->setImage ("") ;
+		}else if (i == 13)//主角圖
+		{
+			vpBtn[i]->init (overlayUI, 64, 65, 160, 333, i) ;
+			vpBtn[i]->setImage ("") ;
 		}
 		addChild (vpBtn[i]) ;
 	}
@@ -78,16 +90,16 @@ for (int i = 0; i<BUTTON_COUNT; i++)
 		char buf[256] ;
 		if (i == 0)
 		{
-			vpText[i]->init (overlayUI, w/2-30, 0, w, CELL_SIZE) ;
+			vpText[i]->init (overlayUI, 240, 8, 540, 20) ;
 			vpText[i]->setText ("角色資訊", 1, 1, 1) ;
 		}else if (i == 1)
 		{
-			vpText[i]->init (overlayUI, w/4-30, CELL_SIZE, w/2, CELL_SIZE) ;
+			vpText[i]->init (overlayUI, 105, 38, 270, 20) ;
 			vpText[i]->setText ("主角名稱", 1, 1, 1) ;
 		}else if (i == 2)
 		{
-			vpText[i]->init (overlayUI, w*1/2+40, CELL_SIZE, w/2, CELL_SIZE) ;
-			sprintf_s (buf, sizeof (buf), "等級 %dLV/經驗值    %d", pPlayer->data.m_level, pPlayer->data.m_xp) ;
+			vpText[i]->init (overlayUI, 310, 38, 270, 20) ;
+			sprintf_s (buf, sizeof (buf), "等級 %d  / 經驗值    %d", pPlayer->data.m_level, pPlayer->data.m_xp) ;
 			vpText[i]->setText (buf, 1, 1, 1) ;
 		}
 		addChild (vpText[i]) ;
@@ -96,7 +108,7 @@ for (int i = 0; i<BUTTON_COUNT; i++)
 	for (int i = 3; i<TEXT_COUNT; i++)
 	{
 		vpText[i] = new TextArea ;
-		vpText[i]->init (overlayUI, CELL_SIZE*14+CELL_SIZE/2, CELL_SIZE*(i-1), CELL_SIZE*10, CELL_SIZE) ;
+		vpText[i]->init (overlayUI, 300, (i-3)*18+66, 200, 20) ;
 		char buf[256] ;		
 		if (i == 3)
 		{
@@ -158,53 +170,67 @@ for (int i = 0; i<BUTTON_COUNT; i++)
 	}
 
 #else _PROJECT_GDI_
-	for (int i = 0; i<BUTTON_COUNT; i++)
+
+for (int i = 0; i<BUTTON_COUNT; i++)
 	{
 		vpBtn[i] = new TextButton ;
 
-		if (i == 0)
-		{//以下為裝備欄
-			vpBtn[i]->init (0, CELL_SIZE*2, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->str = "肩甲" ;
-		}else if (i == 1)
+		if (i == 0)//劍
 		{
-			vpBtn[i]->init (0, CELL_SIZE*7, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->str = "手套" ;
-		}else if (i == 2)
+			vpBtn[i]->init (11, 67, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 1)//盾
 		{
-			vpBtn[i]->init (0, CELL_SIZE*12, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->str = "武器" ;
-		}else if (i == 3)
+			vpBtn[i]->init (228, 67, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 2)//首飾
 		{
-			vpBtn[i]->init (CELL_SIZE*11, CELL_SIZE*2, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->str = "衣服" ;
-		}else if (i == 4)
+			vpBtn[i]->init (11, 123, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 3)//首飾
 		{
-			vpBtn[i]->init (CELL_SIZE*11, CELL_SIZE*7, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->str = "褲子" ;
-		}else if (i == 5)
+			vpBtn[i]->init (228, 123, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 4)//上衣
 		{
-			vpBtn[i]->init (CELL_SIZE*11, CELL_SIZE*12, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->str = "盾牌" ;
-		}else if (i == 6)
+			vpBtn[i]->init (11, 179, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 5)//肩甲
 		{
-			vpBtn[i]->init (CELL_SIZE*6-10, CELL_SIZE*17, CELL_SIZE*3, CELL_SIZE*3, i) ;
-			vpBtn[i]->str = "鞋子" ;
-		}else if (i == 7)
-		{//UI名稱(主角資訊)
-			vpBtn[i]->init (0, 0, w, CELL_SIZE, i) ;
-		}else if (i == 8)
-		{//主角名稱
-			vpBtn[i]->init (0, CELL_SIZE, w/2, CELL_SIZE, i) ;
-		}else if (i == 9)
-		{//等級及經驗值
-			vpBtn[i]->init (w/2, CELL_SIZE, w/2, CELL_SIZE, i) ;
-		}else if (i == 10)
-		{//屬性
-			vpBtn[i]->init (CELL_SIZE*14, CELL_SIZE*2, CELL_SIZE*10, CELL_SIZE*18, i) ;
-		}else if (i == 11)
-		{//主角圖
-			vpBtn[i]->init (CELL_SIZE*3, CELL_SIZE*2, CELL_SIZE*8, CELL_SIZE*15, i) ;
+			vpBtn[i]->init (228, 179, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 6)//褲子
+		{
+			vpBtn[i]->init (11, 235, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 7)//手套
+		{
+			vpBtn[i]->init (228, 235, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 8)//戒指
+		{
+			vpBtn[i]->init (11, 291, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 9)//戒指
+		{
+			vpBtn[i]->init (228, 291, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 10)//鞋子
+		{
+			vpBtn[i]->init (11, 347, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 11)//腰帶
+		{
+			vpBtn[i]->init (228, 347, ICON_SIZE, ICON_SIZE, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 12)//屬性
+		{
+			vpBtn[i]->init (285, 65, 250, 333, i) ;
+			vpBtn[i]->str = "" ;
+		}else if (i == 13)//主角圖
+		{
+			vpBtn[i]->init (64, 65, 160, 333, i) ;
+			vpBtn[i]->str = "" ;
 		}
 		addChild (vpBtn[i]) ;
 	}
@@ -216,16 +242,16 @@ for (int i = 0; i<BUTTON_COUNT; i++)
 		char buf[256] ;
 		if (i == 0)
 		{
-			vpText[i]->init (w/2-30, 0, w, CELL_SIZE) ;
+			vpText[i]->init (240, 8, 540, 20) ;
 			vpText[i]->setText ("角色資訊", 1, 1, 1) ;
 		}else if (i == 1)
 		{
-			vpText[i]->init (w/4-30, CELL_SIZE, w/2, CELL_SIZE) ;
+			vpText[i]->init (105, 38, 270, 20) ;
 			vpText[i]->setText ("主角名稱", 1, 1, 1) ;
 		}else if (i == 2)
 		{
-			vpText[i]->init (w*1/2+40, CELL_SIZE, w/2, CELL_SIZE) ;
-			sprintf_s (buf, sizeof (buf), "等級 %dLV/經驗值    %d", pPlayer->data.m_level, pPlayer->data.m_xp) ;
+			vpText[i]->init (310, 38, 270, 20) ;
+			sprintf_s (buf, sizeof (buf), "等級 %d  / 經驗值    %d", pPlayer->data.m_level, pPlayer->data.m_xp) ;
 			vpText[i]->setText (buf, 1, 1, 1) ;
 		}
 		addChild (vpText[i]) ;
@@ -234,7 +260,7 @@ for (int i = 0; i<BUTTON_COUNT; i++)
 	for (int i = 3; i<TEXT_COUNT; i++)
 	{
 		vpText[i] = new TextArea ;
-		vpText[i]->init (CELL_SIZE*14+CELL_SIZE/2, CELL_SIZE*(i-1), CELL_SIZE*10, CELL_SIZE) ;
+		vpText[i]->init (300, (i-3)*18+66, 200, 20) ;
 		char buf[256] ;		
 		if (i == 3)
 		{
@@ -299,33 +325,17 @@ for (int i = 0; i<BUTTON_COUNT; i++)
 
 bool PlayerInfoWnd::canDrag (int tx, int ty)
 {
-	return false ;
+	return ty < 30 ;
 }
 
 void PlayerInfoWnd::onCommand (int id)
 {
-	for (int i = 0; i<6; i++)
-	{
-		if (i == id)
-		{
-			if (playerInfo[i].itemID != -1)
-			{
-				
-				playerInfo[i].itemID = -1 ;
-#ifdef _PROJECT_OGRE_3D_
-				vpBtn[i]->setImage ("ogreborder") ;
-#else _PROJECT_GDI_
-				vpBtn[i]->str = "" ;
-#endif
-			break ;
-			}		
-		}
-	}
+	
 }
 
 void PlayerInfoWnd::wearEquip (int _itemID)//道具編號 
 {
-	for (int i = 0; i<BUTTON_COUNT; i++)
+/*	for (int i = 0; i<BUTTON_COUNT; i++)
 	{
 		ItemInfo* pInfo = Item::getInfo (_itemID) ;
 		if (pInfo != NULL)
@@ -349,7 +359,7 @@ void PlayerInfoWnd::wearEquip (int _itemID)//道具編號
 					break ;				
 			}			
 		}
-	}	
+	}	*/
 }
 
 #ifdef _PROJECT_OGRE_3D_
@@ -372,16 +382,3 @@ void PlayerInfoWnd::onSwitch ()
 }
 #endif
 
-
-
-/*
-void PlayerStatusWnd::draw (HDC hdc)
-{
-	Window::draw (hdc, 0, 0) ;
-	char buf[256] ;
-	sprintf_s (buf, sizeof(buf), "hp:%d", pPlayer->data.hp) ;
-	TextOut (hdc, x+2, y+2, buf, strlen (buf)) ;
-	sprintf_s (buf, sizeof(buf), "mp:%d", pPlayer->data.mp) ;
-	TextOut (hdc, x+2, y+2+20, buf, strlen (buf)) ;
-}
-*/

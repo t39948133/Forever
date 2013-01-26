@@ -11,97 +11,93 @@ void PlayerStatusWnd::init (int _x, int _y, Player* pu)
 
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
-	overlayUI.setImage ("KAMEN-stup") ;
+	overlayUI.setImage ("") ;
 
 	for (int i = 0; i<BUTTON_COUNT; i++)
 	{		
-		ImageButton* pBtn = new ImageButton ;
-		pBtn->init (overlayUI, 25, i*(CELL_SIZE+3)+3*(i+1), w-33, CELL_SIZE, i) ;
+		vpBtn[i] = new ImageButton ;
+		vpBtn[i]->init (overlayUI, 18, i*15+16, 150, 12, i) ;
 		if (i == 0)
 		{
-			pBtn->setImage ("ogreborder") ;
-		}else if (i == 0)
+			vpBtn[i]->setImage ("hp") ;
+		}else if (i == 1)
 		{
-			pBtn->setImage ("ogreborder") ;
-		}else 
+			vpBtn[i]->setImage ("mp") ;
+		}else if (i == 2)
 		{
-			pBtn->setImage ("ogreborder") ;
+			vpBtn[i]->setImage ("xp") ;
 		}
 		
-		addChild (pBtn) ;
+		addChild (vpBtn[i]) ;
 	}
 
 	for (int i = 0; i<TEXT_COUNT; i++)
 	{
-		TextArea* pTA = new TextArea ;
-		pTA->init (overlayUI, 0, i*(CELL_SIZE+3)+3*(i+1), 30, 30) ;
+		vpText[i] = new TextArea ;
+		vpText[i]->init (overlayUI, 0, i*15+14, 150, 20) ;
 		char buf[256] ;
 		if (i == 0)
 		{	
 			sprintf_s (buf, sizeof (buf), "HP             %d/ %d", pPlayer->data.iHP, pPlayer->data.iHPMax) ;
-			pTA->setText (buf, 1, 1, 1) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
 		}else if (i == 1)
 		{
 			sprintf_s (buf, sizeof (buf), "MP             %d/ %d", pPlayer->data.iMP, pPlayer->data.iMPMax) ;
-			pTA->setText (buf, 1, 1, 1) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
 		}else
 		{
 			sprintf_s (buf, sizeof (buf), "XP             %d/ %d", pPlayer->data.m_xp, pPlayer->data.m_xpMax) ;
-			pTA->setText (buf, 1, 1, 1) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
 		}
 
-		addChild (pTA) ;
+		addChild (vpText[i]) ;
 	}
 #else _PROJECT_GDI_
 	for (int i = 0; i<BUTTON_COUNT; i++)
 	{
-		pvBtn[i] = new TextButton ;
-		pvBtn[i]->init (25, i*(CELL_SIZE+3)+3*(i+1), 200, CELL_SIZE, i) ;
-		addChild (pvBtn[i]) ;
+		vpBtn[i] = new TextButton ;
+		vpBtn[i]->init (25, i*(CELL_SIZE+3)+3*(i+1), 200, CELL_SIZE, i) ;
+		addChild (vpBtn[i]) ;
 	}
 
 	for (int i = 0; i<TEXT_COUNT; i++)
 	{
-		TextArea* pTA = new TextArea ;
-		pTA->init (0, i*(CELL_SIZE+3)+3*(i+1), 30, 30) ;
+		vpText[i] = new TextArea ;
+		vpText[i]->init (0, i*(CELL_SIZE+3)+3*(i+1), 30, 30) ;
 		
 		if (i == 0)
 		{	
-
-			pTA->setText ("HP", 1, 1, 1) ;
+			vpText[i]->setText ("HP", 1, 1, 1) ;
 		}else if (i == 1)
-		{		
-			
-			pTA->setText ("MP", 1, 1, 1) ;
+		{				
+			vpText[i]->setText ("MP", 1, 1, 1) ;
 		}else
-		{	
-			
-			pTA->setText ("XP", 1, 1, 1) ;
+		{			
+			vpText[i]->setText ("XP", 1, 1, 1) ;
 		}
-
-		addChild (pTA) ;
+		addChild (vpText[i]) ;
 	}
 
 	for (int i = 0; i<TEXT_COUNT; i++)
 	{
-		TextArea* pTA = new TextArea ;
-		pTA->init (100, i*(CELL_SIZE+3)+3*(i+1), 30, 30) ;
+		vpText[i] = new TextArea ;
+		vpText[i]->init (100, i*(CELL_SIZE+3)+3*(i+1), 30, 30) ;
 		char buf[256] ;
 		if (i == 0)
 		{	
 			sprintf_s (buf, sizeof (buf), "%d/ %d", pPlayer->data.iHP, pPlayer->data.iHPMax) ;
-			pTA->setText (buf, 1, 1, 1) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
 		}else if (i == 1)
 		{		
 			sprintf_s (buf, sizeof (buf), "%d/ %d", pPlayer->data.iMP, pPlayer->data.iMPMax) ;
-			pTA->setText (buf, 1, 1, 1) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
 		}else
 		{	
 			sprintf_s (buf, sizeof (buf), "%d/ %d", pPlayer->data.m_xp, pPlayer->data.m_xpMax) ;
-			pTA->setText (buf, 1, 1, 1) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
 		}
 
-		addChild (pTA) ;
+		addChild (vpText[i]) ;
 	}
 #endif
 }
@@ -114,7 +110,7 @@ bool PlayerStatusWnd::canDrag (int tx, int ty)
 void PlayerStatusWnd::onCommand (int id)
 {
 }
-
+/*
 void PlayerStatusWnd::upDate ()
 {
 	int HP = pPlayer->getHP () ;
@@ -122,10 +118,10 @@ void PlayerStatusWnd::upDate ()
 	for (int i = 0; i <BUTTON_COUNT; i++)
 	{
 		if (i == BUTTON_HP)
-			pvBtn[i]->w = 200*HP/pPlayer->data.iHPMax ;		
+			vpBtn[i]->w = 200*HP/pPlayer->data.iHPMax ;		
 	}
 }
-
+*/
 
 #ifdef _PROJECT_OGRE_3D_
 void PlayerStatusWnd::onMove ()

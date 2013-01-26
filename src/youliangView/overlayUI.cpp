@@ -3,8 +3,6 @@
 #include "overlayUI.h"
 #include "image_button.h"
 
-
-
 using namespace Ogre ;
 
 void OverlayUI::init (int x, int y, int w, int h)
@@ -26,13 +24,21 @@ void OverlayUI::init (int x, int y, int w, int h)
 	pBackImage->setMetricsMode(Ogre::GMM_PIXELS);
 	pBackImage->setPosition(x, y);
 	pBackImage->setDimensions(w, h);
-	pBackImage->setMaterialName ("Examples/RustySteel") ;
+	pBackImage->setMaterialName ("") ;
 
 	pBackImage->show () ;
 	pOverlay->add2D (pBackImage) ;
 
 	pOverlay->show () ;
 }
+void OverlayUI::show (bool bS)
+{
+	if (bS)
+		pBackImage->show () ;
+	else
+		pBackImage->hide () ;
+}
+
 
 void OverlayUI::setPos (int x, int y)
 {
@@ -59,7 +65,7 @@ void OverlayUI::addImage (ImageButton& img)
 
 void OverlayUI::addImage (TextArea& txtArea)
 {
-	pBackImage->addChild  (txtArea.getImage ()) ;
+	pBackImage->addChild  (txtArea.getImage ()) ;	
 }
 
 #endif

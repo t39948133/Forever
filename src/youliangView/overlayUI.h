@@ -8,6 +8,7 @@
 #include <OgrePanelOverlayElement.h> 
 #include "Ogre.h"
 
+
 class ImageButton ;
 class TextArea ;
 //自己寫的overlay
@@ -33,6 +34,7 @@ public:
 	}
 
 	void init (int, int, int, int) ;//建立overlay
+	void show (bool) ;
 	void setPos (int, int) ;
 	void setZOrder (int) ;
 	void setImage (const Ogre::String& st) ;

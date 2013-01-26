@@ -26,6 +26,8 @@ public:
 
 	Ogre::OverlayContainer* getImage () ;
 
+	void setPos (int _x, int _y) ;
+
 	void setImage (const  Ogre::String& st) ;
 
 //	void upData (Player* plr) ;
@@ -40,6 +42,7 @@ public:
 	void init (OverlayUI&, int _x, int _y, int _w, int _h) ;
 
 	void setText (const char*, float, float, float) ;
+	void setPos (int _x, int _y) ;
 	Ogre::OverlayContainer* getImage () ;
 } ;
 

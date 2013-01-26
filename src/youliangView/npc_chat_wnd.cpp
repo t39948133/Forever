@@ -6,6 +6,7 @@
 //背包視窗
 void NPCChatWnd::init (int _x, int _y, Player* pb, NetStream* pns)
 {
+	
 	selQuestID = -1 ;//目前選的任務編號
 	type = TYPE_CHAT ;
 	pPlayer = pb ;
@@ -18,7 +19,8 @@ void NPCChatWnd::init (int _x, int _y, Player* pb, NetStream* pns)
 
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
-	overlayUI.setImage ("NoiseVolume") ;
+	overlayUI.setImage ("chat") ;
+//	overlayUI.getOverlay ()->hide () ;
 
 	for (int i = 0; i<TEXT_COUNT; i++)
 	{
@@ -222,6 +224,20 @@ void NPCChatWnd::onCommand (int btnID)
 	}
 */
 }
+
+#ifdef _PROJECT_OGRE_3D_
+void NPCChatWnd::onMove ()
+{
+	overlayUI.setPos (x, y) ;
+}
+
+void NPCChatWnd::setZOrder (int z)
+{
+	overlayUI.setZOrder (z) ;
+}
+
+#endif
+
 
 /*
 void NPCChatWnd::draw (HDC hdc, int ox, int oy)

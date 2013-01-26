@@ -3,218 +3,285 @@
 #include "net_packet.h"
 #include "player.h"
 #include "image_button.h"
+#include "hotkey_wnd.h"
 
 //背包視窗
 void SkillWnd::init (int _x, int _y, GP::NetStream* pns, Player* pb,
-					TargetInfoWnd* pti, Scene* psc)
+					TargetInfoWnd* pti, Scene* psc, HotKeyWnd* pw)
 {
+	bVisible = true ;
 	bPickGround = false ;
 	pScene = psc ;
 	pTargetInfoWnd = pti ;
 	pPlayer = pb ;
 	pStream = pns ;
+	phkWnd = pw ;
 	x = _x ;
 	y = _y ;
-	w = CELL_SIZE*BUTTON_COUNT ;
-	h = CELL_SIZE*(BUTTON_COUNT+1) ;
+	w = 593 ;
+	h = 485 ;
+
+	pSkillInfoWnd = new SkillInfoWnd ;
+	pSkillInfoWnd->init (x, y) ;
+	windowMan.addWnd (pSkillInfoWnd) ;
 
 #ifdef _PROJECT_OGRE_3D_
-	overlaySK.init (x, y, w, h) ;
+	overlayUI.init (x, y, w, h) ;
+//	overlayUI.getOverlay ()->hide () ;
+	overlayUI.setImage ("skill") ;
 
 	for (int i = 0; i<BUTTON_COUNT; i++)
 	{	
-		ImageButton* pBtn = new ImageButton ;
-		pBtn->init (overlaySK, 0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i) ;
-		if (i == 0)
-			{
-				pBtn->setImage ("skill_5") ;
-			}else if (i == 1)
-			{
-				pBtn->setImage ("skill_1") ;
-			}else 
-			{
-				pBtn->setImage ("ogreborder") ;
-			}
-		addChild (pBtn) ;
-	}
-
-	for (int i = 0; i<BUTTON_COUNT; i++)
-	{	
-		ImageButton* pBtn = new ImageButton ;
-		pBtn->init (overlaySK, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i) ;
-		pBtn->setImage ("ogreborder") ;
-		addChild (pBtn) ;
-	}
-/*
-	ImageButton* pBtn = new ImageButton ;
-	pBtn->init (w-CELL_SIZE/2, 0, CELL_SIZE/2, CELL_SIZE/2, 14) ;
-	pBtn->str = "X" ;
-	addChild (pBtn) ;
-*/
-	TextArea* pTA = new TextArea ;
-	pTA->init (overlaySK, w/2, 0, w, CELL_SIZE) ;
-	pTA->setText ("技能表", 1, 1, 1) ;
-	addChild (pTA) ;
-
-	for (int i = 0; i<TEXT_COUNT; i++)
-	{
-		pTA = new TextArea ;
-		pTA->init (overlaySK, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE) ;
-
-		if (i == 0)
-		{			
-			pTA->setText ("火球術    耗費10MP", 1, 0, 0) ;
-		}else if (i == 1)
+		vpBtn[i] = new ImageButton ;
+		vpBtn[i]->init (overlayUI, 4, i*58+83, ICON_SIZE, ICON_SIZE, i) ;
+		Skill* pSkill = pPlayer->getSkill (i) ;
+		if (pSkill != NULL)
 		{
-			pTA->setText ("治癒術    耗費15MP", 1, 0, 0) ;
-		}else
-		{
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			vpBtn[i]->setImage ((const Ogre::String)pInfo->image) ;
+			addChild (vpBtn[i]) ;
 		}
+	}	
 
-		addChild (pTA) ;
+	for (int i = 0; i<7; i++)
+	{
+		vpText[i] = new TextArea ;
+		vpText[i]->init (overlayUI, 65, i*57+102, 200, 50) ;
+		Skill* pSkill = pPlayer->getSkill (i) ;
+		if (pSkill != NULL)
+		{
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			vpText[i]->setText (pInfo->name, 1, 1, 1) ;	
+			addChild (vpText[i]) ;
+		}		
 	}
 
+	for (int i = 7; i<14; i++)
+	{
+		vpText[i] = new TextArea ;
+		vpText[i]->init (overlayUI, 300, (i-7)*57+102, 80, 50) ;
+		Skill* pSkill = pPlayer->getSkill (i-7) ;
+		if (pSkill != NULL)
+		{
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			char buf[256] ;
+			sprintf_s (buf, sizeof (buf), "costMP:%d", pInfo->costMP) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
+			addChild (vpText[i]) ;
+		}		
+	}
+
+	for (int i = 14; i<21; i++)
+	{
+		vpText[i] = new TextArea ;
+		vpText[i]->init (overlayUI,  400, (i-14)*57+102, 80, 50) ;
+		Skill* pSkill = pPlayer->getSkill (i-14) ;
+		if (pSkill != NULL)
+		{
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			char buf[256] ;
+			sprintf_s (buf, sizeof (buf), "施法時間:%d", pInfo->castTime) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
+			addChild (vpText[i]) ;
+		}		
+	}
+
+	for (int i = 21; i<28; i++)
+	{
+		vpText[i] = new TextArea ;
+		vpText[i]->init (overlayUI, 500, (i-21)*57+102, 80, 50) ;
+		Skill* pSkill = pPlayer->getSkill (i-21) ;
+		if (pSkill != NULL)
+		{
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			char buf[256] ;
+			sprintf_s (buf, sizeof (buf), "冷卻時間:%d", pInfo->coolDown) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
+			addChild (vpText[i]) ;
+		}		
+	}
+
+	for (int i = 28; i<TEXT_COUNT; i++)
+	{
+		vpText[i] = new TextArea ;
+		if (i == 28)
+		{
+			vpText[i]->init (overlayUI, 264, 13, 60, 20) ;
+			vpText[i]->setText ("技能表", 1, 1, 1) ;
+		}else if (i == 29)
+		{
+			vpText[i]->init (overlayUI, 130, 55, 40, 20) ;
+			vpText[i]->setText ("名稱", 1, 1, 1) ;
+		}else if (i == 30)
+		{
+			vpText[i]->init (overlayUI, 315, 55, 60, 20) ;
+			vpText[i]->setText ("消耗MP", 1, 1, 1) ;
+		}else if (i == 31)
+		{
+			vpText[i]->init (overlayUI, 410, 55, 80, 20) ;
+			vpText[i]->setText ("施法時間", 1, 1, 1) ;
+		}else if (i == 32)
+		{
+			vpText[i]->init (overlayUI, 510, 55, 80, 20) ;
+			vpText[i]->setText ("冷卻時間", 1, 1, 1) ;
+		}
+		addChild (vpText[i]) ;
+	}
+		
 #else _PROJECT_GDI_	
 	for (int i = 0; i<BUTTON_COUNT; i++)
-	{		
-		TextButton* pBtn = new TextButton ;
-		pBtn->init (0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i) ;
-		addChild (pBtn) ;
-	}
-
-	for (int i = 0; i<BUTTON_COUNT; i++)
-	{		
-		TextButton* pBtn = new TextButton ;
-		pBtn->init (CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i) ;
-		addChild (pBtn) ;
-	}
-/*
-	TextButton* pBtn = new TextButton ;
-	pBtn->init (w-CELL_SIZE/2, 0, CELL_SIZE/2, CELL_SIZE/2, 14) ;
-	pBtn->str = "X" ;
-	addChild (pBtn) ;
-*/
-	TextArea* pTA = new TextArea ;
-	pTA->init (w/2, 0, w, CELL_SIZE) ;
-	pTA->setText ("技能表", 1, 1, 1) ;
-	addChild (pTA) ;
-
-	for (int i = 0; i<TEXT_COUNT; i++)
-	{
-		pTA = new TextArea ;
-		pTA->init (CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE) ;
-//		char buf[256] ;
-
-		if (i == 0)
-		{			
-			pTA->setText ("火球術    耗費???MP", 1, 1, 1) ;
-		}else if (i == 1)
+	{	
+		vpBtn[i] = new TextButton ;
+		vpBtn[i]->init (4, i*58+83, ICON_SIZE, ICON_SIZE, i) ;
+		Skill* pSkill = pPlayer->getSkill (i) ;
+		if (pSkill != NULL)
 		{
-//			sprintf_s (buf, sizeof (buf), "金幣         %d元", pPlayer->money) ;
-			pTA->setText ("治癒術    耗費???MP", 1, 1, 1) ;
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			vpBtn[i]->str = pInfo->name ;
+			addChild (vpBtn[i]) ;
 		}
+	}	
 
-		addChild (pTA) ;
+	for (int i = 0; i<7; i++)
+	{
+		vpText[i] = new TextArea ;
+		vpText[i]->init (65, i*57+102, 200, 50) ;
+		Skill* pSkill = pPlayer->getSkill (i) ;
+		if (pSkill != NULL)
+		{
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			vpText[i]->setText (pInfo->name, 1, 1, 1) ;	
+			addChild (vpText[i]) ;
+		}		
+	}
+
+	for (int i = 7; i<14; i++)
+	{
+		vpText[i] = new TextArea ;
+		vpText[i]->init (300, (i-7)*57+102, 80, 50) ;
+		Skill* pSkill = pPlayer->getSkill (i-7) ;
+		if (pSkill != NULL)
+		{
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			char buf[256] ;
+			sprintf_s (buf, sizeof (buf), "costMP:%d", pInfo->costMP) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
+			addChild (vpText[i]) ;
+		}		
+	}
+
+	for (int i = 14; i<21; i++)
+	{
+		vpText[i] = new TextArea ;
+		vpText[i]->init (400, (i-14)*57+102, 80, 50) ;
+		Skill* pSkill = pPlayer->getSkill (i-14) ;
+		if (pSkill != NULL)
+		{
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			char buf[256] ;
+			sprintf_s (buf, sizeof (buf), "施法時間:%d", pInfo->castTime) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
+			addChild (vpText[i]) ;
+		}		
+	}
+
+	for (int i = 21; i<28; i++)
+	{
+		vpText[i] = new TextArea ;
+		vpText[i]->init (500, (i-21)*57+102, 80, 50) ;
+		Skill* pSkill = pPlayer->getSkill (i-21) ;
+		if (pSkill != NULL)
+		{
+			SkillInfo* pInfo = pSkill->getInfo () ;
+			char buf[256] ;
+			sprintf_s (buf, sizeof (buf), "冷卻時間:%d", pInfo->coolDown) ;
+			vpText[i]->setText (buf, 1, 1, 1) ;
+			addChild (vpText[i]) ;
+		}		
+	}
+
+	for (int i = 28; i<TEXT_COUNT; i++)
+	{
+		vpText[i] = new TextArea ;
+		if (i == 28)
+		{
+			vpText[i]->init (264, 13, 60, 20) ;
+			vpText[i]->setText ("技能表", 1, 1, 1) ;
+		}else if (i == 29)
+		{
+			vpText[i]->init (130, 55, 40, 20) ;
+			vpText[i]->setText ("名稱", 1, 1, 1) ;
+		}else if (i == 30)
+		{
+			vpText[i]->init (315, 55, 60, 20) ;
+			vpText[i]->setText ("消耗MP", 1, 1, 1) ;
+		}else if (i == 31)
+		{
+			vpText[i]->init (410, 55, 80, 20) ;
+			vpText[i]->setText ("施法時間", 1, 1, 1) ;
+		}else if (i == 32)
+		{
+			vpText[i]->init (510, 55, 80, 20) ;
+			vpText[i]->setText ("冷卻時間", 1, 1, 1) ;
+		}
+		addChild (vpText[i]) ;
 	}
 #endif
 }
 
 bool SkillWnd::canDrag (int tx, int ty)
 {
-	return ty < CELL_SIZE ;
+	return ty < 40 ;
 }
 
 void SkillWnd::onCommand (int id)
 {
+	Skill* pSkill = pPlayer->getSkill (id) ;
+	if (pSkill != NULL)
+	{
+		SkillInfo* pInfo = pSkill->getInfo () ;		
+		phkWnd->addSkillHotKey (id) ;	
+	}
 }
+
+void SkillWnd::onCommandFocus (int id)
+{
+	Skill* pSkill = pPlayer->getSkill (id) ;
+	if (pSkill != NULL)
+	{
+		SkillInfo* pInfo = pSkill->getInfo () ;	
+		if (pInfo != NULL)
+		{
+			pSkillInfoWnd->setItem (pInfo->name) ;	
+			pSkillInfoWnd->setPos (x+ICON_SIZE, y+(id%9)*ICON_SIZE+ICON_SIZE) ; 
+			setInfoWnd (pSkillInfoWnd) ;
+			pSkillInfoWnd->show (true) ;
+		}else
+		{
+			pSkillInfoWnd->show (false) ;
+		}
+	}else
+	{
+		pSkillInfoWnd->show (false) ;
+	}
+}
+
 
 #ifdef _PROJECT_OGRE_3D_
 void SkillWnd::onMove ()
 {
-	overlaySK.setPos (x, y) ;
+	overlayUI.setPos (x, y) ;
 }
 
 void SkillWnd::setZOrder (int z)
 {
-	overlaySK.setZOrder (z) ;
+	overlayUI.setZOrder (z) ;
+}
+void SkillWnd::onSwitch ()
+{
+	if (bVisible)
+		overlayUI.getOverlay ()->show () ;
+	else
+		overlayUI.getOverlay ()->hide () ;
 }
 #endif
-
-
-/*
-void SkillWnd::onClick (int tx, int ty)
-{
-	int offset = (ty-CELL_SIZE)/CELL_SIZE ;
-
-	Unit* pTarget = pTargetInfoWnd->getTarget () ;
-	if (pPlayer->canUseSkill (offset, pTarget))
-	{
-
-		Skill* pSkill = pPlayer->getSkill (offset) ;
-		if (pSkill != NULL)
-		{
-			SkillInfo* pInfo = pSkill->getInfo () ;
-			if (pInfo->target == SkillInfo::TARGET_GROUND)
-			{
-				//點地板的技能
-				groudSkillOffset = offset ;//對地板使用的技能
-				bPickGround = true ;
-			}else
-			{
-				long long targetUID = -1 ;
-
-				if (pInfo->target == SkillInfo::TARGET_SELF)
-				{
-					//對自己用
-					targetUID = -1 ;
-				}else
-				{
-					//對其他目標用
-					if (pTarget != NULL)
-					{
-//						Unit* pTarget = pTargetInfoWnd->pMonster ;
-						if (pTarget == NULL)
-							targetUID = -1 ;
-						else
-							targetUID = pTarget->UID ;
-					}
-				}
-
-				PacketUseSkill pkg ;
-				pkg.pack (offset, targetUID) ;
-
-				pStream->send (&pkg, sizeof (pkg)) ;
-			}
-		}
-	}
-}
-*/
-
-/*
-	void SkillWnd::draw (HDC hdc)
-	{
-		Window::draw (hdc, 0, 0) ;
-
-		Rectangle (hdc, x, y, x+w, y+CELL_SIZE) ;
-
-		char buf[256] ;
-		for (int i = 0; (size_t) i<pPlayer->vSkill.size (); i++)
-		{
-			Skill& skill = pPlayer->vSkill[i] ;
-			SkillInfo* pInfo = skill.getInfo () ;
-			if (pInfo != NULL)
-			{
-				if (i == pPlayer->castSkillID && 
-						pPlayer->castTime > 0)
-				{
-					sprintf_s (buf, sizeof(buf), "[%.2f][%.2f] %s", 
-						pPlayer->castTime, skill.coolDown, (const char*)(pInfo->name)) ;
-				}else
-				{
-					sprintf_s (buf, sizeof(buf), "[%.2f] %s", skill.coolDown, (const char*)(pInfo->name)) ;
-				}
-				TextOut (hdc, x+3, y+(i+1)*CELL_SIZE, buf, strlen (buf)) ;
-			}
-		}
-	}
-	*/

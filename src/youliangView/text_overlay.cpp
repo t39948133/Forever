@@ -36,6 +36,33 @@ void TextOverlay::Init (Ogre::OverlayContainer* pContainer)
 									NULL, 0) ;
 
 		SelectObject (hMemDC, hBMP) ;
+/*
+		HFONT font = CreateFont(20,0,0,0,FW_NORMAL,
+              FALSE,FALSE,FALSE,DEFAULT_CHARSET,
+              OUT_RASTER_PRECIS,CLIP_DEFAULT_PRECIS,
+              VARIABLE_PITCH|PROOF_QUALITY,FF_DONTCARE,"a") ;
+
+		SelectObject (hMemDC, font) ;
+*/
+		/*
+		HFONT CreateFont(
+  _In_  int nHeight,
+  _In_  int nWidth,
+  _In_  int nEscapement,
+  _In_  int nOrientation,
+  _In_  int fnWeight,
+  _In_  DWORD fdwItalic,
+  _In_  DWORD fdwUnderline,
+  _In_  DWORD fdwStrikeOut,
+  _In_  DWORD fdwCharSet,
+  _In_  DWORD fdwOutputPrecision,
+  _In_  DWORD fdwClipPrecision,
+  _In_  DWORD fdwQuality,
+  _In_  DWORD fdwPitchAndFamily,
+  _In_  LPCTSTR lpszFace
+);
+		*/
+
 
 		in ++ ;
 	}

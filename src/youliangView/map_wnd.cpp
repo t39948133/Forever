@@ -13,26 +13,26 @@ void MapWnd::init (int _x, int _y)
 		overlayUI.init (x, y, w, h) ;
 		overlayUI.getOverlay ()->hide () ;
 
-		ImageButton* pBtn = new ImageButton ;
+		pBtn = new ImageButton ;
 		pBtn->init (overlayUI, 0, 0, w, h, 0) ;
-		pBtn->setImage ("map_1") ;
+		pBtn->setImage ("map") ;
 		addChild (pBtn) ;
 
 #else _PROJECT_GDI_
-			TextButton* pBtn = new TextButton ;
+		pBtn = new TextButton ;
 
-			pBtn->init (0, 0, w, h, 0) ;
+		pBtn->init (0, 0, w, h, 0) ;
 
-			pBtn->str = "地圖" ;
+		pBtn->str = "地圖" ;
 
-			addChild (pBtn) ;			
+		addChild (pBtn) ;			
 #endif
 			
 }
 
 bool MapWnd::canDrag (int tx, int ty)
 {
-	return false ;
+	return true ;
 }
 
 void MapWnd::onCommand (int id)

@@ -21,9 +21,7 @@ public:
 
 #ifdef _PROJECT_OGRE_3D_	
 	void onMove () ;
-
 	void setZOrder (int z) ;
-	void onSwitch () ;
 #endif
 
 //	void draw (HDC hdc, int ox, int oy) ;

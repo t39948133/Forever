@@ -8,9 +8,15 @@ class PlayerImageWnd:public Window
 {
 private:
 	UnitData* pUnitData ;
+#ifdef _PROJECT_OGRE_3D_
+	ImageButton* pBtn ;
+#else _PROJECT_GDI_
+	TextButton* pBtn ;
+#endif
+	TextArea* pText ;
 
 public:
-	enum {CELL_W = 70, CELL_H = 100} ;
+	enum {CELL_W = 700, CELL_H = 104} ;
 
 	~PlayerImageWnd () {};
 

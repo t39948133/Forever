@@ -1,52 +1,121 @@
 #include "mini_map_wnd.h"
-#include "image_button.h"
-
-void MiniMapWnd::init (int _x, int _y, UnitData* pu)
+const float MATH_PI = 3.141592f ;
+void MiniMapWnd::init (int _x, int _y, Unit* _pPlr, Scene* _pScene, float* _camDir)
 {
-	pUnitData = pu ;
+	pPlr = _pPlr ;
 	x = _x ;
 	y = _y ;
-	w = CELL_SIZE*CELL_W_COUNT ;
-	h = CELL_SIZE*CELL_H_COUNT ;
+	w = HALF_MAP_SIZE*2 ;
+	h = HALF_MAP_SIZE*2;	
+	pScene = _pScene ;
+	camDir = _camDir ;
 
 #ifdef _PROJECT_OGRE_3D_
-/*		overlay.init (x, y, w, h) ;
-		ImageButton* pBtn = new ImageButton ;
-
-			pBtn->init (overlay, (i+1)*CELL_SIZE, 0, CELL_SIZE, CELL_SIZE, i) ;
-
-		
-			if (i == 0)
-				pBtn->setImage ("img_backpack") ;
-			else if (i == 1)
-				pBtn->setImage ("img_skill") ;
-			else if (i == 2)
-				pBtn->setImage ("img_status") ;
-			else if (i == 3)
-				pBtn->setImage ("img_shp") ;
-			addChild (pBtn) ;
-*/
-
-	
-#else _PROJECT_GDI_
-			TextButton* pBtn = new TextButton ;
-
-			pBtn->init (0, 0, w, h, 0) ;
-
-			pBtn->str = "地圖" ;
-
-			addChild (pBtn) ;			
+	overlayUI.init (x, y, w, h) ;
+	overlayUI.setImage ("minimap") ;
 #endif
-			
+
+#ifdef _PROJECT_OGRE_3D_
+	//主角
+	pBtn = new ImageButton ;
+	pBtn->init (overlayUI, HALF_MAP_SIZE, HALF_MAP_SIZE, ICON_SIZE, ICON_SIZE, 0) ;
+	pBtn->setImage ("droplet") ;
+	addChild (pBtn) ;
+
+/*
+	pText = new TextArea ;
+	pText->init (overlayUI, 0, 0, 100, 30) ;
+	pText->setText ("小地圖", 1, 1, 1) ;
+	addChild (pText) ;*/
+
+#endif
+
 }
+
+void MiniMapWnd::update()
+{
+#ifdef _PROJECT_OGRE_3D_
+	V_MINI_ICON::iterator pi = vMiniIcon.begin () ;
+	while (pi != vMiniIcon.end ())
+	{
+		//更新button的位置
+		//pi->x = pi->pUnit->x ;
+		//pi->y = pi->pUnit->y ;
+		float dx = (pPlr->x - pi->pUnit->x)/10 ;
+		float dy = (pPlr->y - pi->pUnit->y)/10 ;
+		dx = -dx * cos(*camDir+MATH_PI/2) ;
+		dy = dy * sin(*camDir+MATH_PI/2) ;
+		if(pi->pUnit != NULL)
+		{
+			pi->getImage()->setPosition(dx + HALF_MAP_SIZE, dy + HALF_MAP_SIZE) ;
+			//pi->getImage()->setPosition(pi->pUnit->x, pi->pUnit->y) ;
+		}
+
+		++ pi ;
+	}
+#endif
+}
+
+void MiniMapWnd::onAddUnit (Unit* pu)
+{
+#ifdef _PROJECT_OGRE_3D_
+	MiniIcon icon ;	
+	icon.pUnit = pu ;
+	vMiniIcon.push_back (icon) ;
+
+	vMiniIcon.back ().init(overlayUI, pu->x, pu->y, 6, 6, vMiniIcon.size()) ;
+	vMiniIcon.back ().setImage ("GLX_icon") ;
+
+	//ImageButton* pib = new ImageButton ;
+	//pib->init(overlay, mx, my, 10, 10, t) ;
+	addChild(&(vMiniIcon.back ())) ;
+#endif
+
+}
+
+void MiniMapWnd::onDelUnit (Unit* pu)
+{
+#ifdef _PROJECT_OGRE_3D_
+	V_MINI_ICON::iterator pi = vMiniIcon.begin () ;
+	while (pi != vMiniIcon.end ())
+	{
+		if (pi->pUnit == pu)
+		{
+			delChild (&(*pi)) ;
+			vMiniIcon.erase (pi) ;
+			break ;
+
+		}
+
+		++ pi ;
+	}
+#endif
+}
+
 
 bool MiniMapWnd::canDrag (int tx, int ty)
 {
 	return false ;
 }
 
-void MiniMapWnd::onCommand (int id)
+void MiniMapWnd::onMove ()
 {
+#ifdef _PROJECT_OGRE_3D_
+	overlayUI.setPos (x, y) ;
+#endif
 }
 
+void MiniMapWnd::setZOrder (int z)
+{
+#ifdef _PROJECT_OGRE_3D_
+	overlayUI.setZOrder (z) ;
+#endif
+}
 
+void MiniMapWnd::show (bool bs)
+{
+	Window::show (bs) ;
+#ifdef _PROJECT_OGRE_3D_
+	overlayUI.show (bs) ;
+#endif
+}

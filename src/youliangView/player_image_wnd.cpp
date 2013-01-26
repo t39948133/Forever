@@ -7,37 +7,42 @@ void PlayerImageWnd::init (int _x, int _y, UnitData* pu)
 	pUnitData = pu ;
 	x = _x ;
 	y = _y ;
-	w = CELL_W ;
-	h = CELL_H ;
+#ifdef _PROJECT_OGRE_3D_
+	w = 700 ;
+#else _PROJECT_GDI_
+	w = 104 ;
+#endif
+	h = 104 ;
 
 #ifdef _PROJECT_OGRE_3D_
 	overlayUI.init (x, y, w, h) ;
+	overlayUI.setImage ("player_hotkey") ;
 
-	ImageButton* pBtn = new ImageButton ;
+	pBtn = new ImageButton ;
 	pBtn->init (overlayUI, 0, 0, w, h, 0) ;
-	pBtn->setImage ("elyos") ;
+//	pBtn->setImage ("") ;
 	addChild (pBtn) ;
 
-	TextArea* pTA = new TextArea ;
-	pTA->init (overlayUI, 2, 80, CELL_W, 20) ;
+	pText = new TextArea ;
+	pText->init (overlayUI, 90, 81, 20, 20) ;
 	char buf[64] ;
-	sprintf (buf, "LV :  %d", pUnitData->m_level) ;
-	pTA->setText (buf, 1, 1, 1) ;
-	addChild (pTA) ;
+	sprintf (buf, "%d", pUnitData->m_level) ;
+	pText->setText (buf, 1, 1, 1) ;
+	addChild (pText) ;
 	
 
 #else _PROJECT_GDI_
-	TextButton* pBtn = new TextButton ;
-	pBtn->init (0, 0, w, h, 0) ;
+	pBtn = new TextButton ;
+	pBtn->init (0, 0, 80, 20, 0) ;
 	pBtn->str = "ª±®aÀY¹³" ;
 	addChild (pBtn) ;
 
-	TextArea* pTA = new TextArea ;
-	pTA->init (2, 80, CELL_W, 20) ;
+	pText = new TextArea ;
+	pText->init (2, 80, 20, 20) ;
 	char buf[64] ;
 	sprintf_s (buf, sizeof (buf), "LV :  %d", pUnitData->m_level) ;
-	pTA->setText (buf, 1, 1, 1) ;
-	addChild (pTA) ;
+	pText->setText (buf, 1, 1, 1) ;
+	addChild (pText) ;
 	
 #endif
 	
