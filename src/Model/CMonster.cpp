@@ -73,10 +73,10 @@ CMonster::~CMonster()
 
 void CMonster::initMonster()
 {
-   //if(MONSTER_INFO::read("../Monster.la") == false)
-   //   MONSTER_INFO::read("Monster.la");
+   //if(MONSTER_INFO::read("../Monster.fla") == false)
+   //   MONSTER_INFO::read("Monster.fla");
 
-   if(MONSTER_INFO::read("Monster.la"))
+   if(MONSTER_INFO::read("Monster.fla"))
    {
    }
    else

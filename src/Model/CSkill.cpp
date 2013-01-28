@@ -4,8 +4,8 @@
 
 void CSkill::initSkill()
 {
-   if(SKILL_INFO::read("../Skill.la") == false)
-      SKILL_INFO::read("Skill.la");
+   if(SKILL_INFO::read("../Skill.fla") == false)
+      SKILL_INFO::read("Skill.fla");
 
 	/*if(SKILL_INFO::read("Skill.la"))
    {

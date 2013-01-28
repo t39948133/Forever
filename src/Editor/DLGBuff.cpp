@@ -408,13 +408,13 @@ void DLGBuff::OnBnClickedAddbuff()
 void DLGBuff::OnBnClickedSavebuff()
 {
     // TODO: 在此加入控制項告知處理常式程式碼
-    CBuff::write("Buff.la");
+    CBuff::write("Buff.fla");
 }
 
 void DLGBuff::OnBnClickedLoadbuff()
 {
     // TODO: 在此加入控制項告知處理常式程式碼
-    CBuff::read("Buff.la");
+    CBuff::read("Buff.fla");
     CListBox* pLB = (CListBox*) GetDlgItem(IDC_BuffList);
     pLB->SetCurSel(0);
     CBuffInfo* pInfo = CBuff::getInfo(0);

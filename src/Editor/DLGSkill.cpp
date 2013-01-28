@@ -571,13 +571,13 @@ void DLGSkill::OnBnClickedSkillnew()
 void DLGSkill::OnBnClickedSkillsave()
 {
     // TODO: 在此加入控制項告知處理常式程式碼
-    CSkill::write("Skill.la");
+    CSkill::write("Skill.fla");
 }
 
 void DLGSkill::OnBnClickedSkillload()
 {
     // TODO: 在此加入控制項告知處理常式程式碼
-    CSkill::read("Skill.la");
+    CSkill::read("Skill.fla");
     CListBox* pLB = (CListBox*) GetDlgItem(IDC_SkillList);
     pLB->SetCurSel(0);
     CSkillInfo* pInfo = CSkill::getInfo(pLB->GetCurSel());

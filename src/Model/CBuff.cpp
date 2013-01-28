@@ -3,8 +3,8 @@
 
 void CBuff::initBuff()
 {
-   if(BUFF_INFO::read("../Buff.la") == false)
-      BUFF_INFO::read("Buff.la");
+   if(BUFF_INFO::read("../Buff.fla") == false)
+      BUFF_INFO::read("Buff.fla");
 
    /*if(BUFF_INFO::read("Buff.la"))
    {

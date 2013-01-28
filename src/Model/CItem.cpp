@@ -6,8 +6,8 @@
 
 void CItem::initItem ()
 {
-   if(ITEM_INFO::read("../Item.la") == false)
-      ITEM_INFO::read("Item.la");
+   if(ITEM_INFO::read("../Item.fla") == false)
+      ITEM_INFO::read("Item.fla");
 
 	/*if(ITEM_INFO::read("Item.la"))
 	{

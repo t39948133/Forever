@@ -378,13 +378,13 @@ void DLGItem::OnEnChangeItembuyprice()
 void DLGItem::OnBnClickedSavelist()
 {
 	// TODO: 在此加入控制項告知處理常式程式碼
-    CItem::write ("Item.la") ;
+    CItem::write ("Item.fla") ;
 }
 
 void DLGItem::OnBnClickedLoadlist()
 {
 	// TODO: Add your control notification handler code here
-	CItem::read("Item.la");
+	CItem::read("Item.fla");
 	upDate();
 	CListBox* pLB = (CListBox*)GetDlgItem (IDC_ItemList);
 	pLB->SetCurSel(0);
