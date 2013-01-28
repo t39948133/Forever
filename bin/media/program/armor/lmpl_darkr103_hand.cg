@@ -1,0 +1,103 @@
+void vsAmbGEN0(float4 position	: POSITION,
+	float3 normal : NORMAL,
+	float2 uv0 : TEXCOORD0,
+	out float4 oPos: POSITION,
+	out float2 oUv0 : TEXCOORD0,
+	uniform float4x4 wvpMat
+)
+{
+	oPos = mul(wvpMat, position);
+	oUv0 = uv0;
+}
+
+float4 fpAmbGENDIFF0(float4 position	: POSITION,
+	float2 uv0 : TEXCOORD0,
+	uniform float3 ambient,
+	uniform float4 matAmb,
+	uniform float4 matEmissive,
+	uniform sampler2D diffuseMap : register(s0)): COLOR0
+{
+	float4 diffuseTex = tex2D(diffuseMap, uv0);
+	float4 retColor = max(matEmissive, float4(ambient, 1) * matAmb);
+	retColor *= diffuseTex;
+	return retColor;
+}
+
+void vsLightGENNORM0(float4 position	: POSITION,
+	float3 normal : NORMAL,
+	float3 tangent : TANGENT,
+	float2 uv0 : TEXCOORD0,
+	out float4 oPos : POSITION,
+	out float3 oNorm : TEXCOORD0,
+	out float3 oTang : TEXCOORD1,
+	out float3 oBinormal : TEXCOORD2,
+	out float3 oSpDir : TEXCOORD3,
+	out float4 oWp : TEXCOORD4,
+	out float2 oUv0 : TEXCOORD5,
+	uniform float4x4 wMat,
+	uniform float4x4 wvpMat,
+	uniform float4 spotlightDir)
+{
+	oWp = mul(wMat, position);
+	oPos = mul(wvpMat, position);
+	oNorm = normal;
+	oUv0 = uv0;
+	oTang = tangent;
+	oBinormal = cross(tangent, normal);
+	oSpDir = mul(wMat, spotlightDir).xyz;
+}
+
+float4 fpLightGENDIFF0NORM0(float4 position	: POSITION,
+	float3 norm : TEXCOORD0,
+	float3 tangent : TEXCOORD1,
+	float3 binormal : TEXCOORD2,
+	float3 spDir : TEXCOORD3,
+	float4 wp : TEXCOORD4,
+	float2 uv0 : TEXCOORD5,
+	uniform float3 lightDif0,
+	uniform float4 lightPos0,
+	uniform float4 lightAtt0,
+	uniform float3 lightSpec0,
+	uniform float4 matDif,
+	uniform float4 matSpec,
+	uniform float matShininess,
+	uniform float3 camPos,
+	uniform float4 invSMSize,
+	uniform float4 spotlightParams,
+	uniform float4x4 iTWMat,
+	uniform float normalMul,
+	uniform sampler2D diffuseMap : register(s0),
+	uniform sampler2D normalMap : register(s1)): COLOR0
+{
+	float3 ld0 = normalize(lightPos0.xyz - (lightPos0.w * wp.xyz));
+	// attenuation
+	half lightDist = length(lightPos0.xyz - wp.xyz) / lightAtt0.r;
+	half la = 1;
+	if(lightAtt0.a > 0.0)
+	{
+		half ila = lightDist * lightDist; // quadratic falloff
+		la = 1.0 / (lightAtt0.g + lightAtt0.b * lightDist + lightAtt0.a * ila);
+	}
+	float3 normalTex = tex2D(normalMap, uv0);
+	tangent *= normalMul;
+	binormal *= normalMul;
+	float3x3 tbn = float3x3(tangent, binormal, norm);
+	float3 normal = mul(transpose(tbn), (normalTex.xyz -0.5) * 2); // to object space
+	normal = normalize(mul((float3x3)iTWMat, normal));
+	float3 diffuse = max(dot(ld0, normal), 0);
+	// calculate the spotlight effect
+	float spot = (spotlightParams.x == 1 && spotlightParams.y == 0 && spotlightParams.z == 0 && spotlightParams.w == 1 ? 1 : // if so, then it's not a spot light
+	   saturate((dot(ld0, normalize(-spDir)) - spotlightParams.y) / (spotlightParams.x - spotlightParams.y)));
+	float3 camDir = normalize(camPos - wp.xyz);
+	float3 halfVec = normalize(ld0 + camDir);
+	float3 specular = pow(max(dot(normal, halfVec), 0), matShininess);
+	float4 diffuseTex = tex2D(diffuseMap, uv0);
+	float3 diffuseContrib = diffuse * lightDif0 * matDif.rgb;
+	diffuseContrib *= diffuseTex.rgb;
+	float3 specularContrib = specular * lightSpec0 * matSpec.rgb;
+	float3 light0C = (diffuseContrib + specularContrib) * la * spot;
+	float alpha = matDif.a;
+	alpha *= diffuseTex.a;
+	return float4(light0C, alpha);
+}
+

@@ -223,6 +223,7 @@ BEGIN_MESSAGE_MAP(DLGBuff, CDialog)
     ON_BN_CLICKED(IDC_AddBuff, &DLGBuff::OnBnClickedAddbuff)
     ON_BN_CLICKED(IDC_SaveBuff, &DLGBuff::OnBnClickedSavebuff)
     ON_BN_CLICKED(IDC_LoadBuff, &DLGBuff::OnBnClickedLoadbuff)
+    ON_BN_CLICKED(IDC_DelBuff, &DLGBuff::OnBnClickedDelbuff)
 END_MESSAGE_MAP()
 
 
@@ -418,4 +419,13 @@ void DLGBuff::OnBnClickedLoadbuff()
     pLB->SetCurSel(0);
     CBuffInfo* pInfo = CBuff::getInfo(0);
     replaceSelBuff(pInfo);
+}
+
+void DLGBuff::OnBnClickedDelbuff()
+{
+   CListBox* pLB = (CListBox*) GetDlgItem(IDC_BuffList);
+   if(pLB->GetCurSel() > -1) {
+      CBuff::delInfo(pLB->GetCurSel());
+      upDate();
+   }
 }

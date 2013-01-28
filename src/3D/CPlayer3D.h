@@ -10,13 +10,15 @@
 #include "Common.h"
 #include "IKeyEventListener.h"
 #include "CPlayer.h"
+#include "IPlayerEquipEventListener.h"
 
 #include <OgreSceneManager.h>
 #include <OgreEntity.h>
 #include <OgreSceneNode.h>
 #include <OgreAnimationState.h>
 
-class CPlayer3D : public IKeyEventListener
+class CPlayer3D : public IKeyEventListener,
+                  public IPlayerEquipEventListener
 {
    public:
       CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager);
@@ -65,9 +67,19 @@ class CPlayer3D : public IKeyEventListener
         * @param offsetDirection    移動偏移量 */
       void move(float timeSinceLastFrame, Ogre::Vector3 &offsetDirection);
 
+      /** @brief 安裝/卸下裝備
+        * @param pBaseEntity  角色那個部位模型
+        * @param pSlotEntity  哪個裝備槽模型
+        * @param itemId       新裝備代碼
+        * @return 安裝或卸下的模型 */
+      Ogre::Entity* setupArmor(Ogre::Entity *pBaseEntity, Ogre::Entity *pSlotEntity, int itemId);
+
       // IKeyEventListener
       /* virtual */ void keyDown(const OIS::KeyEvent &evt);
       /* virtual */ void keyUp(const OIS::KeyEvent &evt);
+
+      // IPlayerEquipEventListener
+      /* virtual */ void updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int itemId);
 
       std::vector<Ogre::AnimationState *> *m_pvtAnimationSet;  // 當前角色的動畫集合(所有模型)
 
@@ -79,17 +91,25 @@ class CPlayer3D : public IKeyEventListener
       bool                m_bMouseMove;       // 滑鼠點選新座標使角色移動
 
       // 3D模型相關參數
-      Ogre::Entity       *m_pHairEntity;      // 頭髮模型
-      Ogre::Entity       *m_pHeadEntity;      // 臉部模型
-      Ogre::Entity       *m_pBodyEntity;      // 上衣模型
-      Ogre::Entity       *m_pFootEntity;      // 鞋子模型
-      Ogre::Entity       *m_pHandEntity;      // 手套模型
-      Ogre::Entity       *m_pLegEntity;       // 褲子模型
-      Ogre::Entity       *m_pShoulderEntity;  // 肩甲模型
-      Ogre::SceneNode    *m_pPlayerNode;      // 角色節點
-      Ogre::SceneManager *m_pSceneManager;    // 場景管理員
+      std::string         m_mainHandBoneName;     // 主手武器放在那個骨頭的名稱
+      std::string         m_offHandBoneName;      // 副手武器放在那個骨頭的名稱
+      Ogre::Entity       *m_pHairEntity;          // 頭髮模型 (基本模型)
+      Ogre::Entity       *m_pHeadEntity;          // 臉部模型 (基本模型)
+      Ogre::Entity       *m_pBodyEntity;          // 身體模型 (基本模型)
+      Ogre::Entity       *m_pFootEntity;          // 腳模型 (基本模型)
+      Ogre::Entity       *m_pHandEntity;          // 手模型 (基本模型)
+      Ogre::Entity       *m_pLegEntity;           // 腿模型 (基本模型)
+      Ogre::Entity       *m_pMainHandSlotEntity;  // 主手槽模型
+      Ogre::Entity       *m_pOffHandSlotEntity;   // 副手槽模型
+      Ogre::Entity       *m_pChestSlotEntity;     // 上衣槽模型
+      Ogre::Entity       *m_pPantsSlotEntity;     // 褲子槽模型
+      Ogre::Entity       *m_pGloveSlotEntity;     // 手套槽模型
+      Ogre::Entity       *m_pBootSlotEntity;      // 鞋子槽模型
+      Ogre::Entity       *m_pShoulderSlotEntity;  // 肩甲槽模型
+      Ogre::SceneNode    *m_pPlayerNode;          // 角色節點
+      Ogre::SceneManager *m_pSceneManager;        // 場景管理員
 
-      CPlayer            *m_pPlayer2D;        // 玩家
+      CPlayer            *m_pPlayer2D;            // 玩家
 };
 
 #endif // #ifndef _CPLAYER3D_H_

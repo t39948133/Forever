@@ -73,33 +73,36 @@ CMonster::~CMonster()
 
 void CMonster::initMonster()
 {
-    if(MONSTER_INFO::read("monster.la"))
-    {
-    }
-    else
-    {
-        BasicAttribute basAttr;
-        AttributeClear(basAttr);
-        basAttr.iSTR = 100;
-        basAttr.iVIT = 100;
-        basAttr.iINT = 0;
-        basAttr.iDEX = 100;
-        basAttr.iAGI = 100;
-        basAttr.iWIL = 0;
+   //if(MONSTER_INFO::read("../Monster.la") == false)
+   //   MONSTER_INFO::read("Monster.la");
 
-        CMonsterInfo* pm = new CMonsterInfo();
-        std::vector<int> reware;
-        std::vector<CSkill*> skill;
-        reware.push_back(0);
-        reware.push_back(1);
-        reware.push_back(2);
-        CSkill* pskill = new CSkill();
-        pskill->create(0);
-        skill.push_back(pskill);
-        pm->initMonsterInfo("´³¯¾³Í¾|»«", "´¶³q©Ç", "", "", "", 1, 1, 350, MONSTER_ACTIVE,
-            REGULAR_GRADE, 100, 500, basAttr, 100, reware, skill);
-        addInfo(pm);
-    }
+   if(MONSTER_INFO::read("Monster.la"))
+   {
+   }
+   else
+   {
+      BasicAttribute basAttr;
+      AttributeClear(basAttr);
+      basAttr.iSTR = 100;
+      basAttr.iVIT = 100;
+      basAttr.iINT = 0;
+      basAttr.iDEX = 100;
+      basAttr.iAGI = 100;
+      basAttr.iWIL = 0;
+
+      CMonsterInfo* pm = new CMonsterInfo();
+      std::vector<int> reware;
+      std::vector<CSkill*> skill;
+      reware.push_back(0);
+      reware.push_back(1);
+      reware.push_back(2);
+      CSkill* pskill = new CSkill();
+      pskill->create(0);
+      skill.push_back(pskill);
+      pm->initMonsterInfo("´³¯¾³Í¾|»«", "´¶³q©Ç", "", "", 1, 1, 350, MONSTER_ACTIVE,
+                          REGULAR_GRADE, 100, 500, basAttr, 100, reware, skill);
+                          addInfo(pm);
+   }
 }
 
 bool CMonster::create(unsigned int kindID)

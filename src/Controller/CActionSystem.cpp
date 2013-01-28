@@ -78,7 +78,10 @@ bool CActionSystem::isChangeAction()
 
 CAction* CActionSystem::getCurAction()
 {
-   return m_pvtActionSet->at(m_iCurAction);
+   if(m_pvtActionSet->size() > 0)
+      return m_pvtActionSet->at(m_iCurAction);
+   else
+      return NULL;
 }
 
 void CActionSystem::addAction(CAction *pAction)
@@ -88,14 +91,38 @@ void CActionSystem::addAction(CAction *pAction)
 
 bool CActionSystem::isMove()
 {
-   return getCurAction()->isMove();
+   CAction *pCurAction = getCurAction();
+   if(pCurAction != NULL)
+      return pCurAction->isMove();
+   else
+      return false;
+}
+
+std::vector<std::string> CActionSystem::getAllAnimationName()
+{
+   std::vector<std::string> vtAnimationName;
+
+   std::vector<CAction *>::iterator it = m_pvtActionSet->begin();
+   while(it != m_pvtActionSet->end()) {
+      vtAnimationName.push_back((*it)->getAnimationName());
+      it++;
+   }
+
+   return vtAnimationName;
 }
 
 #ifdef _GAMEENGINE_2D_
 void CActionSystem::draw(HDC hdc, int x, int y)
 {
-   char buf[128];
-   sprintf_s(buf, sizeof(buf), "%s : %.3f", getCurAction()->getName().c_str(), m_fCurTime);
+   char buf[50];
+   memset(buf, 0, sizeof(buf));
+
+   CAction *pCurAction = getCurAction();
+   if(pCurAction != NULL)
+      sprintf_s(buf, sizeof(buf), "%s : %.3f", getCurAction()->getName().c_str(), m_fCurTime);
+   else
+      sprintf_s(buf, sizeof(buf), "沒有載入動作系統");
+
    TextOut(hdc, x, y, buf, strlen(buf));
 }
 #endif

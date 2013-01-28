@@ -128,6 +128,10 @@
 #define IDC_SkillCastMP                 1171
 #define IDC_MeshName                    1172
 #define IDC_EDIT1                       1173
+#define IDC_DelItem                     1174
+#define IDC_SkillDel                    1175
+#define IDC_BUTTON1                     1176
+#define IDC_DelBuff                     1176
 
 // Next default values for new objects
 // 
@@ -135,7 +139,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1174
+#define _APS_NEXT_CONTROL_VALUE         1177
 #define _APS_NEXT_SYMED_VALUE           111
 #endif
 #endif

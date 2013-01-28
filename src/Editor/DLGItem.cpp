@@ -177,6 +177,7 @@ BEGIN_MESSAGE_MAP(DLGItem, CDialog)
 	ON_BN_CLICKED(IDC_LoadList, &DLGItem::OnBnClickedLoadlist)
 	ON_BN_CLICKED(IDC_AddItem, &DLGItem::OnBnClickedAdditem)
 	ON_EN_CHANGE(IDC_iconName, &DLGItem::OnEnChangeiconname)
+   ON_BN_CLICKED(IDC_DelItem, &DLGItem::OnBnClickedDelitem)
 END_MESSAGE_MAP()
 
 
@@ -451,4 +452,14 @@ void DLGItem::OnEnChangeiconname()
 		GetDlgItemText(IDC_iconName,str);
 		pInfo->seticonName((LPCTSTR) str);
 	}
+}
+
+void DLGItem::OnBnClickedDelitem()
+{
+   CListBox* pLB = (CListBox*)GetDlgItem (IDC_ItemList);
+   if(pLB->GetCurSel() > -1) {
+      int offset = pLB->GetCurSel();
+      CItem::delInfo(offset);
+      upDate();
+   }
 }

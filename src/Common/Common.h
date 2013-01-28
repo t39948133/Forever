@@ -305,12 +305,16 @@ typedef enum tagSCENE_TYPE {
 } SCENE_TYPE;  // 場景型態
 
 typedef enum tagACTION_EVENT_TYPE {
-   AET_NULL,         // 沒有事件
-   AET_REACH,        // 到達目標點   (座標無更動)
-   AET_NOT_REACH,    // 未到達目標點 (座標更動中)
-   AET_KEY,          // 快捷鍵
-   AET_KEY_WASD,     // WASD按鍵
-   AET_CAST_SKILL,   // 施展技能
+   AET_NULL,                  // 沒有事件
+   AET_REACH,                 // 到達目標點   (座標無更動)
+   AET_NOT_REACH,             // 未到達目標點 (座標更動中)
+   AET_KEY,                   // 快捷鍵
+   AET_KEY_WASD,              // WASD按鍵
+   AET_CAST_SKILL,            // 施展技能
+
+   //--- 以下是動作系統發出的訊息
+   AET_CALLBACK_DRAW_WEAPON,  // 拔武器
+   AET_CALLBACK_PUTIN_WEAPON, // 收武器
 } ACTION_EVENT_TYPE;  // 動作事件種類
 // } Add by Darren Chen on 2012/12/13
 

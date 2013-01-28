@@ -170,7 +170,24 @@ void CPlayerInfoWnd::init (int _x, int _y, CPlayer *pPlr)
 
    updateAdvAttr(m_pPlayer);
    updatePlayerAttr(m_pPlayer);
-   updatePlayerEquip(m_pPlayer);
+   
+   // 裝備欄清空
+   updatePlayerEquip(m_pPlayer, MAIN_HAND, -1);
+   updatePlayerEquip(m_pPlayer, OFF_HAND, -1);
+   updatePlayerEquip(m_pPlayer, CHEST, -1);
+   updatePlayerEquip(m_pPlayer, LEGS, -1);
+   updatePlayerEquip(m_pPlayer, SHOULDER, -1);
+   updatePlayerEquip(m_pPlayer, GLOVE, -1);
+   updatePlayerEquip(m_pPlayer, BOOT, -1);
+
+   // 顯示玩家裝備
+   std::map<EquipSlot, int> vtEquip = m_pPlayer->getEquip();
+   std::map<EquipSlot, int>::iterator it = vtEquip.begin();
+   while(it != vtEquip.end()) {
+      updatePlayerEquip(m_pPlayer, it->first, it->second);
+      it++;
+   }
+
    show(false);
 }
 
@@ -314,140 +331,152 @@ void CPlayerInfoWnd::updatePlayerAttr(CPlayer *pPlayer)
 	m_vpText[2]->setText(buf, 1, 1, 1);
 }
 
-void CPlayerInfoWnd::updatePlayerEquip(CPlayer *pPlayer)
+void CPlayerInfoWnd::updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int itemId)
 {
 #ifdef _GAMEENGINE_3D_
    //更新裝備欄
-   for(int i = 0; i < BUTTON_COUNT; i++) {
-	   if(i == 0) {
-         int itemID = pPlayer->getEquip(SHOULDER);
-         if(itemID == -1)
-            m_vpBtn[i]->setImage("Examples/ogreborder");
+   switch(equipSlot) {
+      case SHOULDER: {
+         if(itemId == -1)
+            m_vpBtn[0]->setImage("Examples/ogreborder");
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[0]->setImage(pItemInfo->geticonName());
          }
+         break;
 	   }
-      else if(i == 1) {
-         int itemID = pPlayer->getEquip(GLOVE);
-         if(itemID == -1)
-            m_vpBtn[i]->setImage("Examples/ogreborder");
+
+      case GLOVE: {
+         if(itemId == -1)
+            m_vpBtn[1]->setImage("Examples/ogreborder");
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[1]->setImage(pItemInfo->geticonName());
          }
+         break;
 	   }
-      else if(i == 2) {
-         int itemID = pPlayer->getEquip(MAIN_HAND);
-         if(itemID == -1)
-            m_vpBtn[i]->setImage("Examples/ogreborder");
+
+      case MAIN_HAND: {
+         if(itemId == -1)
+            m_vpBtn[2]->setImage("Examples/ogreborder");
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[2]->setImage(pItemInfo->geticonName());
          }
+         break;
 	   }
-      else if(i == 3) {
-         int itemID = pPlayer->getEquip(CHEST);
-         if(itemID == -1)
-            m_vpBtn[i]->setImage("Examples/ogreborder");
+
+      case CHEST: {
+         if(itemId == -1)
+            m_vpBtn[3]->setImage("Examples/ogreborder");
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[3]->setImage(pItemInfo->geticonName());
          }
+         break;
 	   }
-      else if(i == 4) {
-         int itemID = pPlayer->getEquip(LEGS);
-         if(itemID == -1)
-            m_vpBtn[i]->setImage("Examples/ogreborder");
+
+      case LEGS: {
+         if(itemId == -1)
+            m_vpBtn[4]->setImage("Examples/ogreborder");
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[4]->setImage(pItemInfo->geticonName());
          }
+         break;
 	   }
-      else if(i == 5) {
-         int itemID = pPlayer->getEquip(OFF_HAND);
-         if(itemID == -1)
-            m_vpBtn[i]->setImage("Examples/ogreborder");
+
+      case OFF_HAND: {
+         if(itemId == -1)
+            m_vpBtn[5]->setImage("Examples/ogreborder");
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[5]->setImage(pItemInfo->geticonName());
          }
+         break;
 	   }
-      else if(i == 6) {
-         int itemID = pPlayer->getEquip(BOOT);
-         if(itemID == -1)
-            m_vpBtn[i]->setImage("Examples/ogreborder");
+
+      case BOOT: {
+         if(itemId == -1)
+            m_vpBtn[6]->setImage("Examples/ogreborder");
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->setImage(pItemInfo->geticonName());
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[6]->setImage(pItemInfo->geticonName());
          }
+         break;
 	   }
    }
 #elif _GAMEENGINE_2D_
    //更新裝備欄
-   for(int i = 0; i < BUTTON_COUNT; i++) {
-	   if(i == 0) {
-         int itemID = pPlayer->getEquip(SHOULDER);
-         if(itemID == -1)
-		      m_vpBtn[i]->str = "肩甲" ;
+   switch(equipSlot) {
+	   case SHOULDER: {
+         if(itemId == -1)
+		      m_vpBtn[0]->str = "肩甲" ;
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->str = pItemInfo->getName();
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[0]->str = pItemInfo->getName();
          }
+         break;
 	   }
-      else if(i == 1) {
-         int itemID = pPlayer->getEquip(GLOVE);
-         if(itemID == -1)
-		      m_vpBtn[i]->str = "手套" ;
+
+      case GLOVE: {
+         if(itemId == -1)
+		      m_vpBtn[1]->str = "手套" ;
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->str = pItemInfo->getName();
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[1]->str = pItemInfo->getName();
          }
+         break;
 	   }
-      else if(i == 2) {
-         int itemID = pPlayer->getEquip(MAIN_HAND);
-         if(itemID == -1)
-		      m_vpBtn[i]->str = "主手武器" ;
+
+      case MAIN_HAND: {
+         if(itemId == -1)
+		      m_vpBtn[2]->str = "主手武器" ;
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->str = pItemInfo->getName();
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[2]->str = pItemInfo->getName();
          }
+         break;
 	   }
-      else if(i == 3) {
-         int itemID = pPlayer->getEquip(CHEST);
-         if(itemID == -1)
-		      m_vpBtn[i]->str = "衣服" ;
+
+      case CHEST: {
+         if(itemId == -1)
+		      m_vpBtn[3]->str = "衣服" ;
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->str = pItemInfo->getName();
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[3]->str = pItemInfo->getName();
          }
+         break;
 	   }
-      else if(i == 4) {
-         int itemID = pPlayer->getEquip(LEGS);
-         if(itemID == -1)
-		      m_vpBtn[i]->str = "褲子" ;
+
+      case LEGS: {
+         if(itemId == -1)
+		      m_vpBtn[4]->str = "褲子" ;
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->str = pItemInfo->getName();
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[4]->str = pItemInfo->getName();
          }
+         break;
 	   }
-      else if(i == 5) {
-         int itemID = pPlayer->getEquip(OFF_HAND);
-         if(itemID == -1)
-		      m_vpBtn[i]->str = "副手武器" ;
+
+      case OFF_HAND: {
+         if(itemId == -1)
+		      m_vpBtn[5]->str = "副手武器" ;
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->str = pItemInfo->getName();
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[5]->str = pItemInfo->getName();
          }
+         break;
 	   }
-      else if(i == 6) {
-         int itemID = pPlayer->getEquip(BOOT);
-         if(itemID == -1)
-		      m_vpBtn[i]->str = "鞋子" ;
+
+      case BOOT: {
+         if(itemId == -1)
+		      m_vpBtn[6]->str = "鞋子" ;
          else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemID);
-            m_vpBtn[i]->str = pItemInfo->getName();
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            m_vpBtn[6]->str = pItemInfo->getName();
          }
+         break;
 	   }
    }
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_

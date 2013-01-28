@@ -1,4 +1,4 @@
-material Scroll/Skillbook_01
+material Icon/Scroll/Skillbook_01
 {
 	technique
 	{
@@ -11,9 +11,8 @@ material Scroll/Skillbook_01
 		}
 	}
 }
-
 //©G¤å®Ñ
-material Incantation_book
+material Icon/Scroll/Incantation
 {
 	technique
 	{

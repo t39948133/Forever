@@ -43,23 +43,36 @@ ItemClassType CConsumableInfo::getClassType ()
 
 void CConsumableInfo::read(FILE* pFile)
 {
-    CItemInfo::read(pFile);
-	int version = 0;
-	fread (&version, sizeof(version), 1, pFile);
-    char buf[longStrSize];
-    fread(buf, sizeof(buf), 1, pFile);
-    m_strDesc = buf;
-	fread (&m_effect, sizeof(m_effect), 1, pFile);
-	fread (&m_iMuch, sizeof(m_iMuch), 1, pFile);
+   CItemInfo::read(pFile);
+   int version = 0;
+   fread (&version, sizeof(version), 1, pFile);
+
+   // read m_strDesc {
+   int descSize = 0;
+   fread(&descSize, sizeof(descSize), 1, pFile);
+   char buf[256];
+   memset(buf, 0, sizeof(buf));
+   fread(buf, descSize, 1, pFile);
+   m_strDesc = buf;
+   // } read m_strDesc
+
+   fread (&m_effect, sizeof(m_effect), 1, pFile);
+   fread (&m_iMuch, sizeof(m_iMuch), 1, pFile);
 }
 #ifdef _GAMEENGINE_2D_EDITOR_
 void CConsumableInfo::write(FILE* pFile)
 {
-    CItemInfo::write(pFile);
-	int version = 0;
-	fwrite (&version, sizeof(version), 1, pFile);
-	fwrite (const_cast<char*>(m_strDesc.c_str()), longStrSize, 1, pFile);
-	fwrite (&m_effect, sizeof(m_effect), 1, pFile);
-	fwrite (&m_iMuch, sizeof(m_iMuch), 1, pFile);
+   CItemInfo::write(pFile);
+   int version = 0;
+   fwrite (&version, sizeof(version), 1, pFile);
+
+   // write m_strDesc {
+   int descSize = m_strDesc.size();
+   fwrite(&descSize, sizeof(descSize), 1, pFile);
+   fwrite(m_strDesc.c_str(), m_strDesc.size(), 1, pFile);
+   // } write m_strDesc
+
+   fwrite (&m_effect, sizeof(m_effect), 1, pFile);
+   fwrite (&m_iMuch, sizeof(m_iMuch), 1, pFile);
 }
 #endif //#ifdef _GAMEENGINE_2D_EDITOR_

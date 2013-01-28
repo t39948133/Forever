@@ -1,0 +1,111 @@
+material "LMPL_A003_leg"
+{
+	technique LMPL_A003_leg_technique
+	{
+		pass LMPL_A003_leg_Ambient
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			illumination_stage ambient
+
+			scene_blend alpha_blend
+			alpha_rejection greater 128
+			
+			vertex_program_ref vsAmbGEN0
+			{
+			}
+			fragment_program_ref fpAmbGENDIFF0
+			{
+			}
+
+			texture_unit LMPL_A003_leg_Diffuse#0
+			{
+				texture lmpl_a003_leg.dds
+				tex_coord_set 0
+				mipmap_bias -1
+				colour_op modulate
+			}
+		}
+		pass LMPL_A003_leg_Light
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			separate_scene_blend src_alpha one src_alpha one_minus_src_alpha 
+
+			iteration once_per_light
+
+			illumination_stage per_light
+			alpha_rejection greater 128
+			vertex_program_ref vsLightGENNORM0
+			{
+			}
+			fragment_program_ref fpLightGENDIFF0NORM0
+			{
+				param_named normalMul float 0.5
+			}
+
+			texture_unit LMPL_A003_leg_Diffuse#1
+			{
+				texture lmpl_a003_leg.dds
+				tex_coord_set 0
+				mipmap_bias -1
+				colour_op modulate
+			}
+
+			texture_unit LMPL_A003_leg_Unknown#2
+			{
+				texture lmpl_a003_leg_alpha.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit LMPL_A003_leg_Normal#3
+			{
+				texture lmpl_a003_leg_ddn.dds
+				tex_coord_set 0
+				mipmap_bias -1
+				colour_op modulate
+			}
+		}
+	}
+	technique LMPL_A003_leg_basic_technique
+	{
+	scheme basic_mat
+		pass LMPL_A003_leg_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+			alpha_rejection greater 128
+
+			texture_unit LMPL_A003_leg_Diffuse#4
+			{
+				texture lmpl_a003_leg.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit LMPL_A003_leg_Unknown#5
+			{
+				texture lmpl_a003_leg_alpha.png
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

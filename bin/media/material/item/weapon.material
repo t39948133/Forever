@@ -1,19 +1,5 @@
-material Weapon/Sword_C01
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture Icon_Item_Sword_C01.dds
-			}
-		}
-	}
-}
-
-//訓練用長劍
-material Icon_Item_Sword_C01
+// 長劍/單手/普通等級(白武)
+material Icon/Weapon/Sword_C01
 {
 	technique
 	{
@@ -27,8 +13,8 @@ material Icon_Item_Sword_C01
 	}
 }
 
-//吉卡南塔之劍
-material Icon_Item_Sword_R01
+// 長劍/單手/稀有等級(綠武)
+material Icon/Weapon/Sword_R01
 {
 	technique
 	{
@@ -42,8 +28,8 @@ material Icon_Item_Sword_R01
 	}
 }
 
-//巴卡爾摩遠征隊之劍
-material Icon_Item_Sword_L01
+// 長劍/單手/傳承等級(藍武)
+material Icon/Weapon/Sword_L01
 {
 	technique
 	{
@@ -57,8 +43,8 @@ material Icon_Item_Sword_L01
 	}
 }
 
-//赫拉納斯之劍
-material Icon_Item_Sword_U01
+// 長劍/單手/獨特等級(金武)
+material Icon/Weapon/Sword_U01
 {
 	technique
 	{
@@ -72,8 +58,8 @@ material Icon_Item_Sword_U01
 	}
 }
 
-//凱西內爾之恩寵長劍
-material Icon_Item_Sword_E01
+// 長劍/單手/英雄等級(紅武)
+material Icon/Weapon/Sword_E01
 {
 	technique
 	{
@@ -87,9 +73,8 @@ material Icon_Item_Sword_E01
 	}
 }
 
-
-//草原之盾
-material Icon_Item_Shield_C02
+// 盾牌/單手/普通等級(白盾)
+material Icon/Weapon/Shield_C01
 {
 	technique
 	{
@@ -103,8 +88,8 @@ material Icon_Item_Shield_C02
 	}
 }
 
-//森林守衛盾牌 
-material Icon_Item_Shield_R01
+// 盾牌/單手/稀有等級(綠盾)
+material Icon/Weapon/Shield_R01
 {
 	technique
 	{
@@ -118,8 +103,8 @@ material Icon_Item_Shield_R01
 	}
 }
 
-//匠人之閃光的鈦質盾
-material Icon_Item_Shield_L01
+// 盾牌/單手/傳承等級(藍盾)
+material Icon/Weapon/Shield_L01
 {
 	technique
 	{
@@ -133,8 +118,8 @@ material Icon_Item_Shield_L01
 	}
 }
 
-//撒旦之盾 
-material Icon_Item_Shield_U01
+// 盾牌/單手/獨特等級(金盾)
+material Icon/Weapon/Shield_U01
 {
 	technique
 	{
@@ -148,8 +133,8 @@ material Icon_Item_Shield_U01
 	}
 }
 
-//塔哈巴達之盾 
-material Icon_Item_Shield_E01
+// 盾牌/單手/英雄等級(紅盾)
+material Icon/Weapon/Shield_E01
 {
 	technique
 	{

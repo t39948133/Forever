@@ -48,4 +48,5 @@ public:
     afx_msg void OnBnClickedAddbuff();
     afx_msg void OnBnClickedSavebuff();
     afx_msg void OnBnClickedLoadbuff();
+    afx_msg void OnBnClickedDelbuff();
 };

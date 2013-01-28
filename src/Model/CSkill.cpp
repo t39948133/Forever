@@ -4,7 +4,10 @@
 
 void CSkill::initSkill()
 {
-	if(SKILL_INFO::read("Skill.la"))
+   if(SKILL_INFO::read("../Skill.la") == false)
+      SKILL_INFO::read("Skill.la");
+
+	/*if(SKILL_INFO::read("Skill.la"))
    {
    }
 	else
@@ -61,7 +64,7 @@ void CSkill::initSkill()
       ps->initSkillInfo(TYPE_ACTIVE, 1, "Skill/Knight/Robusthit_g1", "猛烈一擊", "對目標造成 138 的物理傷害",
          8, 0, 0, 10.0f, 50.0f, ENEMY, adv, preAttr, 0, -1, -1, true, false);
       addInfo(ps);
-	}
+	}*/
 }
 
 CSkill::CSkill() : m_bAvailable(false) , m_fSurplus(0.0f)

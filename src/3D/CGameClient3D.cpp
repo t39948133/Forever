@@ -112,12 +112,13 @@ void CGameClient3D::destoryScene()
    releaseCamera();
 
    m_pTerrain->release();
-   getScene()->removeAll();
-
+   
    if(m_pPlayer != NULL) {
       delete m_pPlayer;
       m_pPlayer = NULL;
    }
+
+   getScene()->removeAll();
 }
 
 void CGameClient3D::mouseDown(const OIS::MouseEvent &evt)

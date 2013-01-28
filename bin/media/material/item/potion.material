@@ -1,33 +1,5 @@
-material Potion/HP02_2
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture icon_item_potion_hp02_2.dds
-			}
-		}
-	}
-}
-
-material Potion/MP02_2
-{
-	technique
-	{
-		pass
-		{
-			texture_unit
-			{
-				texture icon_item_potion_mp02_2.dds
-			}
-		}
-	}
-}
-
 //hpÃÄ¤ô 
-material Icon_Item_Potion_HP02_1
+material Icon/Potion/HP02_2
 {
 	technique
 	{
@@ -35,14 +7,14 @@ material Icon_Item_Potion_HP02_1
 		{
 			texture_unit
 			{
-				texture Icon_Item_Potion_HP02_1.jpg
+				texture Icon_Item_Potion_HP02_2.jpg
 			}
 		}
 	}
 }
 
 //mpÃÄ¤ô
-material Icon_Item_Potion_MP02_3
+material Icon/Potion/MP02_2
 {
 	technique
 	{
@@ -50,7 +22,7 @@ material Icon_Item_Potion_MP02_3
 		{
 			texture_unit
 			{
-				texture Icon_Item_Potion_MP02_3.jpg
+				texture Icon_Item_Potion_MP02_2.jpg
 			}
 		}
 	}

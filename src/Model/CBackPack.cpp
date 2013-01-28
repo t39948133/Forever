@@ -51,8 +51,6 @@ int CBackPack::getSize()
 void CBackPack::initBack()
 {
    // 藥水
-   m_itemBack[0].create(3, 10);
-   m_itemBack[1].create(4, 10);
 
    // 新手裝備
 	m_itemBack[3].create(0, 1);
@@ -60,6 +58,20 @@ void CBackPack::initBack()
    m_itemBack[5].create(2, 1);
 
    // 技能書
-   m_itemBack[7].create(5, 1);
-   m_itemBack[8].create(6, 1);
+
+   // 勇氣系列裝備
+   m_itemBack[9].create(12, 1);
+   m_itemBack[10].create(13, 1);
+   m_itemBack[11].create(14, 1);
+   m_itemBack[12].create(15, 1);
+   m_itemBack[13].create(16, 1);
+   m_itemBack[14].create(29, 1);
+
+   // 守衛萬夫長系列裝備
+   m_itemBack[18].create(17, 1);
+   m_itemBack[19].create(18, 1);
+   m_itemBack[20].create(19, 1);
+   m_itemBack[21].create(20, 1);
+   m_itemBack[22].create(21, 1);
+   m_itemBack[23].create(30, 1);
 }

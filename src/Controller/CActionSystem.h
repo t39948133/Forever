@@ -37,6 +37,10 @@ class CActionSystem
         * @return true - 可移動 / false - 不可移動 */
       bool isMove();
 
+      /** @brief 取得所有動畫名稱
+        * @return 所有動畫名稱 */
+      std::vector<std::string> getAllAnimationName();
+
 #ifdef _GAMEENGINE_2D_
       /** @brief Client端繪圖動作 
         * @param hdc 繪圖裝置

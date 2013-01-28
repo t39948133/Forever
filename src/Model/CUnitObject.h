@@ -124,6 +124,10 @@ class CUnitObject
         *         false - 否 */
       bool isMove();
 
+      /** @brief 取得所有動畫名稱
+        * @return 所有動畫名稱 */
+      std::vector<std::string> getAllAnimationName();
+
       /** @brief 設定目標物 (玩家/怪物/NPC)
         * @param pUnitObject 目標物 */
       void setTargetObject(CUnitObject *pUnitObject); 

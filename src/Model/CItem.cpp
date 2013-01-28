@@ -6,7 +6,10 @@
 
 void CItem::initItem ()
 {
-	if(ITEM_INFO::read("Item.la"))
+   if(ITEM_INFO::read("../Item.la") == false)
+      ITEM_INFO::read("Item.la");
+
+	/*if(ITEM_INFO::read("Item.la"))
 	{
 	}
 	else
@@ -60,8 +63,7 @@ void CItem::initItem ()
       pc = new CConsumableInfo();
 		pc->initConsumableInfo("猛烈一擊", "Scroll/Skillbook_01", SCROLL, false, 1, 1, 5, 10, "可以學習猛烈一擊技能", EDIBLE_SKILL, 1);
       addInfo(pc);
-	}
-
+	}*/
 }
 CItem::CItem ():m_iStack(0)
 {

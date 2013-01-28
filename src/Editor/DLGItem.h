@@ -54,4 +54,5 @@ public:
 	afx_msg void OnBnClickedLoadlist();
 	afx_msg void OnBnClickedAdditem();
 	afx_msg void OnEnChangeiconname();
+   afx_msg void OnBnClickedDelitem();
 };

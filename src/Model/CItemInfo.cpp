@@ -109,13 +109,27 @@ void CItemInfo::setBuyPrice(int buyPrice)
 
 void CItemInfo::read(FILE* pFile)
 {
+   char buf[256];
+
 	int version = 0;
 	fread (&version, sizeof(version), 1, pFile);
 
-	fread (&m_strName, sizeof(m_strName), 1, pFile);
-	char buf[longStrSize];
-	fread (buf, sizeof(buf), 1, pFile);
-	m_iconName = buf;
+   // read m_strName {
+   int nameSize = 0;
+   fread(&nameSize, sizeof(nameSize), 1, pFile);
+   memset(buf, 0, sizeof(buf));
+   fread(buf, nameSize, 1, pFile);
+   m_strName = buf;
+   // } read m_strName
+
+   // read m_iconName {
+   int iconNameSize = 0;
+   fread(&iconNameSize, sizeof(iconNameSize), 1, pFile);
+   memset(buf, 0, sizeof(buf));
+   fread(buf, iconNameSize, 1, pFile);
+   m_iconName = buf;
+   // } read m_iconName
+
 	fread (&m_type, sizeof(m_type), 1, pFile);
 	fread (&m_bSoulBind, sizeof(m_bSoulBind), 1, pFile);
 	fread (&m_level, sizeof(m_level), 1, pFile);
@@ -129,14 +143,23 @@ void CItemInfo::write(FILE* pFile)
 	int version = 0;
 	fwrite (&version, sizeof(version), 1, pFile);
 
-	fwrite (&m_strName, sizeof(m_strName), 1, pFile);
-	fwrite (const_cast<char*> (m_iconName.c_str()), longStrSize, 1, pFile);
+   // write m_strName {
+   int nameSize = m_strName.size();
+   fwrite(&nameSize, sizeof(nameSize), 1, pFile);
+   fwrite(m_strName.c_str(), m_strName.size(), 1, pFile);
+   // } write m_strName
+
+   // write m_iconName {
+   int iconNameSize = m_iconName.size();
+   fwrite(&iconNameSize, sizeof(iconNameSize), 1, pFile);
+   fwrite(m_iconName.c_str(), m_iconName.size(), 1, pFile);
+   // } write m_iconName
+
 	fwrite (&m_type, sizeof(m_type), 1, pFile);
 	fwrite (&m_bSoulBind, sizeof(m_bSoulBind), 1, pFile);
 	fwrite (&m_level, sizeof(m_level), 1, pFile);
 	fwrite (&m_iStackLimit, sizeof(m_iStackLimit), 1, pFile);
 	fwrite (&m_iSellPrice, sizeof(m_iSellPrice), 1, pFile);
 	fwrite (&m_iBuyPrice, sizeof(m_iBuyPrice), 1, pFile);
-
 }
 #endif //#ifdef _GAMEENGINE_2D_EDITOR_

@@ -56,7 +56,7 @@ class CPlayerInfoWnd : public CWindow,
       /* virtual */ void updatePlayerAttr(CPlayer *pPlayer);
 
       // IPlayerEquipEventListener
-      /* virtual */ void updatePlayerEquip(CPlayer *pPlayer);
+      /* virtual */ void updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int itemId);
 
    private:
 	   CPlayer *m_pPlayer;

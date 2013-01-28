@@ -6,7 +6,7 @@ template <class INFO, class CLASS_LOADER>
 class ObjTable
 {
 public:
-	static bool read (const char* name)
+   static bool read (const char *name)
 	{
       FILE* pFile ; 
       fopen_s (&pFile, name, "rb") ;
@@ -95,6 +95,21 @@ public:
 
 		return (vInfo.back ()) ;
 	}
+
+   // Add by Darren Chen on 2013/01/26 {
+   static void delInfo(size_t id) {
+      if(id >= 0 && id < vInfo.size()) {
+         V_INFO::iterator it = vInfo.begin();
+         while(it != vInfo.end()) {
+            if((*it) == vInfo[id]) {
+               vInfo.erase(it);
+               break;
+            }
+            it++;
+         }
+      }
+   }
+   // } Add by Darren Chen on 2013/01/26
 
    static void release()
    {

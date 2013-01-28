@@ -298,6 +298,7 @@ BEGIN_MESSAGE_MAP(DLGSkill, CDialog)
     ON_BN_CLICKED(IDC_SkillSave, &DLGSkill::OnBnClickedSkillsave)
     ON_BN_CLICKED(IDC_SkillLoad, &DLGSkill::OnBnClickedSkillload)
     ON_EN_CHANGE(IDC_SkillCastMP, &DLGSkill::OnEnChangeSkillcastmp)
+    ON_BN_CLICKED(IDC_SkillDel, &DLGSkill::OnBnClickedSkilldel)
 END_MESSAGE_MAP()
 
 
@@ -593,4 +594,13 @@ void DLGSkill::OnEnChangeSkillcastmp()
     // TODO:  在此加入控制項告知處理常式程式碼
     CSkillInfo* pInfo = getSkillInfo();
     pInfo->m_iCastMP = GetDlgItemInt(IDC_SkillCastMP);
+}
+
+void DLGSkill::OnBnClickedSkilldel()
+{
+   CListBox* pLB = (CListBox*) GetDlgItem(IDC_SkillList);
+   if(pLB->GetCurSel() > -1) {
+      CSkill::delInfo(pLB->GetCurSel());
+      upDate();
+   }
 }

@@ -16,8 +16,10 @@ class IPlayerEquipEventListener
 {
    public:
       /** @brief 更新玩家裝備
-        * @param pPlayer 更新的物件 */
-      virtual void updatePlayerEquip(CPlayer *pPlayer) = 0;
+        * @param pPlayer   玩家
+        * @param equipSlot 哪一個裝備槽有變動
+        * @param itemID    哪一個物品編號 (新裝備) */
+      virtual void updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int itemId) = 0;
 };
 
 #endif  // #ifndef _IPLAYEREQUIPEVENTLISTENER_H_

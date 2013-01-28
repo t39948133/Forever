@@ -94,17 +94,19 @@ private:
    void updateSkillAvailable();
 
    /** @brief 穿到裝備欄上
-     * @param es 裝備部位
-     * @param id 新裝備編號
+     * @param es     裝備部位
+     * @param itemId 物品編號 (某裝備)
      * Modify by Darren Chen on 2013/01/07 */
-	void wearToEquipSlot(EquipSlot es, unsigned int id);
+	void wearToEquipSlot(EquipSlot es, unsigned int itemId);
 
    // Add by Darren Chen on 2013/01/17 {
    /** @brief 通知玩家屬性(xp, money)有更新 */
    void notifyPlayerAttrUpdate();
 
-   /** @brief 通知玩家裝備有更新 */
-   void notifyPlayerEquipUpdate();
+   /** @brief 通知玩家裝備有更新
+     * @param es     裝備部位
+     * @param itemId 物品編號 (某裝備) */
+   void notifyPlayerEquipUpdate(EquipSlot es, int itemId);
 
    /** @brief 通知玩家背包有更新 */
    void notifyPlayerBackpackUpdate();

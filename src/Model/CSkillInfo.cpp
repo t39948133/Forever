@@ -120,16 +120,38 @@ bool CSkillInfo::isRequireShield()
 
 void CSkillInfo::read(FILE *pFile)
 {
+   char buf[256];
+
    int version = 0 ;
    fread (&version, sizeof (version), 1, pFile) ;
 
    fread (&m_type, sizeof (m_type), 1, pFile);
    fread (&m_iLevel, sizeof (m_iLevel), 1, pFile);
-   fread (&m_iconName, sizeof (m_iconName), 1, pFile);
-   fread (&m_strName, sizeof (m_strName), 1, pFile);
-   char buf[longStrSize];
-   fread (buf, sizeof(buf), 1, pFile);
+
+   // read m_iconName {
+   int iconNameSize = 0;
+   fread(&iconNameSize, sizeof(iconNameSize), 1, pFile);
+   memset(buf, 0, sizeof(buf));
+   fread(buf, iconNameSize, 1, pFile);
+   m_iconName = buf;
+   // } read m_iconName
+
+   // read m_strName {
+   int nameSize = 0;
+   fread(&nameSize, sizeof(nameSize), 1, pFile);
+   memset(buf, 0, sizeof(buf));
+   fread(buf, nameSize, 1, pFile);
+   m_strName = buf;
+   // } read m_strName
+
+   // read m_strDesc {
+   int descSize = 0;
+   fread(&descSize, sizeof(descSize), 1, pFile);
+   memset(buf, 0, sizeof(buf));
+   fread(buf, descSize, 1, pFile);
    m_strDesc = buf;
+   // } read m_strDesc
+
    fread (&m_iActionID, sizeof(m_iActionID), 1, pFile);
    fread (&m_iCastMP, sizeof (m_iCastMP), 1, pFile);
    fread (&m_fCastTime, sizeof (m_fCastTime), 1, pFile);
@@ -148,27 +170,43 @@ void CSkillInfo::read(FILE *pFile)
 #ifdef _GAMEENGINE_2D_EDITOR_
 void CSkillInfo::write(FILE *pFile)
 {
-    int version = 0 ;
-	fwrite (&version, sizeof (version), 1, pFile) ;
+   int version = 0 ;
+   fwrite (&version, sizeof (version), 1, pFile) ;
 
-    fwrite (&m_type, sizeof (m_type), 1, pFile);
-    fwrite (&m_iLevel, sizeof (m_iLevel), 1, pFile);
-    fwrite (const_cast<char*> (m_iconName.c_str()), longStrSize, 1, pFile);
-    fwrite (&m_strName, sizeof (m_strName), 1, pFile);
-    fwrite (const_cast<char*> (m_strDesc.c_str()), longStrSize, 1, pFile);
-	 fwrite (&m_iActionID, sizeof(m_iActionID), 1, pFile);
-    fwrite (&m_iCastMP, sizeof(m_iCastMP), 1, pFile);
-    fwrite (&m_fCastTime, sizeof (m_fCastTime), 1, pFile);
-    fwrite (&m_fCoolDown, sizeof (m_fCoolDown), 1, pFile);
-    fwrite (&m_fCastRange, sizeof (m_fCastRange), 1, pFile);
-    fwrite (&m_target, sizeof (m_target), 1, pFile);
-    fwrite (&m_effectAttr, sizeof (m_effectAttr), 1, pFile);
-    fwrite (&m_effectAttrPercent, sizeof (m_effectAttrPercent), 1, pFile);
-    fwrite (&m_iBuffID, sizeof (m_iBuffID), 1, pFile);
-    fwrite (&m_iMotionEffects, sizeof (m_iMotionEffects), 1, pFile);
-    fwrite (&m_iTriggerMotion, sizeof (m_iTriggerMotion), 1, pFile);
-    fwrite (&m_bRequireWeapon, sizeof (m_bRequireWeapon), 1, pFile);
-    fwrite (&m_bRequireShield, sizeof (m_bRequireShield), 1, pFile);
+   fwrite (&m_type, sizeof (m_type), 1, pFile);
+   fwrite (&m_iLevel, sizeof (m_iLevel), 1, pFile);
+
+   // write m_iconName {
+   int iconNameSize = m_iconName.size();
+   fwrite(&iconNameSize, sizeof(iconNameSize), 1, pFile);
+   fwrite(m_iconName.c_str(), m_iconName.size(), 1, pFile);
+   // } write m_iconName
+
+   // write m_strName {
+   int nameSize = m_strName.size();
+   fwrite(&nameSize, sizeof(nameSize), 1, pFile);
+   fwrite(m_strName.c_str(), m_strName.size(), 1, pFile);
+   // } write m_strName
+
+   // write m_strDesc {
+   int descSize = m_strDesc.size();
+   fwrite(&descSize, sizeof(descSize), 1, pFile);
+   fwrite(m_strDesc.c_str(), m_strDesc.size(), 1, pFile);
+   // } write m_strDesc
+
+   fwrite (&m_iActionID, sizeof(m_iActionID), 1, pFile);
+   fwrite (&m_iCastMP, sizeof(m_iCastMP), 1, pFile);
+   fwrite (&m_fCastTime, sizeof (m_fCastTime), 1, pFile);
+   fwrite (&m_fCoolDown, sizeof (m_fCoolDown), 1, pFile);
+   fwrite (&m_fCastRange, sizeof (m_fCastRange), 1, pFile);
+   fwrite (&m_target, sizeof (m_target), 1, pFile);
+   fwrite (&m_effectAttr, sizeof (m_effectAttr), 1, pFile);
+   fwrite (&m_effectAttrPercent, sizeof (m_effectAttrPercent), 1, pFile);
+   fwrite (&m_iBuffID, sizeof (m_iBuffID), 1, pFile);
+   fwrite (&m_iMotionEffects, sizeof (m_iMotionEffects), 1, pFile);
+   fwrite (&m_iTriggerMotion, sizeof (m_iTriggerMotion), 1, pFile);
+   fwrite (&m_bRequireWeapon, sizeof (m_bRequireWeapon), 1, pFile);
+   fwrite (&m_bRequireShield, sizeof (m_bRequireShield), 1, pFile);
 }
 #endif //#ifdef _GAMEENGINE_2D_EDITOR_
 

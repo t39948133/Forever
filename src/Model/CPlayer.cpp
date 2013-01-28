@@ -32,8 +32,9 @@ CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(s
       m_pvtHotKey->push_back(pHotKeyItem);
    }
 
-   // 讀取玩家動作檔
-   m_pActionSystem->read("../player.acs");
+   // 讀取玩家動作檔 (守護星 的動作系統)
+   if(m_pActionSystem->read("../PlayerKnight.acs") == false)
+      m_pActionSystem->read("PlayerKnight.acs");
 
    // 玩家擁有技能
    addSkill(0);
@@ -94,7 +95,7 @@ void CPlayer::shedEquip(EquipSlot grid)
    notifyPlayerBackpackUpdate();
 
 	m_mEquip.erase(grid);
-   notifyPlayerEquipUpdate();
+   notifyPlayerEquipUpdate(grid, -1);
 
 	updateEquipAttr();
 }
@@ -381,38 +382,34 @@ void CPlayer::updateSkillAvailable()
 }
 
 // Modify by Darren Chen on 2013/01/07 {
-void CPlayer::wearToEquipSlot(EquipSlot es, unsigned int id)
+void CPlayer::wearToEquipSlot(EquipSlot es, unsigned int itemId)
 {
    std::map<EquipSlot, int>::iterator it = m_mEquip.find(es);
-	if(m_mEquip.end() == it)
-	{
-      // 背包的物品堆疊減一
-      CItemInfo *pFindItemInfo = CItem::getInfo(id);
-      for(int i = 0; i < BACK_MAX; i++) {
-         CItem *pItem = m_backPack.getItem(i);
-         if(pItem->getInfo() == pFindItemInfo) {
-            pItem->taken();
-            notifyPlayerBackpackUpdate();
-            break;
-         }
-      }
-
-      // 物品裝備到裝備欄上
-		m_mEquip.insert(std::make_pair(es, id));
-      notifyPlayerEquipUpdate();
-	}
-	else
-	{
+   if(it != m_mEquip.end()) {
       // 舊物品放入背包
 		int st = 1;
 		int bu = 0;
 		m_backPack.addItem(it->second, st, bu);
       notifyPlayerBackpackUpdate();
 
-      // 新物品裝備到裝備欄上
-		m_mEquip.insert(std::make_pair(es, id));
-      notifyPlayerEquipUpdate();
-	}
+      // 該裝備槽的資料移除
+      m_mEquip.erase(it);
+   }
+
+	// 物品裝備到裝備欄上
+	m_mEquip.insert(std::make_pair(es, itemId));
+   notifyPlayerEquipUpdate(es, itemId);
+	
+   // 背包的物品堆疊減一
+   CItemInfo *pFindItemInfo = CItem::getInfo(itemId);
+   for(int i = 0; i < BACK_MAX; i++) {
+      CItem *pItem = m_backPack.getItem(i);
+      if(pItem->getInfo() == pFindItemInfo) {
+         pItem->taken();
+         notifyPlayerBackpackUpdate();
+         break;
+      }
+   }
 }
 // } Modify by Darren Chen on 2013/01/07
 
@@ -426,11 +423,11 @@ void CPlayer::notifyPlayerAttrUpdate()
    }
 }
 
-void CPlayer::notifyPlayerEquipUpdate()
+void CPlayer::notifyPlayerEquipUpdate(EquipSlot es, int itemId)
 {
    std::set<IPlayerEquipEventListener *>::iterator it = m_playerEquipEventListeners.begin();
    while(it != m_playerEquipEventListeners.end()) {
-      (*it)->updatePlayerEquip(this);
+      (*it)->updatePlayerEquip(this, es, itemId);
       it++;
    }
 }

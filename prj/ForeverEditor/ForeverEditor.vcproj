@@ -557,7 +557,31 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\IModelEventListener.h"
+					RelativePath="..\..\src\Model\IAdvAttrEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\IItemEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\IPlayerAttrEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\IPlayerBackpackEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\IPlayerEquipEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\IPlayerHotKeyEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\ISkillEventListener.h"
 					>
 				</File>
 				<File
@@ -688,7 +712,7 @@
 	<Globals>
 		<Global
 			Name="RESOURCE_FILE"
-			Value="\Foreverpass\src\Editor\ForeverEditor.rc"
+			Value="\DCI_Prj\DevelopCode2\Forever\src\Editor\ForeverEditor.rc"
 		/>
 	</Globals>
 </VisualStudioProject>

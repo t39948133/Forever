@@ -7,6 +7,9 @@
   * @date   2012/12/12 */
 #include "CPlayer3D.h"
 #include "CRenderLoader.h"
+#include "CWeaponInfo.h"
+#include "CArmorInfo.h"
+
 #include <OgreQuaternion.h>
 #include <OgreSkeletonInstance.h>
 #include <OgreSkeletonManager.h>
@@ -25,7 +28,14 @@ CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager) : m_pP
    m_pFootEntity = NULL;
    m_pHandEntity = NULL;
    m_pLegEntity = NULL;
-   m_pShoulderEntity = NULL;
+
+   m_pMainHandSlotEntity = NULL;
+   m_pOffHandSlotEntity = NULL;
+   m_pChestSlotEntity = NULL;
+   m_pPantsSlotEntity = NULL;
+   m_pGloveSlotEntity = NULL;
+   m_pBootSlotEntity = NULL;
+   m_pShoulderSlotEntity = NULL;
 
    m_mouseDirection = Ogre::Vector3::ZERO;
    m_keyDirection = Ogre::Vector3::ZERO;
@@ -34,10 +44,14 @@ CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager) : m_pP
    m_bMouseMove = false;
 
    m_pvtAnimationSet = new std::vector<Ogre::AnimationState *>();
+
+   m_pPlayer2D->addPlayerEquipEventListener(this);
 }
 
 CPlayer3D::~CPlayer3D()
 {
+   m_pPlayer2D->removePlayerEquipEventListener(this);
+
    release();
 
    if(m_pvtAnimationSet != NULL) {
@@ -55,22 +69,11 @@ CPlayer3D::~CPlayer3D()
 void CPlayer3D::setup()
 {
    m_pHairEntity = m_pSceneManager->createEntity("LM023_Hair.mesh");
-   m_pHairEntity->setMaterialName("LM023_Hair");
-
    m_pHeadEntity = m_pSceneManager->createEntity("LM001_Head.mesh");
-   m_pHeadEntity->setMaterialName("LM001_Head");
-   
    m_pBodyEntity = m_pSceneManager->createEntity("LMDF_C001_Body.mesh");
-   m_pBodyEntity->setMaterialName("LMDF_C001_Body");
-
-   m_pFootEntity = m_pSceneManager->createEntity("LMDF_C001_FootShort.mesh");
-   m_pFootEntity->setMaterialName("LMDF_C001_Foot");
-
-   m_pHandEntity = m_pSceneManager->createEntity("LMDF_C001_HandShort.mesh");
-   m_pHandEntity->setMaterialName("LMDF_C001_Hand");
-
+   m_pFootEntity = m_pSceneManager->createEntity("LMDF_C001_Foot.mesh");
+   m_pHandEntity = m_pSceneManager->createEntity("LMDF_C001_Hand.mesh");
    m_pLegEntity = m_pSceneManager->createEntity("LMDF_C001_Leg.mesh");
-   m_pLegEntity->setMaterialName("LMDF_C001_Leg");
 
    m_pPlayerNode->attachObject(m_pHairEntity);
    m_pPlayerNode->attachObject(m_pHeadEntity);
@@ -88,11 +91,15 @@ void CPlayer3D::setup()
    m_pPlayerNode->yaw(Ogre::Radian(m_pPlayer2D->getDirection()));
 
    // 載入相關動作
-   setupSkeleton("lm_nidle_001.skeleton");
-   setupSkeleton("lm_nrun_001.skeleton");
-   setupSkeleton("lm_cdraw_2weapon_001.skeleton");
-   setupSkeleton("lm_cidle_2weapon_001.skeleton");
-   setupSkeleton("lm_nputin_2weapon_001.skeleton");
+   std::vector<std::string> vtAnimationName = m_pPlayer2D->getAllAnimationName();
+   std::vector<std::string>::iterator it = vtAnimationName.begin();
+   while(it != vtAnimationName.end()) {
+      if((*it).length() > 0) {
+         std::string skeletonFile = (*it) + std::string(".skeleton");
+         setupSkeleton(skeletonFile);
+      }
+      it++;
+   }
 
    // 設定動作
    CAction *pNewAction = m_pPlayer2D->getCurAction();
@@ -106,6 +113,39 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
    if(m_pPlayer2D->isChangeAction()) {
       CAction *pNewAction = m_pPlayer2D->getCurAction();
       setAnimation(pNewAction->getAnimationName());
+
+      if(m_pMainHandSlotEntity != NULL) {
+         if(((pNewAction->getID() == 3) && (m_mainHandBoneName == std::string("Lwaist_bone"))) ||  // 拔出武器
+            ((pNewAction->getID() == 1) && (m_mainHandBoneName == std::string("Rhand_bone")))) {   // 收回武器
+            Ogre::Entity *pEntity = NULL;
+            if(m_pChestSlotEntity != NULL)
+               pEntity = m_pChestSlotEntity;
+            else
+               pEntity = m_pBodyEntity;
+
+            pEntity->detachObjectFromBone(m_pMainHandSlotEntity);
+            if(pNewAction->getID() <= 2) {
+               pEntity->attachObjectToBone("Lwaist_bone", m_pMainHandSlotEntity);
+               m_mainHandBoneName.assign("Lwaist_bone");
+            }
+            else if(pNewAction->getID() >= 3) {
+               pEntity->attachObjectToBone("Rhand_bone", m_pMainHandSlotEntity);
+               m_mainHandBoneName.assign("Rhand_bone");
+            }
+
+            if(m_pOffHandSlotEntity != NULL) {
+               pEntity->detachObjectFromBone(m_pOffHandSlotEntity);
+               if(pNewAction->getID() <= 2) {
+                  pEntity->attachObjectToBone("Back_bone", m_pOffHandSlotEntity);
+                  m_offHandBoneName.assign("Back_bone");
+               }
+               else if(pNewAction->getID() >= 3) {
+                  pEntity->attachObjectToBone("Shield_bone", m_pOffHandSlotEntity);
+                  m_offHandBoneName.assign("Shield_bone");
+               }
+            }
+         }
+      }
    }
    else
       playAnimation(timeSinceLastFrame);
@@ -186,9 +226,39 @@ void CPlayer3D::release()
       m_pLegEntity = NULL;
    }
 
-   if(m_pShoulderEntity != NULL) {
-      m_pSceneManager->destroyEntity(m_pShoulderEntity);
-      m_pShoulderEntity = NULL;
+   if(m_pMainHandSlotEntity != NULL) {
+      m_pSceneManager->destroyEntity(m_pMainHandSlotEntity);
+      m_pMainHandSlotEntity = NULL;
+   }
+
+   if(m_pOffHandSlotEntity != NULL) {
+      m_pSceneManager->destroyEntity(m_pOffHandSlotEntity);
+      m_pOffHandSlotEntity = NULL;
+   }
+
+   if(m_pChestSlotEntity != NULL) {
+      m_pSceneManager->destroyEntity(m_pChestSlotEntity);
+      m_pChestSlotEntity = NULL;
+   }
+
+   if(m_pPantsSlotEntity != NULL) {
+      m_pSceneManager->destroyEntity(m_pPantsSlotEntity);
+      m_pPantsSlotEntity = NULL;
+   }
+
+   if(m_pGloveSlotEntity != NULL) {
+      m_pSceneManager->destroyEntity(m_pGloveSlotEntity);
+      m_pGloveSlotEntity = NULL;
+   }
+
+   if(m_pBootSlotEntity != NULL) {
+      m_pSceneManager->destroyEntity(m_pBootSlotEntity);
+      m_pBootSlotEntity = NULL;
+   }
+
+   if(m_pShoulderSlotEntity != NULL) {
+      m_pSceneManager->destroyEntity(m_pShoulderSlotEntity);
+      m_pBootSlotEntity = NULL;
    }
 
    m_pPlayer2D = NULL;  // 由CScene物件來刪除
@@ -254,8 +324,8 @@ void CPlayer3D::setupSkeleton(std::string skeletonFile)
    Ogre::SkeletonPtr pSkeletonHair = Ogre::SkeletonManager::getSingleton().getByName("LM023_Hair.skeleton");
    Ogre::SkeletonPtr pSkeletonHead = Ogre::SkeletonManager::getSingleton().getByName("LM001_Head.skeleton");
    Ogre::SkeletonPtr pSkeletonBody = Ogre::SkeletonManager::getSingleton().getByName("LMDF_C001_Body.skeleton");
-   Ogre::SkeletonPtr pSkeletonFoot = Ogre::SkeletonManager::getSingleton().getByName("LMDF_C001_Footshort.skeleton");
-   Ogre::SkeletonPtr pSkeletonHand = Ogre::SkeletonManager::getSingleton().getByName("LMDF_C001_Handshort.skeleton");
+   Ogre::SkeletonPtr pSkeletonFoot = Ogre::SkeletonManager::getSingleton().getByName("LMDF_C001_Foot.skeleton");
+   Ogre::SkeletonPtr pSkeletonHand = Ogre::SkeletonManager::getSingleton().getByName("LMDF_C001_Hand.skeleton");
    Ogre::SkeletonPtr pSkeletonLeg  = Ogre::SkeletonManager::getSingleton().getByName("LMDF_C001_Leg.skeleton");
 
    Ogre::Skeleton::BoneHandleMap boneHandleMap;
@@ -349,6 +419,45 @@ void CPlayer3D::move(float timeSinceLastFrame, Ogre::Vector3 &offsetDirection)
    }
 }
 
+Ogre::Entity* CPlayer3D::setupArmor(Ogre::Entity *pBaseEntity, Ogre::Entity *pSlotEntity, int itemId)
+{
+   if(itemId != -1) {
+      CItemInfo *pItemInfo = CItem::getInfo(itemId);
+      if(pItemInfo->getClassType() == ARMOR) {
+         CArmorInfo *pArmorInfo = (CArmorInfo *)pItemInfo;
+
+         // 解除原先裝備
+         if(pSlotEntity != NULL) {
+            m_pPlayerNode->detachObject(pSlotEntity);
+            m_pSceneManager->destroyEntity(pSlotEntity);
+            pSlotEntity = NULL;
+         }
+         else
+            m_pPlayerNode->detachObject(pBaseEntity);
+
+         // 載入新裝備
+         pSlotEntity = m_pSceneManager->createEntity(pArmorInfo->getMeshName());
+
+         // 更換裝備 (使用骨架共享方式來換裝備)
+         Ogre::SkeletonPtr baseSkPtr = pBaseEntity->getMesh()->getSkeleton();
+         pSlotEntity->getMesh()->_notifySkeleton(baseSkPtr);
+         pSlotEntity->shareSkeletonInstanceWith(pBaseEntity);
+         m_pPlayerNode->attachObject(pSlotEntity);
+      }
+   }
+   else {
+      if(pSlotEntity != NULL) {
+         m_pPlayerNode->detachObject(pSlotEntity);
+         m_pPlayerNode->attachObject(pBaseEntity);
+
+         m_pSceneManager->destroyEntity(pSlotEntity);
+         pSlotEntity = NULL;
+      }
+   }
+
+   return pSlotEntity;
+}
+
 void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
 {
    switch(evt.key) {
@@ -393,10 +502,15 @@ void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
       }
       
       case OIS::KC_X: {
-         CActionEvent actEvent;
-         actEvent.m_event = AET_KEY;
-         actEvent.m_iKeyID = 'X';
-         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+         if(m_pMainHandSlotEntity != NULL) {
+            if(m_pPlayer2D->getCurAction()->getID() == 1 ||   // 等待
+               m_pPlayer2D->getCurAction()->getID() == 4) {   // 戰鬥姿勢
+               CActionEvent actEvent;
+               actEvent.m_event = AET_KEY;
+               actEvent.m_iKeyID = 'X';
+               CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+            }
+         }
          break;
       }
    }
@@ -436,4 +550,183 @@ void CPlayer3D::keyUp(const OIS::KeyEvent &evt)
       actEvent.m_iKeyUpID = 'D';
       CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
    }
+}
+
+void CPlayer3D::updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int itemId)
+{
+   switch(equipSlot) {
+      case MAIN_HAND: {
+         Ogre::Entity *pEntity = NULL;
+         if(m_pChestSlotEntity != NULL)
+            pEntity = m_pChestSlotEntity;
+         else
+            pEntity = m_pBodyEntity;
+
+         if(itemId > -1) {
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            if(pItemInfo->getClassType() == WEAPON) {
+               CWeaponInfo *pWeaponInfo = (CWeaponInfo *)pItemInfo;
+
+               if(m_pMainHandSlotEntity != NULL) {
+                  // 移除舊武器
+                  pEntity->detachObjectFromBone(m_pMainHandSlotEntity);
+                  m_pSceneManager->destroyEntity(m_pMainHandSlotEntity);
+                  m_pMainHandSlotEntity = NULL;
+               }
+
+               // 載入新武器
+               m_pMainHandSlotEntity = m_pSceneManager->createEntity(pWeaponInfo->getMeshName());
+
+               // 依據不同的動作，武器放在不同位置上
+               m_mainHandBoneName.clear();
+               CAction *pCurAction = m_pPlayer2D->getCurAction();
+               if(pCurAction->getID() <= 2) {  // 等待 與 非戰鬥的跑步
+                  pEntity->attachObjectToBone("Lwaist_bone", m_pMainHandSlotEntity);
+                  m_mainHandBoneName.assign("Lwaist_bone");
+               }
+               else {
+                  pEntity->attachObjectToBone("Rhand_bone", m_pMainHandSlotEntity);
+                  m_mainHandBoneName.assign("Rhand_bone");
+               }
+            }
+         }
+         else {
+            // 卸下武器
+            if(m_pMainHandSlotEntity != NULL) {
+               pEntity->detachObjectFromBone(m_pMainHandSlotEntity);
+               m_pSceneManager->destroyEntity(m_pMainHandSlotEntity);
+               m_pMainHandSlotEntity = NULL;
+               m_mainHandBoneName.clear();
+            }
+         }
+         break;
+      }   // case MAIN_HAND
+
+      case OFF_HAND: {
+         Ogre::Entity *pEntity = NULL;
+         if(m_pChestSlotEntity != NULL)
+            pEntity = m_pChestSlotEntity;
+         else
+            pEntity = m_pBodyEntity;
+
+         if(itemId > -1) {
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            if(pItemInfo->getClassType() == WEAPON) {
+               CWeaponInfo *pWeaponInfo = (CWeaponInfo *)pItemInfo;
+
+               if(m_pOffHandSlotEntity != NULL) {
+                  // 移除舊武器
+                  pEntity->detachObjectFromBone(m_pOffHandSlotEntity);
+                  m_pSceneManager->destroyEntity(m_pOffHandSlotEntity);
+                  m_pOffHandSlotEntity = NULL;
+               }
+
+               // 載入新武器
+               m_pOffHandSlotEntity = m_pSceneManager->createEntity(pWeaponInfo->getMeshName());
+
+               // 依據不同的動作，武器放在不同位置上
+               m_offHandBoneName.clear();
+               CAction *pCurAction = m_pPlayer2D->getCurAction();
+               if(pCurAction->getID() <= 2) {  // 等待 與 非戰鬥的跑步
+                  pEntity->attachObjectToBone("Back_bone", m_pOffHandSlotEntity);
+                  m_offHandBoneName.assign("Back_bone");
+               }
+               else {
+                  pEntity->attachObjectToBone("Shield_bone", m_pOffHandSlotEntity);
+                  m_offHandBoneName.assign("Shield_bone");
+               }
+            }
+         }
+         else {
+            // 卸下武器
+            if(m_pOffHandSlotEntity != NULL) {
+               pEntity->detachObjectFromBone(m_pOffHandSlotEntity);
+               m_pSceneManager->destroyEntity(m_pOffHandSlotEntity);
+               m_pOffHandSlotEntity = NULL;
+               m_offHandBoneName.clear();
+            }
+         }
+         break;
+      }  // case OFF_HAND
+
+      case CHEST: {
+         Ogre::Entity *pEntity = NULL;
+         if(m_pChestSlotEntity != NULL)
+            pEntity = m_pChestSlotEntity;
+         else
+            pEntity = m_pBodyEntity;
+
+         // 卸下武器
+         if(m_pMainHandSlotEntity != NULL)
+            pEntity->detachObjectFromBone(m_pMainHandSlotEntity);
+
+         if(m_pOffHandSlotEntity != NULL)
+            pEntity->detachObjectFromBone(m_pOffHandSlotEntity);
+
+         m_pChestSlotEntity = setupArmor(m_pBodyEntity, m_pChestSlotEntity, itemId);
+
+         if(m_pChestSlotEntity != NULL)
+            pEntity = m_pChestSlotEntity;
+         else
+            pEntity = m_pBodyEntity;
+
+         // 安裝主手武器
+         if(m_pMainHandSlotEntity != NULL)
+            pEntity->attachObjectToBone(m_mainHandBoneName, m_pMainHandSlotEntity);
+
+         if(m_pOffHandSlotEntity != NULL)
+            pEntity->attachObjectToBone(m_offHandBoneName, m_pOffHandSlotEntity);
+
+         break;
+      }  // case CHEST
+
+      case LEGS: {
+         m_pPantsSlotEntity = setupArmor(m_pLegEntity, m_pPantsSlotEntity, itemId);
+         break;
+      }  // case LEGS
+
+      case GLOVE: {
+         m_pGloveSlotEntity = setupArmor(m_pHandEntity, m_pGloveSlotEntity, itemId);
+         break;
+      }  // case GLOVE
+
+      case BOOT: {
+         m_pBootSlotEntity = setupArmor(m_pFootEntity, m_pBootSlotEntity, itemId);
+         break;
+      }  // case GLOVE
+
+      case SHOULDER: {
+         if(itemId != -1) {
+            CItemInfo *pItemInfo = CItem::getInfo(itemId);
+            if(pItemInfo->getClassType() == ARMOR) {
+               CArmorInfo *pArmorInfo = (CArmorInfo *)pItemInfo;
+
+               // 解除原先裝備
+               if(m_pShoulderSlotEntity != NULL) {
+                  m_pPlayerNode->detachObject(m_pShoulderSlotEntity);
+                  m_pSceneManager->destroyEntity(m_pShoulderSlotEntity);
+                  m_pShoulderSlotEntity = NULL;
+               }
+
+               // 載入新裝備
+               m_pShoulderSlotEntity = m_pSceneManager->createEntity(pArmorInfo->getMeshName());
+
+               // 更換裝備 (使用骨架共享方式來換裝備)
+               Ogre::SkeletonPtr baseSkPtr = m_pBodyEntity->getMesh()->getSkeleton();
+               m_pShoulderSlotEntity->getMesh()->_notifySkeleton(baseSkPtr);
+               m_pShoulderSlotEntity->shareSkeletonInstanceWith(m_pBodyEntity);
+               m_pPlayerNode->attachObject(m_pShoulderSlotEntity);
+            }
+         }
+         else {
+            if(m_pShoulderSlotEntity != NULL) {
+               m_pPlayerNode->detachObject(m_pShoulderSlotEntity);
+
+               m_pSceneManager->destroyEntity(m_pShoulderSlotEntity);
+               m_pShoulderSlotEntity = NULL;
+            }
+         }
+         break;
+      }  // case SHOULDER
+   }  // switch
 }

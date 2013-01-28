@@ -1,0 +1,123 @@
+material "SH_R012a"
+{
+	technique SH_R012a_technique
+	{
+		pass SH_R012a_Ambient
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 1 1 1 0 0
+			emissive 0 0 0 1
+
+			illumination_stage ambient
+
+			scene_blend alpha_blend
+			
+			vertex_program_ref vsAmbGENREF0
+			{
+			}
+			fragment_program_ref fpAmbGENDIFF0REF
+			{
+				param_named reflectivity float 1
+				param_named fresnelMul float 4.0
+				param_named fresnelPow float 5.0
+			}
+
+			texture_unit SH_R012a_Diffuse#0
+			{
+				texture sh_r012a.dds
+				tex_coord_set 0
+				mipmap_bias -1
+				colour_op modulate
+			}
+
+			texture_unit SH_R012a_Reflect#1
+			{
+				texture sh_r012a_matid.dds
+				tex_coord_set 0
+				colour_op modulate
+				env_map planar
+			}
+		}
+		pass SH_R012a_Light
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 1 1 1 0 0
+			emissive 0 0 0 1
+
+			separate_scene_blend src_alpha one src_alpha one_minus_src_alpha 
+
+			iteration once_per_light
+
+			illumination_stage per_light
+			
+			vertex_program_ref vsLightGEN0
+			{
+			}
+			fragment_program_ref fpLightGENDIFF0SPEC0REF
+			{
+				param_named reflectivity float 1
+				param_named fresnelMul float 4.0
+				param_named fresnelPow float 5.0
+			}
+
+			texture_unit SH_R012a_Diffuse#2
+			{
+				texture sh_r012a.dds
+				tex_coord_set 0
+				mipmap_bias -1
+				colour_op modulate
+			}
+
+			texture_unit SH_R012a_Specular#3
+			{
+				texture sh_r012a_sp.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit SH_R012a_Reflect#4
+			{
+				texture sh_r012a_matid.dds
+				tex_coord_set 0
+				colour_op modulate
+				env_map planar
+			}
+		}
+	}
+	technique SH_R012a_basic_technique
+	{
+	scheme basic_mat
+		pass SH_R012a_standard
+		{
+			cull_hardware none
+			cull_software none
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 1 1 1 0 0
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+
+			texture_unit SH_R012a_Diffuse#5
+			{
+				texture sh_r012a.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit SH_R012a_Reflect#6
+			{
+				texture sh_r012a_matid.dds
+				tex_coord_set 0
+				colour_op modulate
+				env_map planar
+			}
+		}
+	}
+}

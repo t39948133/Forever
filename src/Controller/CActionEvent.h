@@ -39,6 +39,10 @@ class CActionEvent
       bool              m_bCastSkill;      // 是否施展技能
       unsigned int      m_iCastSkillID;    // 技能編號
       float             m_fCastSkillTime;  // 施展時間
+
+      // AET_CALLBACK_XXXX  (動作系統會依據此訊息來發出訊息給外部)
+      //float             m_fBeginTime;      // 該事件的開始觸發時間
+      //float             m_fEndTime;        // 該事件的結束觸發時間
 };
 
 #endif  // #ifndef _CACTIONEVENT_H_

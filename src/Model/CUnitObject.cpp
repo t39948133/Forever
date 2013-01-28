@@ -304,6 +304,11 @@ bool CUnitObject::isMove()
       return false;
 }
 
+std::vector<std::string> CUnitObject::getAllAnimationName()
+{
+   return m_pActionSystem->getAllAnimationName();
+}
+
 void CUnitObject::setTargetObject(CUnitObject *pUnitObject)
 {
    m_pTargetObject = pUnitObject;
