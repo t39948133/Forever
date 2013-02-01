@@ -11,6 +11,8 @@
 #include "IKeyEventListener.h"
 #include "CPlayer.h"
 #include "IPlayerEquipEventListener.h"
+#include "IDrawWeaponNotifyListener.h"
+#include "IPutinWeaponNotifyListener.h"
 
 #include <OgreSceneManager.h>
 #include <OgreEntity.h>
@@ -18,7 +20,9 @@
 #include <OgreAnimationState.h>
 
 class CPlayer3D : public IKeyEventListener,
-                  public IPlayerEquipEventListener
+                  public IPlayerEquipEventListener,
+                  public IDrawWeaponNotifyListener,
+                  public IPutinWeaponNotifyListener
 {
    public:
       CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager);
@@ -80,6 +84,12 @@ class CPlayer3D : public IKeyEventListener,
 
       // IPlayerEquipEventListener
       /* virtual */ void updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int itemId);
+
+      // IDrawWeaponNotifyListener
+      /* virtual */ void notifyDrawWeapon();
+
+      // IPutinWeaponNotifyListener
+      /* virtual */ void notifyPutinWeapon();
 
       std::vector<Ogre::AnimationState *> *m_pvtAnimationSet;  // 當前角色的動畫集合(所有模型)
 

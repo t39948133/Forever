@@ -31,6 +31,11 @@ class CActionDispatch
         * @param actEvent 動作訊息 */
       void sendEvnet(long long uid, CActionEvent &actEvent);
 
+      /** @brief 送給某個uid動作通知訊息
+        * @param uid                CUnitObject的uid
+        * @param pNotifyActionEvent 動作通知訊息 */
+      void sendNotify(long long uid, CNotifyActionEvent *pNotifyActionEvent);
+
    private:
       CActionDispatch();
       ~CActionDispatch();

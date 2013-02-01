@@ -11,6 +11,7 @@ material "Na_L_bush_05e"
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
+			scene_blend alpha_blend
 			alpha_rejection greater 128
 
 			texture_unit Na_L_bush_05e_Diffuse#0
@@ -22,7 +23,7 @@ material "Na_L_bush_05e"
 
 			texture_unit Na_L_bush_05e_Unknown#1
 			{
-				texture Na_L_bush_01a_01_alpha.png
+				texture na_l_bush_01a_01_alpha.png
 				tex_coord_set 0
 				colour_op modulate
 			}

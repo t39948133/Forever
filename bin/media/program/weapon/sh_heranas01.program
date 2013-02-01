@@ -1,30 +1,24 @@
-vertex_program vsAmbGENREF0 cg
+vertex_program vsAmbGEN0 cg
 {
 	source sh_heranas01.cg
 	profiles vs_1_1 arbvp1
-	entry_point vsAmbGENREF0
+	entry_point vsAmbGEN0
 	default_params
 	{
 		param_named_auto wvpMat worldviewproj_matrix
-		param_named_auto witMat inverse_transpose_world_matrix
-		param_named_auto wMat world_matrix
 	}
 }
 
-fragment_program fpAmbGENDIFF0REF cg
+fragment_program fpAmbGENDIFF0 cg
 {
 	source sh_heranas01.cg
 	profiles ps_2_x arbfp1
-	entry_point fpAmbGENDIFF0REF
+	entry_point fpAmbGENDIFF0
 	default_params
 	{
 		param_named_auto ambient ambient_light_colour
 		param_named_auto matAmb surface_ambient_colour
 		param_named_auto matEmissive surface_emissive_colour
-		param_named_auto camPos camera_position
-		param_named reflectivity float 1.0
-		param_named fresnelMul float 4.0
-		param_named fresnelPow float 5.0
 	}
 }
 
@@ -41,11 +35,11 @@ vertex_program vsLightGENNORM0 cg
 	}
 }
 
-fragment_program fpLightGENDIFF0SPEC0NORM0REF cg
+fragment_program fpLightGENDIFF0NORM0 cg
 {
 	source sh_heranas01.cg
 	profiles ps_2_x arbfp1
-	entry_point fpLightGENDIFF0SPEC0NORM0REF
+	entry_point fpLightGENDIFF0NORM0
 	default_params
 	{
 		param_named_auto lightDif0 light_diffuse_colour 0
@@ -59,9 +53,6 @@ fragment_program fpLightGENDIFF0SPEC0NORM0REF cg
 		param_named_auto spotlightParams spotlight_params 0
 		param_named_auto iTWMat inverse_transpose_world_matrix
 		param_named normalMul float 1
-		param_named reflectivity float 1.0
-		param_named fresnelMul float 4.0
-		param_named fresnelPow float 5.0
 	}
 }
 

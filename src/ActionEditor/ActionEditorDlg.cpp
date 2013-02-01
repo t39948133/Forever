@@ -4,6 +4,11 @@
 #include "stdafx.h"
 #include "ActionEditor.h"
 #include "ActionEditorDlg.h"
+#include "CKeyActionEvent.h"
+#include "CWASDKeyActionEvent.h"
+#include "CCastSkillActionEvent.h"
+#include "CNotifyActionEvent.h"
+#include "CPlaySoundNotifyActionEvent.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -76,6 +81,7 @@ BEGIN_MESSAGE_MAP(CActionEditorDlg, CDialog)
    ON_BN_CLICKED(BTN_DELEVENT, &CActionEditorDlg::OnBnClickedDelevent)
    ON_BN_CLICKED(BTN_SAVE, &CActionEditorDlg::OnBnClickedSave)
    ON_BN_CLICKED(BTN_LOAD, &CActionEditorDlg::OnBnClickedLoad)
+   ON_CBN_SELCHANGE(CMB_EVENT, &CActionEditorDlg::OnCbnSelchangeEvent)
 END_MESSAGE_MAP()
 
 
@@ -122,6 +128,23 @@ BOOL CActionEditorDlg::OnInitDialog()
 
    CButton *pbtnDelEvent = (CButton*)GetDlgItem(BTN_DELEVENT);
    pbtnDelEvent->EnableWindow(FALSE);
+
+   CEdit *pedtKey = (CEdit*)GetDlgItem(EDT_KEY);
+   pedtKey->EnableWindow(false);
+   CEdit *pedtKeyDown = (CEdit*)GetDlgItem(EDT_KEYDOWN);
+   pedtKeyDown->EnableWindow(false);
+   CEdit *pedtKeyUp = (CEdit*)GetDlgItem(EDT_KEYUP);
+   pedtKeyUp->EnableWindow(false);
+   CEdit *pedtBeginTime = (CEdit*)GetDlgItem(EDT_BEGINTIME);
+   pedtBeginTime->EnableWindow(false);
+   CEdit *pedtEndTime = (CEdit*)GetDlgItem(EDT_ENDTIME);
+   pedtEndTime->EnableWindow(false);
+   CEdit *pedtSoundFile = (CEdit*)GetDlgItem(EDT_SOUNDFILE);
+   pedtSoundFile->EnableWindow(false);
+
+   SetDlgItemText(EDT_EVENTNEXTACTIONID, "");
+   CEdit *pedtEventNextActionID = (CEdit*)GetDlgItem(EDT_EVENTNEXTACTIONID);
+   pedtEventNextActionID->EnableWindow(true);
 
 	return TRUE;  // 傳回 TRUE，除非您對控制項設定焦點
 }
@@ -180,8 +203,8 @@ void CActionEditorDlg::updateActionList()
    CListBox *pActionList = (CListBox*)GetDlgItem(LST_ACTIONLIST);
    pActionList->ResetContent();
 
-   std::vector<CAction *>::iterator it = m_pActionSystem->m_pvtActionSet->begin();
-   while(it != m_pActionSystem->m_pvtActionSet->end()) {
+   std::vector<CAction *>::iterator it = m_pActionSystem->m_pActionVector->begin();
+   while(it != m_pActionSystem->m_pActionVector->end()) {
       CString str;
       char buf[256];
       memset(buf, 0, sizeof(buf));
@@ -214,10 +237,10 @@ void CActionEditorDlg::updateEventList()
    CString str;
    char buf[256];
 
-   CAction *pAction = m_pActionSystem->m_pvtActionSet->at(m_iActionListIdx);
+   CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
    std::vector<CActionEventHandler *>::iterator it = pAction->m_pvtEventHandlerSet->begin();
    while(it != pAction->m_pvtEventHandlerSet->end()) {
-      switch((*it)->m_triggerEvent.m_event) {
+      switch((*it)->m_pTriggerEvent->m_event) {
          case AET_NULL: {     
             str.Empty();
             memset(buf, 0, sizeof(buf));
@@ -271,6 +294,33 @@ void CActionEditorDlg::updateEventList()
 		      pEventList->AddString(str);
             break;
          }
+
+         case AET_NOTIFY_DRAW_WEAPON: {
+            str.Empty();
+            memset(buf, 0, sizeof(buf));
+            sprintf_s(buf, "AET_NOTIFY_DRAW_WEAPON => [%d]", (*it)->m_iNextActionID);
+		      str = buf;
+		      pEventList->AddString(str);
+            break;
+         }
+
+         case AET_NOTIFY_PUTIN_WEAPON: {
+            str.Empty();
+            memset(buf, 0, sizeof(buf));
+            sprintf_s(buf, "AET_NOTIFY_PUTIN_WEAPON => [%d]", (*it)->m_iNextActionID);
+		      str = buf;
+		      pEventList->AddString(str);
+            break;
+         }
+
+         case AET_NOTIFY_PLAY_SOUND: {
+            str.Empty();
+            memset(buf, 0, sizeof(buf));
+            sprintf_s(buf, "AET_NOTIFY_PLAY_SOUND => [%d]", (*it)->m_iNextActionID);
+		      str = buf;
+		      pEventList->AddString(str);
+            break;
+         }
       }
 
       it++;
@@ -287,6 +337,9 @@ void CActionEditorDlg::clearEventData()
    SetDlgItemText(EDT_KEY, "");
    SetDlgItemText(EDT_KEYDOWN, "");
    SetDlgItemText(EDT_KEYUP, "");
+   SetDlgItemText(EDT_BEGINTIME, "");
+   SetDlgItemText(EDT_ENDTIME, "");
+   SetDlgItemText(EDT_SOUNDFILE, "");
 }
 
 void CActionEditorDlg::OnBnClickedNewaction()
@@ -324,7 +377,7 @@ void CActionEditorDlg::OnBnClickedNewaction()
       m_pActionSystem->addAction(pAction);
    }
    else {
-      CAction *pAction = m_pActionSystem->m_pvtActionSet->at(m_iActionListIdx);
+      CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
       pAction->m_iID = actData.iID;
       pAction->m_name = actData.name;
       pAction->m_animationName = actData.animationName;
@@ -363,7 +416,7 @@ void CActionEditorDlg::OnLbnSelchangeActionlist()
    m_iActionListIdx = pActionList->GetCurSel();
 
    if(m_iActionListIdx > -1) {
-      CAction *pAction = m_pActionSystem->m_pvtActionSet->at(m_iActionListIdx);
+      CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
 
       SetDlgItemText(EDT_ACTIONID, toString<int>(pAction->m_iID).c_str());
       SetDlgItemText(EDT_ACTIONNAME, pAction->m_name.c_str());
@@ -377,6 +430,8 @@ void CActionEditorDlg::OnLbnSelchangeActionlist()
          pcmbMove->SetCurSel(1);
 
       SetDlgItemText(EDT_NEXTACTIONID, toString<int>(pAction->m_iNextActID).c_str());
+
+      OnBnClickedCancelseleventlist();
 
       // 顯示Action內的所有Event
       updateEventList();
@@ -430,18 +485,18 @@ void CActionEditorDlg::OnBnClickedCancelselactionlist()
 void CActionEditorDlg::OnBnClickedDelaction()
 {
    if(m_iActionListIdx > -1) {
-      CAction *pAction = m_pActionSystem->m_pvtActionSet->at(m_iActionListIdx);
-      std::vector<CAction *>::iterator it = m_pActionSystem->m_pvtActionSet->begin();
-      while(it != m_pActionSystem->m_pvtActionSet->end()) {
+      CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
+      std::vector<CAction *>::iterator it = m_pActionSystem->m_pActionVector->begin();
+      while(it != m_pActionSystem->m_pActionVector->end()) {
          if((*it) == pAction) {
-            m_pActionSystem->m_pvtActionSet->erase(it);
+            m_pActionSystem->m_pActionVector->erase(it);
             break;
          }
 
          it++;
       }
 
-      if(m_iActionListIdx >= (int)m_pActionSystem->m_pvtActionSet->size())
+      if(m_iActionListIdx >= (int)m_pActionSystem->m_pActionVector->size())
          m_iActionListIdx--;
 
       updateActionList();
@@ -452,59 +507,133 @@ void CActionEditorDlg::OnBnClickedDelaction()
 void CActionEditorDlg::OnBnClickedNewevent()
 {
    if(m_iActionListIdx > -1) {
-      CActionEvent actEvent;
+      CActionEvent *pActionEvent = NULL;
       CComboBox *pcmbEvent = (CComboBox*)GetDlgItem(CMB_EVENT);
-      if(pcmbEvent->GetCurSel() == 0)
-         actEvent.m_event = AET_NULL;
-      else if(pcmbEvent->GetCurSel() == 1)
-         actEvent.m_event = AET_REACH;
-      else if(pcmbEvent->GetCurSel() == 2)
-         actEvent.m_event = AET_NOT_REACH;
+
+      if(pcmbEvent->GetCurSel() == 0) {
+         pActionEvent = new CActionEvent();
+         pActionEvent->m_event = AET_NULL;
+      }
+      else if(pcmbEvent->GetCurSel() == 1) {
+         pActionEvent = new CActionEvent();
+         pActionEvent->m_event = AET_REACH;
+      }
+      else if(pcmbEvent->GetCurSel() == 2) {
+         pActionEvent = new CActionEvent();
+         pActionEvent->m_event = AET_NOT_REACH;
+      }
       else if(pcmbEvent->GetCurSel() == 3) {
-         actEvent.m_event = AET_KEY;
+         CKeyActionEvent *pEvent = new CKeyActionEvent();
+         pEvent->m_event = AET_KEY;
 
          CString str;
          str.Empty();
          GetDlgItemText(EDT_KEY, str);
          std::string strKey = str.GetBuffer(0);
-         actEvent.m_iKeyID = int(*(strKey.c_str()));
+         pEvent->m_iKeyID = int(*(strKey.c_str()));
+
+         pActionEvent = pEvent;
       }
       else if(pcmbEvent->GetCurSel() == 4) {
-         actEvent.m_event = AET_KEY_WASD;
+         CWASDKeyActionEvent *pEvent = new CWASDKeyActionEvent();
+         pEvent->m_event = AET_KEY_WASD;
 
          CString str;
          str.Empty();
          GetDlgItemText(EDT_KEYDOWN, str);
          std::string strKeyDown = str.GetBuffer(0);
-         actEvent.m_iKeyDownID = int(*(strKeyDown.c_str()));
+         pEvent->m_iKeyDownID = int(*(strKeyDown.c_str()));
 
          str.Empty();
          GetDlgItemText(EDT_KEYUP, str);
          std::string strKeyUp = str.GetBuffer(0);
-         actEvent.m_iKeyUpID = int(*(strKeyUp.c_str()));
+         pEvent->m_iKeyUpID = int(*(strKeyUp.c_str()));
+
+         pActionEvent = pEvent;
       }
       else if(pcmbEvent->GetCurSel() == 5) {
-         actEvent.m_event = AET_CAST_SKILL;
+         CCastSkillActionEvent *pEvent = new CCastSkillActionEvent();
+         pEvent->m_event = AET_CAST_SKILL;
+
+         pActionEvent = pEvent;
+      }
+      else if(pcmbEvent->GetCurSel() == 6) {
+         CNotifyActionEvent *pEvent = new CNotifyActionEvent();
+         pEvent->m_event = AET_NOTIFY_DRAW_WEAPON;
+
+         CString str;
+         str.Empty();
+         GetDlgItemText(EDT_BEGINTIME, str);
+         std::string strFTime = str.GetBuffer(0);
+         pEvent->m_fBeginTime = fromString<float>(strFTime);
+
+         str.Empty();
+         strFTime.clear();
+         GetDlgItemText(EDT_ENDTIME, str);
+         strFTime = str.GetBuffer(0);
+         pEvent->m_fEndTime = fromString<float>(strFTime);
+
+         pActionEvent = pEvent;
+      }
+      else if(pcmbEvent->GetCurSel() == 7) {
+         CNotifyActionEvent *pEvent = new CNotifyActionEvent();
+         pEvent->m_event = AET_NOTIFY_PUTIN_WEAPON;
+
+         CString str;
+         str.Empty();
+         GetDlgItemText(EDT_BEGINTIME, str);
+         std::string strFTime = str.GetBuffer(0);
+         pEvent->m_fBeginTime = fromString<float>(strFTime);
+
+         str.Empty();
+         strFTime.clear();
+         GetDlgItemText(EDT_ENDTIME, str);
+         strFTime = str.GetBuffer(0);
+         pEvent->m_fEndTime = fromString<float>(strFTime);
+
+         pActionEvent = pEvent;
+      }
+      else if(pcmbEvent->GetCurSel() == 8) {
+         CPlaySoundNotifyActionEvent *pEvent = new CPlaySoundNotifyActionEvent();
+         pEvent->m_event = AET_NOTIFY_PLAY_SOUND;
+
+         CString str;
+         str.Empty();
+         GetDlgItemText(EDT_BEGINTIME, str);
+         std::string strFTime = str.GetBuffer(0);
+         pEvent->m_fBeginTime = fromString<float>(strFTime);
+
+         str.Empty();
+         strFTime.clear();
+         GetDlgItemText(EDT_ENDTIME, str);
+         strFTime = str.GetBuffer(0);
+         pEvent->m_fEndTime = fromString<float>(strFTime);
+
+         str.Empty();
+         GetDlgItemText(EDT_SOUNDFILE, str);
+         pEvent->m_soundFile = str.GetBuffer(0);
+
+         pActionEvent = pEvent;
       }
 
       if(m_iEventListIdx == -1) {
          CActionEventHandler *pActionEventHandler = new CActionEventHandler();
-         pActionEventHandler->init(actEvent, GetDlgItemInt(EDT_EVENTNEXTACTIONID));
+         pActionEventHandler->init(pActionEvent, GetDlgItemInt(EDT_EVENTNEXTACTIONID));
 
-         CAction *pAction = m_pActionSystem->m_pvtActionSet->at(m_iActionListIdx);
+         CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
          pAction->addEventHandler(pActionEventHandler);
       }
       else {
-         CAction *pAction = m_pActionSystem->m_pvtActionSet->at(m_iActionListIdx);
+         CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
          CActionEventHandler *pActionEventHandler = pAction->m_pvtEventHandlerSet->at(m_iEventListIdx);
 
-         pActionEventHandler->m_triggerEvent = actEvent;
+         pActionEventHandler->m_pTriggerEvent = pActionEvent;
          pActionEventHandler->m_iNextActionID = GetDlgItemInt(EDT_EVENTNEXTACTIONID);
       }
 
       updateEventList();
 
-      clearEventData();
+      OnBnClickedCancelseleventlist();
    }
 }
 
@@ -515,11 +644,12 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
       m_iEventListIdx = pEventList->GetCurSel();
 
       if(m_iEventListIdx > -1) {
-         CAction *pAction = m_pActionSystem->m_pvtActionSet->at(m_iActionListIdx);
+         clearEventData();
+         CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
          CActionEventHandler *pActionEventHandler = pAction->m_pvtEventHandlerSet->at(m_iEventListIdx);
 
          CComboBox *pcmbEvent = (CComboBox*)GetDlgItem(CMB_EVENT);
-         switch(pActionEventHandler->m_triggerEvent.m_event) {
+         switch(pActionEventHandler->m_pTriggerEvent->m_event) {
             case AET_NULL:
                pcmbEvent->SetCurSel(0);
                break;
@@ -532,33 +662,72 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
                pcmbEvent->SetCurSel(2);
                break;
 
-            case AET_KEY:
+            case AET_KEY: {
                pcmbEvent->SetCurSel(3);
-               break;
 
-            case AET_KEY_WASD:
-               pcmbEvent->SetCurSel(4);
+               CKeyActionEvent *pKeyActionEvent = (CKeyActionEvent *)pActionEventHandler->m_pTriggerEvent;
+               std::string strKey;
+               strKey.clear();
+               strKey = (char)pKeyActionEvent->m_iKeyID;
+               SetDlgItemText(EDT_KEY, strKey.c_str());
                break;
+            }
+
+            case AET_KEY_WASD: {
+               pcmbEvent->SetCurSel(4);
+
+               CWASDKeyActionEvent *pWASDKeyActionEvent = (CWASDKeyActionEvent *)pActionEventHandler->m_pTriggerEvent;
+
+               std::string strKey;
+               strKey.clear();
+               strKey = (char)pWASDKeyActionEvent->m_iKeyDownID;
+               SetDlgItemText(EDT_KEYDOWN, strKey.c_str());
+
+               strKey.clear();
+               strKey = (char)pWASDKeyActionEvent->m_iKeyUpID;
+               SetDlgItemText(EDT_KEYUP, strKey.c_str());
+               break;
+            }
 
             case AET_CAST_SKILL:
                pcmbEvent->SetCurSel(5);
                break;
+
+            case AET_NOTIFY_DRAW_WEAPON: {
+               pcmbEvent->SetCurSel(6);
+
+               CNotifyActionEvent *pNotifyActionEvent = (CNotifyActionEvent *)pActionEventHandler->m_pTriggerEvent;
+
+               SetDlgItemText(EDT_BEGINTIME, toString<float>(pNotifyActionEvent->m_fBeginTime).c_str());
+               SetDlgItemText(EDT_ENDTIME, toString<float>(pNotifyActionEvent->m_fEndTime).c_str());
+               break;
+            }
+
+            case AET_NOTIFY_PUTIN_WEAPON: {
+               pcmbEvent->SetCurSel(7);
+
+               CNotifyActionEvent *pNotifyActionEvent = (CNotifyActionEvent *)pActionEventHandler->m_pTriggerEvent;
+
+               SetDlgItemText(EDT_BEGINTIME, toString<float>(pNotifyActionEvent->m_fBeginTime).c_str());
+               SetDlgItemText(EDT_ENDTIME, toString<float>(pNotifyActionEvent->m_fEndTime).c_str());
+               break;
+            }
+
+            case AET_NOTIFY_PLAY_SOUND: {
+               pcmbEvent->SetCurSel(8);
+
+               CPlaySoundNotifyActionEvent *pPlaySoundNotifyActionEvent = (CPlaySoundNotifyActionEvent *)pActionEventHandler->m_pTriggerEvent;
+
+               SetDlgItemText(EDT_BEGINTIME, toString<float>(pPlaySoundNotifyActionEvent->m_fBeginTime).c_str());
+               SetDlgItemText(EDT_ENDTIME, toString<float>(pPlaySoundNotifyActionEvent->m_fEndTime).c_str());
+               SetDlgItemText(EDT_SOUNDFILE, pPlaySoundNotifyActionEvent->m_soundFile.c_str());
+               break;
+            }
          }
 
          SetDlgItemText(EDT_EVENTNEXTACTIONID, toString<int>(pActionEventHandler->getNextActionID()).c_str());
 
-         std::string strKey;
-         strKey.clear();
-         strKey = (char)pActionEventHandler->m_triggerEvent.m_iKeyID;
-         SetDlgItemText(EDT_KEY, strKey.c_str());
-
-         strKey.clear();
-         strKey = (char)pActionEventHandler->m_triggerEvent.m_iKeyDownID;
-         SetDlgItemText(EDT_KEYDOWN, strKey.c_str());
-
-         strKey.clear();
-         strKey = (char)pActionEventHandler->m_triggerEvent.m_iKeyUpID;
-         SetDlgItemText(EDT_KEYUP, strKey.c_str());
+         OnCbnSelchangeEvent();
 
          CButton *pbtnDelEvent = (CButton*)GetDlgItem(BTN_DELEVENT);
          pbtnDelEvent->EnableWindow(TRUE);
@@ -581,6 +750,8 @@ void CActionEditorDlg::OnBnClickedCancelseleventlist()
    //---清除
    clearEventData();
 
+   OnCbnSelchangeEvent();
+
    CButton *pbtnDelEvent = (CButton*)GetDlgItem(BTN_DELEVENT);
    pbtnDelEvent->EnableWindow(FALSE);
 }
@@ -589,7 +760,7 @@ void CActionEditorDlg::OnBnClickedDelevent()
 {
    if(m_iActionListIdx > -1) {
       if(m_iEventListIdx > -1) {
-         CAction *pAction = m_pActionSystem->m_pvtActionSet->at(m_iActionListIdx);
+         CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
          CActionEventHandler *pActionEventHandler = pAction->m_pvtEventHandlerSet->at(m_iEventListIdx);
 
          std::vector<CActionEventHandler *>::iterator it = pAction->m_pvtEventHandlerSet->begin();
@@ -636,5 +807,134 @@ void CActionEditorDlg::OnBnClickedLoad()
       SetDlgItemText(TXT_FILENAME, fullPathFileName);
 
       updateActionList();
+   }
+}
+
+void CActionEditorDlg::OnCbnSelchangeEvent()
+{
+   CComboBox *pcmbEvent = (CComboBox*)GetDlgItem(CMB_EVENT);
+   switch(pcmbEvent->GetCurSel()) {
+      case 0:    // AET_NULL
+      case 1:    // AET_REACH
+      case 2: {  // AET_NOT_REACH
+         CEdit *pedtKey = (CEdit*)GetDlgItem(EDT_KEY);
+         pedtKey->EnableWindow(false);
+         CEdit *pedtKeyDown = (CEdit*)GetDlgItem(EDT_KEYDOWN);
+         pedtKeyDown->EnableWindow(false);
+         CEdit *pedtKeyUp = (CEdit*)GetDlgItem(EDT_KEYUP);
+         pedtKeyUp->EnableWindow(false);
+         CEdit *pedtBeginTime = (CEdit*)GetDlgItem(EDT_BEGINTIME);
+         pedtBeginTime->EnableWindow(false);
+         CEdit *pedtEndTime = (CEdit*)GetDlgItem(EDT_ENDTIME);
+         pedtEndTime->EnableWindow(false);
+         CEdit *pedtSoundFile = (CEdit*)GetDlgItem(EDT_SOUNDFILE);
+         pedtSoundFile->EnableWindow(false);
+
+         SetDlgItemText(EDT_EVENTNEXTACTIONID, "");
+         CEdit *pedtEventNextActionID = (CEdit*)GetDlgItem(EDT_EVENTNEXTACTIONID);
+         pedtEventNextActionID->EnableWindow(true);
+         break;
+      }
+
+      case 3: {  // AET_KEY
+         CEdit *pedtKey = (CEdit*)GetDlgItem(EDT_KEY);
+         pedtKey->EnableWindow(true);
+         CEdit *pedtKeyDown = (CEdit*)GetDlgItem(EDT_KEYDOWN);
+         pedtKeyDown->EnableWindow(false);
+         CEdit *pedtKeyUp = (CEdit*)GetDlgItem(EDT_KEYUP);
+         pedtKeyUp->EnableWindow(false);
+         CEdit *pedtBeginTime = (CEdit*)GetDlgItem(EDT_BEGINTIME);
+         pedtBeginTime->EnableWindow(false);
+         CEdit *pedtEndTime = (CEdit*)GetDlgItem(EDT_ENDTIME);
+         pedtEndTime->EnableWindow(false);
+         CEdit *pedtSoundFile = (CEdit*)GetDlgItem(EDT_SOUNDFILE);
+         pedtSoundFile->EnableWindow(false);
+
+         SetDlgItemText(EDT_EVENTNEXTACTIONID, "");
+         CEdit *pedtEventNextActionID = (CEdit*)GetDlgItem(EDT_EVENTNEXTACTIONID);
+         pedtEventNextActionID->EnableWindow(true);
+         break;
+      }
+
+      case 4: {  // AET_KEY_WASD
+         CEdit *pedtKey = (CEdit*)GetDlgItem(EDT_KEY);
+         pedtKey->EnableWindow(false);
+         CEdit *pedtKeyDown = (CEdit*)GetDlgItem(EDT_KEYDOWN);
+         pedtKeyDown->EnableWindow(true);
+         CEdit *pedtKeyUp = (CEdit*)GetDlgItem(EDT_KEYUP);
+         pedtKeyUp->EnableWindow(true);
+         CEdit *pedtBeginTime = (CEdit*)GetDlgItem(EDT_BEGINTIME);
+         pedtBeginTime->EnableWindow(false);
+         CEdit *pedtEndTime = (CEdit*)GetDlgItem(EDT_ENDTIME);
+         pedtEndTime->EnableWindow(false);
+         CEdit *pedtSoundFile = (CEdit*)GetDlgItem(EDT_SOUNDFILE);
+         pedtSoundFile->EnableWindow(false);
+
+         SetDlgItemText(EDT_EVENTNEXTACTIONID, "");
+         CEdit *pedtEventNextActionID = (CEdit*)GetDlgItem(EDT_EVENTNEXTACTIONID);
+         pedtEventNextActionID->EnableWindow(true);
+         break;
+      }
+
+      case 5: {  // AET_CAST_SKILL
+         CEdit *pedtKey = (CEdit*)GetDlgItem(EDT_KEY);
+         pedtKey->EnableWindow(false);
+         CEdit *pedtKeyDown = (CEdit*)GetDlgItem(EDT_KEYDOWN);
+         pedtKeyDown->EnableWindow(false);
+         CEdit *pedtKeyUp = (CEdit*)GetDlgItem(EDT_KEYUP);
+         pedtKeyUp->EnableWindow(false);
+         CEdit *pedtBeginTime = (CEdit*)GetDlgItem(EDT_BEGINTIME);
+         pedtBeginTime->EnableWindow(false);
+         CEdit *pedtEndTime = (CEdit*)GetDlgItem(EDT_ENDTIME);
+         pedtEndTime->EnableWindow(false);
+         CEdit *pedtSoundFile = (CEdit*)GetDlgItem(EDT_SOUNDFILE);
+         pedtSoundFile->EnableWindow(false);
+
+         SetDlgItemText(EDT_EVENTNEXTACTIONID, "");
+         CEdit *pedtEventNextActionID = (CEdit*)GetDlgItem(EDT_EVENTNEXTACTIONID);
+         pedtEventNextActionID->EnableWindow(true);
+         break;
+      }
+
+      case 6:    // AET_NOTIFY_DRAW_WEAPON
+      case 7: {  // AET_NOTIFY_PUTIN_WEAPON
+         CEdit *pedtKey = (CEdit*)GetDlgItem(EDT_KEY);
+         pedtKey->EnableWindow(false);
+         CEdit *pedtKeyDown = (CEdit*)GetDlgItem(EDT_KEYDOWN);
+         pedtKeyDown->EnableWindow(false);
+         CEdit *pedtKeyUp = (CEdit*)GetDlgItem(EDT_KEYUP);
+         pedtKeyUp->EnableWindow(false);
+         CEdit *pedtBeginTime = (CEdit*)GetDlgItem(EDT_BEGINTIME);
+         pedtBeginTime->EnableWindow(true);
+         CEdit *pedtEndTime = (CEdit*)GetDlgItem(EDT_ENDTIME);
+         pedtEndTime->EnableWindow(true);
+         CEdit *pedtSoundFile = (CEdit*)GetDlgItem(EDT_SOUNDFILE);
+         pedtSoundFile->EnableWindow(false);
+
+         SetDlgItemText(EDT_EVENTNEXTACTIONID, "-1");
+         CEdit *pedtEventNextActionID = (CEdit*)GetDlgItem(EDT_EVENTNEXTACTIONID);
+         pedtEventNextActionID->EnableWindow(false);
+         break;
+      }
+
+      case 8: {  // AET_NOTIFY_PLAY_SOUND
+         CEdit *pedtKey = (CEdit*)GetDlgItem(EDT_KEY);
+         pedtKey->EnableWindow(false);
+         CEdit *pedtKeyDown = (CEdit*)GetDlgItem(EDT_KEYDOWN);
+         pedtKeyDown->EnableWindow(false);
+         CEdit *pedtKeyUp = (CEdit*)GetDlgItem(EDT_KEYUP);
+         pedtKeyUp->EnableWindow(false);
+         CEdit *pedtBeginTime = (CEdit*)GetDlgItem(EDT_BEGINTIME);
+         pedtBeginTime->EnableWindow(true);
+         CEdit *pedtEndTime = (CEdit*)GetDlgItem(EDT_ENDTIME);
+         pedtEndTime->EnableWindow(true);
+         CEdit *pedtSoundFile = (CEdit*)GetDlgItem(EDT_SOUNDFILE);
+         pedtSoundFile->EnableWindow(true);
+
+         SetDlgItemText(EDT_EVENTNEXTACTIONID, "-1");
+         CEdit *pedtEventNextActionID = (CEdit*)GetDlgItem(EDT_EVENTNEXTACTIONID);
+         pedtEventNextActionID->EnableWindow(false);
+         break;
+      }
    }
 }

@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\View"
+				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;..\..\lib\openal_sdk\include;..\..\lib\openal_sdk\samples\framework\Win32;..\..\lib\sound_man;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\View"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_GAMEENGINE_3D_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain_d.lib OIS_d.lib wsock32.lib"
+				AdditionalDependencies="OgreMain_d.lib OIS_d.lib wsock32.lib OpenAL32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;..\..\lib\ogre_v1-8-1\lib\$(ConfigurationName)&quot;;&quot;..\..\lib\ogre_v1-8-1\boost\lib&quot;;..\..\lib\gp_framework"
+				AdditionalLibraryDirectories="&quot;..\..\lib\ogre_v1-8-1\lib\$(ConfigurationName)&quot;;&quot;..\..\lib\ogre_v1-8-1\boost\lib&quot;;..\..\lib\gp_framework;..\..\lib\openal_sdk\libs\Win32"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\View"
+				AdditionalIncludeDirectories="&quot;..\..\lib\etm-2.3.1\include&quot;;..\..\lib\openal_sdk\include;..\..\lib\openal_sdk\samples\framework\Win32;..\..\lib\sound_man;&quot;..\..\lib\ogre_v1-8-1\include&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OIS&quot;;&quot;..\..\lib\ogre_v1-8-1\include\OGRE&quot;;&quot;..\..\lib\ogre_v1-8-1\boost&quot;;..\..\src\Common;..\..\src\Model;..\..\src\GraphicsRender;..\..\src\GraphicsRender\Ogre;..\..\src\3D;..\..\src\Controller;..\..\src\Client;..\..\src\View"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_GAMEENGINE_3D_"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -136,9 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OgreMain.lib OIS.lib wsock32.lib"
+				AdditionalDependencies="OgreMain.lib OIS.lib wsock32.lib OpenAL32.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;..\..\lib\ogre_v1-8-1\lib\$(ConfigurationName)&quot;;&quot;..\..\lib\ogre_v1-8-1\boost\lib&quot;;..\..\lib\gp_framework"
+				AdditionalLibraryDirectories="&quot;..\..\lib\ogre_v1-8-1\lib\$(ConfigurationName)&quot;;&quot;..\..\lib\ogre_v1-8-1\boost\lib&quot;;..\..\lib\gp_framework;..\..\lib\openal_sdk\libs\Win32"
 				GenerateDebugInformation="false"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -324,11 +324,35 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Controller\CCastSkillActionEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CFightSystem.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Controller\CGameClient.cpp"
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Controller\CKeyActionEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CNotifyActionEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CPlaySoundNotifyActionEvent.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Controller\CScene.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CWASDKeyActionEvent.cpp"
 					>
 				</File>
 			</Filter>
@@ -338,6 +362,22 @@
 				<File
 					RelativePath="..\..\src\Common\Common.cpp"
 					>
+				</File>
+				<File
+					RelativePath="..\..\src\Common\CSoundManager.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Common\LogWindow.cpp"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -376,6 +416,30 @@
 					</File>
 					<File
 						RelativePath="..\..\lib\etm-2.3.1\src\ETTile.cpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="OpenAL"
+					>
+					<File
+						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\aldlist.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\CWaves.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\Framework.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\LoadOAL.cpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\sound_man\sound_man.cpp"
 						>
 					</File>
 				</Filter>
@@ -436,6 +500,22 @@
 				<File
 					RelativePath="..\..\src\common\Common.h"
 					>
+				</File>
+				<File
+					RelativePath="..\..\src\Common\CSoundManager.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Common\LogWindow.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -626,11 +706,47 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Controller\CCastSkillActionEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CFightSystem.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Controller\CGameClient.h"
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Controller\CKeyActionEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CNotifyActionEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CPlaySoundNotifyActionEvent.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Controller\CScene.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\CWASDKeyActionEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\IDrawWeaponNotifyListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\IPlaySoundNotifyListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\IPutinWeaponNotifyListener.h"
 					>
 				</File>
 			</Filter>

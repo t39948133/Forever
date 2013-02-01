@@ -313,9 +313,20 @@ typedef enum tagACTION_EVENT_TYPE {
    AET_CAST_SKILL,            // 施展技能
 
    //--- 以下是動作系統發出的訊息
-   AET_CALLBACK_DRAW_WEAPON,  // 拔武器
-   AET_CALLBACK_PUTIN_WEAPON, // 收武器
+   AET_NOTIFY_BEGIN,          // 通知訊息的開始, 此訊息動作編輯器不使用
+   AET_NOTIFY_DRAW_WEAPON,    // 拔武器
+   AET_NOTIFY_PUTIN_WEAPON,   // 收武器
+   AET_NOTIFY_PLAY_SOUND,     // 播放動作音效
 } ACTION_EVENT_TYPE;  // 動作事件種類
+
+const std::string SOUND_DIR   = "../media/sound/";  // 音效路徑
+const int ACTION_IDLE         = 1;  // 等待
+const int ACTION_RUN          = 2;  // 跑步
+const int ACTION_DRAW_WEAPON  = 3;  // 拔出武器
+const int ACTION_FIGHT        = 4;  // 戰鬥姿態
+const int ACTION_FIGHT_RUN    = 5;  // 戰鬥姿態跑步
+const int ACTION_PUTIN_WEAPON = 6;  // 收回武器
+const int ACTION_ATTACK       = 7;  // 普通攻擊
 // } Add by Darren Chen on 2012/12/13
 
 #endif  // #ifndef _COMMON_H_

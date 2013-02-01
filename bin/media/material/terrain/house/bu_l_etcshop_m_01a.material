@@ -1,8 +1,8 @@
-material "Tile06"
+material "Tile03"
 {
-	technique Tile06_technique
+	technique Tile03_technique
 	{
-		pass Tile06_standard
+		pass Tile03_standard
 		{
 			cull_hardware none
 			cull_software none
@@ -11,9 +11,11 @@ material "Tile06"
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit Tile06_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit Tile03_Diffuse#0
 			{
-				texture bu_l_outpostresta_01a_006.dds
+				texture bu_l_outpostresta_01a_003.dds
 				tex_coord_set 0
 				colour_op modulate
 			}
@@ -32,6 +34,8 @@ material "Tile08"
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
+
+			scene_blend alpha_blend
 
 			texture_unit Tile08_Diffuse#0
 			{
@@ -55,6 +59,8 @@ material "Tile09"
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
+			scene_blend alpha_blend
+
 			texture_unit Tile09_Diffuse#0
 			{
 				texture bu_l_outpostresta_01a_009.dds
@@ -76,6 +82,8 @@ material "Tile02"
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
+
+			scene_blend alpha_blend
 
 			texture_unit Tile02_Diffuse#0
 			{
@@ -99,20 +107,22 @@ material "Tile07"
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
+			scene_blend alpha_blend
+
 			texture_unit Tile07_Diffuse#0
 			{
-				texture bu_l_outpostresta_01a_006.dds
+				texture bu_l_outpostresta_01a_001.dds
 				tex_coord_set 0
 				colour_op modulate
 			}
 		}
 	}
 }
-material "Basic"
+material "Tile06"
 {
-	technique Basic_technique
+	technique Tile06_technique
 	{
-		pass Basic_standard
+		pass Tile06_standard
 		{
 			cull_hardware none
 			cull_software none
@@ -121,9 +131,11 @@ material "Basic"
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit Basic_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit Tile06_Diffuse#0
 			{
-				texture bu_l_outpost_01a_001.dds
+				texture bu_l_outpostresta_01a_006.dds
 				tex_coord_set 0
 				colour_op modulate
 			}

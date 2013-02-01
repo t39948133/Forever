@@ -9,6 +9,8 @@ material "wooden_box"
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
+			scene_blend alpha_blend
+
 			texture_unit wooden_box_Diffuse#0
 			{
 				texture wooden_box_001.dds

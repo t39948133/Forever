@@ -6,11 +6,16 @@
   * @email  darren.z32@msa.hinet.net
   * @date   2012/12/02  */
 #include "CGameClient3D.h"
+//#include "LogWindow.h"
+
+//CLogWindow Flog;
 
 /** @brief Forever程式進入點 */
 int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
    CGameClient3D app;
+   //Flog.Create(hInstance, NULL, FALSE, "Log - ForeverClient");
+   //Flog.SetOutputFile("ForeverClient.log", TRUE);
    app.run();
 
    return 0;

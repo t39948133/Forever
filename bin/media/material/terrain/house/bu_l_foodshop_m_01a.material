@@ -1,17 +1,17 @@
-material "foodshop_m_01a_Tile02"
+material "bu_l_foodshop_m_01a_Tile02"
 {
-	technique foodshop_m_01a_Tile02_technique
+	technique bu_l_foodshop_m_01a_Tile02_technique
 	{
-		pass foodshop_m_01a_Tile02_standard
+		pass bu_l_foodshop_m_01a_Tile02_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit foodshop_m_01a_Tile02_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_foodshop_m_01a_Tile02_Diffuse#0
 			{
 				texture bu_l_outpostresta_01a_002.dds
 				tex_coord_set 0
@@ -20,20 +20,20 @@ material "foodshop_m_01a_Tile02"
 		}
 	}
 }
-material "foodshop_m_01a_Tile01"
+material "bu_l_foodshop_m_01a_Tile01"
 {
-	technique foodshop_m_01a_Tile01_technique
+	technique bu_l_foodshop_m_01a_Tile01_technique
 	{
-		pass foodshop_m_01a_Tile01_standard
+		pass bu_l_foodshop_m_01a_Tile01_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit foodshop_m_01a_Tile01_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_foodshop_m_01a_Tile01_Diffuse#0
 			{
 				texture bu_l_outpostresta_01a_001.dds
 				tex_coord_set 0
@@ -42,20 +42,20 @@ material "foodshop_m_01a_Tile01"
 		}
 	}
 }
-material "foodshop_m_01a_Tile03"
+material "bu_l_foodshop_m_01a_Tile03"
 {
-	technique foodshop_m_01a_Tile03_technique
+	technique bu_l_foodshop_m_01a_Tile03_technique
 	{
-		pass foodshop_m_01a_Tile03_standard
+		pass bu_l_foodshop_m_01a_Tile03_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit foodshop_m_01a_Tile03_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_foodshop_m_01a_Tile03_Diffuse#0
 			{
 				texture bu_l_outpostresta_01a_003.dds
 				tex_coord_set 0
@@ -64,20 +64,20 @@ material "foodshop_m_01a_Tile03"
 		}
 	}
 }
-material "foodshop_m_01a_tile06"
+material "bu_l_foodshop_m_01a_tile06"
 {
-	technique foodshop_m_01a_tile06_technique
+	technique bu_l_foodshop_m_01a_tile06_technique
 	{
-		pass foodshop_m_01a_tile06_standard
+		pass bu_l_foodshop_m_01a_tile06_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit foodshop_m_01a_tile06_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_foodshop_m_01a_tile06_Diffuse#0
 			{
 				texture bu_l_outpostresta_01a_006.dds
 				tex_coord_set 0
@@ -86,20 +86,20 @@ material "foodshop_m_01a_tile06"
 		}
 	}
 }
-material "foodshop_m_01a_tile04"
+material "bu_l_foodshop_m_01a_tile04"
 {
-	technique foodshop_m_01a_tile04_technique
+	technique bu_l_foodshop_m_01a_tile04_technique
 	{
-		pass foodshop_m_01a_tile04_standard
+		pass bu_l_foodshop_m_01a_tile04_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit foodshop_m_01a_tile04_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_foodshop_m_01a_tile04_Diffuse#0
 			{
 				texture bu_l_outpostresta_01a_004.dds
 				tex_coord_set 0
@@ -108,20 +108,20 @@ material "foodshop_m_01a_tile04"
 		}
 	}
 }
-material "foodshop_m_01a_002"
+material "bu_l_foodshop_m_01a_002"
 {
-	technique foodshop_m_01a_002_technique
+	technique bu_l_foodshop_m_01a_002_technique
 	{
-		pass foodshop_m_01a_002_standard
+		pass bu_l_foodshop_m_01a_002_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit foodshop_m_01a_002_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_foodshop_m_01a_002_Diffuse#0
 			{
 				texture bu_l_privatehouse_01a_002.dds
 				tex_coord_set 0

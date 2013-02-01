@@ -7,6 +7,8 @@
   * @date   2012/12/12 */
 #include "CPlayer3D.h"
 #include "CRenderLoader.h"
+#include "CKeyActionEvent.h"
+#include "CWASDKeyActionEvent.h"
 #include "CWeaponInfo.h"
 #include "CArmorInfo.h"
 
@@ -46,11 +48,15 @@ CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager) : m_pP
    m_pvtAnimationSet = new std::vector<Ogre::AnimationState *>();
 
    m_pPlayer2D->addPlayerEquipEventListener(this);
+   m_pPlayer2D->addDrawWeaponNotifyListener(this);
+   m_pPlayer2D->addPutinWeaponNotifyListener(this);
 }
 
 CPlayer3D::~CPlayer3D()
 {
    m_pPlayer2D->removePlayerEquipEventListener(this);
+   m_pPlayer2D->removeDrawWeaponNotifyListener(this);
+   m_pPlayer2D->removePutinWeaponNotifyListener(this);
 
    release();
 
@@ -113,39 +119,6 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
    if(m_pPlayer2D->isChangeAction()) {
       CAction *pNewAction = m_pPlayer2D->getCurAction();
       setAnimation(pNewAction->getAnimationName());
-
-      if(m_pMainHandSlotEntity != NULL) {
-         if(((pNewAction->getID() == 3) && (m_mainHandBoneName == std::string("Lwaist_bone"))) ||  // 拔出武器
-            ((pNewAction->getID() == 1) && (m_mainHandBoneName == std::string("Rhand_bone")))) {   // 收回武器
-            Ogre::Entity *pEntity = NULL;
-            if(m_pChestSlotEntity != NULL)
-               pEntity = m_pChestSlotEntity;
-            else
-               pEntity = m_pBodyEntity;
-
-            pEntity->detachObjectFromBone(m_pMainHandSlotEntity);
-            if(pNewAction->getID() <= 2) {
-               pEntity->attachObjectToBone("Lwaist_bone", m_pMainHandSlotEntity);
-               m_mainHandBoneName.assign("Lwaist_bone");
-            }
-            else if(pNewAction->getID() >= 3) {
-               pEntity->attachObjectToBone("Rhand_bone", m_pMainHandSlotEntity);
-               m_mainHandBoneName.assign("Rhand_bone");
-            }
-
-            if(m_pOffHandSlotEntity != NULL) {
-               pEntity->detachObjectFromBone(m_pOffHandSlotEntity);
-               if(pNewAction->getID() <= 2) {
-                  pEntity->attachObjectToBone("Back_bone", m_pOffHandSlotEntity);
-                  m_offHandBoneName.assign("Back_bone");
-               }
-               else if(pNewAction->getID() >= 3) {
-                  pEntity->attachObjectToBone("Shield_bone", m_pOffHandSlotEntity);
-                  m_offHandBoneName.assign("Shield_bone");
-               }
-            }
-         }
-      }
    }
    else
       playAnimation(timeSinceLastFrame);
@@ -464,7 +437,7 @@ void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
       case OIS::KC_W: {
          m_keyDirection.z = -1;
 
-         CActionEvent actEvent;
+         CWASDKeyActionEvent actEvent;
          actEvent.m_event = AET_KEY_WASD;
          actEvent.m_iKeyDownID = 'W';
          CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
@@ -474,7 +447,7 @@ void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
       case OIS::KC_A: {
          m_keyDirection.x = -1;
 
-         CActionEvent actEvent;
+         CWASDKeyActionEvent actEvent;
          actEvent.m_event = AET_KEY_WASD;
          actEvent.m_iKeyDownID = 'A';
          CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
@@ -484,7 +457,7 @@ void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
       case OIS::KC_S: {
          m_keyDirection.z = 1;
 
-         CActionEvent actEvent;
+         CWASDKeyActionEvent actEvent;
          actEvent.m_event = AET_KEY_WASD;
          actEvent.m_iKeyDownID = 'S';
          CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
@@ -494,7 +467,7 @@ void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
       case OIS::KC_D: {
          m_keyDirection.x = 1;
 
-         CActionEvent actEvent;
+         CWASDKeyActionEvent actEvent;
          actEvent.m_event = AET_KEY_WASD;
          actEvent.m_iKeyDownID = 'D';
          CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
@@ -505,7 +478,7 @@ void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
          if(m_pMainHandSlotEntity != NULL) {
             if(m_pPlayer2D->getCurAction()->getID() == 1 ||   // 等待
                m_pPlayer2D->getCurAction()->getID() == 4) {   // 戰鬥姿勢
-               CActionEvent actEvent;
+               CKeyActionEvent actEvent;
                actEvent.m_event = AET_KEY;
                actEvent.m_iKeyID = 'X';
                CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
@@ -521,7 +494,7 @@ void CPlayer3D::keyUp(const OIS::KeyEvent &evt)
    if((evt.key == OIS::KC_W) && (m_keyDirection.z == -1)) {
       m_keyDirection.z = 0;
 
-      CActionEvent actEvent;
+      CWASDKeyActionEvent actEvent;
       actEvent.m_event = AET_KEY_WASD;
       actEvent.m_iKeyUpID = 'W';
       CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
@@ -529,7 +502,7 @@ void CPlayer3D::keyUp(const OIS::KeyEvent &evt)
    else if((evt.key == OIS::KC_A) && (m_keyDirection.x == -1)) {
       m_keyDirection.x = 0;
 
-      CActionEvent actEvent;
+      CWASDKeyActionEvent actEvent;
       actEvent.m_event = AET_KEY_WASD;
       actEvent.m_iKeyUpID = 'A';
       CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
@@ -537,7 +510,7 @@ void CPlayer3D::keyUp(const OIS::KeyEvent &evt)
    else if((evt.key == OIS::KC_S) && (m_keyDirection.z == 1)) {
       m_keyDirection.z = 0;
 
-      CActionEvent actEvent;
+      CWASDKeyActionEvent actEvent;
       actEvent.m_event = AET_KEY_WASD;
       actEvent.m_iKeyUpID = 'S';
       CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
@@ -545,7 +518,7 @@ void CPlayer3D::keyUp(const OIS::KeyEvent &evt)
    else if((evt.key == OIS::KC_D) && (m_keyDirection.x == 1)) {
       m_keyDirection.x = 0;
 
-      CActionEvent actEvent;
+      CWASDKeyActionEvent actEvent;
       actEvent.m_event = AET_KEY_WASD;
       actEvent.m_iKeyUpID = 'D';
       CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
@@ -580,7 +553,7 @@ void CPlayer3D::updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int ite
                // 依據不同的動作，武器放在不同位置上
                m_mainHandBoneName.clear();
                CAction *pCurAction = m_pPlayer2D->getCurAction();
-               if(pCurAction->getID() <= 2) {  // 等待 與 非戰鬥的跑步
+               if(pCurAction->getID() <= ACTION_RUN) {  // 等待 與 非戰鬥的跑步
                   pEntity->attachObjectToBone("Lwaist_bone", m_pMainHandSlotEntity);
                   m_mainHandBoneName.assign("Lwaist_bone");
                }
@@ -627,7 +600,7 @@ void CPlayer3D::updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int ite
                // 依據不同的動作，武器放在不同位置上
                m_offHandBoneName.clear();
                CAction *pCurAction = m_pPlayer2D->getCurAction();
-               if(pCurAction->getID() <= 2) {  // 等待 與 非戰鬥的跑步
+               if(pCurAction->getID() <= ACTION_RUN) {  // 等待 與 非戰鬥的跑步
                   pEntity->attachObjectToBone("Back_bone", m_pOffHandSlotEntity);
                   m_offHandBoneName.assign("Back_bone");
                }
@@ -729,4 +702,46 @@ void CPlayer3D::updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int ite
          break;
       }  // case SHOULDER
    }  // switch
+}
+
+void CPlayer3D::notifyDrawWeapon()
+{
+   if(m_pMainHandSlotEntity != NULL) {
+      Ogre::Entity *pEntity = NULL;
+      if(m_pChestSlotEntity != NULL)
+         pEntity = m_pChestSlotEntity;
+      else
+         pEntity = m_pBodyEntity;
+
+      pEntity->detachObjectFromBone(m_pMainHandSlotEntity);
+      pEntity->attachObjectToBone("Rhand_bone", m_pMainHandSlotEntity);
+      m_mainHandBoneName.assign("Rhand_bone");
+      
+      if(m_pOffHandSlotEntity != NULL) {
+         pEntity->detachObjectFromBone(m_pOffHandSlotEntity);
+         pEntity->attachObjectToBone("Shield_bone", m_pOffHandSlotEntity);
+         m_offHandBoneName.assign("Shield_bone");
+      }
+   }
+}
+
+void CPlayer3D::notifyPutinWeapon()
+{
+   if(m_pMainHandSlotEntity != NULL) {
+      Ogre::Entity *pEntity = NULL;
+      if(m_pChestSlotEntity != NULL)
+         pEntity = m_pChestSlotEntity;
+      else
+         pEntity = m_pBodyEntity;
+
+      pEntity->detachObjectFromBone(m_pMainHandSlotEntity);
+      pEntity->attachObjectToBone("Lwaist_bone", m_pMainHandSlotEntity);
+      m_mainHandBoneName.assign("Lwaist_bone");
+      
+      if(m_pOffHandSlotEntity != NULL) {
+         pEntity->detachObjectFromBone(m_pOffHandSlotEntity);
+         pEntity->attachObjectToBone("Back_bone", m_pOffHandSlotEntity);
+         m_offHandBoneName.assign("Back_bone");
+      }
+   }
 }

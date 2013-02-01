@@ -8,6 +8,8 @@
 #include "CActionDispatch.h"
 #include "IAdvAttrEventListener.h"
 #include "ISkillEventListener.h"
+#include "IDrawWeaponNotifyListener.h"
+#include "IPlaySoundNotifyListener.h"
 
 typedef struct tagPOSITION {
    float fX;
@@ -15,7 +17,7 @@ typedef struct tagPOSITION {
 } FPOS;
 // } Add by Darren Chen on 2012/12/22
 
-class CUnitObject
+class CUnitObject : public IPlaySoundNotifyListener
 {
    public:
       CUnitObject(std::string strName, long long uid, char level = 0); //建立角色 傳入名字、等級(預設建立後為0級)
@@ -151,6 +153,12 @@ class CUnitObject
            * @param pListener 監聽者 */
       void removeSkillEventListener(ISkillEventListener *pListener);
 
+      void addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
+      void removeDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
+
+      void addPutinWeaponNotifyListener(IPutinWeaponNotifyListener *pListener);
+      void removePutinWeaponNotifyListener(IPutinWeaponNotifyListener *pListener);
+
 #ifdef _GAMEENGINE_2D_
       /** @brief 是否被點選
         * @param x 滑鼠的X座標
@@ -202,6 +210,9 @@ class CUnitObject
 
       /** @brief 通知技能有更新 */
       void notifySkillUpdate();
+
+      // IPlaySoundNotifyListener
+      /* virtual */ void notifyPlaySound(std::string soundFile);
 
 #ifdef _GAMEENGINE_2D_
       /** @brief 2D版本移動

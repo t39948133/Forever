@@ -1,45 +1,25 @@
-void vsAmbGENREF0(float4 position	: POSITION,
+void vsAmbGEN0(float4 position	: POSITION,
 	float3 normal : NORMAL,
 	float2 uv0 : TEXCOORD0,
 	out float4 oPos: POSITION,
-	out float3 oNorm : TEXCOORD0,
-	out float4 oWp : TEXCOORD1,
-	out float2 oUv0 : TEXCOORD2,
-	uniform float4x4 wMat,
-	uniform float4x4 witMat,
+	out float2 oUv0 : TEXCOORD0,
 	uniform float4x4 wvpMat
 )
 {
 	oPos = mul(wvpMat, position);
-	oWp = mul(wMat, position);
-	oNorm = normalize(mul((float3x3)witMat, normal));
 	oUv0 = uv0;
 }
 
-float4 fpAmbGENDIFF0REF(float4 position	: POSITION,
-	float3 normal : TEXCOORD0,
-	float4 wp : TEXCOORD1,
-	float2 uv0 : TEXCOORD2,
+float4 fpAmbGENDIFF0(float4 position	: POSITION,
+	float2 uv0 : TEXCOORD0,
 	uniform float3 ambient,
 	uniform float4 matAmb,
 	uniform float4 matEmissive,
-	uniform float3 camPos,
-	uniform float reflectivity,
-	uniform float fresnelMul,
-	uniform float fresnelPow,
-	uniform sampler2D diffuseMap : register(s0),
-	uniform samplerCUBE reflectMap : register(s1)): COLOR0
+	uniform sampler2D diffuseMap : register(s0)): COLOR0
 {
 	float4 diffuseTex = tex2D(diffuseMap, uv0);
 	float4 retColor = max(matEmissive, float4(ambient, 1) * matAmb);
 	retColor *= diffuseTex;
-	float3 camDir = normalize(camPos - wp.xyz);
-	float3 refVec = -reflect(camDir, normal);
-	refVec.z = -refVec.z;
-	float4 reflecTex = texCUBE(reflectMap, refVec);
-	float fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));
-	float4 reflecVal = reflecTex * fresnel;
-	retColor += float4(ambient, 1) * matAmb * reflecVal;
 	return retColor;
 }
 
@@ -67,7 +47,7 @@ void vsLightGENNORM0(float4 position	: POSITION,
 	oSpDir = mul(wMat, spotlightDir).xyz;
 }
 
-float4 fpLightGENDIFF0SPEC0NORM0REF(float4 position	: POSITION,
+float4 fpLightGENDIFF0NORM0(float4 position	: POSITION,
 	float3 norm : TEXCOORD0,
 	float3 tangent : TEXCOORD1,
 	float3 binormal : TEXCOORD2,
@@ -86,13 +66,8 @@ float4 fpLightGENDIFF0SPEC0NORM0REF(float4 position	: POSITION,
 	uniform float4 spotlightParams,
 	uniform float4x4 iTWMat,
 	uniform float normalMul,
-	uniform float reflectivity,
-	uniform float fresnelMul,
-	uniform float fresnelPow,
 	uniform sampler2D diffuseMap : register(s0),
-	uniform sampler2D specMap : register(s1),
-	uniform sampler2D normalMap : register(s2),
-	uniform samplerCUBE reflectMap : register(s3)): COLOR0
+	uniform sampler2D normalMap : register(s1)): COLOR0
 {
 	float3 ld0 = normalize(lightPos0.xyz - (lightPos0.w * wp.xyz));
 	// attenuation
@@ -117,20 +92,12 @@ float4 fpLightGENDIFF0SPEC0NORM0REF(float4 position	: POSITION,
 	float3 halfVec = normalize(ld0 + camDir);
 	float3 specular = pow(max(dot(normal, halfVec), 0), matShininess);
 	float4 diffuseTex = tex2D(diffuseMap, uv0);
-	float4 specTex = tex2D(specMap, uv0);
 	float3 diffuseContrib = diffuse * lightDif0 * matDif.rgb;
 	diffuseContrib *= diffuseTex.rgb;
 	float3 specularContrib = specular * lightSpec0 * matSpec.rgb;
-	specularContrib *= specTex.rgb;
 	float3 light0C = (diffuseContrib + specularContrib) * la * spot;
 	float alpha = matDif.a;
 	alpha *= diffuseTex.a;
-	float3 refVec = -reflect(camDir, normal);
-	refVec.z = -refVec.z;
-	float4 reflecTex = texCUBE(reflectMap, refVec);
-	float fresnel = fresnelMul * reflectivity * pow(1 + dot(-camDir, normal), fresnelPow - (reflectivity * fresnelMul));
-	float4 reflecVal = reflecTex * fresnel;
-	float3 reflectColor = (reflecVal.rgb * diffuseContrib) + (reflecVal.rbg * specularContrib);
-	return float4(light0C + reflectColor, alpha);
+	return float4(light0C, alpha);
 }
 

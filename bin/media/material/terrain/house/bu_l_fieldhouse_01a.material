@@ -1,17 +1,17 @@
-material "filedhouse_01a_18"
+material "default_18"
 {
-	technique filedhouse_01a_18_technique
+	technique default_18_technique
 	{
-		pass filedhouse_01a_18_standard
+		pass default_18_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_18_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit default_18_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_018.dds
 				tex_coord_set 0
@@ -20,20 +20,20 @@ material "filedhouse_01a_18"
 		}
 	}
 }
-material "filedhouse_01a_6"
+material "default_6"
 {
-	technique filedhouse_01a_6_technique
+	technique default_6_technique
 	{
-		pass filedhouse_01a_6_standard
+		pass default_6_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_6_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit default_6_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_006.dds
 				tex_coord_set 0
@@ -42,11 +42,11 @@ material "filedhouse_01a_6"
 		}
 	}
 }
-material "filedhouse_01a_01"
+material "_01_-_Default"
 {
-	technique filedhouse_01a_01_technique
+	technique _01_-_Default_technique
 	{
-		pass filedhouse_01a_01_standard
+		pass _01_-_Default_standard
 		{
 			cull_hardware none
 			cull_software none
@@ -55,16 +55,17 @@ material "filedhouse_01a_01"
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
+			scene_blend alpha_blend
 			alpha_rejection greater 128
 
-			texture_unit filedhouse_01a_01_Diffuse#0
+			texture_unit _01_-_Default_Diffuse#0
 			{
 				texture na_l_flower_15o_01.dds
 				tex_coord_set 0
 				colour_op modulate
 			}
 
-			texture_unit filedhouse_01a_01_Unknown#1
+			texture_unit _01_-_Default_Unknown#1
 			{
 				texture na_l_flower_15o_01_alpha.png
 				tex_coord_set 0
@@ -73,20 +74,20 @@ material "filedhouse_01a_01"
 		}
 	}
 }
-material "filedhouse_01a_08"
+material "default_08"
 {
-	technique filedhouse_01a_08_technique
+	technique default_08_technique
 	{
-		pass filedhouse_01a_08_standard
+		pass default_08_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_08_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit default_08_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_008.dds
 				tex_coord_set 0
@@ -95,20 +96,20 @@ material "filedhouse_01a_08"
 		}
 	}
 }
-material "filedhouse_01a_3"
+material "default_3"
 {
-	technique filedhouse_01a_3_technique
+	technique default_3_technique
 	{
-		pass filedhouse_01a_3_standard
+		pass default_3_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_3_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit default_3_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_003.dds
 				tex_coord_set 0
@@ -117,20 +118,20 @@ material "filedhouse_01a_3"
 		}
 	}
 }
-material "filedhouse_01a_21"
+material "default_21"
 {
-	technique filedhouse_01a_21_technique
+	technique default_21_technique
 	{
-		pass filedhouse_01a_21_standard
+		pass default_21_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_21_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit default_21_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_021.dds
 				tex_coord_set 0
@@ -139,20 +140,20 @@ material "filedhouse_01a_21"
 		}
 	}
 }
-material "filedhouse_01a_23"
+material "default_23"
 {
-	technique filedhouse_01a_23_technique
+	technique default_23_technique
 	{
-		pass filedhouse_01a_23_standard
+		pass default_23_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_23_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit default_23_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_024.dds
 				tex_coord_set 0
@@ -161,20 +162,20 @@ material "filedhouse_01a_23"
 		}
 	}
 }
-material "filedhouse_01a_14"
+material "default_14"
 {
-	technique filedhouse_01a_14_technique
+	technique default_14_technique
 	{
-		pass filedhouse_01a_14_standard
+		pass default_14_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_14_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit default_14_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_014.dds
 				tex_coord_set 0
@@ -183,20 +184,20 @@ material "filedhouse_01a_14"
 		}
 	}
 }
-material "filedhouse_01a_5"
+material "default_5"
 {
-	technique filedhouse_01a_5_technique
+	technique default_5_technique
 	{
-		pass filedhouse_01a_5_standard
+		pass default_5_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_5_Diffuse#0
+			scene_blend alpha_blend			
+
+			texture_unit default_5_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_005.dds
 				tex_coord_set 0
@@ -205,20 +206,20 @@ material "filedhouse_01a_5"
 		}
 	}
 }
-material "filedhouse_01a_16"
+material "default_016"
 {
-	technique filedhouse_01a_16_technique
+	technique default_016_technique
 	{
-		pass filedhouse_01a_16_standard
+		pass default_016_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_16_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit default_016_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_016.dds
 				tex_coord_set 0
@@ -227,42 +228,50 @@ material "filedhouse_01a_16"
 		}
 	}
 }
-material "filedhouse_01a_9"
+material "default_9"
 {
-	technique filedhouse_01a_9_technique
+	technique default_9_technique
 	{
-		pass filedhouse_01a_9_standard
+		pass default_9_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_9_Diffuse#0
+			scene_blend alpha_blend
+			alpha_rejection greater 128
+
+			texture_unit default_9_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_009.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+
+			texture_unit default_9_Unknown#1
+			{
+				texture bu_l_fieldhouse_01a_009_alpha.png
 				tex_coord_set 0
 				colour_op modulate
 			}
 		}
 	}
 }
-material "filedhouse_01a_13"
+material "default_13"
 {
-	technique filedhouse_01a_13_technique
+	technique default_13_technique
 	{
-		pass filedhouse_01a_13_standard
+		pass default_13_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit filedhouse_01a_13_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit default_13_Diffuse#0
 			{
 				texture bu_l_fieldhouse_01a_013.dds
 				tex_coord_set 0
@@ -284,6 +293,7 @@ material "Na_L_bush_04d"
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
+			scene_blend alpha_blend
 			alpha_rejection greater 128
 
 			texture_unit Na_L_bush_04d_Diffuse#0

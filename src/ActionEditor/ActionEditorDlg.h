@@ -48,4 +48,5 @@ public:
    afx_msg void OnBnClickedDelevent();
    afx_msg void OnBnClickedSave();
    afx_msg void OnBnClickedLoad();
+   afx_msg void OnCbnSelchangeEvent();
 };

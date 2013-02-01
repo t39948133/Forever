@@ -25,7 +25,7 @@ CMonster::CMonster(int kindID, long long uid, float fx, float fy) :
       srand((unsigned int)time(NULL));
 
       ACTION_DATA actData;
-      CActionEvent actEvent;
+      CActionEvent *pActionEvent = NULL;
       CAction *pAction = NULL;
       CActionEventHandler *pActionEventHandler = NULL;
 
@@ -38,10 +38,10 @@ CMonster::CMonster(int kindID, long long uid, float fx, float fy) :
       pAction = new CAction();
       pAction->init(actData);
 
-      actEvent.clear();
-      actEvent.m_event      = AET_NOT_REACH;
+      pActionEvent = new CActionEvent();
+      pActionEvent->m_event = AET_NOT_REACH;
       pActionEventHandler = new CActionEventHandler();
-      pActionEventHandler->init(actEvent, 102);
+      pActionEventHandler->init(pActionEvent, 102);
       pAction->addEventHandler(pActionEventHandler);
 
       m_pActionSystem->addAction(pAction);
@@ -57,10 +57,10 @@ CMonster::CMonster(int kindID, long long uid, float fx, float fy) :
       pAction = new CAction();
       pAction->init(actData);
 
-      actEvent.clear();
-      actEvent.m_event    = AET_REACH;
+      pActionEvent = new CActionEvent();
+      pActionEvent->m_event = AET_REACH;
       pActionEventHandler = new CActionEventHandler();
-      pActionEventHandler->init(actEvent, 101);
+      pActionEventHandler->init(pActionEvent, 101);
       pAction->addEventHandler(pActionEventHandler);
 
       m_pActionSystem->addAction(pAction);

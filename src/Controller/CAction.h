@@ -56,11 +56,12 @@ class CAction
       int getID();
 
       /** @brief 動作更新
-        * @param fCurTime     目前時間
-        * @param pEvent       動作事件
-        * @param pKeyDownList 按鍵按下的列表
+        * @param fPreTime    上一次時間
+        * @param fCurTime    目前時間
+        * @param pEvent      動作事件
+        * @param pKeyDownSet 按鍵按下的列表
         * @return 下一個動作編號 (< 0 表示無動作) */
-      int work(float fCurTime, CActionEvent *pEvent, std::list<int> *pKeyDownList);
+      int work(float fPreTime, float fCurTime, CActionEvent *pEvent, std::set<int> *pKeyDownSet);
 
       /** @brief 取得動畫名稱
         * @return 動畫名稱 */
@@ -73,6 +74,8 @@ class CAction
       /** @brief 取得動作名稱
         * @return 動作名稱 */
       std::string getName();
+
+      void setUID(long long uid);
 
       /** @brief 存檔
         * @param pFile 檔案 */
@@ -91,6 +94,7 @@ class CAction
       std::string m_animationName;  // 動畫名稱
       int         m_iNextActID;     // 動作撥完後下一個動作
       bool        m_bMove;          // 是否可移動
+      long long   m_uid;            // 玩家、怪物、NPC的唯一編號
 
       std::vector<CActionEventHandler *> *m_pvtEventHandlerSet;  // 該動作會受哪些事件影響而更換動作
 };

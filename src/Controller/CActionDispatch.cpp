@@ -41,6 +41,13 @@ void CActionDispatch::sendEvnet(long long uid, CActionEvent &actEvent)
       it->second->sendEvent(actEvent);
 }
 
+void CActionDispatch::sendNotify(long long uid, CNotifyActionEvent *pNotifyActionEvent)
+{
+   std::map<long long, CActionSystem *>::iterator it = m_pEventTable->find(uid);
+   if(it != m_pEventTable->end())
+      it->second->sendNotify(pNotifyActionEvent);
+}
+
 CActionDispatch::CActionDispatch()
 {
    m_pEventTable = new std::map<long long, CActionSystem *>();
@@ -52,4 +59,3 @@ CActionDispatch::~CActionDispatch()
    delete m_pEventTable;
    m_pEventTable = NULL;
 }
-

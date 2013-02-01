@@ -57,6 +57,13 @@ void CBackPack::initBack()
 	m_itemBack[4].create(1, 1);
    m_itemBack[5].create(2, 1);
 
+   // 武器
+   m_itemBack[7].create(32, 1);
+   m_itemBack[8].create(33, 1);
+   m_itemBack[16].create(34, 1);
+   m_itemBack[17].create(35, 1);
+   m_itemBack[26].create(36, 1);
+
    // 技能書
 
    // 勇氣系列裝備

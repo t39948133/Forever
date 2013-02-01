@@ -1,0 +1,88 @@
+material "bu_l_regionhouse_l_01a_default_7"
+{
+	technique bu_l_regionhouse_l_01a_default_7_technique
+	{
+		pass bu_l_regionhouse_l_01a_default_7_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+
+			texture_unit bu_l_regionhouse_l_01a_default_7_Diffuse#0
+			{
+				texture bu_l_regionhouse_l_01a_002.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "bu_l_regionhouse_l_01a_default_8"
+{
+	technique bu_l_regionhouse_l_01a_default_8_technique
+	{
+		pass bu_l_regionhouse_l_01a_default_8_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+
+			texture_unit bu_l_regionhouse_l_01a_default_8_Diffuse#0
+			{
+				texture bu_l_regionhouse_l_01a_005.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "bu_l_regionhouse_l_01a_default_13"
+{
+	technique bu_l_regionhouse_l_01a_default_13_technique
+	{
+		pass bu_l_regionhouse_l_01a_default_13_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+
+			texture_unit bu_l_regionhouse_l_01a_default_13_Diffuse#0
+			{
+				texture bu_l_regionhousein_01a_001.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}
+material "bu_l_regionhouse_l_01a_default_15"
+{
+	technique bu_l_regionhouse_l_01a_default_15_technique
+	{
+		pass bu_l_regionhouse_l_01a_default_15_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+
+			texture_unit bu_l_regionhouse_l_01a_default_15_Diffuse#0
+			{
+				texture bu_l_regionhousein_01a_003.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

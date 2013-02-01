@@ -1,0 +1,22 @@
+material "SW_C003"
+{
+	technique SW_C003_technique
+	{
+		pass SW_C003_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+
+			texture_unit SW_C003_Diffuse#0
+			{
+				texture sw_c003.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

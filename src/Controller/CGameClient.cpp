@@ -10,8 +10,10 @@
 #include "CSkill.h"
 #include "CBuff.h"
 #include "CMonster.h"
+#include "CSoundManager.h"
 
 #ifdef _GAMEENGINE_2D_
+#include "CWASDKeyActionEvent.h"
 #include "CPlayerInfoWnd.h"
 #include "CBackpackWnd.h"
 #include "CSkillWnd.h"
@@ -25,6 +27,7 @@ CGameClient::CGameClient()
    CSkill::initSkill();  // 建立技能表
    CBuff::initBuff();
    CMonster::initMonster(); //建立怪物表
+   CSoundManager::getInstance();
 
    //m_pNetStream = NULL;
    m_pScene = new CScene();
@@ -56,6 +59,7 @@ CGameClient::~CGameClient()
       m_pScene = NULL;
    }
 
+   CSoundManager::releaseInstance();
    CItem::release();
    CSkill::release();
 }
@@ -190,6 +194,7 @@ void CGameClient::initUI()
 
 void CGameClient::workPlay(float timePass, HWND hWnd)
 {
+   CSoundManager::getInstance()->work();
    m_pScene->work(timePass);
 
 #ifdef _GAMEENGINE_2D_
@@ -276,7 +281,7 @@ void CGameClient::doKeyControl()
       float moveY = pPlayer->getPosition().fY + 1.0f * cos(fmod(fMoveDirection, 2.0f * 3.1415926f));
       pPlayer->setTargetPosition(moveX, moveY, false);
 
-      CActionEvent actEvent;
+      CWASDKeyActionEvent actEvent;
       actEvent.m_event = AET_KEY_WASD;
       actEvent.m_iKeyDownID = 'W';
       CActionDispatch::getInstance()->sendEvnet(pPlayer->getUID(), actEvent);
@@ -288,7 +293,7 @@ void CGameClient::doKeyControl()
          FPOS curPos = pPlayer->getPosition();
          pPlayer->setTargetPosition(curPos.fX, curPos.fY);
 
-         CActionEvent actEvent;
+         CWASDKeyActionEvent actEvent;
          actEvent.m_event = AET_KEY_WASD;
          actEvent.m_iKeyUpID = 'W';
          CActionDispatch::getInstance()->sendEvnet(pPlayer->getUID(), actEvent);
@@ -330,7 +335,7 @@ void CGameClient::doUI(HWND hWnd)
                   FPOS curPos = pPlayer->getPosition();
                   pPlayer->setTargetPosition(curPos.fX, curPos.fY);
 
-                  CActionEvent actEvent;
+                  CWASDKeyActionEvent actEvent;
                   actEvent.m_event = AET_KEY_WASD;
                   actEvent.m_iKeyUpID = 'W';
                   CActionDispatch::getInstance()->sendEvnet(pPlayer->getUID(), actEvent);

@@ -1,0 +1,22 @@
+material "SW_R004a"
+{
+	technique SW_R004a_technique
+	{
+		pass SW_R004a_standard
+		{
+			ambient 1 1 1 1
+			diffuse 1 1 1 1
+			specular 0 0 0 0 0
+			emissive 0 0 0 1
+
+			scene_blend alpha_blend
+
+			texture_unit SW_R004a_Diffuse#0
+			{
+				texture sw_r004a.dds
+				tex_coord_set 0
+				colour_op modulate
+			}
+		}
+	}
+}

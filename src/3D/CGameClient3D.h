@@ -28,6 +28,8 @@ class CGameClient3D : public IGameFlowListener,
       CGameClient3D();
       ~CGameClient3D();
 
+      HWND getHWnd();
+
       void run();
 
    protected:

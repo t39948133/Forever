@@ -1,6 +1,7 @@
 #include "CUnitObject.h"
 #include "AttributeSet.h"
 #include "CMonster.h"
+#include "CSoundManager.h"
 
 CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_strName(strName),m_uid(uid),m_level(level)
 {
@@ -23,6 +24,7 @@ CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_str
    m_fCastSkillTime = 0.0f;
 
    m_pActionSystem = new CActionSystem(uid);
+   m_pActionSystem->addPlaySoundNotifyListener(this);
 
 #ifdef _GAMEENGINE_2D_
    m_bFaceTarget = false;
@@ -33,6 +35,8 @@ CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_str
 // Add by Darren Chen on 2012/12/22 {
 CUnitObject::~CUnitObject()
 {
+   m_pActionSystem->removePlaySoundNotifyListener(this);
+
    if(m_pActionSystem) {
       delete m_pActionSystem;
       m_pActionSystem = NULL;
@@ -71,7 +75,7 @@ bool CUnitObject::canUseSkill(unsigned int skillID)
                   if(m_pTargetObject != NULL) {
                      float distance = getDistance(m_position.fX, m_position.fY,
                                                   m_pTargetObject->getPosition().fX, m_pTargetObject->getPosition().fY);
-                     if(distance > pUseSkillInfo->getCastRange())
+                     if(distance > pUseSkillInfo->getCastRange() + 50)
                         return false;  // 離目標物距離遠過技能施展距離
                      else
                         return true;
@@ -347,6 +351,30 @@ void CUnitObject::removeSkillEventListener(ISkillEventListener *pListener)
       m_skillEventListeners.erase(it);
 }
 
+void CUnitObject::addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener)
+{
+   if(m_pActionSystem != NULL)
+      m_pActionSystem->addDrawWeaponNotifyListener(pListener);
+}
+
+void CUnitObject::removeDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener)
+{
+   if(m_pActionSystem != NULL)
+      m_pActionSystem->removeDrawWeaponNotifyListener(pListener);
+}
+
+void CUnitObject::addPutinWeaponNotifyListener(IPutinWeaponNotifyListener *pListener)
+{
+   if(m_pActionSystem != NULL)
+      m_pActionSystem->addPutinWeaponNotifyListener(pListener);
+}
+
+void CUnitObject::removePutinWeaponNotifyListener(IPutinWeaponNotifyListener *pListener)
+{
+   if(m_pActionSystem != NULL)
+      m_pActionSystem->removePutinWeaponNotifyListener(pListener);
+}
+
 #ifdef _GAMEENGINE_2D_
 bool CUnitObject::isClick(float x, float y)
 {
@@ -607,6 +635,11 @@ void CUnitObject::notifySkillUpdate()
       (*it)->updateSkill(this);
       it++;
    }
+}
+
+void CUnitObject::notifyPlaySound(std::string soundFile)
+{
+   CSoundManager::getInstance()->playSound(SOUND_DIR + soundFile);
 }
 
 #ifdef _GAMEENGINE_2D_

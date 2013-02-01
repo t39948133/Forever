@@ -44,6 +44,11 @@ CGameClient3D::~CGameClient3D()
    CRenderLoader::releaseInstance();
 }
 
+HWND CGameClient3D::getHWnd()
+{
+   return m_pRenderCore->getRenderHwnd();
+}
+
 void CGameClient3D::run()
 {
    m_pRenderCore->run();

@@ -1,17 +1,17 @@
-material "privatehouse_01a_002"
+material "bu_l_privatehouse_01a_002"
 {
-	technique privatehouse_01a_002_technique
+	technique bu_l_privatehouse_01a_002_technique
 	{
-		pass privatehouse_01a_002_standard
+		pass bu_l_privatehouse_01a_002_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit privatehouse_01a_002_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_privatehouse_01a_002_Diffuse#0
 			{
 				texture bu_l_privatehouse_01a_002.dds
 				tex_coord_set 0
@@ -20,20 +20,20 @@ material "privatehouse_01a_002"
 		}
 	}
 }
-material "privatehouse_01a_004"
+material "bu_l_privatehouse_01a_004"
 {
-	technique privatehouse_01a_004_technique
+	technique bu_l_privatehouse_01a_004_technique
 	{
-		pass privatehouse_01a_004_standard
+		pass bu_l_privatehouse_01a_004_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit privatehouse_01a_004_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_privatehouse_01a_004_Diffuse#0
 			{
 				texture bu_l_privatehouse_01a_004.dds
 				tex_coord_set 0
@@ -42,20 +42,20 @@ material "privatehouse_01a_004"
 		}
 	}
 }
-material "privatehouse_01a_003"
+material "bu_l_privatehouse_01a_003"
 {
-	technique privatehouse_01a_003_technique
+	technique bu_l_privatehouse_01a_003_technique
 	{
-		pass privatehouse_01a_003_standard
+		pass bu_l_privatehouse_01a_003_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit privatehouse_01a_003_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_privatehouse_01a_003_Diffuse#0
 			{
 				texture bu_l_privatehouse_01a_003.dds
 				tex_coord_set 0
@@ -64,20 +64,20 @@ material "privatehouse_01a_003"
 		}
 	}
 }
-material "privatehouse_01a_001"
+material "bu_l_privatehouse_01a_001"
 {
-	technique privatehouse_01a_001_technique
+	technique bu_l_privatehouse_01a_001_technique
 	{
-		pass privatehouse_01a_001_standard
+		pass bu_l_privatehouse_01a_001_standard
 		{
-			cull_hardware none
-			cull_software none
 			ambient 1 1 1 1
 			diffuse 1 1 1 1
 			specular 0 0 0 0 0
 			emissive 0 0 0 1
 
-			texture_unit privatehouse_01a_001_Diffuse#0
+			scene_blend alpha_blend
+
+			texture_unit bu_l_privatehouse_01a_001_Diffuse#0
 			{
 				texture bu_l_privatehouse_01a_001.dds
 				tex_coord_set 0

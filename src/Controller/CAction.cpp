@@ -7,11 +7,13 @@
   * @date   2012/12/20 */
 #include "CAction.h"
 #include "CSkill.h"
+#include "CCastSkillActionEvent.h"
 
 CAction::CAction() : m_iID(0),
                      m_fTime(0.0f),
                      m_iNextActID(-1),
-                     m_bMove(false)
+                     m_bMove(false),
+                     m_uid(-1)
 {
    m_pvtEventHandlerSet = new std::vector<CActionEventHandler *>();
 }
@@ -40,6 +42,7 @@ void CAction::init(ACTION_DATA &data)
 
 void CAction::addEventHandler(CActionEventHandler *pHandler)
 {
+   pHandler->setUID(m_uid);
    m_pvtEventHandlerSet->push_back(pHandler);
 }
 
@@ -48,40 +51,34 @@ int CAction::getID()
    return m_iID;
 }
 
-int CAction::work(float fCurTime, CActionEvent *pEvent, std::list<int> *pKeyDownList)
+int CAction::work(float fPreTime, float fCurTime, CActionEvent *pEvent, std::set<int> *pKeyDownSet)
 {
-   if(fCurTime > m_fTime) {
-      // 動作播完, 換下一個動作
-      return m_iNextActID;
-   }
-   else {
-      // 檢查受影響的事件有沒有被觸發, 有被觸發就需要換相對應的動作
-      std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
-      while(it != m_pvtEventHandlerSet->end()) {
-         if((*it)->check(pEvent, pKeyDownList) == true) {
-            int nextActionID = (*it)->getNextActionID();
-            
-            // 判斷要施展那個技能動作
-            if((m_iID == 4) && (pEvent->m_bCastSkill == true)) {
-               CSkillInfo *pSkillInfo = CSkill::getInfo(pEvent->m_iCastSkillID);
-               if(pSkillInfo != NULL) {
-                  if(pEvent->m_fCastSkillTime == 0)  // 立即施展, 無吟唱動作
-                     nextActionID = pSkillInfo->getActionID();
-                  else {
-                     // 有吟唱動作
-                     // Todo: 還沒做
-                  }
-               }
+   // 檢查受影響的事件有沒有被觸發, 有被觸發就需要換相對應的動作
+   std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
+   while(it != m_pvtEventHandlerSet->end()) {
+      if((*it)->check(fPreTime, fCurTime, pEvent, pKeyDownSet) == true) {
+         int nextActionID = (*it)->getNextActionID();
+         
+         // 判斷要施展那個技能動作
+         if(pEvent->m_event == AET_CAST_SKILL) {
+            CCastSkillActionEvent *pCastSkillActionEvent = (CCastSkillActionEvent *)pEvent;
+            if(pCastSkillActionEvent->m_bCastSkill == true) {
+               CSkillInfo *pSkillInfo = CSkill::getInfo(pCastSkillActionEvent->m_iCastSkillID);
+               if(pSkillInfo != NULL)
+                  nextActionID = pSkillInfo->getActionID();
             }
-
-            return nextActionID;
          }
 
-         it++;
+         return nextActionID;
       }
 
-      return -1;  // 動作還沒播放結束
+      it++;
    }
+
+   if(fCurTime > m_fTime)
+      return m_iNextActID;  // 動作播完, 換下一個動作
+
+   return -1;  // 動作還沒播放結束
 }
 
 std::string CAction::getAnimationName()
@@ -97,6 +94,11 @@ bool CAction::isMove()
 std::string CAction::getName()
 {
    return m_name;
+}
+
+void CAction::setUID(long long uid)
+{
+   m_uid = uid;
 }
 
 void CAction::write(FILE *pFile)
@@ -173,10 +175,10 @@ void CAction::read(FILE *pFile)
    int count = 0;
 	fread(&count, sizeof(count), 1, pFile);
    for(int i = 0; i < count; i++) {
-      CActionEvent actEvent;
+      CActionEvent *pActionEvent = new CActionEvent();
 
       CActionEventHandler *pActionEventHandler = new CActionEventHandler();
-      pActionEventHandler->init(actEvent, 0);
+      pActionEventHandler->init(pActionEvent, 0);
 
       addEventHandler(pActionEventHandler);
    }
