@@ -8,7 +8,8 @@
 #ifndef _CFIGHTSYSTEM_H_
 #define _CFIGHTSYSTEM_H_
 #include "CSkill.h"
-#include "CUnitObject.h"
+
+class CUnitObject;
 
 /** @brief 提供戰鬥的流程與連續技使用
   *        戰鬥過程會控制動作系統 */
@@ -18,6 +19,7 @@ class CFightSystem
       CFightSystem(long long uid);
 
       void useSkill(CSkill *pSkill);
+      bool isCastSkill();
 
       /** @brief 邏輯動作
         * @param timePass 一個frame幾秒

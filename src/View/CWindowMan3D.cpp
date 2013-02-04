@@ -168,7 +168,17 @@ void CWindowMan3D::mouseMove(const OIS::MouseEvent &evt)
 		   m_pDragWnd->x += dx;
 		   m_pDragWnd->y += dy;
 
-		   m_pDragWnd->onDrag();
+		   if(m_pDragWnd->getClassType() == WND_PLAYERINFO) {
+		      m_pDragWnd->onDrag();
+
+            if(m_pBackpackWnd->isVisible() == true) {
+               m_pBackpackWnd->x = m_pDragWnd->x;
+               m_pBackpackWnd->y = m_pDragWnd->y + m_pDragWnd->h + 1;
+               m_pBackpackWnd->onDrag();
+            }
+         }
+         else
+            m_pDragWnd->onDrag();
 
 		   m_iDragX = m_iClientX;
 		   m_iDragY = m_iClientY;
@@ -184,6 +194,8 @@ void CWindowMan3D::mouseUp(const OIS::MouseEvent &evt)
 
 bool CWindowMan3D::isPressWindow(int x, int y)
 {
+   m_iClientX = x;
+   m_iClientY = y;
    bool bPress = false;
    std::list<CWindow *>::iterator it = m_pWindowList->begin();
 	while(it != m_pWindowList->end ()) {

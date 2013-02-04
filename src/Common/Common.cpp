@@ -57,4 +57,18 @@ void movePoint(float &x1, float &y1, float x2, float y2, float step)
       y1 = y2;
    }
 }
+
+#ifdef _GAMEENGINE_3D_
+Ogre::UTFString ConvertToUTFString(const std::string & str) 
+{ 
+   DWORD dwNum = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
+
+   wchar_t *pWbuffer = new wchar_t[dwNum + 1];
+   ZeroMemory(pWbuffer, dwNum + 1);
+
+   MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, pWbuffer, dwNum);
+
+   return Ogre::UTFString(pWbuffer);
+}
+#endif
 // - Add by Darren Chen on 2012/12/13 } 

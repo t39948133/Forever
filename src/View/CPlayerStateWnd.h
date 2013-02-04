@@ -27,8 +27,14 @@ class CPlayerStateWnd : public CWindow,
                         public IPlayerAttrEventListener
 {
    public:
+#ifdef _GAMEENGINE_3D_
+      enum {BUTTON_HP, BUTTON_MP, BUTTON_XP, BUTTON_COUNT};
+      enum {TEXT_HP, TEXT_MP, TEXT_XP, TEXT_HP_VALUE, TEXT_MP_VALUE, TEXT_XP_VALUE, TEXT_LV_VALUE, TEXT_COUNT};
+#elif _GAMEENGINE_2D_
       enum {BUTTON_COUNT = 3, CELL_SIZE = 20, TEXT_COUNT = 3};
+#endif
 
+      CPlayerStateWnd();
       ~CPlayerStateWnd();
 
       void init(int _x, int _y, CPlayer *pPlr);

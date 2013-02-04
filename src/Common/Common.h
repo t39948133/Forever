@@ -23,6 +23,10 @@
 #include <sstream>
 // } Add by Darren Chen on 2012/12/22
 
+#ifdef _GAMEENGINE_3D_
+#include <OgreUTFString.h>
+#endif
+
 struct BasicAttribute
 {
 	int iSTR;	//力量
@@ -280,7 +284,11 @@ float getDistance(float x1, float y1, float x2, float y2);
   * @param [in] x2     第二個座標點X
   * @param [in] y2     第二個座標點Y
   * @param [in] step   每次移動的距離 */   
-void movePoint(float &x1, float &y1, float x2, float y2, float step);
+void movePoint(float &x1, float &y1, float x2, float y2, float step); 
+
+#ifdef _GAMEENGINE_3D_
+Ogre::UTFString ConvertToUTFString(const std::string & str);
+#endif
 
 template<class T>
     std::string toString(const T& t)

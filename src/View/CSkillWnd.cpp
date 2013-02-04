@@ -7,68 +7,114 @@ CSkillWnd::~CSkillWnd()
       m_pPlayer->removeSkillEventListener(this);
 }
 
-void CSkillWnd::init(int _x, int _y, CPlayer *pb)
+void CSkillWnd::init(int _x, int _y, CPlayer *pPlayer)
 {
-	m_pPlayer = pb;
+	m_pPlayer = pPlayer;
    if(m_pPlayer != NULL)
       m_pPlayer->addSkillEventListener(this);
 	
-	x = _x ;
-	y = _y ;
-	w = CELL_SIZE*BUTTON_COUNT ;
-	h = CELL_SIZE*(BUTTON_COUNT+1) ;
+	x = _x;
+	y = _y;
+	w = 408;
+	h = 531;
 
 #ifdef _GAMEENGINE_3D_
 	m_overlay.init(x, y, w, h);
+   m_overlay.setBackImage("UI/BG/SkillWnd");
 
 	for(int i = 0; i < BUTTON_COUNT; i++) {	
 		m_vpBtn[i] = new CImageButton();
-		m_vpBtn[i]->init(m_overlay, 0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i);
+		m_vpBtn[i]->init(&m_overlay, 13, 61 + i * ICON_SIZE + 4 * i, ICON_SIZE, ICON_SIZE, i);
 		addChild(m_vpBtn[i]);
 	}
 
-   for(int i = 0; i < BUTTON_COUNT; i++) {		
-		CImageButton *pBtn = new CImageButton();
-		pBtn->init(m_overlay, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i);
-		addChild(pBtn);
-	}
+   for(int i = TEXT_TITLE; i < TEXT_FIELD_START; i++) {
+      switch(i) {
+         case TEXT_TITLE:
+            m_vpText[i] = new CTextAreaOgre();
+		      m_vpText[i]->init(&m_overlay, 0, 0, w, 25);
+            m_vpText[i]->setHorizontalAlignment(CTextAreaOgre::H_CENTER);
+            m_vpText[i]->setVerticalAlignment(CTextAreaOgre::V_CENTER);
+			   m_vpText[i]->setText("技能", 1, 1, 1);
+            break;
 
-	CTextAreaOgre *pTA = new CTextAreaOgre();
-	pTA->init(m_overlay, w/2, 0, w, CELL_SIZE);
-	pTA->setText("技能表", 1, 1, 1);
-	addChild(pTA);
+         case TEXT_SKILL_NAME:
+            m_vpText[i] = new CTextAreaOgre();
+		      m_vpText[i]->init(&m_overlay, 14, 39, 288, 16);
+            m_vpText[i]->setFont(10, true);
+            m_vpText[i]->setHorizontalAlignment(CTextAreaOgre::H_CENTER);
+            m_vpText[i]->setVerticalAlignment(CTextAreaOgre::V_CENTER);
+			   m_vpText[i]->setText("技能名稱", 1, 1, 1);
+            break;
 
-   for(int i = 0; i < TEXT_COUNT; i++) {
-		m_vpText[i] = new CTextAreaOgre();
-		m_vpText[i]->init(m_overlay, CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE);
+         case TEXT_SKILL_KIND:
+            m_vpText[i] = new CTextAreaOgre();
+		      m_vpText[i]->init(&m_overlay, 310, 39, 62, 16);
+            m_vpText[i]->setFont(10, true);
+            m_vpText[i]->setHorizontalAlignment(CTextAreaOgre::H_CENTER);
+            m_vpText[i]->setVerticalAlignment(CTextAreaOgre::V_CENTER);
+			   m_vpText[i]->setText("種類", 1, 1, 1);
+            break;
+      }
+
 		addChild(m_vpText[i]);
-	}
+   }
 
+   for(int i = 0; i < BUTTON_COUNT; i++) {
+		m_vpText[i * 2 + TEXT_FIELD_START] = new CTextAreaOgre();
+		m_vpText[i * 2 + TEXT_FIELD_START]->init(&m_overlay, 60, 64 + i * 34 + 10 * i, 241, 34);
+      m_vpText[i * 2 + TEXT_FIELD_START]->setVerticalAlignment(CTextAreaOgre::V_CENTER);
+		addChild(m_vpText[i * 2 + TEXT_FIELD_START]);
+
+      m_vpText[i * 2 + TEXT_FIELD_START + 1] = new CTextAreaOgre();
+		m_vpText[i * 2 + TEXT_FIELD_START + 1]->init(&m_overlay, 311, 64 + i * 34 + 10 * i, 60, 34);
+      m_vpText[i * 2 + TEXT_FIELD_START + 1]->setHorizontalAlignment(CTextAreaOgre::H_CENTER);
+      m_vpText[i * 2 + TEXT_FIELD_START + 1]->setVerticalAlignment(CTextAreaOgre::V_CENTER);
+		addChild(m_vpText[i * 2 + TEXT_FIELD_START + 1]);
+	}
 #else _GAMEENGINE_2D_	
-	for(int i = 0; i < BUTTON_COUNT; i++)
-	{		
+   for(int i = 0; i < BUTTON_COUNT; i++) {	
 		m_vpBtn[i] = new CTextButton();
-		m_vpBtn[i]->init(0, (i+1)*CELL_SIZE, CELL_SIZE, CELL_SIZE, i);
+		m_vpBtn[i]->init(13, 61 + i * ICON_SIZE + 4 * i, ICON_SIZE, ICON_SIZE, i);
 		addChild(m_vpBtn[i]);
 	}
 
-   for(int i = 0; i < BUTTON_COUNT; i++)
-	{		
-		CTextButton *pBtn = new CTextButton();
-		pBtn->init(CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE, i);
-		addChild(pBtn);
-	}
+   for(int i = TEXT_TITLE; i < TEXT_FIELD_START; i++) {
+      switch(i) {
+         case TEXT_TITLE:
+            m_vpText[i] = new CTextArea();
+		      m_vpText[i]->init(0, 0, w, 25);
+            m_vpText[i]->setAlignment(CTextArea::CENTER);
+			   m_vpText[i]->setText("技能", 1, 1, 1);
+            break;
 
-	CTextArea *pTA = new CTextArea();
-	pTA->init(w/2, 0, w, CELL_SIZE);
-	pTA->setText("技能表", 1, 1, 1);
-	addChild(pTA);
+         case TEXT_SKILL_NAME:
+            m_vpText[i] = new CTextArea();
+		      m_vpText[i]->init(14, 39, 288, 16);
+            m_vpText[i]->setAlignment(CTextArea::CENTER);
+			   m_vpText[i]->setText("技能名稱", 1, 1, 1);
+            break;
 
-	for(int i = 0; i < TEXT_COUNT; i++)
-	{
-		m_vpText[i] = new CTextArea();
-		m_vpText[i]->init(CELL_SIZE, (i+1)*CELL_SIZE, w-CELL_SIZE, CELL_SIZE);
+         case TEXT_SKILL_KIND:
+            m_vpText[i] = new CTextArea();
+		      m_vpText[i]->init(310, 39, 62, 16);
+            m_vpText[i]->setAlignment(CTextArea::CENTER);
+			   m_vpText[i]->setText("種類", 1, 1, 1);
+            break;
+      }
+
 		addChild(m_vpText[i]);
+   }
+
+   for(int i = 0; i < BUTTON_COUNT; i++) {
+		m_vpText[i * 2 + TEXT_FIELD_START] = new CTextArea();
+		m_vpText[i * 2 + TEXT_FIELD_START]->init(60, 64 + i * 34 + 10 * i, 241, 34);
+		addChild(m_vpText[i * 2 + TEXT_FIELD_START]);
+
+      m_vpText[i * 2 + TEXT_FIELD_START + 1] = new CTextArea();
+		m_vpText[i * 2 + TEXT_FIELD_START + 1]->init(311, 64 + i * 34 + 10 * i, 60, 34);
+      m_vpText[i * 2 + TEXT_FIELD_START + 1]->setAlignment(CTextArea::CENTER);
+		addChild(m_vpText[i * 2 + TEXT_FIELD_START + 1]);
 	}
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
@@ -78,7 +124,7 @@ void CSkillWnd::init(int _x, int _y, CPlayer *pb)
 
 bool CSkillWnd::canDrag(int tx, int ty)
 {
-	return ty < CELL_SIZE ;
+	return ty < 25;
 }
 
 void CSkillWnd::onLCommand(int btnID)
@@ -140,7 +186,8 @@ void CSkillWnd::setZOrder(int order)
 void CSkillWnd::updateSkill(CUnitObject *pUnitObject)
 {
    std::vector<CSkill *> vtSkill = pUnitObject->getSkill();
-   for(int i = 0; i < TEXT_COUNT; i++) {
+
+   for(int i = 0; i < BUTTON_COUNT; i++) {
       if(i < (int)vtSkill.size()) {
          CSkillInfo *pSkillInfo = vtSkill.at(i)->getInfo();
          
@@ -151,16 +198,21 @@ void CSkillWnd::updateSkill(CUnitObject *pUnitObject)
             m_vpBtn[i]->str = pSkillInfo->getName();
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-            m_vpText[i]->setText(pSkillInfo->getName() + "\n" + pSkillInfo->getDesc(), 1, 1, 1);
+            m_vpText[i * 2 + TEXT_FIELD_START]->setText(pSkillInfo->getName(), 1, 1, 1);
+            if(pSkillInfo->getType() == TYPE_ACTIVE)
+               m_vpText[i * 2 + TEXT_FIELD_START + 1]->setText("主動", 1, 1, 1);
+            else
+               m_vpText[i * 2 + TEXT_FIELD_START + 1]->setText("被動", 1, 1, 1);
          }
       }
       else {
 #ifdef _GAMEENGINE_3D_
-         m_vpBtn[i]->setImage("Examples/ogreborder");
+         m_vpBtn[i]->setImage("UI/Icon/NullBackpack");
 #elif _GAMEENGINE_2D_
          m_vpBtn[i]->str = "";
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
-         m_vpText[i]->setText("", 1, 1, 1);
+         m_vpText[i * 2 + TEXT_FIELD_START]->setText("", 1, 1, 1);
+         m_vpText[i * 2 + TEXT_FIELD_START + 1]->setText("", 1, 1, 1);
       }
    }
 }

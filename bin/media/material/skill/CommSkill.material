@@ -6,7 +6,26 @@ material Skill/Common/Action_operation
 		{
 			texture_unit
 			{
-				texture icon_action_operation.dds
+				texture icon_action_operation.png
+			}
+		}
+	}
+}
+
+material Skill/Common/Action_operation/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture icon_action_operation.png
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}

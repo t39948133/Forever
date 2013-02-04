@@ -18,9 +18,6 @@ class COverlayUI
 	   void setZOrder(int);
       void setBackImage(std::string st);
 
-	   void addImage(CImageButton *pImgBtn);
-	   //void addImage(TextArea&);
-
       Ogre::Overlay* getOverlay();
       Ogre::OverlayContainer* getOverlayContainer();
 

@@ -6,6 +6,7 @@
 #include "CBuff.h"
 // Add by Darren Chen on 2012/12/22 {
 #include "CActionDispatch.h"
+#include "CFightSystem.h"
 #include "IAdvAttrEventListener.h"
 #include "ISkillEventListener.h"
 #include "IDrawWeaponNotifyListener.h"
@@ -180,7 +181,8 @@ class CUnitObject : public IPlaySoundNotifyListener
       std::vector<CSkill *>  m_vSkill;          //擁有的技能
 
       // Add by Darren Chen on 2012/12/27 {
-      CActionSystem                   *m_pActionSystem;        // 動作系統
+      CActionSystem         *m_pActionSystem;   // 動作系統
+      CFightSystem          *m_pFightSystem;    // 戰鬥系統         
       // } Add by Darren Chen on 2012/12/27
 
    private:
@@ -229,10 +231,7 @@ class CUnitObject : public IPlaySoundNotifyListener
       FPOS          m_targetPosition;  // 目標點X,Y座標 (2D)
       float         m_fDirection;      // 角色方向(單位: 弧度), 逆時針方向旋轉為+, 順時針方向旋轉為-, 方向為0是朝下
 
-      bool          m_bCastSkill;      // 是否要施展技能
       CUnitObject  *m_pTargetObject;   // 目標物
-      unsigned int  m_iCastSkillID;    // 施展技能的編號
-      float         m_fCastSkillTime;  // 施展技能的吟唱時間
 
       std::set<IAdvAttrEventListener *>  m_advAttrEventListeners;  // 監聽AdvancedAttribute改變的監聽者列表
       std::set<ISkillEventListener *>    m_skillEventListeners;    // 監聽技能改變的監聽者列表

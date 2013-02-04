@@ -9,6 +9,9 @@
 #include "CPlayerInfoWnd.h"
 #include "CBackpackWnd.h"
 #include "CSkillWnd.h"
+#include "CHudWnd.h"
+#include "CHotKeyWnd.h"
+#include "CPlayerStateWnd.h"
 
 #include <OgreMeshManager.h>
 #include <OgreMath.h>
@@ -58,6 +61,11 @@ void CGameClient3D::initUI()
 {
    CPlayer *pPlayer2D = this->getScene()->getMainPlayer();
 
+   RECT rect;
+   memset(&rect, 0, sizeof(rect));
+   HWND hRenderWnd = m_pRenderCore->getRenderHwnd();
+   GetClientRect(hRenderWnd, &rect);
+
    CPlayerInfoWnd *pPlayerInfoWnd = new CPlayerInfoWnd();
    pPlayerInfoWnd->init(10, 10, pPlayer2D);
    m_pWindowMan->addWnd(pPlayerInfoWnd);
@@ -69,6 +77,26 @@ void CGameClient3D::initUI()
    CSkillWnd *pSkillWnd = new CSkillWnd();
    pSkillWnd->init(500, 10, pPlayer2D);
    m_pWindowMan->addWnd(pSkillWnd);
+
+   int hudX = ((rect.right - rect.left) - 856) / 2;
+   int hudY = ((rect.bottom - rect.top) - 126);
+
+   CHotKeyWnd *pHotKeyWnd = new CHotKeyWnd();
+   int hotkeyX = hudX + 381;
+   int hotkeyY = hudY + 75;
+   pHotKeyWnd->init(hotkeyX, hotkeyY, pPlayer2D);
+   m_pWindowMan->addWnd(pHotKeyWnd);
+   m_pRenderCore->addKeyEventListener(pHotKeyWnd);
+
+   CPlayerStateWnd *pPlayerStateWnd = new CPlayerStateWnd();
+   int playerstateX = hudX + 98;
+   int playerstateY = hudY + 70;
+   pPlayerStateWnd->init(playerstateX, playerstateY, pPlayer2D);
+   m_pWindowMan->addWnd(pPlayerStateWnd);
+
+   CHudWnd *pHudWnd = new CHudWnd();
+   pHudWnd->init(hudX, hudY, pPlayer2D);
+   m_pWindowMan->addWnd(pHudWnd);
 }
 
 void CGameClient3D::createScene()

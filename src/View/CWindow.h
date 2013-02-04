@@ -15,6 +15,7 @@ typedef enum WINDOW_CLASS_TYPE {
    WND_PLAYERINFO,  // 人物資訊視窗
    WND_BACKPACK,    // 背包視窗
    WND_SKILL,       // 技能視窗
+   WND_HUD,         // Hud視窗
    WND_HOTKEY,      // 快捷鍵視窗
    WND_TARGETINFO,  // 目標視窗
    WND_PLAYERSTATE, // 人物狀態視窗

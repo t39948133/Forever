@@ -15,9 +15,9 @@
 #include "ISkillEventListener.h"
 
 #ifdef _GAMEENGINE_3D_
-#include "CImageButton.h"
-#include "CTextAreaOgre.h"
+#include "CHotKeyButton.h"
 #include "COverlayUI.h"
+#include "IKeyEventListener.h"
 #elif _GAMEENGINE_2D_
 #include "CTextButton.h"
 #include "CTextArea.h"
@@ -26,11 +26,21 @@
 class CHotKeyWnd : public CWindow,
                    public IPlayerHotKeyEventListener,
                    public IItemEventListener,
+#ifdef _GAMEENGINE_3D_
+                   public IKeyEventListener,
+#endif
                    public ISkillEventListener
+
+                   
 {
    public:
+#ifdef _GAMEENGINE_3D_
+      enum {BUTTON_COUNT = 10, ICON_SIZE = 40};
+#elif _GAMEENGINE_2D_
       enum {BUTTON_COUNT = 10, CELL_SIZE = 40, TEXT_COUNT = 20};
+#endif
 
+      CHotKeyWnd();
       ~CHotKeyWnd();
 
       void init(int _x, int _y, CPlayer *pPlr);
@@ -55,16 +65,22 @@ class CHotKeyWnd : public CWindow,
       /* virtual */ void updateSkill(CUnitObject *pUnitObject);
       /* virtual */ void updateSkillCoolDown(CSkill *pSkill);
 
+#ifdef _GAMEENGINE_3D_
+      // IKeyEventListener
+      /* virtual */ void keyDown(const OIS::KeyEvent &evt);
+      /* virtual */ void keyUp(const OIS::KeyEvent &evt);
+#endif
+
    private:
 	   CPlayer *m_pPlayer;
       std::map<void *, int> m_table;
    	
 #ifdef _GAMEENGINE_3D_	
-	   CImageButton   *m_vpBtn[BUTTON_COUNT] ;
-      CTextAreaOgre  *m_vpText[TEXT_COUNT];
+	   CHotKeyButton  *m_vpBtn[BUTTON_COUNT];
       COverlayUI      m_overlay;  //ºÞ²zoverlay
+      bool            m_bvCoolDown[BUTTON_COUNT];
 #elif _GAMEENGINE_2D_
-	   CTextButton    *m_vpBtn[BUTTON_COUNT] ;
+	   CTextButton    *m_vpBtn[BUTTON_COUNT];
       CTextArea      *m_vpText[TEXT_COUNT];
 #endif
 };

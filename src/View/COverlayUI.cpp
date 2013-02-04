@@ -34,12 +34,10 @@ void COverlayUI::init (int x, int y, int w, int h)
 
 	sprintf (buf, "COverlayUI BackImage %d", in) ;
 
-   m_pBackImage = (Ogre::OverlayContainer*)(Ogre::OverlayManager::getSingleton().
-                                          createOverlayElement("Panel", buf));
+   m_pBackImage = (Ogre::OverlayContainer*)(Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", buf));
 	m_pBackImage->setMetricsMode(Ogre::GMM_PIXELS);
    m_pBackImage->setPosition((Ogre::Real)x, (Ogre::Real)y);
    m_pBackImage->setDimensions((Ogre::Real)w, (Ogre::Real)h);
-	m_pBackImage->setMaterialName("Examples/RustySteel");
 	m_pBackImage->show();
 
 	m_pOverlay->add2D(m_pBackImage);
@@ -60,16 +58,6 @@ void COverlayUI::setBackImage(std::string st)
 {
    m_pBackImage->setMaterialName(st) ;
 }
-
-void COverlayUI::addImage(CImageButton *pImgBtn)
-{
-	m_pBackImage->addChild(pImgBtn->getImage()) ;
-}
-
-/*void COverlayUI::addImage (TextArea& txtArea)
-{
-	m_pBackImage->addChild  (txtArea.getImage ()) ;
-}*/
 
 Ogre::Overlay* COverlayUI::getOverlay()
 {

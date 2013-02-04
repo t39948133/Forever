@@ -9,6 +9,7 @@
 #include "CAction.h"
 #include "CActionDispatch.h"
 #include "CCastSkillActionEvent.h"
+#include "CUnitObject.h"
 
 CFightSystem::CFightSystem(long long uid) : m_uid(uid),
                                             m_pUseSkill(NULL)
@@ -18,6 +19,14 @@ CFightSystem::CFightSystem(long long uid) : m_uid(uid),
 void CFightSystem::useSkill(CSkill *pSkill)
 {
    m_pUseSkill = pSkill;
+}
+
+bool CFightSystem::isCastSkill()
+{
+   if(m_pUseSkill != NULL)
+      return true;
+   else
+      return false;
 }
 
 void CFightSystem::work(float timePass, CUnitObject *pSelfObject, CUnitObject *pTargetObject)
@@ -33,9 +42,12 @@ void CFightSystem::work(float timePass, CUnitObject *pSelfObject, CUnitObject *p
             actEvent.m_event = AET_CAST_SKILL;
             CActionDispatch::getInstance()->sendEvnet(m_uid, actEvent);
          }
-         else if(pSelfCurAction->getID() == ACTION_RUN) {  // 跑步
+         else if((pSelfCurAction->getID() == ACTION_RUN) ||
+                 (pSelfCurAction->getID() == ACTION_FIGHT_RUN)) {  // 跑步
 
-            
+            CActionEvent actEvent;
+            actEvent.m_event = AET_REACH;
+            CActionDispatch::getInstance()->sendEvnet(m_uid, actEvent);
          }
          else if(pSelfCurAction->getID() == ACTION_FIGHT) {  // 戰鬥姿態
             // 判斷距離，距離太遠要切換跑步動作且人物要移動
@@ -51,6 +63,7 @@ void CFightSystem::work(float timePass, CUnitObject *pSelfObject, CUnitObject *p
             CActionDispatch::getInstance()->sendEvnet(m_uid, actEvent);
 
             // 扣血計算
+            pSelfObject->useSkill(m_pUseSkill->getID());
 
             // 判斷有無連續技，有的話要通知UI
 

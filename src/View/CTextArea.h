@@ -13,12 +13,16 @@
 class CTextArea : public CWindow
 {
    private:
-      std::string str ;
+      std::string str;
+      int m_iAlignment;
 
    public:
+      enum {LEFT = DT_LEFT, RIGHT = DT_RIGHT, CENTER = DT_CENTER};
+
 	   void init (int _x, int _y, int _w, int _h) ;
 
-      void setText (std::string, float, float, float) ;
+      void setText (std::string, float, float, float);
+      void setAlignment(int alignment);
 	   void draw (HDC hdc, int ox, int oy) ;
 };
 

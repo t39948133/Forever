@@ -59,4 +59,6 @@ public:
     afx_msg void OnBnClickedSkillload();
     afx_msg void OnEnChangeSkillcastmp();
     afx_msg void OnBnClickedSkilldel();
+    afx_msg void OnBnClickedSkillweapon();
+    afx_msg void OnBnClickedSkillshield();
 };

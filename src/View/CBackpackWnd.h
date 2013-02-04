@@ -27,8 +27,10 @@ class CBackpackWnd : public CWindow,
                      public IPlayerAttrEventListener
 {
    public:
-	   enum {BUTTON_COUNT = BACK_MAX, CELL_SIZE = 60, TEXT_COUNT = BACK_MAX + 2} ;
+      enum {BUTTON_COUNT = BACK_MAX, ICON_SIZE = 40};
+      enum {TEXT_TITLE, TEXT_MONEY, TEXT_COUNT};
    	
+      CBackpackWnd();
 	   ~CBackpackWnd();
 
       void init(int _x, int _y, CPlayer *pb);
@@ -54,12 +56,13 @@ class CBackpackWnd : public CWindow,
       CPlayer *m_pPlayer;
 
 #ifdef _GAMEENGINE_3D_	
-	   CImageButton   *m_vpBtn[BUTTON_COUNT] ;
+	   CImageButton   *m_vpBtn[BUTTON_COUNT];
       CTextAreaOgre  *m_vpText[TEXT_COUNT];
       COverlayUI      m_overlay;  //ºÞ²zoverlay
 #elif _GAMEENGINE_2D_
-	   CTextButton    *m_vpBtn[BUTTON_COUNT] ;
+	   CTextButton    *m_vpBtn[BUTTON_COUNT];
       CTextArea      *m_vpText[TEXT_COUNT];
+      CTextArea      *m_vpStackText[BUTTON_COUNT];
 #endif
 };
 

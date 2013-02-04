@@ -18,13 +18,12 @@ CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_str
    m_targetPosition.fX = 450.0f;
    m_targetPosition.fY = 450.0f;
 
-   m_bCastSkill = false;
    m_pTargetObject = NULL;
-   m_iCastSkillID = 0;
-   m_fCastSkillTime = 0.0f;
 
    m_pActionSystem = new CActionSystem(uid);
    m_pActionSystem->addPlaySoundNotifyListener(this);
+
+   m_pFightSystem = new CFightSystem(uid);
 
 #ifdef _GAMEENGINE_2D_
    m_bFaceTarget = false;
@@ -37,9 +36,14 @@ CUnitObject::~CUnitObject()
 {
    m_pActionSystem->removePlaySoundNotifyListener(this);
 
-   if(m_pActionSystem) {
+   if(m_pActionSystem != NULL) {
       delete m_pActionSystem;
       m_pActionSystem = NULL;
+   }
+
+   if(m_pFightSystem != NULL) {
+      delete m_pFightSystem;
+      m_pFightSystem = NULL;
    }
 
    std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
@@ -75,7 +79,7 @@ bool CUnitObject::canUseSkill(unsigned int skillID)
                   if(m_pTargetObject != NULL) {
                      float distance = getDistance(m_position.fX, m_position.fY,
                                                   m_pTargetObject->getPosition().fX, m_pTargetObject->getPosition().fY);
-                     if(distance > pUseSkillInfo->getCastRange() + 50)
+                     if(distance > pUseSkillInfo->getCastRange())
                         return false;  // 離目標物距離遠過技能施展距離
                      else
                         return true;
@@ -119,9 +123,7 @@ void CUnitObject::startCastSkill(unsigned int skillID)
    if(pUseSkill != NULL) {
       CSkillInfo *pUseSkillInfo = pUseSkill->getInfo();
       if(pUseSkillInfo != NULL) {
-         m_iCastSkillID = skillID;
-         m_fCastSkillTime = pUseSkillInfo->getCastTime();
-         m_bCastSkill = true;
+         m_pFightSystem->useSkill(pUseSkill);
       }
    }
 }
@@ -182,49 +184,20 @@ void CUnitObject::skillDamage(AdvancedAttribute targetAttr)
 
 bool CUnitObject::isCastSkill()
 {
-   return m_bCastSkill;
+   //return m_bCastSkill;
+   return m_pFightSystem->isCastSkill();
 }
 
 void CUnitObject::work(float timePass)
 {
    SkillCoolDown(timePass);
    m_pActionSystem->work(timePass);
+   m_pFightSystem->work(timePass, this, m_pTargetObject);
 
 #ifdef _GAMEENGINE_2D_
    if(m_pActionSystem->isMove() == true)
       move(timePass, m_targetPosition.fX, m_targetPosition.fY, m_bFaceTarget);
 #endif  // #ifdef _GAMEENGINE_2D_
-
-   if(m_bCastSkill == true) {
-      CAction *pAction = m_pActionSystem->getCurAction();
-      if(pAction->getID() == 1) { // 等待
-         CActionEvent actEvent;
-         actEvent.m_event = AET_CAST_SKILL;
-         actEvent.m_bCastSkill = true;
-         actEvent.m_iCastSkillID = m_iCastSkillID;
-         actEvent.m_fCastSkillTime = m_fCastSkillTime;
-         CActionDispatch::getInstance()->sendEvnet(m_uid, actEvent);
-      }
-      else if(pAction->getID() == 2) {  // 跑步
-         CActionEvent actEvent;
-         actEvent.m_event = AET_REACH;
-         CActionDispatch::getInstance()->sendEvnet(m_uid, actEvent);
-      }
-      else if(pAction->getID() == 4) {  // 戰鬥姿勢
-         CActionEvent actEvent;
-         actEvent.m_event = AET_CAST_SKILL;
-         actEvent.m_bCastSkill = true;
-         actEvent.m_iCastSkillID = m_iCastSkillID;
-         actEvent.m_fCastSkillTime = m_fCastSkillTime;
-         CActionDispatch::getInstance()->sendEvnet(m_uid, actEvent);
-
-         useSkill(m_iCastSkillID);
-
-         m_bCastSkill = false;
-         m_iCastSkillID = 0;
-         m_fCastSkillTime = 0.0f;
-      }
-   }
 }
 
 void CUnitObject::addDirection(float offsetDirection)

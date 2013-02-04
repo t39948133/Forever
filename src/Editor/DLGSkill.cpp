@@ -299,6 +299,8 @@ BEGIN_MESSAGE_MAP(DLGSkill, CDialog)
     ON_BN_CLICKED(IDC_SkillLoad, &DLGSkill::OnBnClickedSkillload)
     ON_EN_CHANGE(IDC_SkillCastMP, &DLGSkill::OnEnChangeSkillcastmp)
     ON_BN_CLICKED(IDC_SkillDel, &DLGSkill::OnBnClickedSkilldel)
+    ON_BN_CLICKED(IDC_SkillWeapon, &DLGSkill::OnBnClickedSkillweapon)
+    ON_BN_CLICKED(IDC_SkillShield, &DLGSkill::OnBnClickedSkillshield)
 END_MESSAGE_MAP()
 
 
@@ -563,7 +565,7 @@ void DLGSkill::OnBnClickedSkillnew()
     adv.fCasting = 0.0f;
     adv.fMove = 0.0f;
     pInfo->initSkillInfo(TYPE_ACTIVE, 1, "", "新技能", "說明", -1, 0, 0.0f, 0.0f, 0.0f,
-        ENEMY, adv, per, -1, -1, -1, true, true);
+        ENEMY, adv, per, -1, -1, -1, false, false);
     CSkill::addInfo(pInfo);
     upDate();
 }
@@ -603,4 +605,30 @@ void DLGSkill::OnBnClickedSkilldel()
       CSkill::delInfo(pLB->GetCurSel());
       upDate();
    }
+}
+
+void DLGSkill::OnBnClickedSkillweapon()
+{
+   CSkillInfo *pInfo = getSkillInfo();
+   if(pInfo == NULL)
+      return;
+
+   CButton* pB = (CButton*) GetDlgItem(IDC_SkillWeapon);
+   if(pB->GetCheck() == 1)
+      pInfo->m_bRequireWeapon = true;
+   else
+      pInfo->m_bRequireWeapon = false;
+}
+
+void DLGSkill::OnBnClickedSkillshield()
+{
+   CSkillInfo *pInfo = getSkillInfo();
+   if(pInfo == NULL)
+      return;
+
+   CButton* pB = (CButton*) GetDlgItem(IDC_SkillShield);
+   if(pB->GetCheck() == 1)
+      pInfo->m_bRequireShield = true;
+   else
+      pInfo->m_bRequireShield = false;
 }

@@ -25,11 +25,12 @@ class CSkillWnd : public CWindow,
                   public ISkillEventListener
 {
    public:
-	   enum {BUTTON_COUNT = 7, CELL_SIZE = 60, TEXT_COUNT = 7} ;
+	   enum {BUTTON_COUNT = 10, ICON_SIZE = 40};
+      enum {TEXT_TITLE, TEXT_SKILL_NAME,  TEXT_SKILL_KIND, TEXT_FIELD_START, TEXT_COUNT = BUTTON_COUNT * 2 + TEXT_FIELD_START};
    	 
 	   ~CSkillWnd();
 
-	   void init(int _x, int _y, CPlayer *pb);
+	   void init(int _x, int _y, CPlayer *pPlayer);
 
 	   // CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
@@ -38,7 +39,7 @@ class CSkillWnd : public CWindow,
       /* virtual */ void show(bool bShow);
       /* virtual */ void onDrag();
 #ifdef _GAMEENGINE_3D_
-	   void setZOrder(int order);
+	   /* virtual */ void setZOrder(int order);
 #endif
 
       // ISkillEventListener
@@ -49,11 +50,11 @@ class CSkillWnd : public CWindow,
       CPlayer *m_pPlayer;
 
 #ifdef _GAMEENGINE_3D_	
-	   CImageButton   *m_vpBtn[BUTTON_COUNT] ;
+	   CImageButton   *m_vpBtn[BUTTON_COUNT];
       CTextAreaOgre  *m_vpText[TEXT_COUNT];
       COverlayUI      m_overlay;  //ºÞ²zoverlay
 #elif _GAMEENGINE_2D_
-	   CTextButton    *m_vpBtn[BUTTON_COUNT] ;
+	   CTextButton    *m_vpBtn[BUTTON_COUNT];
       CTextArea      *m_vpText[TEXT_COUNT];
 #endif
 };

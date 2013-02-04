@@ -29,12 +29,22 @@ class CPlayerInfoWnd : public CWindow,
                        public IPlayerEquipEventListener
 {
    public:
-	   enum {BUTTON_SPAULDER, BUTTON_GLOVE, BUTTON_WEAPON, BUTTON_CLOTHES,
-	   BUTTON_PANTS, BUTTON_SHIELD, BUTTON_SHOES, BUTTON_UI_NAME, BUTTON_PLAYER_NAME, 
-	   BUTTON_LEVEL_EXP, BUTTON_ATTRIBUTE, BUTTON_PLAYER_IMAGE, BUTTON_COUNT};
+      enum {BUTTON_MAINHAND, BUTTON_OFFHAND, BUTTON_CHEST, BUTTON_LEGS,
+            BUTTON_SHOULDER, BUTTON_GLOVE, BUTTON_BOOT, BUTTON_COUNT};
+   
+      enum {TEXT_TITLE, TEXT_NAME, TEXT_LEVEL, TEXT_HP, TEXT_MP, TEXT_ATK,
+            TEXT_DEF, TEXT_HIT, TEXT_CRI, TEXT_MATK, TEXT_MDEF, TEXT_MHIT,
+            TEXT_MCRI, TEXT_SDEF, TEXT_WDEF, TEXT_FLEE, TEXT_MOVE,
+            TEXT_ATKSPEED, TEXT_CASTING, TEXT_COUNT};
 
-	   enum {CELL_SIZE = 20, TEXT_COUNT = 21};
+	   /*enum {BUTTON_WEAPON, BUTTON_SHIELD, BUTTON_JEWELRY_1, BUTTON_JEWELRY_2,
+		      BUTTON_CLOTHES, BUTTON_SPAULDER, BUTTON_PANTS, BUTTON_GLOVE, 
+		      BUTTON_RING_1, BUTTON_RING_2, BUTTON_SHOES, BUTTON_BELT, 
+		      BUTTON_ATTRIBUTE, BUTTON_PLAYER_IMAGE, BUTTON_COUNT};*/
 
+	   enum {ICON_SIZE = 40};
+
+      CPlayerInfoWnd();
 	   ~CPlayerInfoWnd();
 
 	   void init(int _x, int _y, CPlayer *pPlr);
@@ -63,10 +73,12 @@ class CPlayerInfoWnd : public CWindow,
    	
 #ifdef _GAMEENGINE_3D_	
 	   CImageButton   *m_vpBtn[BUTTON_COUNT];
+      CTextAreaOgre  *m_vpTextName[TEXT_COUNT];
       CTextAreaOgre  *m_vpText[TEXT_COUNT];
       COverlayUI      m_overlay;  //ºÞ²zoverlay
 #elif _GAMEENGINE_2D_
 	   CTextButton    *m_vpBtn[BUTTON_COUNT];
+      CTextArea      *m_vpTextName[TEXT_COUNT];
       CTextArea      *m_vpText[TEXT_COUNT];
 #endif
 };

@@ -13,6 +13,25 @@ material Icon/Skill/Knight/Provoke_G1
 	}
 }
 
+material Icon/Skill/Knight/Provoke_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_WA_Provoke_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //¨ﬁµP±j¿ª
 material Icon/Skill/Knight/ShieldCharge_G1
 {
@@ -23,6 +42,25 @@ material Icon/Skill/Knight/ShieldCharge_G1
 			texture_unit
 			{
 				texture CBT_KN_ShieldCharge_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/ShieldCharge_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_ShieldCharge_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -43,6 +81,25 @@ material Icon/Skill/Knight/Stonebody_G1
 	}
 }
 
+material Icon/Skill/Knight/Stonebody_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_StoneBody_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //Æz§∆≤r¿ª
 material Icon/Skill/Knight/ArmorBreak_G1
 {
@@ -53,6 +110,25 @@ material Icon/Skill/Knight/ArmorBreak_G1
 			texture_unit
 			{
 				texture CBT_WA_ArmorBreak_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/ArmorBreak_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_WA_ArmorBreak_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -73,6 +149,25 @@ material Icon/Skill/Knight/ShineSlash_G1
 	}
 }
 
+material Icon/Skill/Knight/ShineSlash_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_ShineSlash_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //¨D∆]≤r¿ª
 material Icon/Skill/Knight/BrainBreak_G1
 {
@@ -83,6 +178,25 @@ material Icon/Skill/Knight/BrainBreak_G1
 			texture_unit
 			{
 				texture CBT_KN_BrainBreak_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/BrainBreak_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_BrainBreak_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -103,6 +217,25 @@ material Icon/Skill/Knight/BlessedShield_G1
 	}
 }
 
+material Icon/Skill/Knight/BlessedShield_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_BlessedShield_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //¨¿ª
 material Icon/Skill/Knight/Dash_G1
 {
@@ -113,6 +246,25 @@ material Icon/Skill/Knight/Dash_G1
 			texture_unit
 			{
 				texture CBT_WA_Dash_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/Dash_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_WA_Dash_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -133,6 +285,25 @@ material Icon/Skill/Knight/IronBody_G1
 	}
 }
 
+material Icon/Skill/Knight/IronBody_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_IronBody_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //ß÷≥t¨ﬁ
 material Icon/Skill/Knight/PurifyWing_G1
 {
@@ -143,6 +314,25 @@ material Icon/Skill/Knight/PurifyWing_G1
 			texture_unit
 			{
 				texture CBT_KN_PurifyWing_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/PurifyWing_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_PurifyWing_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -163,6 +353,25 @@ material Icon/Skill/Knight/ShieldSwing_G1
 	}
 }
 
+material Icon/Skill/Knight/ShieldSwing_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture LIVE_KN_ShieldSwing_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //∑•≠≠≤r¿ª 
 material Icon/Skill/Knight/SlashDown_G1
 {
@@ -173,6 +382,25 @@ material Icon/Skill/Knight/SlashDown_G1
 			texture_unit
 			{
 				texture LIVE_KN_SlashDown_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/SlashDown_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture LIVE_KN_SlashDown_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -299,6 +527,25 @@ material Icon/Skill/Knight/RobustHit_G1
 	}
 }
 
+material Icon/Skill/Knight/RobustHit_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_WA_RobustHit_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //¨ﬁµP∆w¿ª
 material Icon/Skill/Knight/AvengingBash_G1
 {
@@ -309,6 +556,25 @@ material Icon/Skill/Knight/AvengingBash_G1
 			texture_unit
 			{
 				texture CBT_KN_AvengingBash_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/AvengingBash_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_AvengingBash_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -329,6 +595,25 @@ material Icon/Skill/Knight/RobustBlow_G1
 	}
 }
 
+material Icon/Skill/Knight/RobustBlow_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_WA_RobustBlow_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //Æ¶X
 material Icon/Skill/Knight/Rage_G1
 {
@@ -339,6 +624,25 @@ material Icon/Skill/Knight/Rage_G1
 			texture_unit
 			{
 				texture CBT_WA_Rage_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/Rage_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_WA_Rage_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -359,6 +663,25 @@ material Icon/Skill/Knight/ShineBlade_G1
 	}
 }
 
+material Icon/Skill/Knight/ShineBlade_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_ShineBlade_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //¨ﬁµP§œ¿ª
 material Icon/Skill/Knight/AvengingCrash_G1
 {
@@ -369,6 +692,25 @@ material Icon/Skill/Knight/AvengingCrash_G1
 			texture_unit
 			{
 				texture CBT_WA_AvengingCrash_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/AvengingCrash_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_WA_AvengingCrash_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -389,6 +731,25 @@ material Icon/Skill/Knight/AvengingBlade_G1
 	}
 }
 
+material Icon/Skill/Knight/AvengingBlade_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_AvengingBlade_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //≥sƒÚ∂√•¥
 material Icon/Skill/Knight/CrossBlade_G1
 {
@@ -399,6 +760,25 @@ material Icon/Skill/Knight/CrossBlade_G1
 			texture_unit
 			{
 				texture CBT_KN_CrossBlade_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/CrossBlade_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_CrossBlade_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}
@@ -419,6 +799,25 @@ material Icon/Skill/Knight/WeaponBreak_G1
 	}
 }
 
+material Icon/Skill/Knight/WeaponBreak_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_WeaponBreak_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //¨ﬁµP¨¿ª
 material Icon/Skill/Knight/ShieldImpact_G1
 {
@@ -434,6 +833,25 @@ material Icon/Skill/Knight/ShieldImpact_G1
 	}
 }
 
+material Icon/Skill/Knight/ShieldImpact_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_ShieldImpact_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
+			}
+		}
+	}
+}
+
 //∂w§∆≤r¿ª
 material Icon/Skill/Knight/LegBreak_G1
 {
@@ -444,6 +862,25 @@ material Icon/Skill/Knight/LegBreak_G1
 			texture_unit
 			{
 				texture CBT_KN_LegBreak_G1.jpg
+			}
+		}
+	}
+}
+
+material Icon/Skill/Knight/LegBreak_G1/CoolDown
+{
+	technique
+	{
+		pass
+		{
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture CBT_KN_LegBreak_G1.jpg
+			}
+			texture_unit
+			{
+				texture SkillCoolDown.png
 			}
 		}
 	}

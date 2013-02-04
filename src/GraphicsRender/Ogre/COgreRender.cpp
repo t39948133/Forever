@@ -130,14 +130,14 @@ bool COgreRender::setup()
     // Load resources
     loadResources();
 
+    createFrameListener();
+
     // Create the scene
     std::set<IGameFlowListener *>::iterator it = m_gameFlowListeners.begin();
     while(it != m_gameFlowListeners.end()) {
        (*it)->createScene();
        it++;
     }
-
-    createFrameListener();
 
     return true;
 };
@@ -254,10 +254,10 @@ void COgreRender::createFrameListener()
 
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mMouse, this);
     mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
-    OgreBites::Label *pLabel = mTrayMgr->createLabel(OgreBites::TL_BOTTOMRIGHT, "Forver", "v0.2", 50);
-    Ogre::TextAreaOverlayElement *pTextArea = (Ogre::TextAreaOverlayElement*)((Ogre::OverlayContainer*)pLabel->getOverlayElement())->getChild(pLabel->getName() + "/LabelCaption");
-    pTextArea->setFontName("NCTaiwanFont");
-    pTextArea->setCharHeight(16);
+    //OgreBites::Label *pLabel = mTrayMgr->createLabel(OgreBites::TL_BOTTOMRIGHT, "Forver", "v0.2", 50);
+    //Ogre::TextAreaOverlayElement *pTextArea = (Ogre::TextAreaOverlayElement*)((Ogre::OverlayContainer*)pLabel->getOverlayElement())->getChild(pLabel->getName() + "/LabelCaption");
+    //pTextArea->setFontName("NCTaiwanFont");
+    //pTextArea->setCharHeight(16);
     //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     //mTrayMgr->hideCursor();
 
