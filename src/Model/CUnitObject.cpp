@@ -588,6 +588,7 @@ bool CUnitObject::addSkill(unsigned int skillID)
       notifySkillUpdate();
       return true;
    }
+delete pSkill;
    return false;
 }
 

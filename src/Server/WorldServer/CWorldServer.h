@@ -55,7 +55,7 @@ class CWorldServer
       std::list<GP::NetStream *> *m_pNetStreamList;   // 所有的網路連線
       std::list<GP::NetStream *> *m_pSceneStreamList; // 所有場景伺服器的網路連線
       //std::list<CNetPlayer *>    *m_pPlayerList;      // 所有玩家
-      std::map<SCENE_TYPE, GP::NetStream *> *m_pSceneTable;  // 場景對照表
+      std::map<SCENE_TYPE, GP::NetStream *> *m_pSceneTable;  // 場景封包對照表
 };
 
 #endif  // #ifndef _CWORLDSERVER_H_

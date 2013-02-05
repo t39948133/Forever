@@ -17,8 +17,8 @@ CMonster::CMonster(int kindID, long long uid, float fx, float fy) :
       setTargetPosition(fx, fy);
       m_state = IDLE;
       m_vSkill = getSkill();
-      m_bonPosition.fX = fx;
-      m_bonPosition.fY = fy;
+		 m_bornPosition.fX = fx;
+		 m_bornPosition.fY = fy;
       m_anchorPosition.fX = 0.0f;
       m_anchorPosition.fY = 0.0f;
 
@@ -188,7 +188,7 @@ void CMonster::work(float timePass, CScene& scene)
    targetUpdate(scene);
    CUnitObject::work(timePass);
    AIAction(timePass, scene);
-   //仇恨值表內玩家攻擊外行為造成仇恨
+    //預計做  仇恨值表內玩家攻擊外行為造成仇恨    
 }
 
 bool CMonster::isDead()
@@ -292,15 +292,9 @@ void CMonster::AIAction(float timePass, CScene& scene)
             float range = pInfo->getAlert();
             int fx = (rand() % (int) (range * 2)) - (int) (range);
             int fy = (rand() % (int) (range * 2)) - (int) (range);
-            float ftx = m_bonPosition.fX + fx;
-            float fty = m_bonPosition.fY + fy;
-#ifdef _GAMEENGINE_2D_
-            setTargetPosition(ftx, fty, true);
-#endif
-
-            CActionEvent actEvent;
-            actEvent.m_event = AET_NOT_REACH;
-            CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+				float ftx = m_bornPosition.fX + fx;
+				float fty = m_bornPosition.fY + fy;
+				dolly(ftx, fty, true);
          }
          else
          {
@@ -334,13 +328,7 @@ void CMonster::AIAction(float timePass, CScene& scene)
 
       float fx = punit->getPosition().fX;
       float fy = punit->getPosition().fY;
-#ifdef _GAMEENGINE_2D_
-      setTargetPosition(fx, fy, true);
-#endif
-
-      CActionEvent actEvent;
-      actEvent.m_event = AET_NOT_REACH;
-      CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+       dolly(fx, fy, true);
 
       m_state = DOLLY;
       return;
@@ -355,15 +343,13 @@ void CMonster::AIAction(float timePass, CScene& scene)
       }
       float fx = punit->getPosition().fX;
       float fy = punit->getPosition().fY;
-#ifdef _GAMEENGINE_2D_
-      setTargetPosition(fx, fy, true);
-#endif
+		dolly(fx, fy, true);
 
-      float distance = getDistance(getPosition().fX, getPosition().fY, fx, fy);
       if(getBack())//離開太遠回歸
       {
          return;
       }
+		float distance = getDistance(getPosition().fX, getPosition().fY, fx, fy);
 #ifdef _GAMEENGINE_2D_
       if(35.0f > distance)
       {
@@ -389,72 +375,21 @@ void CMonster::AIAction(float timePass, CScene& scene)
          return;
       }
 #endif //#ifdef _GAMEENGINE_2D_
-      std::vector<CSkill*> vskill = getSkill();
-      std::vector<CSkill*>::iterator pskill = vskill.begin();
       switch(pInfo->getWistom())
       {
          case 1:
-            while (vskill.end() != pskill)
-            {
-               if((*pskill)->isReady())
-               {
-                  useSkill((*pskill)->getID());
-                  break;
-               }
-               pskill++;
-            }
+			 selectSkill();
             break;
 
          case 2:  
-         {   //選強技能用 菁英
-            int hp = 0;
-            int no = -1;
-            while(vskill.end() != pskill)
-            {
-               if((*pskill)->isReady())
-               {
-                  CSkillInfo* pInfo = (*pskill)->getInfo();
-                  AdvancedAttribute effectAttr = pInfo->getEffectAttr();
-                  FloatPrecentAttribute effectPrecentAttr = pInfo->getEffectAttrPercent();
-                  AttributeMulti(effectAttr, effectPrecentAttr);
-                  if(hp < effectAttr.iHP)
-                  {
-                     hp = effectAttr.iHP;
-                     no = (*pskill)->getID();
-                  }
-               }
-               pskill++;
-            }
-            useSkill(no);
+			 selectPowerfulSkill();
             break;
-         }
-
          case 3: 
-         {    //王
-            int hp = 0;
-            int no = -1;
-            while(vskill.end() != pskill)
-            {
-               if((*pskill)->isReady())
-               {
-                  CSkillInfo* pInfo = (*pskill)->getInfo();
-                  AdvancedAttribute effectAttr = pInfo->getEffectAttr();
-                  FloatPrecentAttribute effectPrecentAttr = pInfo->getEffectAttrPercent();
-                  AttributeMulti(effectAttr, effectPrecentAttr);
-                  if(hp < effectAttr.iHP)
-                  {
-                     hp = effectAttr.iHP;
-                     no = (*pskill)->getID();
-                  }
-               }
-               pskill++;
-            }
-            useSkill(no);
+			 selectPowerfulSkill();
             break;
          }
       }
    }
-}
 
 bool CMonster::getBack()
 {
@@ -477,7 +412,7 @@ bool CMonster::getBack()
    float distance = getDistance(fbx, fby, fx, fy);
    if(range < distance)
    {
-      //轉換追擊在範圍內的仇恨玩家
+        //預備做   轉換追擊在範圍內的仇恨玩家
       m_state = RETURN;
       m_lHatred.clear();
       setTargetObject(NULL);
@@ -490,9 +425,65 @@ bool CMonster::getBack()
    return false;
 }
 
+void CMonster::selectSkill()
+{
+	std::vector<CSkill*> vskill = getSkill();
+   std::vector<CSkill*>::iterator pskill = vskill.begin();
+	 while (vskill.end() != pskill)
+	 {
+		 if((*pskill)->isReady())
+		 {
+			 useSkill((*pskill)->getID());
+			 break;
+		 }
+		 pskill++;
+	 }
+}
+
+void CMonster::selectPowerfulSkill()
+{
+	std::vector<CSkill*> vskill = getSkill();
+   std::vector<CSkill*>::iterator pskill = vskill.begin();
+	int hp = 0;
+   int no = -1;
+   while(vskill.end() != pskill)
+   {
+		if((*pskill)->isReady())
+		{
+			CSkillInfo* pInfo = (*pskill)->getInfo();
+         AdvancedAttribute effectAttr = pInfo->getEffectAttr();
+         FloatPrecentAttribute effectPrecentAttr = pInfo->getEffectAttrPercent();
+         AttributeMulti(effectAttr, effectPrecentAttr);
+         if(hp < effectAttr.iHP)
+         {
+				hp = effectAttr.iHP;
+            no = (*pskill)->getID();
+			}
+		}
+		pskill++;
+	}
+	useSkill(no);
+}
+
+void CMonster::dolly(float fx, float fy, bool bFaceTarget)
+{
+#ifdef _GAMEENGINE_2D_
+            setTargetPosition(fx, fy, bFaceTarget);
+#endif
+
+	if(m_pActionSystem->isMove() == false)
+	{
+		CActionEvent actEvent;
+		actEvent.m_event = AET_NOT_REACH;
+		CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+	}
+}
+
 #ifdef _GAMEENGINE_2D_
 void CMonster::draw(HDC hdc)
 {
+    
+	//Ellipse(hdc, 300, 300, 500, 500);
    CUnitObject::draw(hdc);
 
    int size = 20;

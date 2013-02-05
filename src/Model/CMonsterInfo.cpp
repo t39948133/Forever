@@ -149,7 +149,7 @@ void CMonsterInfo::read(FILE *pFile)
    m_strActionSystemFile = buf;
    // } read m_strActionSystemFile
 
-   memset(buf, 0, longStrSize);
+    memset(buf, 0, sizeof(buf));
    fread(&m_Level, sizeof(m_Level), 1, pFile);
    fread(&m_Wistom, sizeof(m_Wistom), 1, pFile);
    fread(&m_ixp, sizeof(m_ixp), 1, pFile);

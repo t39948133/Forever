@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (Taiwan) resources
+// 中文 (台灣) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
 #ifdef _WIN32
@@ -373,37 +373,37 @@ BEGIN
     PUSHBUTTON      "save",IDC_SkillSave,7,244,48,14
     PUSHBUTTON      "load",IDC_SkillLoad,57,244,48,14
     LTEXT           "生命力",IDC_STATIC,343,32,25,8
-    EDITTEXT        IDC_SkillAttrHP,386,30,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrHP,386,30,30,14,ES_AUTOHSCROLL
     LTEXT           "精神力",IDC_STATIC,343,51,25,8
-    EDITTEXT        IDC_SkillAttrMP,386,48,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrMP,386,48,30,14,ES_AUTOHSCROLL
     LTEXT           "最大生命力",IDC_STATIC,343,69,41,8
-    EDITTEXT        IDC_SkillAttrHPMax,386,66,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrHPMax,386,66,30,14,ES_AUTOHSCROLL
     LTEXT           "最大精神力",IDC_STATIC,343,87,41,8
-    EDITTEXT        IDC_SkillAttrMPMax,386,84,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrMPMax,386,84,30,14,ES_AUTOHSCROLL
     LTEXT           "物理攻擊力",IDC_STATIC,343,105,41,8
-    EDITTEXT        IDC_SkillAttrATK,386,102,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrATK,386,102,30,14,ES_AUTOHSCROLL
     LTEXT           "物理防禦力",IDC_STATIC,343,123,41,8
-    EDITTEXT        IDC_SkillAttrDEF,386,120,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrDEF,386,120,30,14,ES_AUTOHSCROLL
     LTEXT           "物理命中",IDC_STATIC,343,141,33,8
-    EDITTEXT        IDC_SkillAttrHIT,386,138,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrHIT,386,138,30,14,ES_AUTOHSCROLL
     LTEXT           "物理暴擊",IDC_STATIC,343,160,33,8
-    EDITTEXT        IDC_SkillAttrCRI,386,156,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrCRI,386,156,30,14,ES_AUTOHSCROLL
     LTEXT           "盾牌防禦力",IDC_STATIC,343,177,41,8
-    EDITTEXT        IDC_SkillAttrSDEF,386,174,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrSDEF,386,174,30,14,ES_AUTOHSCROLL
     LTEXT           "迴避",IDC_STATIC,343,194,17,8
-    EDITTEXT        IDC_SkillAttrFlee,386,192,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrFlee,386,192,30,14,ES_AUTOHSCROLL
     LTEXT           "攻擊速度",IDC_STATIC,344,212,33,8
     EDITTEXT        IDC_SkillAttrATKSpeed,386,210,36,14,ES_AUTOHSCROLL
     LTEXT           "魔法攻擊力",IDC_STATIC,433,102,41,8
-    EDITTEXT        IDC_SkillAttrMATK,476,101,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrMATK,476,101,30,14,ES_AUTOHSCROLL
     LTEXT           "魔法防禦力",IDC_STATIC,433,120,41,8
-    EDITTEXT        IDC_SkillAttrMDEF,476,119,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrMDEF,476,119,30,14,ES_AUTOHSCROLL
     LTEXT           "魔法命中",IDC_STATIC,433,138,33,8
-    EDITTEXT        IDC_SkillAttrMHIT,476,137,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrMHIT,476,137,30,14,ES_AUTOHSCROLL
     LTEXT           "魔法暴擊",IDC_STATIC,433,156,33,8
-    EDITTEXT        IDC_SkillAttrMCRI,476,155,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrMCRI,476,155,30,14,ES_AUTOHSCROLL
     LTEXT           "武器防禦力",IDC_STATIC,433,174,41,8
-    EDITTEXT        IDC_SkillAttrWDEF,476,173,30,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SkillAttrWDEF,476,173,30,14,ES_AUTOHSCROLL
     LTEXT           "移動速度",IDC_STATIC,433,192,33,8
     EDITTEXT        IDC_SkillAttrMove,476,191,36,14,ES_AUTOHSCROLL
     LTEXT           "施展速度",IDC_STATIC,435,210,33,8
@@ -778,7 +778,7 @@ BEGIN
     AFX_IDS_SCTASKLIST      "啟動工作清單"
 END
 
-#endif    // Chinese (Taiwan) resources
+#endif    // 中文 (台灣) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -59,6 +59,7 @@ void CConsumableInfo::read(FILE* pFile)
    fread (&m_effect, sizeof(m_effect), 1, pFile);
    fread (&m_iMuch, sizeof(m_iMuch), 1, pFile);
 }
+
 #ifdef _GAMEENGINE_2D_EDITOR_
 void CConsumableInfo::write(FILE* pFile)
 {

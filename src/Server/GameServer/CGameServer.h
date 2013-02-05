@@ -8,6 +8,7 @@
 #ifndef _CGAMESERVER_H_
 #define _CGAMESERVER_H_
 #include "CScene.h"
+#include "CMonsterMap.h"
 /*#include "CNetPlayer.h"
 #include "CPacketSceneServerLogin.h"
 #include "CPacketPlayerData.h"
@@ -73,6 +74,7 @@ class CGameServer : public CScene
       bool                        m_bSendWSLogin;   // 是否送出login封包給world server
       std::list<GP::NetStream *> *m_pNetStreamList; // 所有的網路連線
       //std::list<CNetPlayer *>    *m_pPlayerList;    // 此場景的所有網路玩家
+		CMonsterMap						 m_MonsterMap;
 };
 
 #endif  // #ifndef _CGAMESERVER_H_

@@ -35,13 +35,16 @@ class CMonster:public MONSTER_INFO,
    private:
       MonsterState           m_state;             //目前狀態
       std::list<AngerValue>  m_lHatred;			  //仇恨值列表
-      FPOS                   m_bonPosition;       // 出生X,Y座標 (2D)
+    FPOS                    m_bornPosition;      // 出生X,Y座標 (2D)
 	 FPOS							 m_anchorPosition;	//進入戰鬥定位點
 
       bool                   create(unsigned int id);    //設定哪種怪
       void                   targetUpdate(CScene& scene);
       void					     AIAction(float timePass, CScene& scene);
       bool                   getBack();
+	 void							 selectSkill();
+	 void							 selectPowerfulSkill();
+	 void							 dolly(float fx, float fy, bool bFaceTarget);
 };
 
 #endif  // #ifndef _CMONSTER_H_

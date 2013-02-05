@@ -37,6 +37,8 @@ class CScene
         * @return 怪物物件 */
       CMonster* addMonster(long long uid, int kindID, float x, float y);
 
+		void removeMonster(long long uid);
+
       /** @brief 刪除所有東西 */
       void removeAll();
 

@@ -12,10 +12,6 @@
 #include "IDrawWeaponNotifyListener.h"
 #include "IPlaySoundNotifyListener.h"
 
-typedef struct tagPOSITION {
-   float fX;
-   float fY;
-} FPOS;
 // } Add by Darren Chen on 2012/12/22
 
 class CUnitObject : public IPlaySoundNotifyListener

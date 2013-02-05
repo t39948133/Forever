@@ -232,6 +232,11 @@ enum MonsterClass
     MONSTER,
 };
 
+enum MonsterArea
+{
+	MONSTERAREA,
+};
+
 struct AngerValue
 {
     long long uid;
@@ -251,7 +256,6 @@ enum MonsterState
 const int BACK_ROW = 9;		//row橫 
 const int BACK_COLUMN = 3;	//column直
 const int BACK_MAX = BACK_ROW * BACK_COLUMN;	//格數
-const int longStrSize = 256;
 const int UI_HOTKEY_NUM = 10;
 
 // Add by Darren Chen on 2012/12/13 {
@@ -336,5 +340,22 @@ const int ACTION_FIGHT_RUN    = 5;  // 戰鬥姿態跑步
 const int ACTION_PUTIN_WEAPON = 6;  // 收回武器
 const int ACTION_ATTACK       = 7;  // 普通攻擊
 // } Add by Darren Chen on 2012/12/13
+
+typedef struct tagPOSITION {
+   float fX;
+   float fY;
+} FPOS;
+
+enum NPCType
+{
+	STORE,
+	VILLAGER,
+	PRINCIPAL,
+};
+
+enum NPCClassType
+{
+	NPC,
+};
 
 #endif  // #ifndef _COMMON_H_

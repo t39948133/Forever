@@ -43,6 +43,7 @@ void CWeaponInfo::read(FILE* pFile)
 
 	fread (&m_wield, sizeof(m_wield), 1, pFile);
 }
+
 #ifdef _GAMEENGINE_2D_EDITOR_
 void CWeaponInfo::write(FILE* pFile)
 {

@@ -232,4 +232,3 @@ void BackpackWnd::onSwitch ()
 		overlayUI.getOverlay ()->hide () ;
 }
 #endif
-
