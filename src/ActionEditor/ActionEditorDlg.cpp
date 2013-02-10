@@ -56,7 +56,7 @@ CActionEditorDlg::CActionEditorDlg(CWnd* pParent /*=NULL*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
-   m_pActionSystem = new CActionSystem(0);
+   m_pActionSystem = new CActionSystem("CActionEditor", 0);
    m_iActionListIdx = -1;
    m_iEventListIdx = -1;
 }
@@ -652,18 +652,22 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
          switch(pActionEventHandler->m_pTriggerEvent->m_event) {
             case AET_NULL:
                pcmbEvent->SetCurSel(0);
+               OnCbnSelchangeEvent();
                break;
 
             case AET_REACH:
                pcmbEvent->SetCurSel(1);
+               OnCbnSelchangeEvent();
                break;
 
             case AET_NOT_REACH:
                pcmbEvent->SetCurSel(2);
+               OnCbnSelchangeEvent();
                break;
 
             case AET_KEY: {
                pcmbEvent->SetCurSel(3);
+               OnCbnSelchangeEvent();
 
                CKeyActionEvent *pKeyActionEvent = (CKeyActionEvent *)pActionEventHandler->m_pTriggerEvent;
                std::string strKey;
@@ -675,6 +679,7 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
 
             case AET_KEY_WASD: {
                pcmbEvent->SetCurSel(4);
+               OnCbnSelchangeEvent();
 
                CWASDKeyActionEvent *pWASDKeyActionEvent = (CWASDKeyActionEvent *)pActionEventHandler->m_pTriggerEvent;
 
@@ -691,10 +696,12 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
 
             case AET_CAST_SKILL:
                pcmbEvent->SetCurSel(5);
+               OnCbnSelchangeEvent();
                break;
 
             case AET_NOTIFY_DRAW_WEAPON: {
                pcmbEvent->SetCurSel(6);
+               OnCbnSelchangeEvent();
 
                CNotifyActionEvent *pNotifyActionEvent = (CNotifyActionEvent *)pActionEventHandler->m_pTriggerEvent;
 
@@ -705,6 +712,7 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
 
             case AET_NOTIFY_PUTIN_WEAPON: {
                pcmbEvent->SetCurSel(7);
+               OnCbnSelchangeEvent();
 
                CNotifyActionEvent *pNotifyActionEvent = (CNotifyActionEvent *)pActionEventHandler->m_pTriggerEvent;
 
@@ -715,6 +723,7 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
 
             case AET_NOTIFY_PLAY_SOUND: {
                pcmbEvent->SetCurSel(8);
+               OnCbnSelchangeEvent();
 
                CPlaySoundNotifyActionEvent *pPlaySoundNotifyActionEvent = (CPlaySoundNotifyActionEvent *)pActionEventHandler->m_pTriggerEvent;
 
@@ -726,8 +735,6 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
          }
 
          SetDlgItemText(EDT_EVENTNEXTACTIONID, toString<int>(pActionEventHandler->getNextActionID()).c_str());
-
-         OnCbnSelchangeEvent();
 
          CButton *pbtnDelEvent = (CButton*)GetDlgItem(BTN_DELEVENT);
          pbtnDelEvent->EnableWindow(TRUE);

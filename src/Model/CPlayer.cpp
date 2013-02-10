@@ -6,27 +6,18 @@
 #include "AttributeSet.h"
 #include "CMonster.h"
 
-CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(strName, uid, level), m_levelMax(50)
+CPlayer::CPlayer(std::string machineName, std::string strName, long long uid, char level) : CUnitObject(machineName, strName, uid, level), 
+                                                                                            m_levelMax(50)
 {
-   BasicAttribute basAttr;
-   AttributeClear(basAttr);
-   basAttr.iSTR = 115;
-   basAttr.iVIT = 110;
-   basAttr.iDEX = 100;
-   basAttr.iAGI = 100;
-   basAttr.iINT = 90;
-   basAttr.iWIL = 105;
-   setBasAttr(basAttr);
-   m_backPack.initBack();
-   updateEquipAttr();
-   // Add by Darren Chen on 2013/01/05 {
+   m_pBackpack = new CBackpack();
    m_xp = 0;
-   m_xpMax = 1000;
+   m_xpMax = level * 1000;
    m_money = 0;
 
    m_pvtHotKey = new std::vector<HotKeyItem *>();
    for(int i = 0; i < UI_HOTKEY_NUM; i++) {
       HotKeyItem *pHotKeyItem = new HotKeyItem();
+      pHotKeyItem->iField = i;
       pHotKeyItem->pItem = NULL;
       pHotKeyItem->pSkill = NULL;
       m_pvtHotKey->push_back(pHotKeyItem);
@@ -35,10 +26,6 @@ CPlayer::CPlayer(std::string strName, long long uid, char level) : CUnitObject(s
    // 讀取玩家動作檔 (守護星 的動作系統)
    if(m_pActionSystem->read("../PlayerKnight.acs") == false)
       m_pActionSystem->read("PlayerKnight.acs");
-
-   // 玩家擁有技能
-   addSkill(0);
-   // } Add by Darren Chen on 2013/01/05
 }
 
 // Add by Darren Chen on 2013/01/12 {
@@ -53,6 +40,11 @@ CPlayer::~CPlayer()
       m_pvtHotKey->clear();
       delete m_pvtHotKey;
       m_pvtHotKey = NULL;
+   }
+
+   if(m_pBackpack != NULL) {
+      delete m_pBackpack;
+      m_pBackpack = NULL;
    }
 }
 // } Add by Darren Chen on 2013/01/12
@@ -78,10 +70,33 @@ unsigned int CPlayer::getXPMax()
 	return m_xpMax;
 }
 
-CBackPack CPlayer::getBackPack()
+CBackpack* CPlayer::getBackpack()
 {
-	return m_backPack;
+	return m_pBackpack;
 }
+
+// Modify by Darren Chen on 2013/01/07 {
+void CPlayer::wearToEquipSlot(EquipSlot es, int itemID)
+{
+   std::map<EquipSlot, int>::iterator it = m_mEquip.find(es);
+   if(it != m_mEquip.end()) {
+      // 舊物品放入背包
+		int st = 1;
+		int bu = 0;
+		m_pBackpack->addItem(it->second, st, bu);
+
+      // 該裝備槽的資料移除
+      m_mEquip.erase(it);
+   }
+
+	// 物品裝備到裝備欄上
+	m_mEquip.insert(std::make_pair(es, itemID));
+   notifyPlayerEquipUpdate(es, itemID);
+	
+   // 背包的物品堆疊減一
+   m_pBackpack->removeItem(itemID);
+}
+// } Modify by Darren Chen on 2013/01/07
 
 void CPlayer::shedEquip(EquipSlot grid)
 {
@@ -91,8 +106,7 @@ void CPlayer::shedEquip(EquipSlot grid)
 	
 	int st = 1;
 	int gr = 0;
-	m_backPack.addItem(it->second, st, gr);
-   notifyPlayerBackpackUpdate();
+	m_pBackpack->addItem(it->second, st, gr);
 
 	m_mEquip.erase(grid);
    notifyPlayerEquipUpdate(grid, -1);
@@ -132,7 +146,7 @@ long long CPlayer::getMoney()
    return m_money;
 }
 
-void CPlayer::useItem(unsigned int itemID)
+void CPlayer::useItem(int itemID)
 {
    CItemInfo* pItemInfo = CItem::getInfo(itemID);
    if(pItemInfo == NULL)
@@ -195,15 +209,7 @@ void CPlayer::useItem(unsigned int itemID)
             return;
 
          // 背包物品減一
-         for(int i = 0; i < BACK_MAX; i++) {
-            CItem *pFindItem = m_backPack.getItem(i);
-            if(pFindItem->getInfo() == pItemInfo) {
-               pFindItem->taken();
-
-               notifyPlayerBackpackUpdate();
-               break;
-            }
-         }
+         m_pBackpack->removeItem(itemID);
       }
    }
 }
@@ -214,8 +220,8 @@ void CPlayer::addHotKeyItem(HotKeyItem &newHotKeyItem)
       HotKeyItem *pHotKeyItem = m_pvtHotKey->at(newHotKeyItem.iField);
       if(pHotKeyItem != NULL) {
          if(newHotKeyItem.pItem != NULL) {
-            for(int i = 0; i < m_backPack.getSize(); i++) {
-               CItem *pBackpackItem = m_backPack.getItem(i);
+            for(int i = 0; i < m_pBackpack->getSize(); i++) {
+               CItem *pBackpackItem = m_pBackpack->getItem(i);
                if(pBackpackItem != NULL) {
                   if(newHotKeyItem.pItem->getID() == pBackpackItem->getID()) {
                      pHotKeyItem->iField = newHotKeyItem.iField;
@@ -306,16 +312,12 @@ void CPlayer::removePlayerEquipEventListener(IPlayerEquipEventListener *pListene
 
 void CPlayer::addPlayerBackpackEventListener(IPlayerBackpackEventListener *pListener)
 {
-   std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.find(pListener);
-   if(it == m_playerBackpackEventListeners.end())
-      m_playerBackpackEventListeners.insert(pListener);
+   m_pBackpack->addPlayerBackpackEventListener(pListener);
 }
 
 void CPlayer::removePlayerBackpackEventListener(IPlayerBackpackEventListener *pListener)
 {
-   std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.find(pListener);
-   if(it != m_playerBackpackEventListeners.end())
-      m_playerBackpackEventListeners.erase(it);
+   m_pBackpack->removePlayerBackpackEventListener(pListener);
 }
 
 void CPlayer::addPlayerHotKeyEventListener(IPlayerHotKeyEventListener *pListener)
@@ -381,38 +383,6 @@ void CPlayer::updateSkillAvailable()
     }
 }
 
-// Modify by Darren Chen on 2013/01/07 {
-void CPlayer::wearToEquipSlot(EquipSlot es, unsigned int itemId)
-{
-   std::map<EquipSlot, int>::iterator it = m_mEquip.find(es);
-   if(it != m_mEquip.end()) {
-      // 舊物品放入背包
-		int st = 1;
-		int bu = 0;
-		m_backPack.addItem(it->second, st, bu);
-      notifyPlayerBackpackUpdate();
-
-      // 該裝備槽的資料移除
-      m_mEquip.erase(it);
-   }
-
-	// 物品裝備到裝備欄上
-	m_mEquip.insert(std::make_pair(es, itemId));
-   notifyPlayerEquipUpdate(es, itemId);
-	
-   // 背包的物品堆疊減一
-   CItemInfo *pFindItemInfo = CItem::getInfo(itemId);
-   for(int i = 0; i < BACK_MAX; i++) {
-      CItem *pItem = m_backPack.getItem(i);
-      if(pItem->getInfo() == pFindItemInfo) {
-         pItem->taken();
-         notifyPlayerBackpackUpdate();
-         break;
-      }
-   }
-}
-// } Modify by Darren Chen on 2013/01/07
-
 // Add by Darren Chen on 2013/01/17 {
 void CPlayer::notifyPlayerAttrUpdate()
 {
@@ -423,20 +393,11 @@ void CPlayer::notifyPlayerAttrUpdate()
    }
 }
 
-void CPlayer::notifyPlayerEquipUpdate(EquipSlot es, int itemId)
+void CPlayer::notifyPlayerEquipUpdate(EquipSlot es, int itemID)
 {
    std::set<IPlayerEquipEventListener *>::iterator it = m_playerEquipEventListeners.begin();
    while(it != m_playerEquipEventListeners.end()) {
-      (*it)->updatePlayerEquip(this, es, itemId);
-      it++;
-   }
-}
-
-void CPlayer::notifyPlayerBackpackUpdate()
-{
-   std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.begin();
-   while(it != m_playerBackpackEventListeners.end()) {
-      (*it)->updatePlayerBackpack(this);
+      (*it)->updatePlayerEquip(this, es, itemID);
       it++;
    }
 }

@@ -37,6 +37,8 @@ class CActionEventHandler
 
       void setUID(long long uid);
 
+      void setMachineName(std::string machineName);
+
       /** @brief 存檔
         * @param pFile 檔案 */
       void write(FILE *pFile);
@@ -48,6 +50,7 @@ class CActionEventHandler
    private:
       friend class CActionEditorDlg;  // 允許動作編輯器來存取此物件
 
+      std::string   m_machineName;    // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       CActionEvent *m_pTriggerEvent;  // 觸發訊息
       int           m_iNextActionID;  // 觸發後要執行某個動作
       long long     m_uid;            // 玩家、怪物、NPC的唯一編號

@@ -11,14 +11,15 @@
 #include "ISkillEventListener.h"
 #include "IDrawWeaponNotifyListener.h"
 #include "IPlaySoundNotifyListener.h"
-
 // } Add by Darren Chen on 2012/12/22
 
 class CUnitObject : public IPlaySoundNotifyListener
 {
    public:
-      CUnitObject(std::string strName, long long uid, char level = 0); //建立角色 傳入名字、等級(預設建立後為0級)
+      CUnitObject(std::string machineName, std::string strName, long long uid, char level = 0); //建立角色 傳入名字、等級(預設建立後為0級)
       virtual ~CUnitObject();  // Add by Darren Chen on 2013/01/12
+
+      std::string getMachineName();
 
       long long getUID();	   //取得唯一編號
       std::string getName();	//取得角色名字
@@ -34,28 +35,30 @@ class CUnitObject : public IPlaySoundNotifyListener
 
       void setAdvAttr(AdvancedAttribute advAttr);	//設定屬性
       AdvancedAttribute getAdvAttr();	            //取得屬性
+      void setBasAttr(BasicAttribute basAttr);     //設定基本素質
       BasicAttribute getBasAttr();                 //取得基礎素質
 
       std::list<CBuff> getBuff();      //取得身上的Buff表
       void addBuff(unsigned int id);   //增加Buff
 
       std::vector<CSkill *> getSkill();  //取得學會的技能表
-      bool addSkill(unsigned int skillID);    //學技能
+      CSkill* getSkill(int skillID);
+      bool addSkill(int skillID);    //學技能
 
       // Add by Darren Chen on 2012/12/22 {
       /** @brief 是否可使用技能
         * @param skillID       技能編號
         * @return true  - 可以使用
         *         false - 不可以使用 */
-      bool canUseSkill(unsigned int skillID);
+      bool canUseSkill(int skillID);
 
       /** @brief 開始施展技能
         * @param skillID       技能編號 */
-      void startCastSkill(unsigned int skillID);
+      void startCastSkill(int skillID);
 
       /** @brief 使用技能
         * @param skillID       技能編號 */
-      void useSkill(unsigned int skillID);
+      void useSkill(int skillID);
 
       /** @brief 是否在施展技能
         * @return true  - 是
@@ -123,6 +126,9 @@ class CUnitObject : public IPlaySoundNotifyListener
         *         false - 否 */
       bool isMove();
 
+      /** @brief 設定鍵盤讓角色移動模式 */
+      void setKeyMoveEnabled(bool bEnable);
+
       /** @brief 取得所有動畫名稱
         * @return 所有動畫名稱 */
       std::vector<std::string> getAllAnimationName();
@@ -173,7 +179,6 @@ class CUnitObject : public IPlaySoundNotifyListener
       virtual void skillDamage(AdvancedAttribute targetAttr);
 
    protected:
-      void setBasAttr(BasicAttribute basAttr);  //設定基本素質
       std::vector<CSkill *>  m_vSkill;          //擁有的技能
 
       // Add by Darren Chen on 2012/12/27 {
@@ -182,26 +187,15 @@ class CUnitObject : public IPlaySoundNotifyListener
       // } Add by Darren Chen on 2012/12/27
 
    private:
-      long long              m_uid;	     //唯一編號
-      char                   m_level;	  //等級
-      std::string            m_strName;  //名字
-      BasicAttribute         m_basAttr;  //基本數值
-      AdvancedAttribute      m_advAttr;  //屬性
-      ObscureAttribute       m_obsAttr;  //隱藏數值
-      ComplexAttribute       m_comAttr;  //狀態造成屬性變化暫存
-      FloatPrecentAttribute  m_preAttr;  //狀態造成屬性浮點數(百分比)
-                                         //變化暫存
-      std::list<CBuff>       m_lBuff;	  //身上的Buff
+      friend class CPacketPlayerDataWG;  // 允許CPacketPlayerDataWG物件直接對private/protected成員做存取
+      friend class CPacketPlayerInit;    // 允許CPacketPlayerInit物件直接對private/protected成員做存取
+      friend class CPacketPlayerData;
 
       int getHPR();   //取得回復的生命力點
       int getMPR();   //取得回復的精神力點
 
       void updateBuff(float timepass);    //更新所有Buff的時間
       void SkillCoolDown(float timepass); //更新所有技能的冷卻
-
-      // Add by Darren Chen on 2012/12/22 {
-      //friend class CPacketPlayerData;  // 允許CPacketPlayerData物件直接對private/protected成員做存取
-      //friend class CPacketPlayerInit;  // 允許CPacketPlayerInit物件直接對private/protected成員做存取
 
       /** @brief 通知AdvAttr有更新 */
       void notifyAdvAttrUpdate();
@@ -211,6 +205,8 @@ class CUnitObject : public IPlaySoundNotifyListener
 
       // IPlaySoundNotifyListener
       /* virtual */ void notifyPlaySound(std::string soundFile);
+
+      void setUID(long long uid);
 
 #ifdef _GAMEENGINE_2D_
       /** @brief 2D版本移動
@@ -223,11 +219,22 @@ class CUnitObject : public IPlaySoundNotifyListener
       bool          m_bFaceTarget;     // 是否面對目標
 #endif
 
-      FPOS          m_position;        // 角色X,Y座標 (2D)
-      FPOS          m_targetPosition;  // 目標點X,Y座標 (2D)
-      float         m_fDirection;      // 角色方向(單位: 弧度), 逆時針方向旋轉為+, 順時針方向旋轉為-, 方向為0是朝下
-
-      CUnitObject  *m_pTargetObject;   // 目標物
+      std::string            m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
+      long long              m_uid;	            //唯一編號
+      char                   m_level;	         //等級
+      std::string            m_strName;         //名字
+      BasicAttribute         m_basAttr;         //基本數值
+      AdvancedAttribute      m_advAttr;         //屬性
+      ObscureAttribute       m_obsAttr;         //隱藏數值
+      ComplexAttribute       m_comAttr;         //狀態造成屬性變化暫存
+      FloatPrecentAttribute  m_preAttr;         //狀態造成屬性浮點數(百分比)
+                                                //變化暫存
+      std::list<CBuff>       m_lBuff;	         //身上的Buff
+      FPOS                   m_position;        // 角色X,Y座標 (2D)
+      FPOS                   m_targetPosition;  // 目標點X,Y座標 (2D)
+      float                  m_fDirection;      // 角色方向(單位: 弧度), 逆時針方向旋轉為+, 順時針方向旋轉為-, 方向為0是朝下
+      CUnitObject           *m_pTargetObject;   // 目標物
+      bool                   m_bKeyMoveEnabled; // 鍵盤移動模式
 
       std::set<IAdvAttrEventListener *>  m_advAttrEventListeners;  // 監聽AdvancedAttribute改變的監聽者列表
       std::set<ISkillEventListener *>    m_skillEventListeners;    // 監聽技能改變的監聽者列表

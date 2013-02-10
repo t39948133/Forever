@@ -58,7 +58,6 @@ struct AdvancedAttribute
 	float fMove;      //移動速度 預設值 6.0
 	float fATKSpeed;  //攻擊速度 揮擊動作以秒為單位 1下 1.5 秒 預設值 1.5
 	float fCasting;   //施展速度 以秒為單位 1.0 秒 預設值 1.0
-	
 };
 
 struct ObscureAttribute
@@ -70,14 +69,16 @@ struct ObscureAttribute
 //裝備槽
 enum EquipSlot	
 {
+   SLOT_NULL,
 	MAIN_HAND,	//主手
 	OFF_HAND,	//副手
 	CHEST,		//上衣
-	BELT,		   //腰帶
 	LEGS,		   //褲子
 	SHOULDER,	//護肩
 	GLOVE,		//手套
 	BOOT,		   //鞋子
+   BELT,       //腰帶
+   MAX_SLOT
 };
 
 enum ItemClassType
@@ -256,6 +257,7 @@ enum MonsterState
 const int BACK_ROW = 9;		//row橫 
 const int BACK_COLUMN = 3;	//column直
 const int BACK_MAX = BACK_ROW * BACK_COLUMN;	//格數
+const int SKILL_MAX = 11;
 const int UI_HOTKEY_NUM = 10;
 
 // Add by Darren Chen on 2012/12/13 {

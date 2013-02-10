@@ -8,11 +8,7 @@
 #include "DLGBuff.h"
 #include "DLGSkill.h"
 
-#include "Common.h"
-#include "CItem.h"
-#include "CBuff.h"
-#include "CSkill.h"
-#include "CGameClient.h"
+#include "CClientServer.h"
 
 // CChildView µøµ¡
 
@@ -29,9 +25,9 @@ public:
     DLGSkill dlgSkill;
 
 private:
-    CGameClient *m_pGameClient;
-    HDC          m_memDC;
-    HBITMAP      m_hBMP;
+    CClientServer *m_pClientServer;
+    HDC            m_memDC;
+    HBITMAP        m_hBMP;
 
 // §@·~
 public:

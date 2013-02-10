@@ -13,6 +13,7 @@
 #include "CTerrain.h"
 #include "CGameClient.h"
 #include "CWindowMan3D.h"
+#include "CScene3D.h"
 
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
@@ -25,16 +26,14 @@ class CGameClient3D : public IGameFlowListener,
                       public CGameClient
 {
    public:
-      CGameClient3D();
+      CGameClient3D(std::string machineName);
       ~CGameClient3D();
-
-      HWND getHWnd();
-
-      void run();
 
    protected:
       // CGameClient
       /* virtual */ void initUI();
+      /* virtual */ void onRecvPlayerInit(CPacketPlayerInit *pPacket);
+      /* virtual */ void onRecvPlayerData(CPacketPlayerData *pPacket);
 
    private:
       // IGameFlowListener
@@ -60,9 +59,11 @@ class CGameClient3D : public IGameFlowListener,
       /** @brief 釋放攝影機 */
       void releaseCamera();
 
-      CWindowMan3D        *m_pWindowMan;     // UI視窗管理
+      bool                 m_bCreateScene;   // 3D初始化是否完成 (true - 還沒完成 / false - 已經完成)
 
-      CPlayer3D           *m_pPlayer;        // 玩家操控
+      CWindowMan3D        *m_pWindowMan;     // UI視窗管理
+      
+      CScene3D            *m_pScene3D;       // 3D場景管理
       CTerrain            *m_pTerrain;       // 3D地形
       Ogre::RaySceneQuery *m_pRayQuery;      // 場景射線的詢問物件
 

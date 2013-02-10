@@ -9,7 +9,7 @@
 #define _IPLAYERBACKPACKEVENTLISTENER_H_
 #include "Common.h"
 
-class CPlayer;
+class CBackpack;
 
 /** @brief 玩家裝備事件監聽, 可以通知需要知道的物件 */
 class IPlayerBackpackEventListener
@@ -17,7 +17,7 @@ class IPlayerBackpackEventListener
    public:
       /** @brief 更新玩家背包
         * @param pPlayer 更新的物件 */
-      virtual void updatePlayerBackpack(CPlayer *pPlayer) = 0;
+      virtual void updatePlayerBackpack(CBackpack *pBackpack) = 0;
 };
 
 #endif  // #ifndef _IPLAYERBACKPACKEVENTLISTENER_H_

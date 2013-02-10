@@ -5,6 +5,7 @@
   * @author Darren Chen (³¯²±¥a)
   * @email  darren.z32@msa.hinet.net
   * @date   2013/01/31 */
+#ifdef _GAMESOUND_
 #include "CSoundManager.h"
 
 CSoundManager *CSoundManager::m_pInstance = NULL;
@@ -59,3 +60,5 @@ CSoundManager::~CSoundManager()
       m_pSoundMan = NULL;
    }
 }
+
+#endif  // #ifdef _GAMESOUND_

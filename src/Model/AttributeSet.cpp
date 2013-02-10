@@ -34,7 +34,7 @@ void AttributeClear (ComplexAttribute& com)
 	AttributeClear(com.ObsAttr);
 }
 
-void AttributeClear (BasicAttribute& bas)
+/*void AttributeClear (BasicAttribute& bas)
 {
    bas.iSTR = 0;
    bas.iVIT = 0;
@@ -42,7 +42,7 @@ void AttributeClear (BasicAttribute& bas)
    bas.iAGI = 0;
    bas.iINT = 0;
    bas.iWIL = 0;
-}
+}*/
 
 void AttributeClear (FloatPrecentAttribute& pre)
 {

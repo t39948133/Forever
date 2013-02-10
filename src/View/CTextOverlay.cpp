@@ -86,8 +86,8 @@ void CTextOverlay::init(Ogre::OverlayContainer *pOverlayContainer, int x, int y,
 
 	char buf[256];
    memset(buf, 0, sizeof(buf));
-	static int in2 = 0;
-	sprintf(buf, "CTextOverlay %d", in2++);
+	static int inTextOverlay = 0;
+   sprintf(buf, "CTextOverlay::%d", inTextOverlay++);
 
    m_pPanel = (Ogre::PanelOverlayElement*)Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", buf);
 	m_pPanel->setMetricsMode(Ogre::GMM_PIXELS);

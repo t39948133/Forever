@@ -43,6 +43,7 @@ void CAction::init(ACTION_DATA &data)
 void CAction::addEventHandler(CActionEventHandler *pHandler)
 {
    pHandler->setUID(m_uid);
+   pHandler->setMachineName(m_machineName);
    m_pvtEventHandlerSet->push_back(pHandler);
 }
 
@@ -99,6 +100,17 @@ std::string CAction::getName()
 void CAction::setUID(long long uid)
 {
    m_uid = uid;
+}
+
+void CAction::setMachineName(std::string machineName)
+{
+   m_machineName = machineName;
+
+   std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
+   while(it != m_pvtEventHandlerSet->end()) {
+      (*it)->setMachineName(m_machineName);
+      it++;
+   }
 }
 
 void CAction::write(FILE *pFile)

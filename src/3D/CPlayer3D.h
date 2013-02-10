@@ -8,8 +8,10 @@
 #ifndef _CPLAYER3D_H_
 #define _CPLAYER3D_H_
 #include "Common.h"
-#include "IKeyEventListener.h"
+#include "CGraphicsRender.h"
 #include "CPlayer.h"
+#include "CObjectTitle.h"
+#include "IKeyEventListener.h"
 #include "IPlayerEquipEventListener.h"
 #include "IDrawWeaponNotifyListener.h"
 #include "IPutinWeaponNotifyListener.h"
@@ -19,13 +21,15 @@
 #include <OgreSceneNode.h>
 #include <OgreAnimationState.h>
 
+#include <network\gp_socket.h>
+
 class CPlayer3D : public IKeyEventListener,
                   public IPlayerEquipEventListener,
                   public IDrawWeaponNotifyListener,
                   public IPutinWeaponNotifyListener
 {
    public:
-      CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager);
+      CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream);
       ~CPlayer3D();
 
       /** @brief 設定模型 */
@@ -34,7 +38,7 @@ class CPlayer3D : public IKeyEventListener,
       /** @brief 更新模型邏輯運算
         * @param timeSinceLastFrame 1Frame是幾秒
         * @param pCameraNode        以攝影機的位置/方向為基準來運算 */
-      void update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode);
+      void update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode = NULL);
 
       /** @brief 釋放模型 */
       void release();
@@ -42,12 +46,20 @@ class CPlayer3D : public IKeyEventListener,
       /** @brief 取得座標位置
         * @return 3D座標位置 */
       const Ogre::Vector3& getPosition();
-
+      
       /** @brief 設定滑鼠目標點位置
         * @param targetPos 目標點位置 */
       void setMouseTargetPosition(Ogre::Vector3 &targetPos);
 
+      CPlayer* getPlayer2D();
+
    private:
+      friend class CPacketPlayerInit;
+      friend class CPacketPlayerData;
+
+      void setPosition(float x, float y, float z);
+      void setDirection(float direction);
+
       /** @brief 切換成哪個動作
         * @param animationName 動作名稱 */
       void setAnimation(std::string animationName);
@@ -93,12 +105,14 @@ class CPlayer3D : public IKeyEventListener,
 
       std::vector<Ogre::AnimationState *> *m_pvtAnimationSet;  // 當前角色的動畫集合(所有模型)
 
+      // Title
+      CObjectTitle       *m_nameOverlay;      // 顯示於3D的人物名稱
+
       // 攝影機控制相關參數
       Ogre::Vector3       m_mouseDirection;   // 滑鼠移動方向與偏移量
       Ogre::Vector3       m_keyDirection;     // 鍵盤移動方向與偏移量
       Ogre::Vector3       m_goalDirection;    // 目標方向
       float               m_fTurnSpeed;       // 模型轉方向的速度
-      bool                m_bMouseMove;       // 滑鼠點選新座標使角色移動
 
       // 3D模型相關參數
       std::string         m_mainHandBoneName;     // 主手武器放在那個骨頭的名稱
@@ -118,8 +132,13 @@ class CPlayer3D : public IKeyEventListener,
       Ogre::Entity       *m_pShoulderSlotEntity;  // 肩甲槽模型
       Ogre::SceneNode    *m_pPlayerNode;          // 角色節點
       Ogre::SceneManager *m_pSceneManager;        // 場景管理員
+      CGraphicsRender    *m_pRenderCore;          // 繪圖引擎
 
+      GP::NetStream      *m_pNetStream;
+      bool                m_bMainPlayer;          // 是主角嗎?
       CPlayer            *m_pPlayer2D;            // 玩家
+
+      static int          m_iPlayerCount;
 };
 
 #endif // #ifndef _CPLAYER3D_H_

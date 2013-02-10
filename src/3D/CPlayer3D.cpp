@@ -11,18 +11,27 @@
 #include "CWASDKeyActionEvent.h"
 #include "CWeaponInfo.h"
 #include "CArmorInfo.h"
+#include "CPacketTargetPos.h"
 
 #include <OgreQuaternion.h>
 #include <OgreSkeletonInstance.h>
 #include <OgreSkeletonManager.h>
 
-CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager) : m_pPlayer2D(pPlayer),
-                                                                            m_pSceneManager(pSceneManager)
-{
-   CGraphicsRender *pRenderCore = CRenderLoader::getInstance()->getGraphicsRender("RenderEngine::OGRE");
-   pRenderCore->addKeyEventListener(this);
+int CPlayer3D::m_iPlayerCount = 0;
 
-   m_pPlayerNode = m_pSceneManager->getRootSceneNode()->createChildSceneNode("Forever::Player");
+CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream) : m_pPlayer2D(pPlayer),
+                                                                                                       m_pSceneManager(pSceneManager),
+                                                                                                       m_pNetStream(pNetStream)
+{
+   m_pRenderCore = CRenderLoader::getInstance()->getGraphicsRender("RenderEngine::OGRE");
+   m_pRenderCore->addKeyEventListener(this);
+
+	char buf[256];
+   memset(buf, 0, sizeof(buf));
+   sprintf(buf, "CPlayer3D::%d", m_iPlayerCount++);
+   m_pPlayerNode = m_pSceneManager->getRootSceneNode()->createChildSceneNode(buf);
+
+   m_nameOverlay = NULL;
 
    m_pHairEntity = NULL;
    m_pHeadEntity = NULL;
@@ -43,7 +52,7 @@ CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager) : m_pP
    m_keyDirection = Ogre::Vector3::ZERO;
    m_goalDirection = Ogre::Vector3::ZERO;
    m_fTurnSpeed = 500.0f;
-   m_bMouseMove = false;
+   m_bMainPlayer = false;
 
    m_pvtAnimationSet = new std::vector<Ogre::AnimationState *>();
 
@@ -109,7 +118,9 @@ void CPlayer3D::setup()
 
    // 設定動作
    CAction *pNewAction = m_pPlayer2D->getCurAction();
-   setAnimation(pNewAction->getAnimationName());
+   setAnimation(pNewAction->getAnimationName() + "::" + m_pPlayerNode->getName());
+
+   m_nameOverlay = new CObjectTitle(m_pHairEntity, m_pRenderCore->getCamera(), "NCTaiwanFont", 20.0f);
 }
 
 void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
@@ -118,22 +129,58 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
 
    if(m_pPlayer2D->isChangeAction()) {
       CAction *pNewAction = m_pPlayer2D->getCurAction();
-      setAnimation(pNewAction->getAnimationName());
+      setAnimation(pNewAction->getAnimationName() + "::" + m_pPlayerNode->getName());
    }
    else
       playAnimation(timeSinceLastFrame);
    
-   if(m_keyDirection != Ogre::Vector3::ZERO) {
-      // 鍵盤移動
-      move(timeSinceLastFrame, pCameraNode, m_keyDirection);
+   if(pCameraNode != NULL) {
+      // 代表主角
+      m_bMainPlayer = true;
 
-      Ogre::Vector3 curPos = m_pPlayerNode->getPosition();
-      m_pPlayer2D->setTargetPosition(curPos.x, curPos.z);
+      if(m_keyDirection != Ogre::Vector3::ZERO) {
+         // 鍵盤移動
+         move(timeSinceLastFrame, pCameraNode, m_keyDirection);
+
+         Ogre::Vector3 curPos = m_pPlayerNode->getPosition();
+         m_pPlayer2D->setTargetPosition(curPos.x, curPos.z);
+
+         CPacketTargetPos packet;
+         packet.pack(m_pPlayer2D);
+         m_pNetStream->send(&packet, sizeof(packet));
+      }
+      else {
+         if(m_pPlayer2D->isMove() == true) {
+            // 滑鼠移動
+            FPOS targetPos = m_pPlayer2D->getTargetPosition();
+            FPOS curPos = m_pPlayer2D->getPosition();
+
+            FPOS offsetPos;
+            offsetPos.fX = targetPos.fX - curPos.fX;
+            offsetPos.fY = targetPos.fY - curPos.fY;
+
+            m_mouseDirection = Ogre::Vector3::ZERO;
+            m_mouseDirection.x = offsetPos.fX;
+            m_mouseDirection.z = offsetPos.fY;
+
+            move(timeSinceLastFrame, m_mouseDirection);
+         }
+         else {
+            // 主角，非鍵盤移動也非滑鼠移動時
+            m_pPlayer2D->setKeyMoveEnabled(false);
+
+            FPOS pos = m_pPlayer2D->getPosition();
+            setPosition(pos.fX, 0, pos.fY);
+            setDirection(m_pPlayer2D->getDirection());
+         }
+      }
    }
    else {
-      // 滑鼠移動
-      if(m_pPlayer2D->isMove() == true) {
-         m_bMouseMove = true;
+      // 其他玩家
+      m_bMainPlayer = false;
+
+      if((m_pPlayer2D->isMove() == true) && (m_pPlayer2D->isReachTarget() == false)) {
+         // 其他玩家位置改變時, 一律視為其他玩家用滑鼠移動
          FPOS targetPos = m_pPlayer2D->getTargetPosition();
          FPOS curPos = m_pPlayer2D->getPosition();
 
@@ -148,24 +195,24 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
          move(timeSinceLastFrame, m_mouseDirection);
       }
       else {
-         if(m_bMouseMove == true) {
-            if(m_pPlayer2D->isReachTarget() == true) {
-               m_bMouseMove = false;
-               FPOS targetPos = m_pPlayer2D->getTargetPosition();
-               m_pPlayer2D->setPosition(targetPos.fX, targetPos.fY);
-               m_pPlayerNode->setPosition(targetPos.fX, 0, targetPos.fY);
-
-               CActionEvent actEvent;
-               actEvent.m_event = AET_REACH;
-               CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
-            }
-         }
+         // 其他玩家沒有改變位置時
+         FPOS pos = m_pPlayer2D->getPosition();
+         setPosition(pos.fX, 0, pos.fY);
+         setDirection(m_pPlayer2D->getDirection());
       }
    }
+
+   m_nameOverlay->setTitle(m_pPlayer2D->getName());
+   m_nameOverlay->update();
 }
 
 void CPlayer3D::release()
 {
+   if(m_nameOverlay != NULL) {
+      delete m_nameOverlay;
+      m_nameOverlay = NULL;
+   }
+
    m_pvtAnimationSet->clear();
    m_pPlayerNode->detachAllObjects();
 
@@ -244,13 +291,37 @@ const Ogre::Vector3& CPlayer3D::getPosition()
 
 void CPlayer3D::setMouseTargetPosition(Ogre::Vector3 &targetPos)
 {
+   if(m_bMainPlayer == false)
+      return;
+
    m_pPlayer2D->setTargetPosition(targetPos.x, targetPos.z);
 
    if(m_pPlayer2D->isReachTarget() == false) {
       CActionEvent actEvent;
       actEvent.m_event = AET_NOT_REACH;
-      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
    }
+
+   CPacketTargetPos packet;
+   packet.pack(m_pPlayer2D);
+   m_pNetStream->send(&packet, sizeof(packet));
+}
+
+CPlayer* CPlayer3D::getPlayer2D()
+{
+   return m_pPlayer2D;
+}
+
+void CPlayer3D::setPosition(float x, float y, float z)
+{
+   m_pPlayerNode->setPosition(x, y, z);
+}
+
+void CPlayer3D::setDirection(float direction)
+{
+   // 設定玩家的方向 (臉朝向-Z軸與2D方向相同)
+   m_pPlayerNode->resetOrientation();
+   m_pPlayerNode->yaw(Ogre::Radian(direction));
 }
 
 void CPlayer3D::setAnimation(std::string animationName)
@@ -304,6 +375,13 @@ void CPlayer3D::setupSkeleton(std::string skeletonFile)
    Ogre::Skeleton::BoneHandleMap boneHandleMap;
   
    Ogre::SkeletonPtr pNewSkeleton = Ogre::SkeletonManager::getSingleton().load(skeletonFile, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+   Ogre::Animation *pSrcAnimation = pNewSkeleton->getAnimation(0);
+   std::string newAnimationName = pSrcAnimation->getName() + "::" + m_pPlayerNode->getName();
+   Ogre::Animation *pNewAnimation = pNewSkeleton->createAnimation(newAnimationName, pSrcAnimation->getLength());
+   Ogre::Animation *pCloneAnimation = pNewSkeleton->getAnimation(0)->clone(newAnimationName);
+   *pNewAnimation = *pCloneAnimation;
+   pNewSkeleton->removeAnimation(pSrcAnimation->getName());
+
    pNewSkeleton->_buildMapBoneByHandle(pNewSkeleton.getPointer(), boneHandleMap);
    pSkeletonHair->_mergeSkeletonAnimations(pNewSkeleton.getPointer(), boneHandleMap);
    pSkeletonHead->_mergeSkeletonAnimations(pNewSkeleton.getPointer(), boneHandleMap);
@@ -433,44 +511,55 @@ Ogre::Entity* CPlayer3D::setupArmor(Ogre::Entity *pBaseEntity, Ogre::Entity *pSl
 
 void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
 {
+   if(m_bMainPlayer == false)
+      return;
+
    switch(evt.key) {
       case OIS::KC_W: {
          m_keyDirection.z = -1;
 
+         m_pPlayer2D->setKeyMoveEnabled(true);
+
          CWASDKeyActionEvent actEvent;
          actEvent.m_event = AET_KEY_WASD;
          actEvent.m_iKeyDownID = 'W';
-         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
          break;
       }
 
       case OIS::KC_A: {
          m_keyDirection.x = -1;
 
+         m_pPlayer2D->setKeyMoveEnabled(true);
+
          CWASDKeyActionEvent actEvent;
          actEvent.m_event = AET_KEY_WASD;
          actEvent.m_iKeyDownID = 'A';
-         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
          break;
       }
 
       case OIS::KC_S: {
          m_keyDirection.z = 1;
 
+         m_pPlayer2D->setKeyMoveEnabled(true);
+
          CWASDKeyActionEvent actEvent;
          actEvent.m_event = AET_KEY_WASD;
          actEvent.m_iKeyDownID = 'S';
-         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
          break;
       }
 
       case OIS::KC_D: {
          m_keyDirection.x = 1;
 
+         m_pPlayer2D->setKeyMoveEnabled(true);
+
          CWASDKeyActionEvent actEvent;
          actEvent.m_event = AET_KEY_WASD;
          actEvent.m_iKeyDownID = 'D';
-         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+         CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
          break;
       }
       
@@ -481,7 +570,7 @@ void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
                CKeyActionEvent actEvent;
                actEvent.m_event = AET_KEY;
                actEvent.m_iKeyID = 'X';
-               CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+               CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
             }
          }
          break;
@@ -491,13 +580,16 @@ void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
 
 void CPlayer3D::keyUp(const OIS::KeyEvent &evt)
 {
+   if(m_bMainPlayer == false)
+      return;
+
    if((evt.key == OIS::KC_W) && (m_keyDirection.z == -1)) {
       m_keyDirection.z = 0;
 
       CWASDKeyActionEvent actEvent;
       actEvent.m_event = AET_KEY_WASD;
       actEvent.m_iKeyUpID = 'W';
-      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
    }
    else if((evt.key == OIS::KC_A) && (m_keyDirection.x == -1)) {
       m_keyDirection.x = 0;
@@ -505,7 +597,7 @@ void CPlayer3D::keyUp(const OIS::KeyEvent &evt)
       CWASDKeyActionEvent actEvent;
       actEvent.m_event = AET_KEY_WASD;
       actEvent.m_iKeyUpID = 'A';
-      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
    }
    else if((evt.key == OIS::KC_S) && (m_keyDirection.z == 1)) {
       m_keyDirection.z = 0;
@@ -513,7 +605,7 @@ void CPlayer3D::keyUp(const OIS::KeyEvent &evt)
       CWASDKeyActionEvent actEvent;
       actEvent.m_event = AET_KEY_WASD;
       actEvent.m_iKeyUpID = 'S';
-      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
    }
    else if((evt.key == OIS::KC_D) && (m_keyDirection.x == 1)) {
       m_keyDirection.x = 0;
@@ -521,7 +613,7 @@ void CPlayer3D::keyUp(const OIS::KeyEvent &evt)
       CWASDKeyActionEvent actEvent;
       actEvent.m_event = AET_KEY_WASD;
       actEvent.m_iKeyUpID = 'D';
-      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getUID(), actEvent);
+      CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
    }
 }
 

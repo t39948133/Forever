@@ -609,7 +609,6 @@ void DLGSkill::OnBnClickedSkilldel()
 
 void DLGSkill::OnBnClickedSkillweapon()
 {
-	// TODO: 在此加入控制項告知處理常式程式碼
    CSkillInfo *pInfo = getSkillInfo();
    if(pInfo == NULL)
       return;
@@ -623,7 +622,6 @@ void DLGSkill::OnBnClickedSkillweapon()
 
 void DLGSkill::OnBnClickedSkillshield()
 {
-	// TODO: 在此加入控制項告知處理常式程式碼
    CSkillInfo *pInfo = getSkillInfo();
    if(pInfo == NULL)
       return;

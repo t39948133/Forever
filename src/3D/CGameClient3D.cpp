@@ -16,9 +16,14 @@
 #include <OgreMeshManager.h>
 #include <OgreMath.h>
 
-CGameClient3D::CGameClient3D() : CGameClient()
+#ifdef _DEBUGLOG
+#include "LogWindow.h"
+extern CLogWindow glog;
+#endif  // #ifdef _DEBUG
+
+CGameClient3D::CGameClient3D(std::string machineName) : CGameClient(machineName)
 {
-   m_pPlayer = NULL;
+   m_pScene3D = NULL;
    m_fPivotPitch = 0;
    m_pTerrain = new CTerrain();
    m_pRayQuery = NULL;
@@ -43,18 +48,12 @@ CGameClient3D::~CGameClient3D()
       m_pTerrain = NULL;
    }
 
+   if(m_pScene3D != NULL) {
+      delete m_pScene3D;
+      m_pScene3D = NULL;
+   }
+
    m_pRenderCore = NULL;
-   CRenderLoader::releaseInstance();
-}
-
-HWND CGameClient3D::getHWnd()
-{
-   return m_pRenderCore->getRenderHwnd();
-}
-
-void CGameClient3D::run()
-{
-   m_pRenderCore->run();
 }
 
 void CGameClient3D::initUI()
@@ -99,38 +98,63 @@ void CGameClient3D::initUI()
    m_pWindowMan->addWnd(pHudWnd);
 }
 
+void CGameClient3D::onRecvPlayerInit(CPacketPlayerInit *pPacket)
+{
+   CPlayer3D *pMainPlayer = m_pScene3D->getMainPlayer3D();
+   if(pMainPlayer != NULL)
+      pPacket->unpack(pMainPlayer);
+
+   // createScene完成, 取得GameServer的玩家資料
+   m_bCreateScene = false;  
+}
+
+void CGameClient3D::onRecvPlayerData(CPacketPlayerData *pPacket)
+{
+   CPlayer3D *pPlayer = m_pScene3D->getPlayer3D(pPacket->getUID());
+   if(pPlayer == NULL) {
+      CPlayer *pNewPlayer2D = this->getScene()->addPlayer(pPacket->getUID());
+      pPlayer = m_pScene3D->addPlayer3D(pNewPlayer2D);
+   }
+
+   pPacket->unpack(pPlayer);
+}
+
 void CGameClient3D::createScene()
 {
    CGameClient::init();
 
    m_pSceneManager = m_pRenderCore->getSceneManager();
+   m_pScene3D = new CScene3D(m_pSceneManager, this->getNetStream());
 
    m_pRayQuery = m_pSceneManager->createRayQuery(Ogre::Ray());
 
    // 設定場景環境光源
    m_pSceneManager->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
 
-   // 建立玩家模型
-   CPlayer *pPlayer = getScene()->getMainPlayer();
-   m_pPlayer = new CPlayer3D(pPlayer, m_pSceneManager);
-   m_pPlayer->setup();
+   // 建立玩家模型 (資料未定)
+   CPlayer *pPlayer2D = this->getScene()->getMainPlayer();
+   CPlayer3D *pMainPlayer = m_pScene3D->addPlayer3D(pPlayer2D, true);
 
    // 依據玩家模型位置來設定攝影機
-   setupCamera(m_pRenderCore->getCamera(), m_pPlayer->getPosition());
+   setupCamera(m_pRenderCore->getCamera(), pMainPlayer->getPosition());
 
    // 地形初始化
    m_pTerrain->init(m_pSceneManager, m_pRenderCore->getCamera());
+
+   // createScene還沒完成, 必須等待GameServer的玩家資料
+   m_bCreateScene = true;  
 }
 
 bool CGameClient3D::frameRenderingQueued(float timeSinceLastFrame)
 {
-   CGameClient::work(timeSinceLastFrame, m_pRenderCore->getRenderHwnd());
+   CGameClient::work(m_pRenderCore->getRenderHwnd(), timeSinceLastFrame);
 
-   // 以m_pCameraNode為基準, 對玩家角色做邏輯運算
-   m_pPlayer->update(timeSinceLastFrame, m_pCameraNode);
+   if(m_bCreateScene == false) {
+      m_pScene3D->work(timeSinceLastFrame, m_pCameraNode);
 
-   // 以玩家角色的位置來更新攝影機的邏輯運算
-   updateCamera(timeSinceLastFrame, m_pPlayer->getPosition());
+      // 以玩家角色的位置來更新攝影機的邏輯運算
+      updateCamera(timeSinceLastFrame, m_pScene3D->getMainPlayer3D()->getPosition());
+   }
 
    return true;
 }
@@ -146,12 +170,9 @@ void CGameClient3D::destoryScene()
 
    m_pTerrain->release();
    
-   if(m_pPlayer != NULL) {
-      delete m_pPlayer;
-      m_pPlayer = NULL;
-   }
+   m_pScene3D->clear();
 
-   getScene()->removeAll();
+   this->getScene()->clear();
 }
 
 void CGameClient3D::mouseDown(const OIS::MouseEvent &evt)
@@ -179,7 +200,7 @@ void CGameClient3D::mouseDown(const OIS::MouseEvent &evt)
 
                Ogre::Vector3 newPos;
                m_pTerrain->getRayPos(mouseRay, newPos);
-               m_pPlayer->setMouseTargetPosition(newPos);
+               m_pScene3D->getMainPlayer3D()->setMouseTargetPosition(newPos);
                break;
             }
 

@@ -24,17 +24,19 @@ class CActionDispatch
       /** @brief 加入要收到動作訊息的動作系統物件
         * @param uid           CUnitObject的uid
         * @param pActionSystem 動作系統物件 */
-      void addActionSystem(long long uid, CActionSystem *pActionSystem);
+      void addActionSystem(std::string &machineName, long long uid, CActionSystem *pActionSystem);
+
+      void removeActionSystem(std::string &machineName, long long uid);
 
       /** @brief 送給某個uid動作訊息
         * @param uid      CUnitObject的uid
         * @param actEvent 動作訊息 */
-      void sendEvnet(long long uid, CActionEvent &actEvent);
+      void sendEvnet(std::string &machineName, long long uid, CActionEvent &actEvent);
 
       /** @brief 送給某個uid動作通知訊息
         * @param uid                CUnitObject的uid
         * @param pNotifyActionEvent 動作通知訊息 */
-      void sendNotify(long long uid, CNotifyActionEvent *pNotifyActionEvent);
+      void sendNotify(std::string &machineName, long long uid, CNotifyActionEvent *pNotifyActionEvent);
 
    private:
       CActionDispatch();
@@ -42,7 +44,9 @@ class CActionDispatch
 
       static CActionDispatch *m_pInstance;  // CActionDispatch實體物件
 
-      std::map<long long, CActionSystem*> *m_pEventTable;  // 訊息對照表
+      std::string getDispatchIdentify(std::string &machineName, long long uid);
+
+      std::map<std::string, CActionSystem*> *m_pEventTable;    // 訊息對照表
 };
 
 #endif  // #ifndef _CACTIONDISPATCH_H_

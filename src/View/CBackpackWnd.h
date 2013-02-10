@@ -47,7 +47,7 @@ class CBackpackWnd : public CWindow,
 #endif
 
       // IPlayerBackpackEventListener
-      /* virtual */ void updatePlayerBackpack(CPlayer *pPlayer);
+      /* virtual */ void updatePlayerBackpack(CBackpack *pBackpack);
 
       // IPlayerAttrEventListener
       /* virtual */ void updatePlayerAttr(CPlayer *pPlayer);

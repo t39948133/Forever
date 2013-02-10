@@ -8,7 +8,7 @@
 #include "CScene.h"
 #include "AttributeSet.h"
 
-CScene::CScene()
+CScene::CScene(std::string machineName) : m_machineName(machineName)
 {
    m_pvtPlayer = new std::list<CPlayer *>();
    m_pvtMonster = new std::list<CMonster *>();
@@ -17,12 +17,33 @@ CScene::CScene()
 
 CScene::~CScene()
 {
-   removeAll();
+   if(m_pvtPlayer != NULL) {
+      std::list<CPlayer *>::iterator itPlayer = m_pvtPlayer->begin();
+      while(itPlayer != m_pvtPlayer->end()) {
+         delete (*itPlayer);
+         itPlayer++;
+      }
+      m_pvtPlayer->clear();
+      delete m_pvtPlayer;
+      m_pvtPlayer = NULL;
+   }
+
+   if(m_pvtMonster != NULL) {
+      std::string name = this->m_machineName;
+      std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
+      while(itMonster != m_pvtMonster->end()) {
+         delete (*itMonster);
+         itMonster++;
+      }
+      m_pvtMonster->clear();
+      delete m_pvtMonster;
+      m_pvtMonster = NULL;
+   }
 }
 
 CPlayer* CScene::addPlayer(long long uid, bool bMainPlayer)
 {
-   CPlayer *pPlayer = new CPlayer("player", uid);
+   CPlayer *pPlayer = new CPlayer(m_machineName, "player", uid);
    m_pvtPlayer->push_back(pPlayer);
 
    if(bMainPlayer == true)
@@ -45,7 +66,7 @@ void CScene::removePlayer(long long uid)
 
 CMonster* CScene::addMonster(long long uid, int kindID, float x, float y)
 {
-   CMonster *pMonster = new CMonster(kindID, uid, x, y);
+   CMonster *pMonster = new CMonster(m_machineName, kindID, uid, x, y);
 
    m_pvtMonster->push_back(pMonster);
 
@@ -64,7 +85,7 @@ void CScene::removeMonster(long long uid)
 	}
 }
 
-void CScene::removeAll()
+void CScene::clear()
 {
    if(m_pvtPlayer != NULL) {
       std::list<CPlayer *>::iterator itPlayer = m_pvtPlayer->begin();
@@ -73,8 +94,6 @@ void CScene::removeAll()
          itPlayer++;
       }
       m_pvtPlayer->clear();
-      delete m_pvtPlayer;
-      m_pvtPlayer = NULL;
    }
 
    if(m_pvtMonster != NULL) {
@@ -84,8 +103,6 @@ void CScene::removeAll()
          itMonster++;
       }
       m_pvtMonster->clear();
-      delete m_pvtMonster;
-      m_pvtMonster = NULL;
    }
 
    m_pMainPlayer = NULL;
@@ -160,11 +177,10 @@ void CScene::work(float timePass)
 			removeMonster(uid);
 		}
       else
-		{
          itMonster++;
    }
 }
-}
+
 std::list<CPlayer *>* CScene::getvtPlayer()
 {
 	return m_pvtPlayer;

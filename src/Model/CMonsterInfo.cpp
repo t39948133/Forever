@@ -3,7 +3,7 @@
 
 CMonsterInfo::CMonsterInfo()
 {
-    AttributeClear(m_basAttr);
+    memset(&m_basAttr, 0, sizeof(m_basAttr));
 }
 
 CMonsterInfo::~CMonsterInfo()
@@ -16,7 +16,7 @@ void CMonsterInfo::initMonsterInfo(std::string name, std::string desc,
                                    unsigned int xp, MonsterType atkType,
                                    MonsterGrade levelGrade, float alert, float regress,
                                    BasicAttribute basAttr, long long money,
-                                   std::vector<int> reware, std::vector<CSkill*> skill)
+                                   std::vector<int> reware, std::vector<int> skill)
 {
     m_strName = name;
     m_strDesc = desc;
@@ -105,7 +105,7 @@ std::vector<int> CMonsterInfo::getReware()
     return m_vReware;
 }
 
-std::vector<CSkill*> CMonsterInfo::getSkill()
+std::vector<int> CMonsterInfo::getSkill()
 {
     return m_vSkill;
 }
@@ -172,16 +172,11 @@ void CMonsterInfo::read(FILE *pFile)
    }
    size = 0;
    fread(&size, sizeof(size), 1, pFile);
-   for(int i = 0; size > i; i++)
-   {
+   for(int i = 0; i < size; i++) {
       int skillID = -1;
       fread(&skillID, sizeof(skillID), 1, pFile);
-      if(NULL != CSkill::getInfo(skillID))
-      {
-         CSkill* pSkill = new CSkill();
-         pSkill->create(skillID);
-         m_vSkill.push_back(pSkill);
-      }
+      if(skillID > -1)
+         m_vSkill.push_back(skillID);
    }
 }
 
@@ -233,15 +228,15 @@ void CMonsterInfo::write(FILE *pFile)
       int itemID;
       itemID = (*pr);
       fwrite(&itemID, sizeof(itemID), 1, pFile);
+      pr++;
    }
    size = m_vSkill.size();
    fwrite(&size, sizeof(size), 1, pFile);
-   std::vector<CSkill*>::iterator ps = m_vSkill.begin();
-   while(m_vSkill.end() != ps)
-   {
-      int skillID;
-      skillID = (*ps)->getID();
+   std::vector<int>::iterator ps = m_vSkill.begin();
+   while(ps != m_vSkill.end()) {
+      int skillID = (*ps);
       fwrite(&skillID, sizeof(skillID), 1, pFile);
+      ps++;
    }
 }
 #endif //#ifdef _GAMEENGINE_2D_EDITOR_

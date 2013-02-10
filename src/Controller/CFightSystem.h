@@ -16,7 +16,7 @@ class CUnitObject;
 class CFightSystem
 {
    public:
-      CFightSystem(long long uid);
+      CFightSystem(std::string machineName, long long uid);
 
       void useSkill(CSkill *pSkill);
       bool isCastSkill();
@@ -28,6 +28,7 @@ class CFightSystem
       void work(float timePass, CUnitObject *pSelfObject, CUnitObject *pTargetObject);
 
    private:
+      std::string    m_machineName;   // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       long long      m_uid;           // 玩家、怪物、NPC的唯一編號
       CSkill        *m_pUseSkill;
 };

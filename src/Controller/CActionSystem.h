@@ -19,7 +19,7 @@
 class CActionSystem
 {
    public:
-      CActionSystem(long long uid);
+      CActionSystem(std::string machineName, long long uid);
       ~CActionSystem();
    
       /** @brief 邏輯動作
@@ -89,11 +89,14 @@ class CActionSystem
 
       friend class CActionDispatch;  // 允許CActionDispatch來存取此物件的private成員
       friend class CActionEditorDlg; // 允許動作編輯器來存取此物件
+      friend class CUnitObject;
 
-      float     m_fCurTime;      // 目前的時間
-      int       m_iCurAction;    // 目前動作
-      long long m_uid;           // 玩家、怪物、NPC的唯一編號
-      bool      m_bChangeAction; // 動作是否改變
+      std::string m_machineName;   // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
+      std::string m_actionFile;    // 動作系統是使用哪個檔案
+      float       m_fCurTime;      // 目前的時間
+      int         m_iCurAction;    // 目前動作
+      long long   m_uid;           // 玩家、怪物、NPC的唯一編號
+      bool        m_bChangeAction; // 動作是否改變
       
       std::vector<CActionEvent *>       *m_pEventQueue;   // Action Event Queue
       std::vector<CNotifyActionEvent *> *m_pNotifyQueue;  // Action Notify Queue

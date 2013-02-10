@@ -24,17 +24,16 @@ COverlayUI::~COverlayUI()
 
 void COverlayUI::init (int x, int y, int w, int h)
 {
-	static int in = 0 ;
-	in ++ ;
-	char buf[256] ;
-	sprintf (buf, "COverlayUI %d", in) ;
+	static int inOverlayUI = 0;
+	char buf[256];
+   memset(buf, 0, sizeof(buf));
+   sprintf(buf, "COverlayUI::%d", inOverlayUI++);
+   std::string objName = buf;
 
    Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
-	m_pOverlay = overlayManager.create (buf);
+	m_pOverlay = overlayManager.create(objName);
 
-	sprintf (buf, "COverlayUI BackImage %d", in) ;
-
-   m_pBackImage = (Ogre::OverlayContainer*)(Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", buf));
+   m_pBackImage = (Ogre::OverlayContainer*)(Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", objName + "::BackImage"));
 	m_pBackImage->setMetricsMode(Ogre::GMM_PIXELS);
    m_pBackImage->setPosition((Ogre::Real)x, (Ogre::Real)y);
    m_pBackImage->setDimensions((Ogre::Real)w, (Ogre::Real)h);

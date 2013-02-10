@@ -12,21 +12,24 @@
 #include "CCastSkillActionEvent.h"
 #include "CPlaySoundNotifyActionEvent.h"
 
-CActionSystem::CActionSystem(long long uid) : m_uid(uid), 
-                                              m_fCurTime(0.0f),
-                                              m_iCurAction(0),
-                                              m_bChangeAction(false)
+CActionSystem::CActionSystem(std::string machineName, long long uid) : m_machineName(machineName),
+                                                                       m_uid(uid), 
+                                                                       m_fCurTime(0.0f),
+                                                                       m_iCurAction(0),
+                                                                       m_bChangeAction(false)
 {
    m_pEventQueue = new std::vector<CActionEvent *>();
    m_pNotifyQueue = new std::vector<CNotifyActionEvent *>();
    m_pActionVector = new std::vector<CAction *>();
    m_pKeyDownSet = new std::set<int>;
 
-   CActionDispatch::getInstance()->addActionSystem(uid, this);
+   CActionDispatch::getInstance()->addActionSystem(m_machineName, uid, this);
 }
 
 CActionSystem::~CActionSystem()
 {
+   CActionDispatch::getInstance()->removeActionSystem(m_machineName, m_uid);
+
    m_pKeyDownSet->clear();
    delete m_pKeyDownSet;
    m_pKeyDownSet = NULL;
@@ -110,6 +113,7 @@ CAction* CActionSystem::getCurAction()
 void CActionSystem::addAction(CAction *pAction)
 {
    pAction->setUID(m_uid);
+   pAction->setMachineName(m_machineName);
    m_pActionVector->push_back(pAction);
 }
 
@@ -178,6 +182,8 @@ bool CActionSystem::read(std::string fileName)
 
    if(pFile == NULL)
       return false;
+
+   m_actionFile = fileName;
 
    int version = 0;
 	fread(&version, sizeof(version), 1, pFile);

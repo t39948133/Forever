@@ -1,5 +1,5 @@
 #include "CBackpackWnd.h"
-#include "CBackPack.h"
+#include "CBackpack.h"
 
 CBackpackWnd::CBackpackWnd()
 {
@@ -151,12 +151,12 @@ void CBackpackWnd::init(int _x, int _y, CPlayer *pb)
 	}
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-   updatePlayerBackpack(m_pPlayer);
+   updatePlayerBackpack(m_pPlayer->getBackpack());
    updatePlayerAttr(m_pPlayer);
    show(false);
 }
 
-bool CBackpackWnd::canDrag (int tx, int ty)
+bool CBackpackWnd::canDrag(int tx, int ty)
 {
 	return ty < 25;
 }
@@ -164,11 +164,12 @@ bool CBackpackWnd::canDrag (int tx, int ty)
 void CBackpackWnd::onLCommand(int btnID)
 {
    // 把物品放於HotKey上
-   CBackPack backpack = m_pPlayer->getBackPack(); 
-   CItem *pItem = backpack.getItem(btnID);
+   CBackpack *pBackpack = m_pPlayer->getBackpack(); 
+   CItem *pItem = pBackpack->getItem(btnID);
    if(pItem != NULL) {
       for(int i = 0; i < m_pPlayer->getHotKeySize(); i++) {
          HotKeyItem *pHotKeyItem = m_pPlayer->getHotKeyItem(i);
+         
          if(pHotKeyItem != NULL) {
             if((pHotKeyItem->pItem == NULL) && (pHotKeyItem->pSkill == NULL)) {
                HotKeyItem newHotKeyItem;
@@ -184,16 +185,16 @@ void CBackpackWnd::onLCommand(int btnID)
    }
 }
 
-void CBackpackWnd::onRCommand (int btnID)
+void CBackpackWnd::onRCommand(int btnID)
 {
    // 使用物品
-   CBackPack backpack = m_pPlayer->getBackPack(); 
-   CItem *pItem = backpack.getItem(btnID);
+   CBackpack *pBackpack = m_pPlayer->getBackpack(); 
+   CItem *pItem = pBackpack->getItem(btnID);
    if(pItem != NULL) {
       CItemInfo *pItemInfo = pItem->getInfo();
-      if(pItemInfo != NULL) {
+
+      if(pItemInfo != NULL)
          m_pPlayer->useItem(pItem->getID());
-      }
    }
 }
 
@@ -228,14 +229,12 @@ void CBackpackWnd::setZOrder(int order)
 }
 #endif  // #ifdef _GAMEENGINE_3D_
 
-void CBackpackWnd::updatePlayerBackpack(CPlayer *pPlayer)
+void CBackpackWnd::updatePlayerBackpack(CBackpack *pBackpack)
 {
-   CBackPack backpack = pPlayer->getBackPack();
-
    //更新背包裡的道具/堆疊數量
    for(int i = 0; i <BACK_COLUMN; i++) {
 	   for(int m = 0; m < BACK_ROW; m++) {		
-         CItem *pItem = backpack.getItem(i * BACK_ROW + m);
+         CItem *pItem = pBackpack->getItem(i * BACK_ROW + m);
 		   if(pItem != NULL) {
             CItemInfo *pItemInfo = pItem->getInfo();
 

@@ -1,14 +1,14 @@
-#include "CBackPack.h"
+#include "CBackpack.h"
 
-void CBackPack::setGrid(int grid, CItem& itm)
+void CBackpack::setGrid(int grid, CItem& itm)
 {
-	if((grid >= 0) && (grid < BACK_MAX))
-	{
-		m_itemBack[grid] = itm;
-	}
+   if((grid >= 0) && (grid < BACK_MAX)) {
+      m_itemBack[grid].create(itm.getID(), itm.getStack());
+      notifyPlayerBackpackUpdate();
+   }
 }
 
-CItem* CBackPack::getItem(int grid)
+CItem* CBackpack::getItem(int grid)
 {
 	if((grid >= 0) && (grid < BACK_MAX))
 	{
@@ -20,7 +20,7 @@ CItem* CBackPack::getItem(int grid)
 	}
 }
 
-CItemInfo* CBackPack::getItemInfo(int grid)
+CItemInfo* CBackpack::getItemInfo(int grid)
 {
     CItem* pc = getItem(grid);					
     if (pc != NULL)
@@ -28,28 +28,58 @@ CItemInfo* CBackPack::getItemInfo(int grid)
     return NULL ;
 }
 
-void CBackPack::addItem(int id, int& stack, int& grid)
+void CBackpack::addItem(int itemID, int &stack, int &grid)
 {
-	for(int i = 0; i<BACK_MAX; i++)
+	for(int i = 0; i < BACK_MAX; i++)
 	{
-		m_itemBack[i].addStack(id, stack);
+		m_itemBack[i].addStack(itemID, stack);
 		if(stack == 0)
 		{
 			grid = i;
+         notifyPlayerBackpackUpdate();
 			break;
 		}
 	}
 }
 
+void CBackpack::removeItem(int itemID)
+{
+   CItemInfo *pFindItemInfo = CItem::getInfo(itemID);
+
+   for(int i = 0; i < BACK_MAX; i++) {
+      CItem *pItem = getItem(i);
+      if(pItem->getInfo() == pFindItemInfo) {
+         pItem->taken();
+         notifyPlayerBackpackUpdate();
+         break;
+      }
+   }
+}
+
 // Add by Darren Chen on 2013/01/13 {
-int CBackPack::getSize()
+int CBackpack::getSize()
 {
    return BACK_MAX;
 }
+
+void CBackpack::addPlayerBackpackEventListener(IPlayerBackpackEventListener *pListener)
+{
+   std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.find(pListener);
+   if(it == m_playerBackpackEventListeners.end())
+      m_playerBackpackEventListeners.insert(pListener);
+}
+
+void CBackpack::removePlayerBackpackEventListener(IPlayerBackpackEventListener *pListener)
+{
+   std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.find(pListener);
+   if(it != m_playerBackpackEventListeners.end())
+      m_playerBackpackEventListeners.erase(it);
+}
 // } Add by Darren Chen on 2013/01/13
 
-void CBackPack::initBack()
+void CBackpack::initBack()
 {
+/*#ifdef _GAMESERVER_
    // 藥水
 
    // 新手裝備
@@ -81,4 +111,14 @@ void CBackPack::initBack()
    m_itemBack[21].create(20, 1);
    m_itemBack[22].create(21, 1);
    m_itemBack[23].create(30, 1);
+#endif  // #ifdef _GAMESERVER_*/
+}
+
+void CBackpack::notifyPlayerBackpackUpdate()
+{
+   std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.begin();
+   while(it != m_playerBackpackEventListeners.end()) {
+      (*it)->updatePlayerBackpack(this);
+      it++;
+   }
 }

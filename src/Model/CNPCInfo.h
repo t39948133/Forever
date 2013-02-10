@@ -31,7 +31,7 @@ private:
 	std::vector<int>	m_viQuest;
 	std::vector<int>	m_viSell;
 #ifdef _GAMEENGINE_2D_EDITOR_
-	friend class DLGNPC
+	friend class DLGNPC;
 #endif	//_GAMEENGINE_2D_EDITOR_
 };
 

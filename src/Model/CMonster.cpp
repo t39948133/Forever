@@ -6,10 +6,10 @@
 
 const int idelRandRange = 5000;
 
-CMonster::CMonster(int kindID, long long uid, float fx, float fy) :
-            CUnitObject(MONSTER_INFO::getInfo(kindID)->getName(), uid, 
-            MONSTER_INFO::getInfo(kindID)->getLevel()),
-                        m_state(ESTABLISH)
+CMonster::CMonster(std::string machineName, int kindID, long long uid, float fx, float fy) : CUnitObject(machineName, 
+                                                                                                         MONSTER_INFO::getInfo(kindID)->getName(), uid, 
+                                                                                                         MONSTER_INFO::getInfo(kindID)->getLevel()),
+                                                                                             m_state(ESTABLISH)
 {
    if(create(kindID))
    {
@@ -82,7 +82,7 @@ void CMonster::initMonster()
    else
    {
       BasicAttribute basAttr;
-      AttributeClear(basAttr);
+      memset(&basAttr, 0, sizeof(basAttr));
       basAttr.iSTR = 100;
       basAttr.iVIT = 100;
       basAttr.iINT = 0;
@@ -92,16 +92,15 @@ void CMonster::initMonster()
 
       CMonsterInfo* pm = new CMonsterInfo();
       std::vector<int> reware;
-      std::vector<CSkill*> skill;
       reware.push_back(0);
       reware.push_back(1);
       reware.push_back(2);
-      CSkill* pskill = new CSkill();
-      pskill->create(0);
-      skill.push_back(pskill);
+
+      std::vector<int> skill;
+      skill.push_back(0);
       pm->initMonsterInfo("´³¯¾³Í¾|»«", "´¶³q©Ç", "", "", 1, 1, 350, MONSTER_ACTIVE,
                           REGULAR_GRADE, 100, 500, basAttr, 100, reware, skill);
-                          addInfo(pm);
+      addInfo(pm);
    }
 }
 
@@ -117,6 +116,14 @@ bool CMonster::create(unsigned int kindID)
    {
       m_lHatred.clear();
       setBasAttr(pInfo->getBasAttr());
+
+      std::vector<int> vSkill = pInfo->getSkill();
+      std::vector<int>::iterator itSkillID = vSkill.begin();
+      while(itSkillID != vSkill.end()) {
+         this->addSkill((*itSkillID));
+         itSkillID++;
+      }
+
       return true;
    }
    return false;
@@ -194,11 +201,6 @@ void CMonster::work(float timePass, CScene& scene)
 bool CMonster::isDead()
 {
 	return 0 >= getAdvAttr().iHP;
-}
-
-std::vector<CSkill*> CMonster::getSkill()
-{
-   return MONSTER_INFO::getInfo()->getSkill();
 }
 
 void CMonster::targetUpdate(CScene& scene)
@@ -302,7 +304,7 @@ void CMonster::AIAction(float timePass, CScene& scene)
 
             CActionEvent actEvent;
             actEvent.m_event = AET_REACH;
-            CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+            CActionDispatch::getInstance()->sendEvnet(this->getMachineName(), this->getUID(), actEvent);
          }
       }
       return;
@@ -356,7 +358,7 @@ void CMonster::AIAction(float timePass, CScene& scene)
          //setTargetPosition(getPosition().fX, getPosition().fY);
          CActionEvent actEvent;
          actEvent.m_event = AET_REACH;
-         CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+         CActionDispatch::getInstance()->sendEvnet(this->getMachineName(), this->getUID(), actEvent);
          m_state = ATTACK;
       }
       return;
@@ -384,12 +386,13 @@ void CMonster::AIAction(float timePass, CScene& scene)
          case 2:  
 			 selectPowerfulSkill();
             break;
+
          case 3: 
 			 selectPowerfulSkill();
             break;
-         }
       }
    }
+}
 
 bool CMonster::getBack()
 {
@@ -475,15 +478,13 @@ void CMonster::dolly(float fx, float fy, bool bFaceTarget)
 	{
 		CActionEvent actEvent;
 		actEvent.m_event = AET_NOT_REACH;
-		CActionDispatch::getInstance()->sendEvnet(getUID(), actEvent);
+		CActionDispatch::getInstance()->sendEvnet(this->getMachineName(), this->getUID(), actEvent);
 	}
 }
 
 #ifdef _GAMEENGINE_2D_
 void CMonster::draw(HDC hdc)
 {
-    
-	//Ellipse(hdc, 300, 300, 500, 500);
    CUnitObject::draw(hdc);
 
    int size = 20;

@@ -36,7 +36,7 @@ void CImageButton::init(COverlayUI *pUI, int _x, int _y, int _w, int _h, int _id
 	static int inImageButton = 0;
 	char name[256];
    memset(name, 0, sizeof(name));
-	sprintf (name, "CImageButton %d", inImageButton++);
+   sprintf(name, "CImageButton::%d", inImageButton++);
 
    m_pPanel = (Ogre::PanelOverlayElement *)Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", name);
    m_pPanel->setMetricsMode(Ogre::GMM_PIXELS);

@@ -45,8 +45,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\lib\openal_sdk\include;..\..\lib\sound_man;..\..\lib\gp_framework;..\..\lib\openal_sdk\samples\framework\Win32;..\..\src\View;..\..\src\Client\2D;..\..\src\Controller;..\..\src\Model;..\..\src\Common;..\..\src\Editor"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_GAMEENGINE_2D_;_GAMEENGINE_2D_EDITOR_"
+				AdditionalIncludeDirectories="..\..\src\Server;..\..\src\Network;..\..\lib\openal_sdk\include;..\..\lib\sound_man;..\..\lib\gp_framework;..\..\lib\openal_sdk\samples\framework\Win32;..\..\src\View;..\..\src\Client\2D;..\..\src\Controller;..\..\src\Model;..\..\src\Common;..\..\src\Editor"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;_GAMEENGINE_2D_;_GAMEENGINE_2D_EDITOR_;_GAMENOSOUND_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -68,7 +68,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenAL32.lib"
+				AdditionalDependencies="wsock32.lib OpenAL32.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\lib\openal_sdk\libs\Win32"
 				GenerateDebugInformation="true"
@@ -128,8 +128,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\lib\openal_sdk\include;..\..\lib\sound_man;..\..\lib\gp_framework;..\..\lib\openal_sdk\samples\framework\Win32;..\..\src\View;..\..\src\Client\2D;..\..\src\Controller;..\..\src\Model;..\..\src\Common;..\..\src\Editor"
-				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_GAMEENGINE_2D_;_GAMEENGINE_2D_EDITOR_"
+				AdditionalIncludeDirectories="..\..\src\Server;..\..\src\Network;..\..\lib\openal_sdk\include;..\..\lib\sound_man;..\..\lib\gp_framework;..\..\lib\openal_sdk\samples\framework\Win32;..\..\src\View;..\..\src\Client\2D;..\..\src\Controller;..\..\src\Model;..\..\src\Common;..\..\src\Editor"
+				PreprocessorDefinitions="WIN32;_WINDOWS;NDEBUG;_GAMEENGINE_2D_;_GAMEENGINE_2D_EDITOR_;_GAMENOSOUND_"
 				MinimalRebuild="false"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -151,7 +151,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenAL32.lib"
+				AdditionalDependencies="wsock32.lib OpenAL32.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\lib\openal_sdk\libs\Win32"
 				GenerateDebugInformation="true"
@@ -287,11 +287,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CMonsterArea.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterAreaInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterAreaInfoLoader.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CMonsterInfo.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CMonsterInfoLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterMap.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CNPCInfo.cpp"
 					>
 				</File>
 				<File
@@ -323,6 +343,10 @@
 				Name="Common"
 				>
 				<File
+					RelativePath="..\..\src\Common\CClientServer.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Common\CFPS.cpp"
 					>
 				</File>
@@ -339,7 +363,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Common\CSoundManager.cpp"
+					RelativePath="..\..\src\Common\CSoundManager.h"
 					>
 				</File>
 			</Filter>
@@ -372,10 +396,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Controller\CFightSystem.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Controller\CGameClient.cpp"
 					>
 				</File>
 				<File
@@ -474,6 +494,58 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="GPSocket"
+					>
+					<File
+						RelativePath="..\..\lib\gp_framework\network\gp_socket.cpp"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Network"
+				>
+				<File
+					RelativePath="..\..\src\Network\CNetPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketPlayerData.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketPlayerDataWG.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketPlayerInit.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketTargetPos.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Server"
+				>
+				<File
+					RelativePath="..\..\src\Server\CGameServer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Server\CWorldServer.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Client"
+				>
+				<File
+					RelativePath="..\..\src\Client\2D\CGameClient.cpp"
+					>
+				</File>
 			</Filter>
 		</Filter>
 		<Filter
@@ -585,11 +657,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CMonsterArea.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterAreaInfo.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterAreaInfoLoader.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CMonsterInfo.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CMonsterInfoLoader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterMap.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CNPCInfo.h"
 					>
 				</File>
 				<File
@@ -653,6 +745,10 @@
 				Name="Common"
 				>
 				<File
+					RelativePath="..\..\src\Common\CClientServer.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Common\CFPS.h"
 					>
 				</File>
@@ -669,7 +765,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Common\CSoundManager.h"
+					RelativePath="..\..\src\Common\CSoundManager.cpp"
 					>
 				</File>
 			</Filter>
@@ -702,10 +798,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Controller\CFightSystem.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Controller\CGameClient.h"
 					>
 				</File>
 				<File
@@ -786,6 +878,82 @@
 				</File>
 				<File
 					RelativePath="..\..\src\View\CWindowMan.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Network"
+				>
+				<File
+					RelativePath="..\..\src\Network\CBasePacket.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CNetDataBackpack.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CNetDataEquip.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CNetDataHotKey.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CNetDataSkill.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CNetPlayer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketFirstLogin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketPasswordGW.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketPlayerData.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketPlayerDataWG.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketPlayerInit.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketTargetPos.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPlayerServerID.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Server"
+				>
+				<File
+					RelativePath="..\..\src\Server\CGameServer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Server\CWorldServer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Client"
+				>
+				<File
+					RelativePath="..\..\src\Client\2D\CGameClient.h"
 					>
 				</File>
 			</Filter>

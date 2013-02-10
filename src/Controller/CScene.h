@@ -16,7 +16,7 @@
 class CScene
 {
    public:
-      CScene();
+      CScene(std::string machineName);
       ~CScene();
 
       /** @brief 新增玩家
@@ -40,7 +40,7 @@ class CScene
 		void removeMonster(long long uid);
 
       /** @brief 刪除所有東西 */
-      void removeAll();
+      void clear();
 
       void loadScene(SCENE_TYPE scene);
 
@@ -91,6 +91,7 @@ class CScene
 #endif  // #ifdef _GAMEENGINE_2D_
 
    private:
+      std::string            m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       std::list<CPlayer *>  *m_pvtPlayer;   // 場景內所有玩家
       std::list<CMonster *> *m_pvtMonster;  // 場景內所有怪物
       CPlayer               *m_pMainPlayer; // 玩家

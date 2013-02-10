@@ -47,7 +47,7 @@ bool CActionEventHandler::check(float fPreTime, float fCurTime, CActionEvent *pE
          CNotifyActionEvent *pTriggerEvent = (CNotifyActionEvent *)m_pTriggerEvent;
          if((fPreTime <= pTriggerEvent->m_fBeginTime) &&
             (fCurTime >= pTriggerEvent->m_fBeginTime)) {
-            CActionDispatch::getInstance()->sendNotify(m_uid, pTriggerEvent);
+            CActionDispatch::getInstance()->sendNotify(m_machineName, m_uid, pTriggerEvent);
             return false; // ¤£´«°Ê§@
          }
          else
@@ -110,6 +110,11 @@ bool CActionEventHandler::check(float fPreTime, float fCurTime, CActionEvent *pE
 void CActionEventHandler::setUID(long long uid)
 {
    m_uid = uid;
+}
+
+void CActionEventHandler::setMachineName(std::string machineName)
+{
+   m_machineName = machineName;
 }
 
 void CActionEventHandler::write(FILE *pFile)

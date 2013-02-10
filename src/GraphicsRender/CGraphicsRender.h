@@ -59,7 +59,7 @@ class CGraphicsRender
       virtual void run() = 0;
 
    private:
-      friend class CGameClient3D;  // 允許CGameClient3D物件來存取private/protected
+      friend class CClientServer;  // 允許CClientServer物件來存取private/protected
       std::string m_strRenderName; // 繪圖引擎名稱
 };
 

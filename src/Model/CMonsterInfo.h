@@ -26,14 +26,14 @@ class CMonsterInfo
       char                  getLevel();         //取得等級
       long long             getMoney();         //取得掉落金錢
       std::vector<int>      getReware();        //取得掉落物品ID
-      std::vector<CSkill*>  getSkill();         //取得擁有技能
+      std::vector<int>      getSkill();         //取得擁有的技能ID
 
       //--1/19
       void initMonsterInfo(std::string name, std::string desc,
                            std::string meshName, std::string actionSystem,
                            char level, char wistom, unsigned int xp, MonsterType atkType,
                            MonsterGrade levelGrade, float alert, float regress, BasicAttribute basAttr,
-                           long long money, std::vector<int> reware, std::vector<CSkill*> skill);  //初始設定
+                           long long money, std::vector<int> reware, std::vector<int> skill);  //初始設定
 
       void                  read(FILE* pFile);  //讀檔
       void                  write(FILE* pFile); //寫檔
@@ -54,7 +54,7 @@ class CMonsterInfo
       BasicAttribute        m_basAttr;          //基本素質
       long long             m_Money;            //掉落金錢
       std::vector<int>      m_vReware;          //掉落物品ID
-      std::vector<CSkill*>  m_vSkill;           //技能    
+      std::vector<int>      m_vSkill;           //技能ID
 };
 
 #endif

@@ -12,7 +12,7 @@ class CMonster:public MONSTER_INFO,
                public CUnitObject
 {
    public:
-      CMonster(int kindID, long long uid, float fx, float fy);	//建構 傳入怪物的所有資料
+      CMonster(std::string machineName, int kindID, long long uid, float fx, float fy);	//建構 傳入怪物的所有資料
       ~CMonster();
       static void          initMonster();						      //建立唯一怪物表(僅在場景初
                                                                //始時呼叫一次)
@@ -25,7 +25,7 @@ class CMonster:public MONSTER_INFO,
       unsigned int         getXP();							         //取得經驗
       void                 work(float timePass, CScene& scene);
       bool                 isDead();
-      std::vector<CSkill*> getSkill();
+      
 #ifdef _GAMEENGINE_2D_
       /** @brief Client端繪圖動作 
         * @param hdc 繪圖裝置 */

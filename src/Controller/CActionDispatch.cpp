@@ -25,32 +25,47 @@ void CActionDispatch::releaseInstance()
    }
 }
 
-void CActionDispatch::addActionSystem(long long uid, CActionSystem *pActionSystem)
+void CActionDispatch::addActionSystem(std::string &machineName, long long uid, CActionSystem *pActionSystem)
 {
-   std::map<long long, CActionSystem *>::iterator it = m_pEventTable->find(uid);
+   std::string dispatchID = getDispatchIdentify(machineName, uid);
+
+   std::map<std::string, CActionSystem *>::iterator it = m_pEventTable->find(dispatchID);
    if(it != m_pEventTable->end())
       it->second = pActionSystem;
    else
-      m_pEventTable->insert(std::make_pair(uid, pActionSystem));
+      m_pEventTable->insert(std::make_pair(dispatchID, pActionSystem));
 }
 
-void CActionDispatch::sendEvnet(long long uid, CActionEvent &actEvent)
+void CActionDispatch::removeActionSystem(std::string &machineName, long long uid)
 {
-   std::map<long long, CActionSystem *>::iterator it = m_pEventTable->find(uid);
+   std::string dispatchID = getDispatchIdentify(machineName, uid);
+
+   std::map<std::string, CActionSystem *>::iterator it = m_pEventTable->find(dispatchID);
+   if(it != m_pEventTable->end())
+      m_pEventTable->erase(it);
+}
+
+void CActionDispatch::sendEvnet(std::string &machineName, long long uid, CActionEvent &actEvent)
+{
+   std::string dispatchID = getDispatchIdentify(machineName, uid);
+
+   std::map<std::string, CActionSystem *>::iterator it = m_pEventTable->find(dispatchID);
    if(it != m_pEventTable->end())
       it->second->sendEvent(actEvent);
 }
 
-void CActionDispatch::sendNotify(long long uid, CNotifyActionEvent *pNotifyActionEvent)
+void CActionDispatch::sendNotify(std::string &machineName, long long uid, CNotifyActionEvent *pNotifyActionEvent)
 {
-   std::map<long long, CActionSystem *>::iterator it = m_pEventTable->find(uid);
+   std::string dispatchID = getDispatchIdentify(machineName, uid);
+
+   std::map<std::string, CActionSystem *>::iterator it = m_pEventTable->find(dispatchID);
    if(it != m_pEventTable->end())
       it->second->sendNotify(pNotifyActionEvent);
 }
 
 CActionDispatch::CActionDispatch()
 {
-   m_pEventTable = new std::map<long long, CActionSystem *>();
+   m_pEventTable = new std::map<std::string, CActionSystem *>();
 }
 
 CActionDispatch::~CActionDispatch()
@@ -58,4 +73,11 @@ CActionDispatch::~CActionDispatch()
    m_pEventTable->clear();
    delete m_pEventTable;
    m_pEventTable = NULL;
+}
+
+std::string CActionDispatch::getDispatchIdentify(std::string &machineName, long long uid)
+{
+   std::string ret = machineName + "::" + toString<long long>(uid);
+
+   return ret;
 }

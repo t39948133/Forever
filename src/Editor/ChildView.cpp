@@ -14,7 +14,7 @@
 
 CChildView::CChildView()
 {
-    m_pGameClient = NULL;
+    m_pClientServer = NULL;
 }
 
 CChildView::~CChildView()
@@ -22,9 +22,9 @@ CChildView::~CChildView()
    ::DeleteObject(m_hBMP);
    ::ReleaseDC(NULL, m_memDC);
 
-   if(m_pGameClient != NULL) {
-       delete m_pGameClient;
-       m_pGameClient = NULL;
+   if(m_pClientServer != NULL) {
+       delete m_pClientServer;
+       m_pClientServer = NULL;
    }
 }
 
@@ -56,8 +56,8 @@ int CChildView::OnCreate(LPCREATESTRUCT lpCreateStruct )
 {
 	int r = CWnd::OnCreate (lpCreateStruct) ;
 
-    m_pGameClient = new CGameClient();
-    m_pGameClient->init();
+    m_pClientServer = new CClientServer();
+    m_pClientServer->init();
 
     // 建立背景繪圖區(為了避免畫面閃爍)
     HDC screenDC = ::GetDC(NULL);
@@ -85,7 +85,7 @@ int CChildView::OnCreate(LPCREATESTRUCT lpCreateStruct )
 
 void CChildView::OnTimer(UINT_PTR nIDEvent)
 {
-    m_pGameClient->work(m_hWnd);
+    m_pClientServer->work(m_hWnd);
 
 	Invalidate (true) ;
 }
@@ -99,7 +99,7 @@ void CChildView::OnPaint()
 	// 不要呼叫描繪訊息的 CWnd::OnPaint()
 
 	HDC hdc = dc;
-    m_pGameClient->draw(m_memDC);
+    m_pClientServer->draw(m_memDC);
     ::BitBlt(hdc, 0, 0, 900, 900, m_memDC, 0, 0, SRCCOPY);
 }
 

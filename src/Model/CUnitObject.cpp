@@ -1,11 +1,17 @@
 #include "CUnitObject.h"
 #include "AttributeSet.h"
 #include "CMonster.h"
-#include "CSoundManager.h"
 
-CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_strName(strName),m_uid(uid),m_level(level)
+#ifdef _GAMESOUND_
+#include "CSoundManager.h"
+#endif  // #ifdef _GAMESOUND_
+
+CUnitObject::CUnitObject(std::string machineName, std::string strName, long long uid, char level) : m_machineName(machineName),
+                                                                                                    m_strName(strName),
+                                                                                                    m_uid(uid),
+                                                                                                    m_level(level)
 {
-   AttributeClear(m_basAttr);
+   memset(&m_basAttr, 0, sizeof(m_basAttr));
 	AttributeSet(m_advAttr);
    AttributeClear(m_obsAttr);
    AttributeClear(m_comAttr);
@@ -13,17 +19,18 @@ CUnitObject::CUnitObject(std::string strName, long long uid, char level) : m_str
 
    // Add by Darren Chen on 2012/12/22 {
    m_fDirection = -3.1415926f;  // 角色方向朝上(-Z軸)
-   m_position.fX = 450.0f;
-   m_position.fY = 450.0f;
-   m_targetPosition.fX = 450.0f;
-   m_targetPosition.fY = 450.0f;
+   m_position.fX = 0.0f;
+   m_position.fY = 0.0f;
+   m_targetPosition.fX = 0.0f;
+   m_targetPosition.fY = 0.0f;
 
    m_pTargetObject = NULL;
+   m_bKeyMoveEnabled = false;
 
-   m_pActionSystem = new CActionSystem(uid);
+   m_pActionSystem = new CActionSystem(m_machineName, uid);
    m_pActionSystem->addPlaySoundNotifyListener(this);
 
-   m_pFightSystem = new CFightSystem(uid);
+   m_pFightSystem = new CFightSystem(m_machineName, uid);
 
 #ifdef _GAMEENGINE_2D_
    m_bFaceTarget = false;
@@ -56,18 +63,9 @@ CUnitObject::~CUnitObject()
    m_pTargetObject = NULL;
 }
 
-bool CUnitObject::canUseSkill(unsigned int skillID)
+bool CUnitObject::canUseSkill(int skillID)
 {
-   CSkill *pUseSkill = NULL;
-   std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
-   while(itSkill != m_vSkill.end()) {
-      if((*itSkill)->getID() == skillID) {
-         pUseSkill = (*itSkill);
-         break;
-      }
-
-      itSkill++;
-   }
+   CSkill *pUseSkill = getSkill(skillID);
 
    if(pUseSkill != NULL) {
       if(pUseSkill->getAvailable() == true) {  // 確定該項技能因裝備關係而可以使用
@@ -107,18 +105,9 @@ bool CUnitObject::canUseSkill(unsigned int skillID)
       return false;
 }
 
-void CUnitObject::startCastSkill(unsigned int skillID)
+void CUnitObject::startCastSkill(int skillID)
 {
-   CSkill *pUseSkill = NULL;
-   std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
-   while(itSkill != m_vSkill.end()) {
-      if((*itSkill)->getID() == skillID) {
-         pUseSkill = (*itSkill);
-         break;
-      }
-
-      itSkill++;
-   }
+   CSkill *pUseSkill = getSkill(skillID);
 
    if(pUseSkill != NULL) {
       CSkillInfo *pUseSkillInfo = pUseSkill->getInfo();
@@ -128,18 +117,9 @@ void CUnitObject::startCastSkill(unsigned int skillID)
    }
 }
 
-void CUnitObject::useSkill(unsigned int skillID)
+void CUnitObject::useSkill(int skillID)
 {
-   CSkill *pUseSkill = NULL;
-   std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
-   while(itSkill != m_vSkill.end()) {
-      if((*itSkill)->getID() == skillID) {
-         pUseSkill = (*itSkill);
-         break;
-      }
-
-      itSkill++;
-   }
+   CSkill *pUseSkill = getSkill(skillID);
 
    if(pUseSkill != NULL) {
       CSkillInfo *pUseSkillInfo = pUseSkill->getInfo();
@@ -184,7 +164,6 @@ void CUnitObject::skillDamage(AdvancedAttribute targetAttr)
 
 bool CUnitObject::isCastSkill()
 {
-   //return m_bCastSkill;
    return m_pFightSystem->isCastSkill();
 }
 
@@ -198,6 +177,14 @@ void CUnitObject::work(float timePass)
    if(m_pActionSystem->isMove() == true)
       move(timePass, m_targetPosition.fX, m_targetPosition.fY, m_bFaceTarget);
 #endif  // #ifdef _GAMEENGINE_2D_
+
+   if((m_pActionSystem->isMove() == true) && (m_bKeyMoveEnabled == true))
+      ;
+   else if((m_pActionSystem->isMove() == true) && (isReachTarget() == true)) {
+      CActionEvent actEvent;
+      actEvent.m_event = AET_REACH;
+      CActionDispatch::getInstance()->sendEvnet(m_machineName, getUID(), actEvent);
+   }
 }
 
 void CUnitObject::addDirection(float offsetDirection)
@@ -272,13 +259,18 @@ CAction* CUnitObject::getCurAction()
 bool CUnitObject::isMove()
 {
    if(m_pActionSystem->isMove() == true) {
-      if(isReachTarget() == false)
+      //if(isReachTarget() == false)
          return true;
-      else
-         return false;
+      //else
+      //   return false;
    }
    else
       return false;
+}
+
+void CUnitObject::setKeyMoveEnabled(bool bEnable)
+{
+   m_bKeyMoveEnabled = bEnable;
 }
 
 std::vector<std::string> CUnitObject::getAllAnimationName()
@@ -372,6 +364,11 @@ void CUnitObject::draw(HDC hdc)
 }
 #endif  // #ifdef _GAMEENGINE_2D_
 // } Add by Darren Chen on 2012/12/22
+
+std::string CUnitObject::getMachineName()
+{
+   return m_machineName;
+}
 
 long long CUnitObject::getUID()
 {
@@ -568,6 +565,22 @@ std::vector<CSkill *> CUnitObject::getSkill()
    return m_vSkill;
 }
 
+CSkill* CUnitObject::getSkill(int skillID)
+{
+   CSkill *pFindSkill = NULL;
+   std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
+   while(itSkill != m_vSkill.end()) {
+      if((*itSkill)->getID() == skillID) {
+         pFindSkill = (*itSkill);
+         break;
+      }
+
+      itSkill++;
+   }
+
+   return pFindSkill;
+}
+
 void CUnitObject::SkillCoolDown(float timepass)
 {
    std::vector<CSkill *>::iterator pi = m_vSkill.begin();
@@ -578,7 +591,7 @@ void CUnitObject::SkillCoolDown(float timepass)
    }
 }
 
-bool CUnitObject::addSkill(unsigned int skillID)
+bool CUnitObject::addSkill(int skillID)
 {
    CSkill *pSkill = new CSkill();
    pSkill->create(skillID);
@@ -588,7 +601,6 @@ bool CUnitObject::addSkill(unsigned int skillID)
       notifySkillUpdate();
       return true;
    }
-delete pSkill;
    return false;
 }
 
@@ -613,7 +625,42 @@ void CUnitObject::notifySkillUpdate()
 
 void CUnitObject::notifyPlaySound(std::string soundFile)
 {
+#ifdef _GAMESOUND_
+   size_t idx = m_machineName.find("Server");
+   if(idx != std::string::npos)
+      return;
+
    CSoundManager::getInstance()->playSound(SOUND_DIR + soundFile);
+#endif  // #ifdef _GAMESOUND_
+}
+
+void CUnitObject::setUID(long long uid)
+{
+   m_uid = uid;
+
+   // 把舊的動作系統內資料複製一份
+   std::string actionFile = m_pActionSystem->m_actionFile;
+   std::set<IDrawWeaponNotifyListener *>  drawWeaponNotifyListeners  = m_pActionSystem->m_drawWeaponNotifyListeners;
+   std::set<IPutinWeaponNotifyListener *> putinWeaponNotifyListeners = m_pActionSystem->m_putinWeaponNotifyListeners;
+   std::set<IPlaySoundNotifyListener *>   playSoundNotifyListeners   = m_pActionSystem->m_playSoundNotifyListeners;
+
+   if(m_pActionSystem != NULL) {
+      delete m_pActionSystem;
+      m_pActionSystem = NULL;
+   }
+
+   if(m_pFightSystem != NULL) {
+      delete m_pFightSystem;
+      m_pFightSystem = NULL;
+   }
+
+   m_pActionSystem = new CActionSystem(m_machineName, m_uid);
+   m_pActionSystem->read(actionFile);
+   m_pActionSystem->m_drawWeaponNotifyListeners  = drawWeaponNotifyListeners;
+   m_pActionSystem->m_putinWeaponNotifyListeners = putinWeaponNotifyListeners;
+   m_pActionSystem->m_playSoundNotifyListeners   = playSoundNotifyListeners;
+
+   m_pFightSystem = new CFightSystem(m_machineName, m_uid);
 }
 
 #ifdef _GAMEENGINE_2D_

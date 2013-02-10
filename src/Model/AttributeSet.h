@@ -9,7 +9,7 @@ void AttributeClear (ObscureAttribute& obs);
 
 void AttributeClear (ComplexAttribute& com);
 
-void AttributeClear (BasicAttribute& bas);
+//void AttributeClear (BasicAttribute& bas);
 
 void AttributeClear (FloatPrecentAttribute& pre);
 

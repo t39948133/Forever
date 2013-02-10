@@ -73,6 +73,7 @@ CSkill::CSkill() : m_bAvailable(false) , m_fSurplus(0.0f)
 
 CSkill::~CSkill()
 {
+   m_skillEventListeners.clear();
 }
 
 float CSkill::getSurplus()

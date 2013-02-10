@@ -262,10 +262,6 @@
 					RelativePath="..\..\src\Common\Common.cpp"
 					>
 				</File>
-				<File
-					RelativePath="..\..\src\Common\CSoundManager.cpp"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Model"
@@ -319,11 +315,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CMonsterArea.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterAreaInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterAreaInfoLoader.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CMonsterInfo.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CMonsterInfoLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterMap.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CNPCInfo.cpp"
 					>
 				</File>
 				<File
@@ -476,10 +492,6 @@
 					RelativePath="..\..\src\Common\Common.h"
 					>
 				</File>
-				<File
-					RelativePath="..\..\src\Common\CSoundManager.h"
-					>
-				</File>
 			</Filter>
 			<Filter
 				Name="Model"
@@ -533,11 +545,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CMonsterArea.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterAreaInfo.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterAreaInfoLoader.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CMonsterInfo.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CMonsterInfoLoader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CMonsterMap.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CNPCInfo.h"
 					>
 				</File>
 				<File

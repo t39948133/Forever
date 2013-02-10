@@ -7,6 +7,7 @@
   * @date   2013/01/31 */
 #ifndef _CSOUNDMANAGER_H_
 #define _CSOUNDMANAGER_H_
+#ifdef _GAMESOUND_
 #include "Common.h"
 #include "sound_man.h"
 
@@ -43,4 +44,5 @@ class CSoundManager
       SoundMan *m_pSoundMan;
 };
 
+#endif  // #ifdef _GAMESOUND_
 #endif  // #ifndef _CSOUNDMANAGER_H_
