@@ -3,8 +3,8 @@
 
 #include "obj_mTable.h"
 #include "CMonsterAreaInfoLoader.h"
-//#include "CScene.h"
 class CScene;
+class CGameServer;
 
 typedef ObjTable <CMonsterAreaInfo*, CMonsterAreaInfoLoader> MONSTERAREA_INFO;
 
@@ -18,7 +18,7 @@ public:
 	bool			isClick(float fx, float fy);
 	CMonsterArea();
 	~CMonsterArea();
-	void			work(long long& uid, CScene& scene);
+	void			work(CGameServer& gameServer, CScene& scene);
 	void			draw(HDC hdc);
 private:
 	int m_iMonsterCount;

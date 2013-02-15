@@ -350,14 +350,34 @@ typedef struct tagPOSITION {
 
 enum NPCType
 {
-	STORE,
-	VILLAGER,
-	PRINCIPAL,
+	STORE,		//商店
+	VILLAGER,	//對話
+	PRINCIPAL,	//任務
 };
 
 enum NPCClassType
 {
 	NPC,
+};
+
+enum QuestType
+{
+	KILL,		//殺怪
+	TALK,		//對話
+	TAKE,		//收集物品
+};
+
+enum QuestClassType
+{
+	QUEST,
+};
+
+enum QuestState
+{
+	QUEST_NULL,			//這任務不能接
+	QUEST_CAN_TAKE,		//這任務可以接
+	QUEST_WORKING,		//正在進行
+	QUEST_FINISH		//這任務已繳交完成
 };
 
 #endif  // #ifndef _COMMON_H_

@@ -25,12 +25,12 @@ CMonsterArea* CMonsterMap::addArea()
 	return m_vMonsterArea->back();
 }
 
-void CMonsterMap::work(long long& uid,CScene& scene)
+void CMonsterMap::work(CGameServer& gameServer,CScene& scene)
 {
 	std::vector<CMonsterArea*>::iterator pArea = m_vMonsterArea->begin();
 	while(m_vMonsterArea->end() != pArea)
 	{
-		(*pArea)->work(uid, scene);
+		(*pArea)->work(gameServer, scene);
 		pArea++;
 	}
 }

@@ -13,6 +13,7 @@
 #include "CPacketFirstLogin.h"
 #include "CPacketPlayerDataWG.h"
 #include "CPacketTargetPos.h"
+#include "CMonsterArea.h"
 
 #include <network\gp_socket.h>
 
@@ -30,6 +31,8 @@ class CGameServer : public CScene
         * @param hWnd 主視窗 
         * @param timePass 一個frame幾秒 */
       void work(HWND hWnd, float timePass);
+
+	  long long generateUID();
 
 #ifdef _GAMEENGINE_2D_
       /** @brief 2D繪圖
@@ -72,6 +75,7 @@ class CGameServer : public CScene
       GP::NetListener          m_listener;
       GP::NetStream           *m_pWorldStream;    // World Server的網路連線
       std::list<CNetPlayer *> *m_pNetPlayerList;  // 此場景的所有網路玩家
+	  CMonsterArea			   m_MonsterArea;
 };
 
 #endif  // #ifndef _CGAMESERVER_H_

@@ -1,5 +1,6 @@
 #include "CMonsterArea.h"
 #include "CScene.h"
+#include "CGameServer.h"
 
 void CMonsterArea::initMonsterArea()
 {
@@ -40,7 +41,7 @@ bool CMonsterArea::isClick(float fx, float fy)
 	return dis < pInfo->getBornSize();
 }
 
-CMonsterArea::CMonsterArea()
+CMonsterArea::CMonsterArea():m_iConstTime(0), m_iMonsterCount(0)
 {
 	srand((unsigned) time(NULL));
 }
@@ -49,8 +50,12 @@ CMonsterArea::~CMonsterArea()
 {
 }
 
-void CMonsterArea::work(long long& uid, CScene& scene)
+void CMonsterArea::work(CGameServer& gameServer, CScene& scene)
 {
+	if(NULL == MONSTERAREA_INFO::getInfo())
+	{
+		return;
+	}
 	if(MONSTERAREA_INFO::getInfo()->getMaxMonster() <= m_iMonsterCount)
 	{
 		return;
@@ -63,9 +68,9 @@ void CMonsterArea::work(long long& uid, CScene& scene)
 			- pInfo->getBornSize();
 		float fy = pInfo->getPosition().fY + (rand() % ((int) (pInfo->getBornSize()) * 2))
 			- pInfo->getBornSize();
-		scene.addMonster(uid++, mid, fx, fy);
+		scene.addMonster(gameServer.generateUID(), mid, fx, fy);
 		m_iMonsterCount++;
-		m_iConstTime += GetTickCount() + pInfo->getAddTime();
+		m_iConstTime = GetTickCount() + pInfo->getAddTime();
 	}
 }
 

@@ -7,7 +7,7 @@ class CMonsterMap
 {
 public:
 	CMonsterMap();
-	void work(long long& uid, CScene& scene);
+	void work(CGameServer& gameServer, CScene& scene);
 	CMonsterArea* getArea(float fx, float fy);
 	CMonsterArea* addArea();
 	void draw(HDC hdc);

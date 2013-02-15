@@ -12,9 +12,9 @@ public:
 	static void initItem ();
 	CItem ();
 	~CItem();
-	bool addStack (int id, int& st);
-	int getStack ();
-	void create (int id, int st);
+	bool addStack (int id, int& st);	//增加物品 id st幾個
+	int getStack ();						//取得堆了幾個
+	void create (int id, int st);		//建立 設定
 
    /** @brief 物品堆疊減一, 減到0後會自動消滅物品 */
 	void taken();
@@ -30,7 +30,7 @@ public:
    // } Add by Darren Chen on 2013/01/21
 
 private:
-	int m_iStack;
+	int m_iStack;	//堆疊幾個
 
    // Add by Darren Chen on 2013/01/21 {
    /** @brief 通知物品欄有更新 */

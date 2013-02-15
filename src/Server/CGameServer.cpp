@@ -54,6 +54,7 @@ void CGameServer::init(int port)
       // 產生怪物
       //for(int i = 0; i < 4; i++)
       //   this->addMonster(m_curUID++, 0, float(300 + i * 50), (float)300);
+	   m_MonsterArea.create(0);
       
       // Todo: 產生NPC
    }
@@ -67,6 +68,7 @@ void CGameServer::work(HWND hWnd, float timePass)
    procAccept();
    
    // Todo: 種怪物物件.work()
+   m_MonsterArea.work(*this, *this);
 
    std::list<CNetPlayer *>::iterator it = m_pNetPlayerList->begin();
    while(it != m_pNetPlayerList->end()) {
@@ -80,6 +82,11 @@ void CGameServer::work(HWND hWnd, float timePass)
       else
          it++;
    }
+}
+
+long long CGameServer::generateUID()
+{
+	return m_curUID++;
 }
 
 #ifdef _GAMEENGINE_2D_

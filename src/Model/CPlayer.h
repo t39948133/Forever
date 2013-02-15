@@ -2,6 +2,7 @@
 #define _CPLAYER_H_
 #include "CUnitObject.h"
 #include "CBackpack.h"
+#include "CQuestMap.h"
 #include "IPlayerAttrEventListener.h"
 #include "IPlayerEquipEventListener.h"
 #include "IPlayerBackpackEventListener.h"
@@ -25,6 +26,7 @@ public:
 	unsigned int getXP();			//讀取XP
 	unsigned int getXPMax();		//讀取最大XP
 	CBackpack* getBackpack();		//取得背包
+	CQuestMap* getQuestMap();		//取得任務
 
    /** @brief 穿到裝備欄上
      * @param es     裝備部位
@@ -122,6 +124,7 @@ private:
 	char                       m_levelMax;	  //最高等級 預設50
 	std::map<EquipSlot, int>   m_mEquip;	  //裝備欄
 	CBackpack                 *m_pBackpack;  //背包
+	CQuestMap				  *m_pQuestMap;
 
    // Add by Darren Chen on 2013/01/06 {
    long long                  m_money;     // 錢

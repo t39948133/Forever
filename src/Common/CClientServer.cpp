@@ -3,6 +3,7 @@
 #include "CSkill.h"
 #include "CBuff.h"
 #include "CMonster.h"
+#include "CMonsterArea.h"
 
 #include <network\gp_socket.h>
 
@@ -115,6 +116,7 @@ void CClientServer::init()
    CSkill::initSkill();  // 建立技能表
    CBuff::initBuff();
    CMonster::initMonster(); //建立怪物表
+   CMonsterArea::initMonsterArea();
 
    for(int i = 0; i < MAX_WORLDSERVER; i++)
       m_pvWorldServer->at(i)->init(2000 + i);

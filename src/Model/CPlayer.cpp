@@ -10,6 +10,7 @@ CPlayer::CPlayer(std::string machineName, std::string strName, long long uid, ch
                                                                                             m_levelMax(50)
 {
    m_pBackpack = new CBackpack();
+   m_pQuestMap = new CQuestMap();
    m_xp = 0;
    m_xpMax = level * 1000;
    m_money = 0;
@@ -73,6 +74,11 @@ unsigned int CPlayer::getXPMax()
 CBackpack* CPlayer::getBackpack()
 {
 	return m_pBackpack;
+}
+
+CQuestMap* CPlayer::getQuestMap()
+{
+	return m_pQuestMap;
 }
 
 // Modify by Darren Chen on 2013/01/07 {
