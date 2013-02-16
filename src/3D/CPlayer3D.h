@@ -53,6 +53,8 @@ class CPlayer3D : public IKeyEventListener,
 
       CPlayer* getPlayer2D();
 
+      void setUID(long long uid);
+
    private:
       friend class CPacketPlayerInit;
       friend class CPacketPlayerData;
@@ -106,13 +108,12 @@ class CPlayer3D : public IKeyEventListener,
       std::vector<Ogre::AnimationState *> *m_pvtAnimationSet;  // 當前角色的動畫集合(所有模型)
 
       // Title
-      CObjectTitle       *m_nameOverlay;      // 顯示於3D的人物名稱
+      CObjectTitle       *m_nameOverlay;      // 顯示於3D的角色名稱
 
       // 攝影機控制相關參數
       Ogre::Vector3       m_mouseDirection;   // 滑鼠移動方向與偏移量
       Ogre::Vector3       m_keyDirection;     // 鍵盤移動方向與偏移量
       Ogre::Vector3       m_goalDirection;    // 目標方向
-      float               m_fTurnSpeed;       // 模型轉方向的速度
 
       // 3D模型相關參數
       std::string         m_mainHandBoneName;     // 主手武器放在那個骨頭的名稱
@@ -138,7 +139,7 @@ class CPlayer3D : public IKeyEventListener,
       bool                m_bMainPlayer;          // 是主角嗎?
       CPlayer            *m_pPlayer2D;            // 玩家
 
-      static int          m_iPlayerCount;
+      static unsigned int m_iPlayerCount;
 };
 
 #endif // #ifndef _CPLAYER3D_H_

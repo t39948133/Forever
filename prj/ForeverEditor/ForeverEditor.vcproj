@@ -311,11 +311,35 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPC.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CNPCInfo.cpp"
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPCInfoLoader.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfoLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestMap.cpp"
 					>
 				</File>
 				<File
@@ -511,6 +535,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketActionEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketMonsterData.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketPlayerData.cpp"
 					>
 				</File>
@@ -523,7 +555,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketTargetObject.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketTargetPos.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketUseSkill.cpp"
 					>
 				</File>
 			</Filter>
@@ -681,11 +721,35 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPC.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CNPCInfo.h"
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPCInfoLoader.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CPlayer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfo.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfoLoader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestMap.h"
 					>
 				</File>
 				<File
@@ -714,6 +778,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\IItemEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\IMonsterAIEventListener.h"
 					>
 				</File>
 				<File
@@ -832,6 +900,10 @@
 					RelativePath="..\..\src\Controller\IPutinWeaponNotifyListener.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Controller\ISceneMonsterEventListener.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="View"
@@ -909,7 +981,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketActionEvent.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketFirstLogin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketMonsterData.h"
 					>
 				</File>
 				<File
@@ -929,7 +1009,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketTargetObject.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketTargetPos.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketUseSkill.h"
 					>
 				</File>
 				<File

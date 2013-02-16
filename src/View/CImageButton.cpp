@@ -124,6 +124,18 @@ void CImageButton::setTextVerticalAlignment(Alignment alignment)
    }
 }
 
+void CImageButton::setPosition(int x, int y)
+{
+   m_pPanel->setPosition((Ogre::Real)x, (Ogre::Real)y);
+}
+
+void CImageButton::setSize(int width, int height)
+{
+   this->w = width;
+   this->h = height;
+   m_pPanel->setDimensions((Ogre::Real)width, (Ogre::Real)height);
+}
+
 void CImageButton::addChild(Ogre::OverlayElement *pElement)
 {
    if(pElement != NULL)

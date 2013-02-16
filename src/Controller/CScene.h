@@ -10,6 +10,7 @@
 #include "Common.h"
 #include "CPlayer.h"
 #include "CMonster.h"
+#include "ISceneMonsterEventListener.h"
 
 /** @brief 場景管理
   *        管理這個場景內有哪些玩家 */
@@ -42,8 +43,6 @@ class CScene
       /** @brief 刪除所有東西 */
       void clear();
 
-      void loadScene(SCENE_TYPE scene);
-
       /** @brief 取得主角玩家 */
       CPlayer* getMainPlayer();
 
@@ -66,7 +65,8 @@ class CScene
         * @param timePass 一個frame幾秒 */
       void work(float timePass);
 
-      std::list<CPlayer *>* getvtPlayer();
+      std::list<CPlayer *>* getAllPlayer();
+      std::list<CMonster *>* getAllMonster();
 
 #ifdef _GAMEENGINE_2D_
       /** @brief 取得玩家
@@ -90,12 +90,18 @@ class CScene
       void draw(HDC hdc);
 #endif  // #ifdef _GAMEENGINE_2D_
 
+      void addSceneMonsterEventListener(ISceneMonsterEventListener *pListener);
+      void removeSceneMonsterEventListener(ISceneMonsterEventListener *pListener);
+
    private:
-      std::string            m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
+      void notifyAddMonsterUpdate(CMonster *pNewMonster);
+
+      std::string            m_machineName; // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       std::list<CPlayer *>  *m_pvtPlayer;   // 場景內所有玩家
       std::list<CMonster *> *m_pvtMonster;  // 場景內所有怪物
       CPlayer               *m_pMainPlayer; // 玩家
-      SCENE_TYPE             m_scene;       // 那個場景
+
+      std::set<ISceneMonsterEventListener *> m_monsterEventListeners;    // 監聽怪物事件的監聽者列表
 };
 
 #endif  // #ifndef _CSCENE_H_

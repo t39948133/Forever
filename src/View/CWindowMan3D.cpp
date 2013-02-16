@@ -20,7 +20,7 @@ void CWindowMan3D::addWnd(CWindow *pWnd)
    CWindowMan::addWnd(pWnd);
    pWnd->setWindowMan(this);
 
-   int offset = 0; 
+   int offset = 2; 
    std::list<CWindow *>::reverse_iterator it = m_pWindowList->rbegin();
    while(it != m_pWindowList->rend()) {
       (*it)->setZOrder(offset++);

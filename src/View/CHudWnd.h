@@ -24,7 +24,7 @@ class CHudWnd : public CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
       /* virtual */ WindowClassType getClassType();
       /* virtual */ void show(bool bShow);
-      /* virtual */ void setZOrder(int order);
+      /* virtual */ int getZOrder();
 
    private:
       CPlayer    *m_pPlayer;

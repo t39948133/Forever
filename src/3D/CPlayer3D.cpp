@@ -17,7 +17,7 @@
 #include <OgreSkeletonInstance.h>
 #include <OgreSkeletonManager.h>
 
-int CPlayer3D::m_iPlayerCount = 0;
+unsigned int CPlayer3D::m_iPlayerCount = 0;
 
 CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream) : m_pPlayer2D(pPlayer),
                                                                                                        m_pSceneManager(pSceneManager),
@@ -28,7 +28,7 @@ CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::Ne
 
 	char buf[256];
    memset(buf, 0, sizeof(buf));
-   sprintf(buf, "CPlayer3D::%d", m_iPlayerCount++);
+   sprintf(buf, "%s::CPlayer3D::%d", m_pPlayer2D->getMachineName().c_str(), m_iPlayerCount++);
    m_pPlayerNode = m_pSceneManager->getRootSceneNode()->createChildSceneNode(buf);
 
    m_nameOverlay = NULL;
@@ -51,7 +51,6 @@ CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::Ne
    m_mouseDirection = Ogre::Vector3::ZERO;
    m_keyDirection = Ogre::Vector3::ZERO;
    m_goalDirection = Ogre::Vector3::ZERO;
-   m_fTurnSpeed = 500.0f;
    m_bMainPlayer = false;
 
    m_pvtAnimationSet = new std::vector<Ogre::AnimationState *>();
@@ -310,6 +309,11 @@ void CPlayer3D::setMouseTargetPosition(Ogre::Vector3 &targetPos)
 CPlayer* CPlayer3D::getPlayer2D()
 {
    return m_pPlayer2D;
+}
+
+void CPlayer3D::setUID(long long uid)
+{
+   m_pPlayerNode->setUserAny(Ogre::Any(uid));
 }
 
 void CPlayer3D::setPosition(float x, float y, float z)

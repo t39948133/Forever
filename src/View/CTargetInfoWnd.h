@@ -25,6 +25,11 @@ class CTargetInfoWnd : public CWindow,
                        public IAdvAttrEventListener
 {
    public:
+#ifdef _GAMEENGINE_3D_
+      enum {BUTTON_AI, BUTTON_HP, BUTTON_COUNT};
+      enum {TEXT_LEVEL, TEXT_NAME, TEXT_COUNT};
+#endif
+      CTargetInfoWnd();
       ~CTargetInfoWnd();
 
       void init(int _x, int _y, CScene *pScene, CPlayer *pPlayer);
@@ -33,9 +38,6 @@ class CTargetInfoWnd : public CWindow,
 	   /* virtual */ bool canDrag(int tx, int ty);
       /* virtual */ WindowClassType getClassType();
       /* virtual */ void show(bool bShow);
-#ifdef _GAMEENGINE_3D_
-	   /* virtual */ void setZOrder(int order);
-#endif
 
       // IAdvAttrEventListener
       /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
@@ -49,8 +51,8 @@ class CTargetInfoWnd : public CWindow,
       long long  m_targetUID;
 
 #ifdef _GAMEENGINE_3D_	
-	   CImageButton   *m_pBtn;
-      CTextAreaOgre  *m_pText;
+	   CImageButton   *m_pBtn[BUTTON_COUNT];
+      CTextAreaOgre  *m_pText[TEXT_COUNT];
       COverlayUI      m_overlay;  //ºÞ²zoverlay
 #elif _GAMEENGINE_2D_
 	   CTextButton    *m_pBtn;

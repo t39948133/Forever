@@ -187,7 +187,6 @@ material UI/BG/HPBar
 		pass
 		{			
 		  scene_blend alpha_blend
-		  depth_write off
 			texture_unit
 			{
 				texture hp.png
@@ -204,7 +203,6 @@ material UI/BG/MPBar
 		pass
 		{			
 		  scene_blend alpha_blend
-		  depth_write off
 			texture_unit
 			{
 				texture mp.png
@@ -221,10 +219,153 @@ material UI/BG/XPBar
 		pass
 		{			
 		  scene_blend alpha_blend
-		  depth_write off
 			texture_unit
 			{
 				texture xp.png
+			}
+		}
+	}
+}
+
+//一般怪物血條
+material UI/BG/RegularMonster
+{
+	technique
+	{
+		pass
+		{
+		  scene_blend alpha_blend
+			texture_unit 
+			{
+				texture bg_RegularMonster.png
+			}
+		}
+	}
+}
+
+//菁英怪物血條
+material UI/BG/EliteMonster
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture bg_EliteMonster.png
+			}
+		}
+	}
+}
+
+//王怪物血條
+material UI/BG/HeroMonster
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture bg_HeroMonster.png
+			}
+		}
+	}
+}
+
+//怪物AI等級1
+material UI/MonsterAI/1
+{
+	technique
+	{
+		pass
+		{			
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture icon_emblem_monster_n_1_a.dds
+			}
+			texture_unit
+			{
+				texture icon_emblem_monster_n_1_a_alpha.png
+			}
+		}
+	}
+}
+
+//怪物AI等級2
+material UI/MonsterAI/2
+{
+	technique
+	{
+		pass
+		{			
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture icon_emblem_monster_n_2_a.dds
+			}
+			texture_unit
+			{
+				texture icon_emblem_monster_n_1_a_alpha.png
+			}
+		}
+	}
+}
+
+//怪物AI等級3
+material UI/MonsterAI/3
+{
+	technique
+	{
+		pass
+		{			
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture icon_emblem_monster_n_3_a.dds
+			}
+			texture_unit
+			{
+				texture icon_emblem_monster_n_1_a_alpha.png
+			}
+		}
+	}
+}
+
+//怪物HP
+material UI/MonsterHP
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture MonsterHP.png
+			}
+		}
+	}
+}
+
+//守護
+material UI/MonsterAI/Knight
+{
+	technique
+	{
+		pass
+		{			
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture icon_emblem_knight.dds
+			}
+			texture_unit
+			{
+				texture icon_emblem_knight_alpha.png
 			}
 		}
 	}

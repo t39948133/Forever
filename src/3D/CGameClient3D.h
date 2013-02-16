@@ -14,6 +14,7 @@
 #include "CGameClient.h"
 #include "CWindowMan3D.h"
 #include "CScene3D.h"
+#include "CTargetInfoWnd.h"
 
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
@@ -34,6 +35,7 @@ class CGameClient3D : public IGameFlowListener,
       /* virtual */ void initUI();
       /* virtual */ void onRecvPlayerInit(CPacketPlayerInit *pPacket);
       /* virtual */ void onRecvPlayerData(CPacketPlayerData *pPacket);
+      /* virtual */ void onRecvMonsterData(CPacketMonsterData *pPacket);
 
    private:
       // IGameFlowListener
@@ -61,6 +63,7 @@ class CGameClient3D : public IGameFlowListener,
 
       bool                 m_bCreateScene;   // 3D初始化是否完成 (true - 還沒完成 / false - 已經完成)
 
+      CTargetInfoWnd      *m_pTargetInfoWnd;
       CWindowMan3D        *m_pWindowMan;     // UI視窗管理
       
       CScene3D            *m_pScene3D;       // 3D場景管理

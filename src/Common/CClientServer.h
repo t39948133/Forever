@@ -49,7 +49,7 @@ class CClientServer
       int  m_curClient;
       int  m_curServer;
 
-      enum {MAX_SERVER = 2};
+      enum {MAX_SERVER = 1};
       std::vector<CGameServer *>   *m_pvGameServer;
 
       enum {MAX_WORLDSERVER = 1};

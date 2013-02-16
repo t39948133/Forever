@@ -13,11 +13,15 @@
 #include "CPacketFirstLogin.h"
 #include "CPacketPlayerDataWG.h"
 #include "CPacketTargetPos.h"
-#include "CMonsterArea.h"
+#include "IMonsterAIEventListener.h"
+#include "CMonsterMap.h"
+#include "ISceneMonsterEventListener.h"
 
 #include <network\gp_socket.h>
 
-class CGameServer : public CScene
+class CGameServer : public CScene,
+                    public IMonsterAIEventListener,
+                    public ISceneMonsterEventListener
 {
    public:
       CGameServer(std::string machineName);
@@ -32,7 +36,7 @@ class CGameServer : public CScene
         * @param timePass 一個frame幾秒 */
       void work(HWND hWnd, float timePass);
 
-	  long long generateUID();
+      long long generateUID();
 
 #ifdef _GAMEENGINE_2D_
       /** @brief 2D繪圖
@@ -41,6 +45,22 @@ class CGameServer : public CScene
 #endif  // #ifdef _GAMEENGINE_2D_
 
    private:
+      // ISceneMonsterEventListener
+      /* virtual */ void updateAddMonster(CMonster *pMonster);
+
+      // IMonsterAIEventListener
+      /* virtual */ void updateMonsterTargetObject(CMonster *pMonster, long long newTargetObjectUID);
+      /* virtual */ void updateMonsterAI(CMonster *pMonster);
+
+      void doMonsterAIIdle(CMonster *pMonster);
+      void doMonsterAIGoals(CMonster *pMonster);
+      void doMonsterAIDolly(CMonster *pMonster);
+      void doMonsterAIReturn(CMonster *pMonster);
+      void doMonsterAIAttack(CMonster *pMonster);
+
+      /** @brief 怪物移動 */
+      void moveMonster(CMonster *pMonster, float x, float y);
+
       /** @brief 處理與Client之間的網路連線 */
       void procAccept();
 
@@ -54,6 +74,7 @@ class CGameServer : public CScene
 
       void sendPlayerDataToOtherClient(CNetPlayer *pNetPlayer);
       void sendNearPlayerToClient(CNetPlayer *pNetPlayer);
+      void sendNearMonsterToClient(CNetPlayer *pNetPlayer);
 
       /** @brief 將pNetPlayer的資料送給其他Client */
       void sendPacket(CNetPlayer *pNetPlayer, void *pPacket, int packetSize);
@@ -70,12 +91,13 @@ class CGameServer : public CScene
       void onRecvTargetPos(CNetPlayer *pNetPlayer, CPacketTargetPos *pPacket);
 
       std::string              m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
+      int                      m_port;
       long long                m_curUID;
       long long                m_curNetID;
       GP::NetListener          m_listener;
       GP::NetStream           *m_pWorldStream;    // World Server的網路連線
       std::list<CNetPlayer *> *m_pNetPlayerList;  // 此場景的所有網路玩家
-	  CMonsterArea			   m_MonsterArea;
+      CMonsterMap              m_monsterMap;
 };
 
 #endif  // #ifndef _CGAMESERVER_H_

@@ -77,25 +77,29 @@ void CGameClient3D::initUI()
    pSkillWnd->init(500, 10, pPlayer2D);
    m_pWindowMan->addWnd(pSkillWnd);
 
+   m_pTargetInfoWnd = new CTargetInfoWnd();
+   m_pTargetInfoWnd->init(0, 0, this->getScene(), pPlayer2D);
+   m_pWindowMan->addWnd(m_pTargetInfoWnd);
+
    int hudX = ((rect.right - rect.left) - 856) / 2;
    int hudY = ((rect.bottom - rect.top) - 126);
+
+   CHudWnd *pHudWnd = new CHudWnd();
+   pHudWnd->init(hudX, hudY, pPlayer2D);
+   m_pWindowMan->addWnd(pHudWnd);
 
    CHotKeyWnd *pHotKeyWnd = new CHotKeyWnd();
    int hotkeyX = hudX + 381;
    int hotkeyY = hudY + 75;
-   pHotKeyWnd->init(hotkeyX, hotkeyY, pPlayer2D);
+   pHotKeyWnd->init(hotkeyX, hotkeyY, pPlayer2D, pHudWnd->getZOrder() + 1);
    m_pWindowMan->addWnd(pHotKeyWnd);
    m_pRenderCore->addKeyEventListener(pHotKeyWnd);
 
    CPlayerStateWnd *pPlayerStateWnd = new CPlayerStateWnd();
    int playerstateX = hudX + 98;
    int playerstateY = hudY + 70;
-   pPlayerStateWnd->init(playerstateX, playerstateY, pPlayer2D);
+   pPlayerStateWnd->init(playerstateX, playerstateY, pPlayer2D, pHudWnd->getZOrder() + 1);
    m_pWindowMan->addWnd(pPlayerStateWnd);
-
-   CHudWnd *pHudWnd = new CHudWnd();
-   pHudWnd->init(hudX, hudY, pPlayer2D);
-   m_pWindowMan->addWnd(pHudWnd);
 }
 
 void CGameClient3D::onRecvPlayerInit(CPacketPlayerInit *pPacket)
@@ -103,6 +107,8 @@ void CGameClient3D::onRecvPlayerInit(CPacketPlayerInit *pPacket)
    CPlayer3D *pMainPlayer = m_pScene3D->getMainPlayer3D();
    if(pMainPlayer != NULL)
       pPacket->unpack(pMainPlayer);
+
+   pMainPlayer->setUID(pPacket->getUID());
 
    // createScene完成, 取得GameServer的玩家資料
    m_bCreateScene = false;  
@@ -117,6 +123,21 @@ void CGameClient3D::onRecvPlayerData(CPacketPlayerData *pPacket)
    }
 
    pPacket->unpack(pPlayer);
+
+   pPlayer->setUID(pPacket->getUID());
+}
+
+void CGameClient3D::onRecvMonsterData(CPacketMonsterData *pPacket)
+{
+   CMonster3D *pMonster = m_pScene3D->getMonster3D(pPacket->getUID());
+   if(pMonster == NULL) {
+      CMonster *pNewMonster2D = this->getScene()->addMonster(-1, pPacket->getKindID(), 0, 0);
+      pMonster = m_pScene3D->addMonster3D(pNewMonster2D);
+   }
+
+   pPacket->unpack(pMonster);
+
+   pMonster->setUID(pPacket->getUID());
 }
 
 void CGameClient3D::createScene()
@@ -192,11 +213,29 @@ void CGameClient3D::mouseDown(const OIS::MouseEvent &evt)
 
          // 尋找這條射線打到什麼3D物件
          Ogre::RaySceneQueryResult &result = m_pRayQuery->execute();
-         Ogre::RaySceneQueryResult::iterator it = result.begin();
-         while(it != result.end()) {
-            std::string nodeName = (*it).movable->getName();
-            if(nodeName.find("ETTerrain") != std::string::npos) {
+         Ogre::RaySceneQueryResult::reverse_iterator it = result.rbegin();
+         while(it != result.rend()) {
+            std::string nodeName = (*it).movable->getParentNode()->getName();
+            if(nodeName.find("CMonster3D") != std::string::npos) {
+               // 滑鼠點到怪物
+
+               const Ogre::Any &value = (*it).movable->getParentNode()->getUserAny();
+               long long uid = Ogre::any_cast<long long>(value);
+               m_pTargetInfoWnd->setTarget(uid);
+               break;
+            }
+            else if(nodeName.find("CPlayer3D") != std::string::npos) {
+               // 滑鼠點到玩家
+
+               const Ogre::Any &value = (*it).movable->getParentNode()->getUserAny();
+               long long uid = Ogre::any_cast<long long>(value);
+               m_pTargetInfoWnd->setTarget(uid);
+               break;
+            }
+            else if(nodeName.find("ETTerrain") != std::string::npos) {
                // 滑鼠點到地板
+
+               m_pTargetInfoWnd->setTarget(-1);
 
                Ogre::Vector3 newPos;
                m_pTerrain->getRayPos(mouseRay, newPos);

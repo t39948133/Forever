@@ -315,18 +315,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CMonsterArea.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Model\CMonsterAreaInfo.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Model\CMonsterAreaInfoLoader.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Model\CMonsterInfo.cpp"
 					>
 				</File>
@@ -335,7 +323,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CMonsterMap.cpp"
+					RelativePath="..\..\src\Model\CNPC.cpp"
 					>
 				</File>
 				<File
@@ -343,7 +331,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPCInfoLoader.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfoLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestMap.cpp"
 					>
 				</File>
 				<File
@@ -484,6 +492,10 @@
 					RelativePath="..\..\src\Controller\IPutinWeaponNotifyListener.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Controller\ISceneMonsterEventListener.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Common"
@@ -545,18 +557,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CMonsterArea.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Model\CMonsterAreaInfo.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Model\CMonsterAreaInfoLoader.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Model\CMonsterInfo.h"
 					>
 				</File>
@@ -565,7 +565,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CMonsterMap.h"
+					RelativePath="..\..\src\Model\CNPC.h"
 					>
 				</File>
 				<File
@@ -573,7 +573,27 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPCInfoLoader.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CPlayer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfo.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfoLoader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestMap.h"
 					>
 				</File>
 				<File
@@ -602,6 +622,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\IItemEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\IMonsterAIEventListener.h"
 					>
 				</File>
 				<File

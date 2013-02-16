@@ -122,6 +122,11 @@ void CWindow::show(bool bShow)
 void CWindow::setZOrder(int order)
 {
 }
+
+int CWindow::getZOrder()
+{
+   return -1;
+}
 #elif _GAMEENGINE_2D_
 void CWindow::draw(HDC hdc, int ox, int oy)
 {

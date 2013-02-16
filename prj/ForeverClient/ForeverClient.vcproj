@@ -256,11 +256,35 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPC.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CNPCInfo.cpp"
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPCInfoLoader.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuest.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfoLoader.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestMap.cpp"
 					>
 				</File>
 				<File
@@ -309,6 +333,10 @@
 				>
 				<File
 					RelativePath="..\..\src\3D\CGameClient3D.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\3D\CMonster3D.cpp"
 					>
 				</File>
 				<File
@@ -394,6 +422,14 @@
 				<File
 					RelativePath="..\..\src\Common\LogWindow.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -516,6 +552,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CTargetInfoWnd.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CTextAreaOgre.cpp"
 					>
 				</File>
@@ -544,6 +584,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketActionEvent.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketMonsterData.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketPlayerData.cpp"
 					>
 				</File>
@@ -556,7 +604,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketTargetObject.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketTargetPos.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketUseSkill.cpp"
 					>
 				</File>
 			</Filter>
@@ -606,6 +662,7 @@
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
+						ExcludedFromBuild="true"
 						>
 						<Tool
 							Name="VCCustomBuildTool"
@@ -689,11 +746,35 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPC.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CNPCInfo.h"
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\CNPCInfoLoader.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\CPlayer.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuest.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfo.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestInfoLoader.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\CQuestMap.h"
 					>
 				</File>
 				<File
@@ -722,6 +803,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\IItemEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\IMonsterAIEventListener.h"
 					>
 				</File>
 				<File
@@ -787,6 +872,17 @@
 				<File
 					RelativePath="..\..\src\3D\CGameClient3D.h"
 					>
+				</File>
+				<File
+					RelativePath="..\..\src\3D\CMonster3D.h"
+					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\3D\CPlayer3D.h"
@@ -864,6 +960,10 @@
 					RelativePath="..\..\src\Controller\IPutinWeaponNotifyListener.h"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Controller\ISceneMonsterEventListener.h"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="View"
@@ -913,6 +1013,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CTargetInfoWnd.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CTextAreaOgre.h"
 					>
 				</File>
@@ -941,6 +1045,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CNetDataAngerValue.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CNetDataBackpack.h"
 					>
 				</File>
@@ -961,7 +1069,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketActionEvent.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketFirstLogin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketMonsterData.h"
 					>
 				</File>
 				<File
@@ -981,7 +1097,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketTargetObject.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketTargetPos.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketUseSkill.h"
 					>
 				</File>
 				<File

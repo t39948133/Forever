@@ -67,8 +67,9 @@ void CScene::removePlayer(long long uid)
 CMonster* CScene::addMonster(long long uid, int kindID, float x, float y)
 {
    CMonster *pMonster = new CMonster(m_machineName, kindID, uid, x, y);
-
    m_pvtMonster->push_back(pMonster);
+
+   notifyAddMonsterUpdate(pMonster);
 
    return pMonster;
 }
@@ -106,11 +107,6 @@ void CScene::clear()
    }
 
    m_pMainPlayer = NULL;
-}
-
-void CScene::loadScene(SCENE_TYPE scene)
-{
-   m_scene = scene;
 }
 
 CPlayer* CScene::getMainPlayer()
@@ -169,9 +165,8 @@ void CScene::work(float timePass)
 
    std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
    while(itMonster != m_pvtMonster->end()) {
-      (*itMonster)->work(timePass, *this);
-      if((*itMonster)->isDead())
-		{
+      (*itMonster)->work(timePass);
+      if((*itMonster)->isDead()) {
 			long long uid = (*itMonster)->getUID();
 			itMonster++;
 			removeMonster(uid);
@@ -181,9 +176,14 @@ void CScene::work(float timePass)
    }
 }
 
-std::list<CPlayer *>* CScene::getvtPlayer()
+std::list<CPlayer *>* CScene::getAllPlayer()
 {
 	return m_pvtPlayer;
+}
+
+std::list<CMonster *>* CScene::getAllMonster()
+{
+   return m_pvtMonster;
 }
 
 #ifdef _GAMEENGINE_2D_
@@ -243,3 +243,26 @@ void CScene::draw(HDC hdc)
    }
 }
 #endif  // #ifdef _GAMEENGINE_2D_
+
+void CScene::addSceneMonsterEventListener(ISceneMonsterEventListener *pListener)
+{
+   std::set<ISceneMonsterEventListener *>::iterator it = m_monsterEventListeners.find(pListener);
+   if(it == m_monsterEventListeners.end())
+      m_monsterEventListeners.insert(pListener);
+}
+
+void CScene::removeSceneMonsterEventListener(ISceneMonsterEventListener *pListener)
+{
+   std::set<ISceneMonsterEventListener *>::iterator it = m_monsterEventListeners.find(pListener);
+   if(it != m_monsterEventListeners.end())
+      m_monsterEventListeners.erase(it);
+}
+
+void CScene::notifyAddMonsterUpdate(CMonster *pNewMonster)
+{
+   std::set<ISceneMonsterEventListener *>::iterator it = m_monsterEventListeners.begin();
+   while(it != m_monsterEventListeners.end()) {
+      (*it)->updateAddMonster(pNewMonster);
+      it++;
+   }
+}

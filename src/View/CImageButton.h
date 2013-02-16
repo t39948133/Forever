@@ -36,6 +36,8 @@ class CImageButton : public CFButton
       void setText(std::string text, float r, float g, float b);
       void setTextHorizontalAlignment(Alignment alignment);
       void setTextVerticalAlignment(Alignment alignment);
+      void setPosition(int x, int y);
+      void setSize(int width, int height);
 
    protected:
       void addChild(Ogre::OverlayElement *pElement);

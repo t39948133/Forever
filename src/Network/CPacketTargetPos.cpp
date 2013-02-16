@@ -39,3 +39,15 @@ void CPacketTargetPos::unpack(CUnitObject *pUnitObject)
       CActionDispatch::getInstance()->sendEvnet(pUnitObject->getMachineName(), pUnitObject->getUID(), actEvent);
    }
 }
+
+#ifdef _GAMEENGINE_3D_
+void CPacketTargetPos::unpack(CPlayer3D *pPlayer)
+{
+   this->unpack(pPlayer->getPlayer2D());
+}
+
+void CPacketTargetPos::unpack(CMonster3D *pMonster)
+{
+   this->unpack(pMonster->getMonster2D());
+}
+#endif

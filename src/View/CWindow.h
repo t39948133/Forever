@@ -58,6 +58,7 @@ class CWindow
 
 #ifdef _GAMEENGINE_3D_
 	   virtual void setZOrder(int order);
+      virtual int getZOrder();
 #elif _GAMEENGINE_2D_
       virtual void draw(HDC hdc, int ox, int oy);
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_

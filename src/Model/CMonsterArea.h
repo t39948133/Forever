@@ -3,6 +3,7 @@
 
 #include "obj_mTable.h"
 #include "CMonsterAreaInfoLoader.h"
+
 class CScene;
 class CGameServer;
 
@@ -12,14 +13,17 @@ class CMonsterArea:public MONSTERAREA_INFO
 {
 public:
 	static void initMonsterArea();
-	void			create(int id);
+	void			create(int areaID);
 	int			getMonsterCount();
 	int			getConstTime();
 	bool			isClick(float fx, float fy);
 	CMonsterArea();
 	~CMonsterArea();
-	void			work(CGameServer& gameServer, CScene& scene);
+	void			work(CGameServer *pGameServer, CScene *pScene);
+#ifdef _GAMEENGINE_2D_
 	void			draw(HDC hdc);
+#endif
+
 private:
 	int m_iMonsterCount;
 	int m_iConstTime;

@@ -45,7 +45,11 @@ CHotKeyWnd::~CHotKeyWnd()
 #endif
 }
 
+#ifdef _GAMEENGINE_3D_
+void CHotKeyWnd::init(int _x, int _y, CPlayer *pPlr, int zOrder)
+#elif _GAMEENGINE_2D_
 void CHotKeyWnd::init(int _x, int _y, CPlayer *pPlr)
+#endif
 {
    m_pPlayer = pPlr;
    if(m_pPlayer != NULL)
@@ -64,6 +68,7 @@ void CHotKeyWnd::init(int _x, int _y, CPlayer *pPlr)
 
 #ifdef _GAMEENGINE_3D_
 	m_overlay.init(x, y, w, h);
+   m_overlay.setZOrder(zOrder);
 
 	//¼öÁä
 	for(int i = 0; i < BUTTON_COUNT; i++) {
@@ -191,13 +196,6 @@ void CHotKeyWnd::show(bool bShow)
       m_overlay.getOverlay()->hide();
 #endif  // #ifdef _GAMEENGINE_3D_
 }
-
-#ifdef _GAMEENGINE_3D_
-void CHotKeyWnd::setZOrder(int order)
-{
-	m_overlay.setZOrder(order);
-}
-#endif  // #ifdef _GAMEENGINE_3D_
 
 void CHotKeyWnd::updatePlayerHotKey(HotKeyItem *pHotKeyItem)
 {

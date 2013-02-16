@@ -182,6 +182,15 @@ void CGameClient::onRecvPlayerData(CPacketPlayerData *pPacket)
    pPacket->unpack(pPlayer);
 }
 
+void CGameClient::onRecvMonsterData(CPacketMonsterData *pPacket)
+{
+   CMonster *pMonster = m_pScene->getMonster(pPacket->getUID());
+   if(pMonster == NULL)
+      pMonster = m_pScene->addMonster(-1, pPacket->getKindID(), 0, 0);
+
+   pPacket->unpack(pMonster);
+}
+
 void CGameClient::workLogin()
 {
    m_pNetStream->procPackage();
@@ -217,17 +226,48 @@ void CGameClient::workPlay(HWND hWnd, float timePass)
    m_pNetStream->procPackage();
    if(m_pNetStream->isConnected()) {
       GP::NetBuffer netBuff;
-      if(m_pNetStream->getFullPackage(netBuff)) {
+      while(m_pNetStream->getFullPackage(netBuff)) {
          CBasePacket *pPacket = (CBasePacket *)netBuff.getBuffer();
          if(pPacket->m_id == PACKET_PLAYER_DATA)
             onRecvPlayerData((CPacketPlayerData *)pPacket);
          else if(pPacket->m_id == PACKET_TARGET_POS)
             onRecvTargetPos((CPacketTargetPos *)pPacket);
+         else if(pPacket->m_id == PACKET_MONSTER_DATA)
+            onRecvMonsterData((CPacketMonsterData *)pPacket);
+         else if(pPacket->m_id == PACKET_TARGET_OBJECT)
+            onRecvTargetObject((CPacketTargetObject *)pPacket);
+         else if(pPacket->m_id == PACKET_ACTION_EVENT)
+            onRecvActionEvent((CPacketActionEvent *)pPacket);
+         else if(pPacket->m_id == PACKET_USE_SKILL)
+            onRecvUseSkill((CPacketUseSkill *)pPacket);
       }
    }
 }
 
 void CGameClient::onRecvTargetPos(CPacketTargetPos *pPacket)
+{
+   CUnitObject *pUnitObject = m_pScene->getUnitObject(pPacket->getUID());
+   if(pUnitObject != NULL)
+      pPacket->unpack(pUnitObject);
+}
+
+void CGameClient::onRecvTargetObject(CPacketTargetObject *pPacket)
+{
+   CUnitObject *pUnitObject = m_pScene->getUnitObject(pPacket->getUID());
+   if(pUnitObject != NULL) {
+      CUnitObject *pNewTargetObject = m_pScene->getUnitObject(pPacket->getTargetUID());
+      pUnitObject->setTargetObject(pNewTargetObject);
+   }
+}
+
+void CGameClient::onRecvActionEvent(CPacketActionEvent *pPacket)
+{
+   CUnitObject *pUnitObject = m_pScene->getUnitObject(pPacket->getUID());
+   if(pUnitObject != NULL)
+      pPacket->unpack(pUnitObject);
+}
+
+void CGameClient::onRecvUseSkill(CPacketUseSkill *pPacket)
 {
    CUnitObject *pUnitObject = m_pScene->getUnitObject(pPacket->getUID());
    if(pUnitObject != NULL)

@@ -15,6 +15,7 @@ void CHudWnd::init(int _x, int _y, CPlayer *pPlayer)
 
    m_overlay.init(x, y, w, h);
    m_overlay.setBackImage("UI/BG/HudWnd");
+   m_overlay.setZOrder(20);
    show(true);
 }
 
@@ -38,8 +39,8 @@ void CHudWnd::show(bool bShow)
       m_overlay.getOverlay()->hide();
 }
 
-void CHudWnd::setZOrder(int order)
+int CHudWnd::getZOrder()
 {
-	m_overlay.setZOrder(order);
+   return m_overlay.getZOrder();
 }
 #endif  // #ifdef _GAMEENGINE_3D_

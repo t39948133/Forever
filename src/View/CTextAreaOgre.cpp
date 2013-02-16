@@ -27,6 +27,11 @@ void CTextAreaOgre::init (COverlayUI *pUI, int _x, int _y, int _w, int _h)
       m_pTextOverlay->init(NULL, x, y, w, h);
 }
 
+void CTextAreaOgre::setPosition(int x, int y)
+{
+   m_pTextOverlay->setPosition((Ogre::Real)x, (Ogre::Real)y);
+}
+
 void CTextAreaOgre::setText(std::string text, float r, float g, float b)
 {
    m_pTextOverlay->setText(text, r, g, b);

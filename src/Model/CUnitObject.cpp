@@ -173,10 +173,16 @@ void CUnitObject::work(float timePass)
    m_pActionSystem->work(timePass);
    m_pFightSystem->work(timePass, this, m_pTargetObject);
 
-#ifdef _GAMEENGINE_2D_
+#ifdef _GAMEENGINE_3D_
+   size_t idx = m_machineName.find("Server");
+   if(idx != std::string::npos) {
+      if(m_pActionSystem->isMove() == true)
+         move(timePass, m_targetPosition.fX, m_targetPosition.fY, true);
+   }
+#elif _GAMEENGINE_2D_
    if(m_pActionSystem->isMove() == true)
       move(timePass, m_targetPosition.fX, m_targetPosition.fY, m_bFaceTarget);
-#endif  // #ifdef _GAMEENGINE_2D_
+#endif
 
    if((m_pActionSystem->isMove() == true) && (m_bKeyMoveEnabled == true))
       ;
@@ -258,12 +264,8 @@ CAction* CUnitObject::getCurAction()
 
 bool CUnitObject::isMove()
 {
-   if(m_pActionSystem->isMove() == true) {
-      //if(isReachTarget() == false)
-         return true;
-      //else
-      //   return false;
-   }
+   if(m_pActionSystem->isMove() == true)
+      return true;
    else
       return false;
 }
@@ -663,7 +665,7 @@ void CUnitObject::setUID(long long uid)
    m_pFightSystem = new CFightSystem(m_machineName, m_uid);
 }
 
-#ifdef _GAMEENGINE_2D_
+//#ifdef _GAMEENGINE_2D_
 void CUnitObject::move(float timePass, float targetX, float targetY, bool bFaceTarget)
 {
    movePoint(m_position.fX, m_position.fY, targetX, targetY, m_advAttr.fMove * timePass);
@@ -681,5 +683,5 @@ void CUnitObject::move(float timePass, float targetX, float targetY, bool bFaceT
       }
    }
 }
-#endif  // #ifdef _GAMEENGINE_2D_
+//#endif  // #ifdef _GAMEENGINE_2D_
 // } Add by Darren Chen on 2013/01/01

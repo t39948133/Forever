@@ -14,8 +14,10 @@ class COverlayUI
       ~COverlayUI();
 
       void init(int, int, int, int);  //«Ø¥ßoverlay
-	   void setPos(int, int);
+	   void setPosition(int x, int y);
+      void setSize(int width, int height);
 	   void setZOrder(int);
+      int getZOrder();
       void setBackImage(std::string st);
 
       Ogre::Overlay* getOverlay();

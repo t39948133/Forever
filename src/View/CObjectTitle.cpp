@@ -20,6 +20,7 @@ CObjectTitle::CObjectTitle(Ogre::MovableObject *pObject, Ogre::Camera *pCamera,
 
    m_pContainer = (Ogre::OverlayContainer *)Ogre::OverlayManager::getSingleton().createOverlayElement("Panel", objName + "::Container");
    m_pOverlay->add2D(m_pContainer);
+   m_pOverlay->setZOrder(0);
 
    Ogre::FontManager::getSingleton().load(fontName, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
    m_pFont = (Ogre::Font *)Ogre::FontManager::getSingleton().getByName(fontName).getPointer();

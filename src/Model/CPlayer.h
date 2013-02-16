@@ -124,7 +124,7 @@ private:
 	char                       m_levelMax;	  //最高等級 預設50
 	std::map<EquipSlot, int>   m_mEquip;	  //裝備欄
 	CBackpack                 *m_pBackpack;  //背包
-	CQuestMap				  *m_pQuestMap;
+	CQuestMap                 *m_pQuestMap;
 
    // Add by Darren Chen on 2013/01/06 {
    long long                  m_money;     // 錢

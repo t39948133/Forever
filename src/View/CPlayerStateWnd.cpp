@@ -31,7 +31,11 @@ CPlayerStateWnd::~CPlayerStateWnd()
    }
 }
 
+#ifdef _GAMEENGINE_3D_
+void CPlayerStateWnd::init(int _x, int _y, CPlayer *pPlr, int zOrder)
+#elif _GAMEENGINE_2D_
 void CPlayerStateWnd::init(int _x, int _y, CPlayer *pPlr)
+#endif
 {
    m_pPlayer = pPlr;
    if(m_pPlayer != NULL) {
@@ -51,6 +55,7 @@ void CPlayerStateWnd::init(int _x, int _y, CPlayer *pPlr)
 
 #ifdef _GAMEENGINE_3D_
 	m_overlay.init(x, y, w, h);
+   m_overlay.setZOrder(zOrder);
 
    for(int i = 0; i < BUTTON_COUNT; i++) {
 		m_vpBtn[i] = new CImageButton();
@@ -171,13 +176,6 @@ void CPlayerStateWnd::show(bool bShow)
       m_overlay.getOverlay()->hide();
 #endif  // #ifdef _GAMEENGINE_3D_
 }
-
-#ifdef _GAMEENGINE_3D_
-void CPlayerStateWnd::setZOrder(int order)
-{
-   m_overlay.setZOrder(order);
-}
-#endif  // #ifdef _GAMEENGINE_3D_
 
 void CPlayerStateWnd::updateAdvAttr(CUnitObject *pUnitObject)
 {

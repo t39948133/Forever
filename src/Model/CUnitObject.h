@@ -190,6 +190,7 @@ class CUnitObject : public IPlaySoundNotifyListener
       friend class CPacketPlayerDataWG;  // 允許CPacketPlayerDataWG物件直接對private/protected成員做存取
       friend class CPacketPlayerInit;    // 允許CPacketPlayerInit物件直接對private/protected成員做存取
       friend class CPacketPlayerData;
+      friend class CPacketMonsterData;
 
       int getHPR();   //取得回復的生命力點
       int getMPR();   //取得回復的精神力點
@@ -208,7 +209,7 @@ class CUnitObject : public IPlaySoundNotifyListener
 
       void setUID(long long uid);
 
-#ifdef _GAMEENGINE_2D_
+//#elif _GAMEENGINE_2D_
       /** @brief 2D版本移動
         * @param timePass 一個frame幾秒
         * @param targetX  目標點X座標
@@ -217,7 +218,7 @@ class CUnitObject : public IPlaySoundNotifyListener
       void move(float timePass, float targetX, float targetY, bool bFaceTarget);
 
       bool          m_bFaceTarget;     // 是否面對目標
-#endif
+//#endif
 
       std::string            m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       long long              m_uid;	            //唯一編號

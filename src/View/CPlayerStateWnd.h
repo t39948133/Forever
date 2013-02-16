@@ -37,15 +37,16 @@ class CPlayerStateWnd : public CWindow,
       CPlayerStateWnd();
       ~CPlayerStateWnd();
 
+#ifdef _GAMEENGINE_3D_
+      void init(int _x, int _y, CPlayer *pPlr, int zOrder);
+#elif _GAMEENGINE_2D_
       void init(int _x, int _y, CPlayer *pPlr);
+#endif
 
       // CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
       /* virtual */ WindowClassType getClassType();
       /* virtual */ void show(bool bShow);
-#ifdef _GAMEENGINE_3D_
-	   /* virtual */ void setZOrder(int order);
-#endif
 
       // IAdvAttrEventListener
       /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);

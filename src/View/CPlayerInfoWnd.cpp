@@ -470,7 +470,7 @@ void CPlayerInfoWnd::show(bool bShow)
 void CPlayerInfoWnd::onDrag()
 {   
 #ifdef _GAMEENGINE_3D_
-	m_overlay.setPos(x, y);
+   m_overlay.setPosition(x, y);
 #endif  // #ifdef _GAMEENGINE_3D_
 }
 

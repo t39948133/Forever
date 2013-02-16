@@ -11,6 +11,10 @@
 #include "CPacketPlayerInit.h"
 #include "CPacketPlayerData.h"
 #include "CPacketTargetPos.h"
+#include "CPacketMonsterData.h"
+#include "CPacketTargetObject.h"
+#include "CPacketActionEvent.h"
+#include "CPacketUseSkill.h"
 
 #include <network\gp_socket.h>
 
@@ -76,6 +80,10 @@ class CGameClient
         * @param pPacket 封包 */
       virtual void onRecvPlayerData(CPacketPlayerData *pPacket);
 
+      /** @brief 接收怪物資料
+        * @param pPacket 封包 */
+      virtual void onRecvMonsterData(CPacketMonsterData *pPacket);
+
    private:
       /** @brief 遊戲第一次登入的邏輯運算 */
       void workLogin();
@@ -84,8 +92,18 @@ class CGameClient
         * @param hWnd     Client端視窗 
         * @param timePass 一個frame幾秒 */
       void workPlay(HWND hWnd, float timePass);
-
+      
+      /** @brief 接收目標物的位置 */
       void onRecvTargetPos(CPacketTargetPos *pPacket);
+
+      /** @brief 接收鎖定哪個目標物 */
+      void onRecvTargetObject(CPacketTargetObject *pPacket);
+
+      /** @brief 接收要發出什麼動作訊息 */
+      void onRecvActionEvent(CPacketActionEvent *pPacket);
+
+      /** @brief 接收使用哪個技能 */
+      void onRecvUseSkill(CPacketUseSkill *pPacket);
 
       std::string    m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       CScene        *m_pScene;          // 遊戲場景管理

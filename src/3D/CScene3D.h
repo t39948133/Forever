@@ -2,6 +2,7 @@
 #define _CSCENE3D_H_
 #include "Common.h"
 #include "CPlayer3D.h"
+#include "CMonster3D.h"
 
 #include <OgreSceneManager.h>
 #include <OgreSceneNode.h>
@@ -19,6 +20,10 @@ class CScene3D
       void removePlayer3D(long long uid);
       CPlayer3D* getMainPlayer3D();
 
+      CMonster3D* addMonster3D(CMonster *pMonster2D);
+      CMonster3D* getMonster3D(long long uid);
+      void removeMonster3D(long long uid);
+
       void clear();
 
       /** @brief 更新模型邏輯運算
@@ -31,6 +36,7 @@ class CScene3D
       Ogre::SceneManager      *m_pSceneManager;  // Ogre scene manager
       CPlayer3D               *m_pMainPlayer;    // 玩家操控
       std::list<CPlayer3D *>  *m_pPlayer3DList;  // 玩家列表
+      std::list<CMonster3D *> *m_pMonster3DList; // 怪物列表
 };
 
 #endif  // #ifndef _CSCENE3D_H_

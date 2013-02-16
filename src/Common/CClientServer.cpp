@@ -28,6 +28,24 @@ CClientServer::CClientServer()
    if(m_pRenderCore != NULL)
       m_pRenderCore->addGameFlowListener(this);
 
+   m_bShowClient = true;
+   GP::NetStream::fnInitShareData(NULL);
+
+   CBuff::initBuff();       // 建立Buff表
+   CItem::initItem();       // 建立物品表
+   CSkill::initSkill();     // 建立技能表
+   CMonster::initMonster(); // 建立怪物表
+   CMonsterArea::initMonsterArea();
+
+   for(int i = 0; i < MAX_WORLDSERVER; i++)
+      m_pvWorldServer->at(i)->init(2000 + i);
+
+   for(int i = 0; i < MAX_SERVER; i++)
+      m_pvGameServer->at(i)->init(2200 + i);
+   
+   m_curClient = 0;
+   m_curServer = 0;
+
    m_pvGameClient = new std::vector<CGameClient3D *>();
    for(int i = 0; i < MAX_CLIENT; i++) {
       std::string machineName = std::string("CGameClient3D::") + toString<int>(i);
@@ -95,10 +113,10 @@ CClientServer::~CClientServer()
       m_pvWorldServer = NULL;
    }
 
-   CItem::release();
-   CSkill::release();
-   CBuff::release();
    CMonster::release();
+   CSkill::release();
+   CItem::release();
+   CBuff::release();
 }
 
 #ifdef _GAMEENGINE_3D_
@@ -109,12 +127,16 @@ void CClientServer::run()
 #elif _GAMEENGINE_2D_
 void CClientServer::init()
 {
-   m_bShowClient = true;
+   if(MAX_CLIENT > 0)
+      m_bShowClient = true;
+   else
+      m_bShowClient = false;
+
    GP::NetStream::fnInitShareData(NULL);
 
+   CBuff::initBuff();
    CItem::initItem();    // 建立物品表
    CSkill::initSkill();  // 建立技能表
-   CBuff::initBuff();
    CMonster::initMonster(); //建立怪物表
    CMonsterArea::initMonsterArea();
 
@@ -164,8 +186,10 @@ void CClientServer::work(HWND hWnd)
 		m_curServer = 0;
 	}
 	else if(GetAsyncKeyState(VK_F5) < 0) {
-		m_bShowClient = false;
-		m_curServer = 1;
+      if(MAX_SERVER > 1) {
+		   m_bShowClient = false;
+		   m_curServer = 1;
+      }
 	}
 
    for(int i = 0; i < MAX_CLIENT; i++) {
@@ -202,22 +226,6 @@ void CClientServer::draw(HDC hdc)
 #ifdef _GAMEENGINE_3D_
 void CClientServer::createScene()
 {
-   m_bShowClient = true;
-   GP::NetStream::fnInitShareData(NULL);
-
-   CItem::initItem();       // 建立物品表
-   CSkill::initSkill();     // 建立技能表
-   CBuff::initBuff();       // 建立Buff表
-   CMonster::initMonster(); // 建立怪物表
-
-   for(int i = 0; i < MAX_WORLDSERVER; i++)
-      m_pvWorldServer->at(i)->init(2000 + i);
-
-   for(int i = 0; i < MAX_SERVER; i++)
-      m_pvGameServer->at(i)->init(2200 + i);
-   
-   m_curClient = 0;
-   m_curServer = 0;
 }
 
 bool CClientServer::frameRenderingQueued(float timeSinceLastFrame)

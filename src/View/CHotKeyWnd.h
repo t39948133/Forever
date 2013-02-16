@@ -43,7 +43,11 @@ class CHotKeyWnd : public CWindow,
       CHotKeyWnd();
       ~CHotKeyWnd();
 
+#ifdef _GAMEENGINE_3D_
+      void init(int _x, int _y, CPlayer *pPlr, int zOrder);
+#elif _GAMEENGINE_2D_
       void init(int _x, int _y, CPlayer *pPlr);
+#endif
 
       // CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
@@ -51,9 +55,6 @@ class CHotKeyWnd : public CWindow,
       /* virtual */ void onRCommand(int btnID);
       /* virtual */ WindowClassType getClassType();
       /* virtual */ void show(bool bShow);
-#ifdef _GAMEENGINE_3D_
-	   /* virtual */ void setZOrder(int order);
-#endif
 
       // IPlayerHotKeyEventListener
       /* virtual */ void updatePlayerHotKey(HotKeyItem *pHotKeyItem);

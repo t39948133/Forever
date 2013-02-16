@@ -32,6 +32,7 @@ class CTextAreaOgre : public CWindow
 
 	   void init(COverlayUI *pUI, int _x, int _y, int _w, int _h);
 
+      void setPosition(int x, int y);
       void setText(std::string, float, float, float);
       void setHorizontalAlignment(Alignment alignment);
       void setVerticalAlignment(Alignment alignment);

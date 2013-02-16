@@ -118,7 +118,7 @@ void CNPCInfo::write(FILE *pFile)
 		ptalk++;
 	}
 	fwrite(&m_workType, sizeof(m_workType), 1, pFile);
-	int questQuantity = m_vQuest.size();
+	int questQuantity = m_viQuest.size();
 	fwrite(&questQuantity, sizeof(questQuantity), 1, pFile);
 	std::vector<int>::iterator pquest = m_viQuest.begin();
 	while(m_viQuest.end() != pquest)

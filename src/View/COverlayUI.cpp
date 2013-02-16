@@ -43,14 +43,24 @@ void COverlayUI::init (int x, int y, int w, int h)
 	m_pOverlay->show();
 }
 
-void COverlayUI::setPos (int x, int y)
+void COverlayUI::setPosition(int x, int y)
 {
    m_pBackImage->setPosition((Ogre::Real)x, (Ogre::Real)y);
+}
+
+void COverlayUI::setSize(int width, int height)
+{
+   m_pBackImage->setDimensions((Ogre::Real)width, (Ogre::Real)height);
 }
 
 void COverlayUI::setZOrder(int z)
 {
 	m_pOverlay->setZOrder(z) ;
+}
+
+int COverlayUI::getZOrder()
+{
+   return m_pOverlay->getZOrder();
 }
 
 void COverlayUI::setBackImage(std::string st)

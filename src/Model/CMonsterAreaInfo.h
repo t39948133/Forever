@@ -7,7 +7,7 @@ class CMonsterAreaInfo
 {
 public:
 	void					initMonsterAreaInfo(int maxMonster, float fx, float fy, float bornSize,
-		int AddTime, std::vector<int> viMonsterID);	//初始
+		                                   int AddTime, std::vector<int> viMonsterID);	//初始
 	int					getMaxMonster();					//取得最大出生量
 	const FPOS&			getPosition();						//取得出生點
 	float					getBornSize();						//取得範圍
@@ -18,6 +18,7 @@ public:
 	void					write(FILE* pFile);
 #endif //#ifdef _GAMEENGINE_2D_EDITOR_
 	MonsterArea			getClassType();
+
 private:
 	int					m_iMaxMonster;		//最大數量
 	FPOS					m_position;			//出生點

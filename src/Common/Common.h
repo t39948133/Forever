@@ -313,11 +313,6 @@ template<class T>
      return t;
 }
 
-typedef enum tagSCENE_TYPE {
-   SCENE_POETA,     // 波伊塔 (新手村)
-   SCENE_INSTANCE   // 副本
-} SCENE_TYPE;  // 場景型態
-
 typedef enum tagACTION_EVENT_TYPE {
    AET_NULL,                  // 沒有事件
    AET_REACH,                 // 到達目標點   (座標無更動)
@@ -341,6 +336,8 @@ const int ACTION_FIGHT        = 4;  // 戰鬥姿態
 const int ACTION_FIGHT_RUN    = 5;  // 戰鬥姿態跑步
 const int ACTION_PUTIN_WEAPON = 6;  // 收回武器
 const int ACTION_ATTACK       = 7;  // 普通攻擊
+const int ACTION_DAMAGE       = 8;  // 受到傷害
+const int ACTION_DIE          = 9;  // 死亡
 // } Add by Darren Chen on 2012/12/13
 
 typedef struct tagPOSITION {
