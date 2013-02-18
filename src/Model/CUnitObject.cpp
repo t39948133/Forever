@@ -128,6 +128,14 @@ void CUnitObject::useSkill(int skillID)
             if(m_pTargetObject != NULL) {
                AdvancedAttribute effectAttr = pUseSkillInfo->getEffectAttr();
                AdvancedAttribute targetAttr = m_pTargetObject->getAdvAttr();
+			   //Âù¤è§ðÀ»¨¾¿mÃB¥~­pºâ
+			   int targetDEF = targetAttr.iDEF;
+			   int basicDamage;
+			   basicDamage = targetDEF - getAdvAttr().iATK;
+			   if(0 > basicDamage)
+			   {
+				   effectAttr.iHP += basicDamage;
+			   }
                AttributeAdd(targetAttr, effectAttr);
 
                FloatPrecentAttribute effectPrecentAttr = pUseSkillInfo->getEffectAttrPercent();

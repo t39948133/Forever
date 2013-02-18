@@ -248,7 +248,7 @@ void CGameServer::doMonsterAIReturn(CMonster *pMonster)
    if(pMonsterInfo == NULL)
       return;
 
-   pMonster->setBasAttr(pMonsterInfo->getBasAttr());
+   pMonster->setAdvAttr(pMonsterInfo->getAdvAttr());
    // Todo: 要處理怪物HP,MP封包
 
    if(pMonster->isReachTarget())

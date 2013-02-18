@@ -3,7 +3,7 @@
 
 CMonsterInfo::CMonsterInfo()
 {
-    memset(&m_basAttr, 0, sizeof(m_basAttr));
+	AttributeSet(m_advAttr);
 }
 
 CMonsterInfo::~CMonsterInfo()
@@ -15,7 +15,7 @@ void CMonsterInfo::initMonsterInfo(std::string name, std::string desc,
                                    std::string actionSystem, char level, char wistom,
                                    unsigned int xp, MonsterType atkType,
                                    MonsterGrade levelGrade, float alert, float regress,
-                                   BasicAttribute basAttr, long long money,
+                                   AdvancedAttribute advAttr, long long money,
                                    std::vector<int> reware, std::vector<int> skill)
 {
     m_strName = name;
@@ -29,7 +29,7 @@ void CMonsterInfo::initMonsterInfo(std::string name, std::string desc,
     m_LevelGrade = levelGrade;
     m_fAlert = alert;
     m_fRegress = regress;
-    m_basAttr = basAttr;
+    m_advAttr = advAttr;
     m_Money = money;
     m_vReware = reware;
     m_vSkill = skill;
@@ -80,9 +80,9 @@ float CMonsterInfo::getRegress()
     return m_fRegress;
 }
 
-BasicAttribute CMonsterInfo::getBasAttr()
+AdvancedAttribute CMonsterInfo::getAdvAttr()
 {
-    return m_basAttr;
+    return m_advAttr;
 }
 
 std::string CMonsterInfo::getActionSystemFile()
@@ -157,7 +157,7 @@ void CMonsterInfo::read(FILE *pFile)
    fread(&m_LevelGrade, sizeof(m_LevelGrade), 1, pFile);
    fread(&m_fAlert, sizeof(m_fAlert), 1, pFile);
    fread(&m_fRegress, sizeof(m_fRegress), 1, pFile);
-   fread(&m_basAttr, sizeof(m_basAttr), 1, pFile);
+    fread(&m_advAttr, sizeof(m_advAttr), 1, pFile);
    fread(&m_Money, sizeof(m_Money), 1, pFile);
    int size = 0;
    fread(&size, sizeof(size), 1, pFile);
@@ -217,7 +217,7 @@ void CMonsterInfo::write(FILE *pFile)
    fwrite(&m_LevelGrade, sizeof(m_LevelGrade), 1, pFile);
    fwrite(&m_fAlert, sizeof(m_fAlert), 1, pFile);
    fwrite(&m_fRegress, sizeof(m_fRegress), 1, pFile);
-   fwrite(&m_basAttr, sizeof(m_basAttr), 1, pFile);
+    fwrite(&m_advAttr, sizeof(m_advAttr), 1, pFile);
    fwrite(&m_Money, sizeof(m_Money), 1, pFile);
    int size = 0;
    size = m_vReware.size();

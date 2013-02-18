@@ -41,14 +41,12 @@ void CMonster::initMonster()
    }
    else
    {
-      BasicAttribute basAttr;
-      memset(&basAttr, 0, sizeof(basAttr));
-      basAttr.iSTR = 100;
-      basAttr.iVIT = 100;
-      basAttr.iINT = 0;
-      basAttr.iDEX = 100;
-      basAttr.iAGI = 100;
-      basAttr.iWIL = 0;
+        AdvancedAttribute advAttr;
+		AttributeSet(advAttr);
+	  advAttr.iATK = 50;
+	  advAttr.iHP = 300;
+	  advAttr.iHPMax = advAttr.iHP;
+	  advAttr.iDEF = 70;
 
       CMonsterInfo* pm = new CMonsterInfo();
       std::vector<int> reware;
@@ -63,7 +61,7 @@ void CMonster::initMonster()
       std::vector<int> skill;
       skill.push_back(11);
       pm->initMonsterInfo("圖爾辛暴徒", "普通怪", "KrallWarriorMT.mesh", "KrallWarriorMT.acs", 1, 1, 350, MONSTER_ACTIVE,
-                          REGULAR_GRADE, 50, 100, basAttr, 100, reware, skill);
+                          REGULAR_GRADE, 50, 100, advAttr, 100, reware, skill);
       addInfo(pm);
 
       //-------------------------------------------------------------------------------
@@ -82,7 +80,7 @@ void CMonster::initMonster()
       skill1.push_back(12);
       skill1.push_back(13);
       pm->initMonsterInfo("偵察隊長塔卡塔", "菁英怪", "KrallScoutMT.mesh", "KrallScoutMT.acs", 1, 2, 50000, MONSTER_ACTIVE,
-                          ELITE_GRADE, 50, 100, basAttr, 50000, reware1, skill1);
+                          ELITE_GRADE, 50, 100, advAttr, 50000, reware1, skill1);
       addInfo(pm);
 
       //-------------------------------------------------------------------------------
@@ -102,7 +100,7 @@ void CMonster::initMonster()
       skill2.push_back(15);
       skill2.push_back(16);
       pm->initMonsterInfo("大族長山杜卡", "王怪", "OrcShandura.mesh", "OrcShandura.acs", 1, 3, 500000, MONSTER_ACTIVE,
-                          HERO_GRADE, 100, 200, basAttr, 500000, reware2, skill2);
+                          HERO_GRADE, 100, 200, advAttr, 500000, reware2, skill2);
       addInfo(pm);
    }
 }
@@ -118,7 +116,7 @@ bool CMonster::create(unsigned int kindID)
    if(NULL != pInfo)
    {
       m_lHatred.clear();
-      setBasAttr(pInfo->getBasAttr());
+      setAdvAttr(pInfo->getAdvAttr());
 
       std::vector<int> vSkill = pInfo->getSkill();
       std::vector<int>::iterator itSkillID = vSkill.begin();
@@ -211,8 +209,6 @@ void CMonster::work(float timePass)
          it++;
       }
    }
-
-    //預計做  仇恨值表內玩家攻擊外行為造成仇恨    
 }
 
 bool CMonster::isDead()

@@ -19,7 +19,7 @@ class CMonsterInfo
       MonsterGrade          getLevelGrade();    //取得階級類型
       float                 getAlert();         //取得警戒範圍
       float                 getRegress();       //取得追擊範圍
-      BasicAttribute        getBasAttr();       //取得基本素質
+    AdvancedAttribute       getAdvAttr();       //取得基本素質
 
       //---1/19--add-
       std::string           getActionSystemFile();    //取得動作檔案名稱
@@ -32,7 +32,7 @@ class CMonsterInfo
       void initMonsterInfo(std::string name, std::string desc,
                            std::string meshName, std::string actionSystem,
                            char level, char wistom, unsigned int xp, MonsterType atkType,
-                           MonsterGrade levelGrade, float alert, float regress, BasicAttribute basAttr,
+        MonsterGrade levelGrade, float alert, float regress, AdvancedAttribute advAttr,
                            long long money, std::vector<int> reware, std::vector<int> skill);  //初始設定
 
       void                  read(FILE* pFile);  //讀檔
@@ -51,7 +51,7 @@ class CMonsterInfo
       MonsterGrade          m_LevelGrade;       //階級
       float                 m_fAlert;           //警戒範圍
       float                 m_fRegress;         //追擊範圍
-      BasicAttribute        m_basAttr;          //基本素質
+    AdvancedAttribute       m_advAttr;          //基本素質
       long long             m_Money;            //掉落金錢
       std::vector<int>      m_vReware;          //掉落物品ID
       std::vector<int>      m_vSkill;           //技能ID
