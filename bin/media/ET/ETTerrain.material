@@ -34,8 +34,7 @@ material ETTerrainMaterial
       // splatting textures
       texture_unit
       {
-        //texture splatting0.png
-        texture lf1_grass_10.dds
+        texture splatting0.png
       }
       texture_unit
       {
