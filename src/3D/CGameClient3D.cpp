@@ -12,6 +12,7 @@
 #include "CHudWnd.h"
 #include "CHotKeyWnd.h"
 #include "CPlayerStateWnd.h"
+#include "CToolBarWnd.h"
 
 #include <OgreMeshManager.h>
 #include <OgreMath.h>
@@ -100,6 +101,11 @@ void CGameClient3D::initUI()
    int playerstateY = hudY + 70;
    pPlayerStateWnd->init(playerstateX, playerstateY, pPlayer2D, pHudWnd->getZOrder() + 1);
    m_pWindowMan->addWnd(pPlayerStateWnd);
+
+   CToolBarWnd *pToolBarWnd = new CToolBarWnd() ;
+   pToolBarWnd-> init (pBackpackWnd, pPlayerInfoWnd, pSkillWnd,
+	                   pBackpackWnd, hudX+830, hudY+66) ;
+   m_pWindowMan->addWnd(pToolBarWnd);
 }
 
 void CGameClient3D::onRecvPlayerInit(CPacketPlayerInit *pPacket)

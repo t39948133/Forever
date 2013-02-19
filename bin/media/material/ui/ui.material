@@ -118,6 +118,24 @@ material UI/Icon/BootSlot
 	}
 }
 
+//選單視窗
+material UI/BG/ToolBarWnd
+{
+	technique
+	{
+		pass
+		{			
+			scene_blend alpha_blend 			
+
+			texture_unit
+			{
+				texture toolbar.png
+			}
+		}
+	}
+}
+
+
 //背包視窗
 material UI/BG/BackpackWnd
 {
