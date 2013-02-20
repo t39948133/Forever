@@ -11,6 +11,7 @@
 #include "CRenderLoader.h"
 #include "CPlayer3D.h"
 #include "CTerrain.h"
+#include "CSceneObjMan.h"
 #include "CGameClient.h"
 #include "CWindowMan3D.h"
 #include "CScene3D.h"
@@ -21,6 +22,7 @@
 #include <OgreCamera.h>
 #include <OgreSceneNode.h>
 #include <OgreSceneQuery.h>
+#include "CMiniMapWnd.h"
 
 class CGameClient3D : public IGameFlowListener,
                       public IMouseEventListener,
@@ -36,6 +38,7 @@ class CGameClient3D : public IGameFlowListener,
       /* virtual */ void onRecvPlayerInit(CPacketPlayerInit *pPacket);
       /* virtual */ void onRecvPlayerData(CPacketPlayerData *pPacket);
       /* virtual */ void onRecvMonsterData(CPacketMonsterData *pPacket);
+      /* virtual */ void onRecvEquipData(CPacketEquipData *pPacket);
 
    private:
       // IGameFlowListener
@@ -67,7 +70,8 @@ class CGameClient3D : public IGameFlowListener,
       CWindowMan3D        *m_pWindowMan;     // UI視窗管理
       
       CScene3D            *m_pScene3D;       // 3D場景管理
-      CTerrain            *m_pTerrain;       // 3D地形
+      CTerrain             m_terrain;        // 3D地形
+      CSceneObjMan         m_sceneObjMan;    // 3D場景模型管理
       Ogre::RaySceneQuery *m_pRayQuery;      // 場景射線的詢問物件
 
       float                m_fPivotPitch;    // 目前仰視角度(正值)與俯視角度(負值)
@@ -78,6 +82,8 @@ class CGameClient3D : public IGameFlowListener,
 
       Ogre::SceneManager  *m_pSceneManager;  // Ogre scene manager
       CGraphicsRender     *m_pRenderCore;    // 繪圖引擎
+	  float cameraDir ;
+	  CMiniMapWnd *pMiniMapWnd ;
 };
 
 #endif // #ifndef _CGAMECLIENT3D_H_

@@ -26,7 +26,6 @@ CGameClient3D::CGameClient3D(std::string machineName) : CGameClient(machineName)
 {
    m_pScene3D = NULL;
    m_fPivotPitch = 0;
-   m_pTerrain = new CTerrain();
    m_pRayQuery = NULL;
    m_pWindowMan = new CWindowMan3D();
 
@@ -42,11 +41,6 @@ CGameClient3D::~CGameClient3D()
    if(m_pWindowMan != NULL) {
       delete m_pWindowMan;
       m_pWindowMan = NULL;
-   }
-
-   if(m_pTerrain != NULL) {
-      delete m_pTerrain;
-      m_pTerrain = NULL;
    }
 
    if(m_pScene3D != NULL) {
@@ -67,11 +61,11 @@ void CGameClient3D::initUI()
    GetClientRect(hRenderWnd, &rect);
 
    CPlayerInfoWnd *pPlayerInfoWnd = new CPlayerInfoWnd();
-   pPlayerInfoWnd->init(10, 10, pPlayer2D);
+   pPlayerInfoWnd->init(10, 10, pPlayer2D, this->getNetStream());
    m_pWindowMan->addWnd(pPlayerInfoWnd);
 
    CBackpackWnd *pBackpackWnd = new CBackpackWnd();
-   pBackpackWnd->init(10, 411, pPlayer2D);
+   pBackpackWnd->init(10, 411, pPlayer2D, this->getNetStream());
    m_pWindowMan->addWnd(pBackpackWnd);
 
    CSkillWnd *pSkillWnd = new CSkillWnd();
@@ -92,7 +86,7 @@ void CGameClient3D::initUI()
    CHotKeyWnd *pHotKeyWnd = new CHotKeyWnd();
    int hotkeyX = hudX + 381;
    int hotkeyY = hudY + 75;
-   pHotKeyWnd->init(hotkeyX, hotkeyY, pPlayer2D, pHudWnd->getZOrder() + 1);
+   pHotKeyWnd->init(hotkeyX, hotkeyY, pPlayer2D, pHudWnd->getZOrder() + 1, this->getNetStream());
    m_pWindowMan->addWnd(pHotKeyWnd);
    m_pRenderCore->addKeyEventListener(pHotKeyWnd);
 
@@ -102,10 +96,16 @@ void CGameClient3D::initUI()
    pPlayerStateWnd->init(playerstateX, playerstateY, pPlayer2D, pHudWnd->getZOrder() + 1);
    m_pWindowMan->addWnd(pPlayerStateWnd);
 
+   pMiniMapWnd = new CMiniMapWnd() ;
+   pMiniMapWnd->init (hudX+830, hudY-200, pPlayer2D, getScene(), &cameraDir) ;
+   m_pWindowMan->addWnd (pMiniMapWnd) ;
+
    CToolBarWnd *pToolBarWnd = new CToolBarWnd() ;
    pToolBarWnd-> init (pBackpackWnd, pPlayerInfoWnd, pSkillWnd,
 	                   pBackpackWnd, hudX+830, hudY+66) ;
    m_pWindowMan->addWnd(pToolBarWnd);
+
+   
 }
 
 void CGameClient3D::onRecvPlayerInit(CPacketPlayerInit *pPacket)
@@ -140,10 +140,18 @@ void CGameClient3D::onRecvMonsterData(CPacketMonsterData *pPacket)
       CMonster *pNewMonster2D = this->getScene()->addMonster(-1, pPacket->getKindID(), 0, 0);
       pMonster = m_pScene3D->addMonster3D(pNewMonster2D);
    }
-
    pPacket->unpack(pMonster);
 
    pMonster->setUID(pPacket->getUID());
+   pMiniMapWnd->onAddUnit (pMonster->getMonster2D()) ;
+   pMiniMapWnd->update () ;
+}
+
+void CGameClient3D::onRecvEquipData(CPacketEquipData *pPacket)
+{
+   CPlayer3D *pPlayer = m_pScene3D->getPlayer3D(pPacket->getUID());
+   if(pPlayer != NULL)
+      pPacket->unpack(pPlayer);
 }
 
 void CGameClient3D::createScene()
@@ -151,12 +159,18 @@ void CGameClient3D::createScene()
    CGameClient::init();
 
    m_pSceneManager = m_pRenderCore->getSceneManager();
-   m_pScene3D = new CScene3D(m_pSceneManager, this->getNetStream());
-
    m_pRayQuery = m_pSceneManager->createRayQuery(Ogre::Ray());
 
    // 設定場景環境光源
    m_pSceneManager->setAmbientLight(Ogre::ColourValue(1.0f, 1.0f, 1.0f));
+
+   // 地形初始化
+   m_terrain.init(m_pSceneManager, m_pRenderCore->getCamera());
+   m_terrain.loadTerrain(1);
+   m_sceneObjMan.init(m_pSceneManager);
+   m_sceneObjMan.read("../1.sco");
+
+   m_pScene3D = new CScene3D(m_pSceneManager, this->getNetStream(), m_terrain);
 
    // 建立玩家模型 (資料未定)
    CPlayer *pPlayer2D = this->getScene()->getMainPlayer();
@@ -165,9 +179,6 @@ void CGameClient3D::createScene()
    // 依據玩家模型位置來設定攝影機
    setupCamera(m_pRenderCore->getCamera(), pMainPlayer->getPosition());
 
-   // 地形初始化
-   m_pTerrain->init(m_pSceneManager, m_pRenderCore->getCamera());
-
    // createScene還沒完成, 必須等待GameServer的玩家資料
    m_bCreateScene = true;  
 }
@@ -175,6 +186,7 @@ void CGameClient3D::createScene()
 bool CGameClient3D::frameRenderingQueued(float timeSinceLastFrame)
 {
    CGameClient::work(m_pRenderCore->getRenderHwnd(), timeSinceLastFrame);
+   pMiniMapWnd->update () ;
 
    if(m_bCreateScene == false) {
       m_pScene3D->work(timeSinceLastFrame, m_pCameraNode);
@@ -195,7 +207,8 @@ void CGameClient3D::destoryScene()
 
    releaseCamera();
 
-   m_pTerrain->release();
+   m_sceneObjMan.release();
+   m_terrain.release();
    
    m_pScene3D->clear();
 
@@ -244,7 +257,7 @@ void CGameClient3D::mouseDown(const OIS::MouseEvent &evt)
                m_pTargetInfoWnd->setTarget(-1);
 
                Ogre::Vector3 newPos;
-               m_pTerrain->getRayPos(mouseRay, newPos);
+               m_terrain.getRayPos(mouseRay, newPos);
                m_pScene3D->getMainPlayer3D()->setMouseTargetPosition(newPos);
                break;
             }
