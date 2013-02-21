@@ -57,6 +57,7 @@ public:
 
 	void update() ;
 	void onAddUnit (CUnitObject*) ;
+	void onAddNPCUnit (CUnitObject* pu) ;
 	void onDelUnit (CUnitObject*) ;
 
 	bool canDrag (int tx, int ty) ;

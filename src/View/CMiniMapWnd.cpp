@@ -13,7 +13,7 @@ void CMiniMapWnd::init (int _x, int _y, CUnitObject* _pPlr, CScene* _pScene, flo
 
 #ifdef _GAMEENGINE_3D_
 	m_overlay.init (x, y, w, h) ;
-	m_overlay.setBackImage ("minimap") ;
+	m_overlay.setBackImage ("minimap2") ;
 #endif
 
 #ifdef _GAMEENGINE_3D_
@@ -23,11 +23,10 @@ void CMiniMapWnd::init (int _x, int _y, CUnitObject* _pPlr, CScene* _pScene, flo
 	pBtn->setImage ("droplet") ;
 	addChild (pBtn) ;
 
-/*
-	pText = new TextArea ;
-	pText->init (overlayUI, 0, 0, 100, 30) ;
-	pText->setText ("小地圖", 1, 1, 1) ;
-	addChild (pText) ;*/
+	pText = new CTextAreaOgre ;
+	pText->init (&m_overlay, 5, 20, 100, 30) ;
+	pText->setText ("雷達", 1, 0.8, 1) ;
+	addChild (pText) ;
 
 #endif
 
@@ -72,7 +71,24 @@ void CMiniMapWnd::onAddUnit (CUnitObject* pu)
 	//pib->init(overlay, mx, my, 10, 10, t) ;
 	addChild(&(vMiniIcon.back ())) ;
 #endif
+}
 
+void CMiniMapWnd::onAddNPCUnit (CUnitObject* pu)
+{
+#ifdef _GAMEENGINE_3D_
+	CMiniIcon icon ;	
+	icon.pUnit = pu ;
+	vMiniIcon.push_back (icon) ;
+
+	vMiniIcon.back ().init(&m_overlay, pu->getPosition().fX, pu->getPosition().fY, 
+		ICON_SIZE, ICON_SIZE, vMiniIcon.size()) ;
+
+	vMiniIcon.back ().setImage ("tusk") ;
+
+	//ImageButton* pib = new ImageButton ;
+	//pib->init(overlay, mx, my, 10, 10, t) ;
+	addChild(&(vMiniIcon.back ())) ;
+#endif
 }
 
 void CMiniMapWnd::onDelUnit (CUnitObject* pu)
