@@ -14,6 +14,10 @@
 #include "CHotKeyWnd.h"
 #include "CPlayerStateWnd.h"
 #include "CToolBarWnd.h"
+#include "CNPCChatWnd.h"
+#include "CMapWnd.h"
+#include "CQuestWnd.h"
+#include "CShopWnd.h"
 
 #include <OgreMeshManager.h>
 #include <OgreMath.h>
@@ -61,6 +65,14 @@ void CGameClient3D::initUI()
    HWND hRenderWnd = m_pRenderCore->getRenderHwnd();
    GetClientRect(hRenderWnd, &rect);
 
+   CMapWnd *pMapWnd = new CMapWnd ;
+   pMapWnd->init (150, 100) ;
+   m_pWindowMan->addWnd(pMapWnd);
+
+   CShopWnd* pShopWnd = new CShopWnd ;
+   pShopWnd->init(600, 20, pPlayer2D) ;
+   m_pWindowMan->addWnd (pShopWnd) ;
+
    CPlayerInfoWnd *pPlayerInfoWnd = new CPlayerInfoWnd();
    pPlayerInfoWnd->init(10, 10, pPlayer2D, this->getNetStream());
    m_pWindowMan->addWnd(pPlayerInfoWnd);
@@ -82,6 +94,7 @@ void CGameClient3D::initUI()
 
    CHudWnd *pHudWnd = new CHudWnd();
    pHudWnd->init(hudX, hudY, pPlayer2D);
+   m_pWindowMan->addWnd(pHudWnd);
 
    CHotKeyWnd *pHotKeyWnd = new CHotKeyWnd();
    int hotkeyX = hudX + 381;
@@ -96,16 +109,22 @@ void CGameClient3D::initUI()
    pPlayerStateWnd->init(playerstateX, playerstateY, pPlayer2D, pHudWnd->getZOrder() + 1);
    m_pWindowMan->addWnd(pPlayerStateWnd);
 
+   CNPCChatWnd *pNPCChatWnd = new CNPCChatWnd ;
+   pNPCChatWnd->init (0, 700, pPlayer2D, this->getNetStream()) ;
+   m_pWindowMan->addWnd(pNPCChatWnd);
+
+   CQuestWnd *pQuestWnd = new CQuestWnd ;
+   pQuestWnd->init (0, 500, pPlayer2D) ;
+   m_pWindowMan->addWnd (pQuestWnd) ;
+
    m_pMiniMapWnd = new CMiniMapWnd();
    m_pMiniMapWnd->init((rect.right - rect.left) - 242, 0, pPlayer2D, getScene(), &m_cameraDir);
    m_pWindowMan->addWnd(m_pMiniMapWnd);
 
    CToolBarWnd *pToolBarWnd = new CToolBarWnd();
    pToolBarWnd->init(pBackpackWnd, pPlayerInfoWnd, pSkillWnd,
-	                  pBackpackWnd, hudX + 830, hudY + 66);
-   m_pWindowMan->addWnd(pToolBarWnd);
-
-   m_pWindowMan->addWnd(pHudWnd);
+	                  pShopWnd, hudX + 830, hudY + 66);
+   m_pWindowMan->addWnd(pToolBarWnd);   
 }
 
 void CGameClient3D::onRecvPlayerInit(CPacketPlayerInit *pPacket)
@@ -166,6 +185,7 @@ void CGameClient3D::onRecvNPCData(CPacketNPCData *pPacket)
 	pPacket->unpack(pNPC);
 
 	pNPC->setUID(pPacket->getUID());
+	m_pMiniMapWnd->onAddNPCUnit(pNPC->getNPC2D ());
 }
 
 void CGameClient3D::createScene()
