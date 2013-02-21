@@ -199,6 +199,15 @@ void CGameClient::onRecvEquipData(CPacketEquipData *pPacket)
       pPacket->unpack(pPlayer);
 }
 
+void CGameClient::onRecvNPCData(CPacketNPCData *pPacket)
+{
+	CNPC *pNPC = m_pScene->getNPC(pPacket->getUID());
+	if(pNPC == NULL)
+		pNPC = m_pScene->addNPC(-1, pPacket->getKindID(), 0, 0);
+
+	pPacket->unpack(pNPC);
+}
+
 void CGameClient::workLogin()
 {
    m_pNetStream->procPackage();
@@ -258,6 +267,8 @@ void CGameClient::workPlay(HWND hWnd, float timePass)
             onRecvAddSkill((CPacketAddSkill *)pPacket);
          else if(pPacket->m_id == PACKET_CAN_USE_SKILL)
             onRecvCanUseSkill((CPacketCanUseSkill *)pPacket);
+	 else if(pPacket->m_id == PACKET_NPC_DATA)
+	    onRecvNPCData((CPacketNPCData *)pPacket);
       }
    }
 }

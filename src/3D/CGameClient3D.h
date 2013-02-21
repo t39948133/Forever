@@ -39,6 +39,7 @@ class CGameClient3D : public IGameFlowListener,
       /* virtual */ void onRecvPlayerData(CPacketPlayerData *pPacket);
       /* virtual */ void onRecvMonsterData(CPacketMonsterData *pPacket);
       /* virtual */ void onRecvEquipData(CPacketEquipData *pPacket);
+		/* virtual */ void onRecvNPCData(CPacketNPCData *pPacket);
 
    private:
       // IGameFlowListener

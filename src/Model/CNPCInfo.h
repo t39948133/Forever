@@ -11,10 +11,11 @@ class CNPCInfo
 public:
 	CNPCInfo();
 	void					initNPCInfo(std::string name, std::string meshName,
-		std::vector<std::string> talk, NPCType type, std::vector<int> vQuest,
-		std::vector<int> viSell);
+		std::string actionSystem, std::vector<std::string> talk, NPCType type,
+		std::vector<int> vQuest, std::vector<int> viSell);
 	std::string			getName();			//取得名稱
 	std::string			getMeshName();		//取得檔案名稱
+	std::string			getActionSystemFile();
 	std::string			getTalk();			//取得對話內容
 	NPCType				getNPCType();		//取得是哪種NPC
 	std::vector<int>	getQuest();		//取得擁有任務(ID)
@@ -28,6 +29,7 @@ public:
 private:
 	std::string m_strName;							//名稱
 	std::string	m_strMeshName;						//檔案名稱
+	std::string m_strActionSystemFile;			//動作檔案名稱
 	std::vector<std::string>	m_vstrTalk;		//對話
 	NPCType		m_workType;							//任務 商店 閒聊 NPC
 	std::vector<int>	m_viQuest;					//擁有任務

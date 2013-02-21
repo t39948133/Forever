@@ -135,6 +135,7 @@ private:
    std::set<IPlayerEquipEventListener *>    m_playerEquipEventListeners;    // 監聽玩家裝備改變的監聽者列表
    std::set<IPlayerHotKeyEventListener *>   m_playerHotKeyEventListeners;   // 監聽玩家快捷鍵改變的監聽者列表
    // } Add by Darren Chen on 2013/01/06
+	void	levelUp();
 };
 
 #endif

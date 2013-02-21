@@ -6,11 +6,12 @@ CNPCInfo::CNPCInfo()
 }
 
 void CNPCInfo::initNPCInfo(std::string name, std::string meshName,
-									std::vector<std::string> talk, NPCType type,
-									std::vector<int> vQuest, std::vector<int> viSell)
+									std::string actionSystem,std::vector<std::string> talk,
+									NPCType type, std::vector<int> vQuest, std::vector<int> viSell)
 {
 	m_strName = name;
 	m_strMeshName = meshName;
+	m_strActionSystemFile = actionSystem;
 	m_vstrTalk = talk;
 	m_workType = type;
 	m_viQuest = vQuest;
@@ -25,6 +26,11 @@ std::string CNPCInfo::getName()
 std::string CNPCInfo::getMeshName()
 {
 	return m_strMeshName;
+}
+
+std::string CNPCInfo::getActionSystemFile()
+{
+	return m_strActionSystemFile;
 }
 
 std::string CNPCInfo::getTalk()

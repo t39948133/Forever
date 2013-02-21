@@ -20,6 +20,7 @@
 #include "CPacketBackpackData.h"
 #include "CPacketAdvAttrData.h"
 #include "CPacketAddSkill.h"
+#include "CPacketNPCData.h"
 
 #ifdef _DEBUGLOG
 #include "LogWindow.h"
@@ -75,6 +76,7 @@ void CGameServer::init(int port)
       }
 
       // Todo: 產生NPC
+		addNPC(this->generateUID(), 0, 300, 600);
    }
 }
 
@@ -546,6 +548,18 @@ void CGameServer::sendNearMonsterToClient(CNetPlayer *pNetPlayer)
    }
 }
 
+void CGameServer::sendNearNPCToClient(CNetPlayer *pNetPlayer)
+{
+	std::vector<CNPC *> *pNPCList = this->getAllNPC();
+	std::vector<CNPC *>::iterator it = pNPCList->begin();
+	while(it != pNPCList->end()) {
+		CPacketNPCData packet;
+		packet.pack((*it));
+		pNetPlayer->m_pNetStream->send(&packet, sizeof(packet));
+		it++;
+	}
+}
+
 void CGameServer::sendPacket(CNetPlayer *pNetPlayer, void *pPacket, int packetSize)
 {
    std::list<CNetPlayer *>::iterator it = m_pNetPlayerList->begin();
@@ -595,6 +609,7 @@ void CGameServer::onRecvPlayerDataWG(CPacketPlayerDataWG *pPacket)
 	sendNearMonsterToClient(pNetPlayer);
 
    // Todo: 還沒處理完畢
+	sendNearNPCToClient(pNetPlayer);
 }
 
 void CGameServer::onRecvTargetPos(CNetPlayer *pNetPlayer, CPacketTargetPos *pPacket)

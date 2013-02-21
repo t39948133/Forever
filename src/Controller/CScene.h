@@ -10,6 +10,7 @@
 #include "Common.h"
 #include "CPlayer.h"
 #include "CMonster.h"
+#include "CNPC.h"
 #include "ISceneMonsterEventListener.h"
 
 /** @brief 場景管理
@@ -40,6 +41,10 @@ class CScene
 
 		void removeMonster(long long uid);
 
+		CNPC* addNPC(long long uid, int kindID, float x, float y);
+
+		void	removeNPC(long long uid);
+
       /** @brief 刪除所有東西 */
       void clear();
 
@@ -56,6 +61,8 @@ class CScene
         * @return 怪物物件 */
       CMonster* getMonster(long long uid);
 
+		CNPC*		 getNPC(long long uid);
+
       /** @brief 取得作戰單位 (可能是玩家/怪物/NPC)
         * @param uid 唯一編號
         * @return 作戰單位物件 */
@@ -67,6 +74,7 @@ class CScene
 
       std::list<CPlayer *>* getAllPlayer();
       std::list<CMonster *>* getAllMonster();
+		std::vector<CNPC *>* getAllNPC();
 
 #ifdef _GAMEENGINE_2D_
       /** @brief 取得玩家
@@ -80,6 +88,8 @@ class CScene
         * @param y 滑鼠點擊的Y座標
         * @return 怪物物件 */
       CMonster* getMonster(float x, float y);
+
+		CNPC* getNPC(float x, float y);
 
       /** @brief 取得作戰單位
         * @param x 滑鼠點擊的X座標
@@ -99,6 +109,7 @@ class CScene
       std::string            m_machineName; // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       std::list<CPlayer *>  *m_pvtPlayer;   // 場景內所有玩家
       std::list<CMonster *> *m_pvtMonster;  // 場景內所有怪物
+		std::vector<CNPC *>	 *m_pvtNPC;
       CPlayer               *m_pMainPlayer; // 玩家
 
       std::set<ISceneMonsterEventListener *> m_monsterEventListeners;    // 監聽怪物事件的監聽者列表

@@ -7,10 +7,22 @@ CScene3D::CScene3D(Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream,
    m_pMainPlayer = NULL;
    m_pPlayer3DList = new std::list<CPlayer3D *>();
    m_pMonster3DList = new std::list<CMonster3D *>();
+	m_pNPC3DList = new std::list<CNPC3D *>();
 }
 
 CScene3D::~CScene3D()
 {
+	if(m_pNPC3DList != NULL) {
+		std::list<CNPC3D *>::iterator it = m_pNPC3DList->begin();
+		while(it != m_pNPC3DList->end()) {
+			delete (*it);
+			it++;
+		}
+		m_pNPC3DList->clear();
+		delete m_pNPC3DList;
+		m_pNPC3DList = NULL;
+	}
+
    if(m_pMonster3DList != NULL) {
       std::list<CMonster3D *>::iterator it = m_pMonster3DList->begin();
       while(it != m_pMonster3DList->end()) {
@@ -114,8 +126,51 @@ void CScene3D::removeMonster3D(long long uid)
    }
 }
 
+CNPC3D* CScene3D::addNPC3D(CNPC *pNPC2D)
+{
+	CNPC3D *pNPC3D = new CNPC3D(pNPC2D, m_pSceneManager);
+	pNPC3D->setup();
+	m_pNPC3DList->push_back(pNPC3D);
+	return pNPC3D;
+}
+
+CNPC3D* CScene3D::getNPC3D(long long uid)
+{
+	std::list<CNPC3D *>::iterator it = m_pNPC3DList->begin();
+	while(it != m_pNPC3DList->end()) {
+		if((*it)->getNPC2D()->getUID() == uid)
+			return (*it);
+		it++;
+	}
+
+	return NULL;
+}
+
+void CScene3D::removeNPC3D(long long uid)
+{
+	std::list<CNPC3D *>::iterator it = m_pNPC3DList->begin();
+   while(it != m_pNPC3DList->end()) {
+      if((*it)->getNPC2D()->getUID() == uid) {
+         delete (*it);
+         m_pNPC3DList->erase(it);
+         return;
+      }
+         
+      it++;
+   }
+}
+
 void CScene3D::clear()
 {
+	if(m_pNPC3DList != NULL) {
+		std::list<CNPC3D *>::iterator it = m_pNPC3DList->begin();
+		while(it != m_pNPC3DList->end()) {
+			delete (*it);
+			it++;
+		}
+		m_pNPC3DList->clear();
+	}
+
    if(m_pMonster3DList != NULL) {
       std::list<CMonster3D *>::iterator it = m_pMonster3DList->begin();
       while(it != m_pMonster3DList->end()) {
@@ -155,4 +210,10 @@ void CScene3D::work(float timePass, Ogre::SceneNode *pCameraNode)
 
       itMonster3D++;
    }
+
+	std::list<CNPC3D *>::iterator itNPC3D = m_pNPC3DList->begin();
+	while(itNPC3D != m_pNPC3DList->end()) {
+		(*itNPC3D)->update(timePass);
+		itNPC3D++;
+	}
 }

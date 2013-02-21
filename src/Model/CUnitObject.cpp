@@ -473,6 +473,11 @@ int CUnitObject::getMPMax()
 	return mpMax;
 }
 
+void CUnitObject::levelUp()
+{
+	m_level++;
+}
+
 int CUnitObject::getHPR()
 {
    int hpr = m_obsAttr.iHPR;

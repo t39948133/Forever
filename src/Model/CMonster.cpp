@@ -183,7 +183,7 @@ long long CMonster::getMoney()
 unsigned int CMonster::getXP()
 {
    CMonsterInfo* pInfo = MONSTER_INFO::getInfo();
-   return (pInfo->getxp() * getLevel());
+    return pInfo->getxp();
 }
 
 void CMonster::work(float timePass)

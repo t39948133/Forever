@@ -53,12 +53,19 @@ CPlayer::~CPlayer()
 void CPlayer::addXP(unsigned int xp)
 {
 	m_xp += xp;
-	if(m_xpMax < m_xp)	//取得經驗後 可升級
+	while(m_xpMax < m_xp)	//取得經驗後 可升級
 	{		
 		m_xp -= m_xpMax;
 		//升級function
+		levelUp();
 	}
    notifyPlayerAttrUpdate();
+}
+
+void CPlayer::levelUp()
+{
+	CUnitObject::levelUp();
+	m_xpMax = CUnitObject::getLevel() * 1000;
 }
 
 unsigned int CPlayer::getXP()

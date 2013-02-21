@@ -20,6 +20,7 @@
 #include "CPacketAdvAttrData.h"
 #include "CPacketAddSkill.h"
 #include "CPacketCanUseSkill.h"
+#include "CPacketNPCData.h"
 
 #include <network\gp_socket.h>
 
@@ -91,6 +92,7 @@ class CGameClient
 
       /** @brief 接收更換裝備資料 */
       virtual void onRecvEquipData(CPacketEquipData *pPacket);
+		virtual void onRecvNPCData(CPacketNPCData *pPacket);
 
    private:
       /** @brief 遊戲第一次登入的邏輯運算 */

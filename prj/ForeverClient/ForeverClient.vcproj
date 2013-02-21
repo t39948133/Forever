@@ -340,6 +340,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\3D\CNPC3D.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\3D\CPlayer3D.cpp"
 					>
 				</File>
@@ -659,6 +663,10 @@
 					RelativePath="..\..\src\Network\CPacketUseSkill.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Network\CPaketNPCData.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Server"
@@ -929,6 +937,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath="..\..\src\3D\CNPC3D.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\3D\CPlayer3D.h"
 					>
 				</File>
@@ -1014,6 +1026,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Controller\ISceneMonsterEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\ISceneNPCEventListener.h"
 					>
 				</File>
 			</Filter>
@@ -1162,6 +1178,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CPacketMonsterData.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketNPCData.h"
 					>
 				</File>
 				<File

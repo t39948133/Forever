@@ -12,6 +12,7 @@ CScene::CScene(std::string machineName) : m_machineName(machineName)
 {
    m_pvtPlayer = new std::list<CPlayer *>();
    m_pvtMonster = new std::list<CMonster *>();
+	m_pvtNPC = new std::vector<CNPC *>();
    m_pMainPlayer = NULL;
 }
 
@@ -38,6 +39,17 @@ CScene::~CScene()
       delete m_pvtMonster;
       m_pvtMonster = NULL;
    }
+
+	if(m_pvtNPC != NULL) {
+		std::vector<CNPC *>::iterator itNPC = m_pvtNPC->begin();
+		while(itNPC != m_pvtNPC->end()) {
+			delete (*itNPC);
+			itNPC++;
+		}
+		m_pvtNPC->clear();
+		delete m_pvtNPC;
+		m_pvtNPC = NULL;
+	}
 }
 
 CPlayer* CScene::addPlayer(long long uid, bool bMainPlayer)
@@ -85,6 +97,26 @@ void CScene::removeMonster(long long uid)
 	}
 }
 
+CNPC* CScene::addNPC(long long uid, int kindID, float x, float y)
+{
+	CNPC *pNPC = new CNPC(m_machineName, kindID, uid, x, y);
+   m_pvtNPC->push_back(pNPC);
+
+   return pNPC;
+}
+
+void CScene::removeNPC(long long uid)
+{
+	std::vector<CNPC *>::iterator it = m_pvtNPC->begin();
+	while(it != m_pvtNPC->end()) {
+		if((*it)->getUID() == uid) {
+			m_pvtNPC->erase(it);
+			break;
+		}
+		it++;
+	}
+}
+
 void CScene::clear()
 {
    if(m_pvtPlayer != NULL) {
@@ -104,6 +136,15 @@ void CScene::clear()
       }
       m_pvtMonster->clear();
    }
+
+	if(m_pvtNPC != NULL) {
+		std::vector<CNPC *>::iterator itNPC = m_pvtNPC->begin();
+		while(itNPC != m_pvtNPC->end()) {
+			delete(*itNPC);
+			itNPC++;
+		}
+		m_pvtNPC->clear();
+	}
 
    m_pMainPlayer = NULL;
 }
@@ -139,6 +180,17 @@ CMonster* CScene::getMonster(long long uid)
    return NULL;
 }
 
+CNPC* CScene::getNPC(long long uid)
+{
+	std::vector<CNPC *>::iterator it = m_pvtNPC->begin();
+	while(it != m_pvtNPC->end()) {
+		if((*it)->getUID() == uid)
+			return (*it);
+		it++;
+	}
+	return NULL;
+}
+
 CUnitObject* CScene::getUnitObject(long long uid)
 {
    CUnitObject *pUnitObject = NULL;
@@ -150,6 +202,10 @@ CUnitObject* CScene::getUnitObject(long long uid)
    pUnitObject = getMonster(uid);
    if(pUnitObject != NULL)
       return pUnitObject;
+
+	pUnitObject = getNPC(uid);
+	if(pUnitObject != NULL)
+		return pUnitObject;
 
    return NULL;
 }
@@ -173,6 +229,12 @@ void CScene::work(float timePass)
       else
          itMonster++;
    }
+
+	std::vector<CNPC *>::iterator itNPC = m_pvtNPC->begin();
+	while(itNPC != m_pvtNPC->end()) {
+		(*itNPC)->work(timePass);
+		itNPC++;
+	}
 }
 
 std::list<CPlayer *>* CScene::getAllPlayer()
@@ -183,6 +245,11 @@ std::list<CPlayer *>* CScene::getAllPlayer()
 std::list<CMonster *>* CScene::getAllMonster()
 {
    return m_pvtMonster;
+}
+
+std::vector<CNPC *>* CScene::getAllNPC()
+{
+	return m_pvtNPC;
 }
 
 #ifdef _GAMEENGINE_2D_
@@ -212,6 +279,17 @@ CMonster* CScene::getMonster(float x, float y)
    return NULL;
 }
 
+CNPC* CScene::getNPC(float x, float y)
+{
+	std::vector<CNPC *>::iterator it = m_pvtNPC->begin();
+	while(it != m_pvtNPC->end()){
+		if((*it)->isClick(x, y) == true)
+			return (*it);
+		it++;
+	}
+	return NULL;
+}
+
 CUnitObject* CScene::getUnitObject(float x, float y)
 {
    CUnitObject *pUnitObject = NULL;
@@ -223,6 +301,10 @@ CUnitObject* CScene::getUnitObject(float x, float y)
    pUnitObject = getMonster(x, y);
    if(pUnitObject != NULL)
       return pUnitObject;
+
+	pUnitObject = getNPC(x, y);
+	if(pUnitObject != NULL)
+		return pUnitObject;
 
    return NULL;
 }
@@ -240,6 +322,12 @@ void CScene::draw(HDC hdc)
       (*itMonster)->draw(hdc);
       itMonster++;
    }
+
+	std::vector<CNPC *>::iterator itNPC = m_pvtNPC->begin();
+	while(itNPC != m_pvtNPC->end()) {
+		(*itNPC)->draw(hdc);
+		itNPC++;
+	}
 }
 #endif  // #ifdef _GAMEENGINE_2D_
 

@@ -107,6 +107,7 @@ class CGameServer : public CScene,
       void sendPlayerDataToOtherClient(CNetPlayer *pNetPlayer);
       void sendNearPlayerToClient(CNetPlayer *pNetPlayer);
       void sendNearMonsterToClient(CNetPlayer *pNetPlayer);
+		void sendNearNPCToClient(CNetPlayer *pNetPlayer);
 
       /** @brief 將pNetPlayer的資料送給其他Client */
       void sendPacket(CNetPlayer *pNetPlayer, void *pPacket, int packetSize);

@@ -5,6 +5,7 @@
 #include "CRenderLoader.h"
 #include "CPlayer.h"
 #include "CMonster.h"
+#include "CNPC.h"
 #endif
 
 CTargetInfoWnd::CTargetInfoWnd()
@@ -264,6 +265,25 @@ void CTargetInfoWnd::setTarget(long long uid)
          }
       }
       else {
+			CNPC *pNPC = dynamic_cast<CNPC *>(pTargetObject);
+			if(pNPC != NULL) {
+				int x = ((rect.right - rect.left) - 284) / 2;
+            m_overlay.setPosition(x, 0);
+            m_overlay.setSize(284, 84);
+            m_overlay.setBackImage("UI/BG/RegularMonster");
+
+            m_pBtn[BUTTON_AI]->setPosition(30, 22);
+            m_pBtn[BUTTON_AI]->setSize(40, 40);
+            m_pBtn[BUTTON_AI]->setImage("UI/MonsterAI/Knight");
+
+            m_pBtn[BUTTON_HP]->setPosition(83, 36);
+            m_pBtn[BUTTON_HP]->setSize(169, 13);
+
+            m_pText[TEXT_LEVEL]->setPosition(9, 33);
+
+            m_pText[TEXT_NAME]->setPosition(80, 6);
+			}
+			else {
          CPlayer *pPlayer = dynamic_cast<CPlayer *>(pTargetObject);
          if(pPlayer != NULL) {
             int x = ((rect.right - rect.left) - 284) / 2;
@@ -283,6 +303,7 @@ void CTargetInfoWnd::setTarget(long long uid)
             m_pText[TEXT_NAME]->setPosition(80, 6);
          }
       }
+   }
    }
 #endif
 

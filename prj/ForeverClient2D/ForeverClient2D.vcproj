@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\src\Server;..\..\src\Network;..\..\src\Common;..\..\src\View;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework;..\..\lib\openal_sdk\include;..\..\lib\openal_sdk\samples\framework\Win32;..\..\lib\sound_man"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_GAMEENGINE_2D_;_GAMESOUND_"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_GAMEENGINE_2D_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -95,7 +95,7 @@
 			OutputDirectory="..\..\bin\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="0"
+			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -117,8 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\src\Server;..\..\src\Network;..\..\src\Common;..\..\src\View;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework;..\..\lib\openal_sdk\include;..\..\lib\openal_sdk\samples\framework\Win32;..\..\lib\sound_man"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_GAMEENGINE_2D_;_GAMESOUND_"
+				AdditionalIncludeDirectories="..\..\src\Network;..\..\src\Common;..\..\src\View;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework;..\..\lib\openal_sdk\include;..\..\lib\openal_sdk\samples\framework\Win32;..\..\lib\sound_man"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_GAMEENGINE_2D_"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -138,7 +138,6 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="wsock32.lib OpenAL32.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\lib\openal_sdk\libs\Win32"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -248,7 +247,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CBackpack.cpp"
+					RelativePath="..\..\src\Model\CBackPack.cpp"
 					>
 				</File>
 				<File
@@ -394,22 +393,6 @@
 				<File
 					RelativePath="..\..\src\Common\LogWindow.cpp"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCLCompilerTool"
-						/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -497,6 +480,14 @@
 				</Filter>
 			</Filter>
 			<Filter
+				Name="Client"
+				>
+				<File
+					RelativePath="..\..\src\Client\2D\CGameClient.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
 				Name="Network"
 				>
 				<File
@@ -563,6 +554,10 @@
 					RelativePath="..\..\src\Network\CPacketUseSkill.cpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\src\Network\CPaketNPCData.cpp"
+					>
+				</File>
 			</Filter>
 			<Filter
 				Name="Server"
@@ -573,14 +568,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Server\CWorldServer.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Client"
-				>
-				<File
-					RelativePath="..\..\src\Client\2D\CGameClient.cpp"
 					>
 				</File>
 			</Filter>
@@ -712,22 +699,6 @@
 				<File
 					RelativePath="..\..\src\Common\LogWindow.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32"
-						ExcludedFromBuild="true"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -742,7 +713,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CBackpack.h"
+					RelativePath="..\..\src\Model\CBackPack.h"
 					>
 				</File>
 				<File
@@ -804,13 +775,6 @@
 				<File
 					RelativePath="..\..\src\Model\CMonsterMap.h"
 					>
-					<FileConfiguration
-						Name="Debug|Win32"
-						>
-						<Tool
-							Name="VCCustomBuildTool"
-						/>
-					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CNPC.h"
@@ -957,6 +921,42 @@
 				</File>
 			</Filter>
 			<Filter
+				Name="Lib"
+				>
+				<Filter
+					Name="OpenAL"
+					>
+					<File
+						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\aldlist.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\CWaves.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\Framework.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\LoadOAL.h"
+						>
+					</File>
+					<File
+						RelativePath="..\..\lib\sound_man\sound_man.h"
+						>
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Client"
+				>
+				<File
+					RelativePath="..\..\src\Client\2D\CGameClient.h"
+					>
+				</File>
+			</Filter>
+			<Filter
 				Name="Network"
 				>
 				<File
@@ -1020,6 +1020,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketNPCData.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketPasswordGW.h"
 					>
 				</File>
@@ -1065,14 +1069,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Server\CWorldServer.h"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Client"
-				>
-				<File
-					RelativePath="..\..\src\Client\2D\CGameClient.h"
 					>
 				</File>
 			</Filter>

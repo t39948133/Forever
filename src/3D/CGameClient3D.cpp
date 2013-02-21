@@ -155,6 +155,19 @@ void CGameClient3D::onRecvEquipData(CPacketEquipData *pPacket)
       pPacket->unpack(pPlayer);
 }
 
+void CGameClient3D::onRecvNPCData(CPacketNPCData *pPacket)
+{
+	CNPC3D *pNPC = m_pScene3D->getNPC3D(pPacket->getUID());
+	if(pNPC == NULL) {
+		CNPC *pNewNPC2D = this->getScene()->addNPC(-1, pPacket->getKindID(), 0, 0);
+		pNPC = m_pScene3D->addNPC3D(pNewNPC2D);
+	}
+
+	pPacket->unpack(pNPC);
+
+	pNPC->setUID(pPacket->getUID());
+}
+
 void CGameClient3D::createScene()
 {
    CGameClient::init();
@@ -250,6 +263,12 @@ void CGameClient3D::mouseDown(const OIS::MouseEvent &evt)
                m_pTargetInfoWnd->setTarget(uid);
                break;
             }
+				else if(nodeName.find("CNPC3D") != std::string::npos) {
+					const Ogre::Any &value = (*it).movable->getParentNode()->getUserAny();
+					long long uid = Ogre::any_cast<long long>(value);
+					m_pTargetInfoWnd->setTarget(uid);
+					break;
+				}
             else if(nodeName.find("CPlayer3D") != std::string::npos) {
                // ·Æ¹«ÂI¨ìª±®a
 

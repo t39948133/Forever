@@ -4,6 +4,8 @@
 #include "CBuff.h"
 #include "CMonster.h"
 #include "CMonsterArea.h"
+#include "CNPC.h"
+#include "CQuest.h"
 
 #include <network\gp_socket.h>
 
@@ -36,6 +38,8 @@ CClientServer::CClientServer()
    CSkill::initSkill();     // 建立技能表
    CMonster::initMonster(); // 建立怪物表
    CMonsterArea::initMonsterArea();
+	CNPC::initNPC();
+	CQuest::initQuest();
 
    for(int i = 0; i < MAX_WORLDSERVER; i++)
       m_pvWorldServer->at(i)->init(2000 + i);
@@ -117,6 +121,9 @@ CClientServer::~CClientServer()
    CSkill::release();
    CItem::release();
    CBuff::release();
+	CMonsterArea::release();
+	CNPC::release();
+	CQuest::release();
 }
 
 #ifdef _GAMEENGINE_3D_
@@ -139,6 +146,8 @@ void CClientServer::init()
    CSkill::initSkill();  // 建立技能表
    CMonster::initMonster(); //建立怪物表
    CMonsterArea::initMonsterArea();
+	CNPC::initNPC();
+	CQuest::initQuest();
 
    for(int i = 0; i < MAX_WORLDSERVER; i++)
       m_pvWorldServer->at(i)->init(2000 + i);
