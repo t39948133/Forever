@@ -1,3 +1,143 @@
+//關閉圖示
+material x
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend		
+			texture_unit
+			{
+				texture green-x.png
+			}
+		}
+	}
+}
+//商店視窗
+material shop
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture shop.jpg
+			}
+		}
+	}
+}
+
+//NPC聊天視窗
+material chat
+{
+	technique
+	{
+		pass
+		{
+			scene_blend add		
+			texture_unit
+			{
+				texture chat.jpg
+			}
+		}
+	}
+}
+
+//地圖視窗
+material map
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture map.jpg
+			}
+		}
+	}
+}
+
+//小地圖視窗
+material minimap
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture minimap.jpg
+			}
+		}
+	}
+}
+
+//小地圖視窗2版
+material minimap2
+{
+	technique
+	{
+		pass
+		{	
+			scene_blend alpha_blend	
+			texture_unit
+			{
+				texture minimap2.png
+			}
+		}
+	}
+}
+
+//小地圖中的主角
+material blue_point
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture blue_point.png
+			}
+		}
+	}
+}
+
+//小地圖中的怪物
+material GLX_icon
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture GLX_icon.png
+			}
+		}
+	}
+}
+
+//小地圖中的NPC
+material tusk
+{
+	technique
+	{
+		pass
+		{
+			
+			texture_unit
+			{
+				texture tusk.jpg
+			}
+		}
+	}
+}
+
 //主角資訊視窗
 material UI/BG/PlayerInfoWnd
 {
@@ -118,6 +258,23 @@ material UI/Icon/BootSlot
 	}
 }
 
+//選單視窗
+material UI/BG/ToolBarWnd
+{
+	technique
+	{
+		pass
+		{			
+			scene_blend alpha_blend 			
+
+			texture_unit
+			{
+				texture toolbar.png
+			}
+		}
+	}
+}
+
 //背包視窗
 material UI/BG/BackpackWnd
 {
@@ -174,6 +331,21 @@ material UI/BG/HudWnd
 			texture_unit
 			{
 				texture player_hotkey.png
+			}
+		}
+	}
+}
+
+//彈出視窗
+material infownd
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture infownd.jpg
 			}
 		}
 	}
@@ -366,22 +538,6 @@ material UI/MonsterAI/Knight
 			texture_unit
 			{
 				texture icon_emblem_knight_alpha.png
-			}
-		}
-	}
-}
-
-//主角資訊視窗
-material UI/BG/ToolBarWnd
-{
-	technique
-	{
-		pass
-		{			
-		  scene_blend alpha_blend
-			texture_unit
-			{
-				texture toolbar.png
 			}
 		}
 	}
