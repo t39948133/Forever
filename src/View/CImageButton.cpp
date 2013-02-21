@@ -136,6 +136,11 @@ void CImageButton::setSize(int width, int height)
    m_pPanel->setDimensions((Ogre::Real)width, (Ogre::Real)height);
 }
 
+Ogre::PanelOverlayElement* CImageButton::getImage()
+{
+   return m_pPanel;
+}
+
 void CImageButton::addChild(Ogre::OverlayElement *pElement)
 {
    if(pElement != NULL)

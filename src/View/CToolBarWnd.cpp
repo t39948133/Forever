@@ -53,6 +53,7 @@ void CToolBarWnd::init (CWindow* pw0,  CWindow* pw1, CWindow* pw2, CWindow* pw3,
 #ifdef _GAMEENGINE_3D_
 	m_overlay.init(x, y, w, h);
 	m_overlay.setBackImage("UI/BG/ToolBarWnd");
+   m_overlay.setZOrder(20);
 
 	for (int i = 0; i<BUTTON_COUNT; i++){
 		m_vpBtn[i] = new CImageButton() ;
@@ -92,13 +93,6 @@ void CToolBarWnd::onDrag()
 {   
 #ifdef _GAMEENGINE_3D_
    m_overlay.setPosition(x, y);
-#endif  // #ifdef _GAMEENGINE_3D_
-}
-
-void CToolBarWnd::setZOrder(int order)
-{
-#ifdef _GAMEENGINE_3D_
-	m_overlay.setZOrder(order);
 #endif  // #ifdef _GAMEENGINE_3D_
 }
 

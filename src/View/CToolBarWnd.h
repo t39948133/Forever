@@ -33,7 +33,6 @@ public:
 	  /* virtual */ bool canDrag(int tx, int ty);
 	  /* virtual */ void onLCommand(int btnID);
       /* virtual */ void onDrag();
-	  /* virtual */ void setZOrder(int order) ;
 
 private:
   	

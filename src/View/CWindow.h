@@ -40,6 +40,7 @@ class CWindow
 
 	   bool checkPoint(int tx, int ty);
       void addChild(CWindow *pChildWnd);
+      void delChild(CWindow *pChildWnd);
 
 	   virtual bool canDrag(int tx, int ty);   // 是否可以拖曳視窗
       virtual void onDrag();                  // 視窗拖曳過程中

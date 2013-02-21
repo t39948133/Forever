@@ -6,6 +6,7 @@
   * @email  darren.z32@msa.hinet.net
   * @date   2012/12/04 */
 #include "CGameClient3D.h"
+#include "CPlayer.h"
 #include "CPlayerInfoWnd.h"
 #include "CBackpackWnd.h"
 #include "CSkillWnd.h"
@@ -81,7 +82,6 @@ void CGameClient3D::initUI()
 
    CHudWnd *pHudWnd = new CHudWnd();
    pHudWnd->init(hudX, hudY, pPlayer2D);
-   m_pWindowMan->addWnd(pHudWnd);
 
    CHotKeyWnd *pHotKeyWnd = new CHotKeyWnd();
    int hotkeyX = hudX + 381;
@@ -96,16 +96,16 @@ void CGameClient3D::initUI()
    pPlayerStateWnd->init(playerstateX, playerstateY, pPlayer2D, pHudWnd->getZOrder() + 1);
    m_pWindowMan->addWnd(pPlayerStateWnd);
 
-   pMiniMapWnd = new CMiniMapWnd() ;
-   pMiniMapWnd->init (hudX+830, hudY-200, pPlayer2D, getScene(), &cameraDir) ;
-   m_pWindowMan->addWnd (pMiniMapWnd) ;
+   m_pMiniMapWnd = new CMiniMapWnd();
+   m_pMiniMapWnd->init((rect.right - rect.left) - 242, 0, pPlayer2D, getScene(), &m_cameraDir);
+   m_pWindowMan->addWnd(m_pMiniMapWnd);
 
-   CToolBarWnd *pToolBarWnd = new CToolBarWnd() ;
-   pToolBarWnd-> init (pBackpackWnd, pPlayerInfoWnd, pSkillWnd,
-	                   pBackpackWnd, hudX+830, hudY+66) ;
+   CToolBarWnd *pToolBarWnd = new CToolBarWnd();
+   pToolBarWnd->init(pBackpackWnd, pPlayerInfoWnd, pSkillWnd,
+	                  pBackpackWnd, hudX + 830, hudY + 66);
    m_pWindowMan->addWnd(pToolBarWnd);
 
-   
+   m_pWindowMan->addWnd(pHudWnd);
 }
 
 void CGameClient3D::onRecvPlayerInit(CPacketPlayerInit *pPacket)
@@ -140,11 +140,12 @@ void CGameClient3D::onRecvMonsterData(CPacketMonsterData *pPacket)
       CMonster *pNewMonster2D = this->getScene()->addMonster(-1, pPacket->getKindID(), 0, 0);
       pMonster = m_pScene3D->addMonster3D(pNewMonster2D);
    }
+
    pPacket->unpack(pMonster);
 
    pMonster->setUID(pPacket->getUID());
-   pMiniMapWnd->onAddUnit (pMonster->getMonster2D()) ;
-   pMiniMapWnd->update () ;
+
+   m_pMiniMapWnd->onAddUnit(pMonster->getMonster2D());
 }
 
 void CGameClient3D::onRecvEquipData(CPacketEquipData *pPacket)
@@ -170,6 +171,12 @@ void CGameClient3D::createScene()
    m_sceneObjMan.init(m_pSceneManager);
    m_sceneObjMan.read("../1.sco");
 
+   // 天空面
+   Ogre::Plane plane;
+   plane.d = 1000;  // 天空高度
+   plane.normal = Ogre::Vector3::NEGATIVE_UNIT_Y;
+   m_pSceneManager->setSkyPlane(true, plane, "Examples/CloudySky", 1500, 40, true, 1.5f, 150, 150);
+
    m_pScene3D = new CScene3D(m_pSceneManager, this->getNetStream(), m_terrain);
 
    // 建立玩家模型 (資料未定)
@@ -186,7 +193,7 @@ void CGameClient3D::createScene()
 bool CGameClient3D::frameRenderingQueued(float timeSinceLastFrame)
 {
    CGameClient::work(m_pRenderCore->getRenderHwnd(), timeSinceLastFrame);
-   pMiniMapWnd->update () ;
+   m_pMiniMapWnd->update();
 
    if(m_bCreateScene == false) {
       m_pScene3D->work(timeSinceLastFrame, m_pCameraNode);

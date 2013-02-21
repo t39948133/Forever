@@ -10,18 +10,32 @@
 #include "CScene.h"
 #include "CFPS.h"
 #include "CNetPlayer.h"
+#include "CMonsterMap.h"
 #include "CPacketFirstLogin.h"
 #include "CPacketPlayerDataWG.h"
 #include "CPacketTargetPos.h"
+#include "CPacketUseItem.h"
+#include "CPacketEquipData.h"
+#include "CPacketCanUseSkill.h"
+#include "CPacketCancelUseSkill.h"
 #include "IMonsterAIEventListener.h"
-#include "CMonsterMap.h"
 #include "ISceneMonsterEventListener.h"
+#include "IPlayerBackpackEventListener.h"
+#include "IPlayerEquipEventListener.h"
+#include "IAdvAttrEventListener.h"
+#include "ISkillEventListener.h"
+#include "IFightEventListener.h"
 
 #include <network\gp_socket.h>
 
 class CGameServer : public CScene,
                     public IMonsterAIEventListener,
-                    public ISceneMonsterEventListener
+                    public ISceneMonsterEventListener,
+                    public IPlayerBackpackEventListener,
+                    public IPlayerEquipEventListener,
+                    public IAdvAttrEventListener,
+                    public ISkillEventListener,
+                    public IFightEventListener
 {
    public:
       CGameServer(std::string machineName);
@@ -45,12 +59,30 @@ class CGameServer : public CScene,
 #endif  // #ifdef _GAMEENGINE_2D_
 
    private:
-      // ISceneMonsterEventListener
-      /* virtual */ void updateAddMonster(CMonster *pMonster);
-
       // IMonsterAIEventListener
       /* virtual */ void updateMonsterTargetObject(CMonster *pMonster, long long newTargetObjectUID);
       /* virtual */ void updateMonsterAI(CMonster *pMonster);
+
+      // ISceneMonsterEventListener
+      /* virtual */ void updateAddMonster(CMonster *pMonster);
+
+      // IPlayerBackpackEventListener
+      /* virtual */ void updatePlayerBackpack(CBackpack *pBackpack);
+
+      // IPlayerEquipEventListener
+      /* virtual */ void updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int itemId);
+
+      // IAdvAttrEventListener
+      /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
+
+      // ISkillEventListener
+      /* virtual */ void updateAddSkill(CUnitObject *pUnitObject, int skillID);
+      /* virtual */ void updateSkillAvailable(CSkill *pSkill);
+      /* virtual */ void updateSkillCoolDown(CSkill *pSkill);
+
+      // IFightEventListener
+      /* virtual */ void updateFightActionEvent(CUnitObject *pUnitObject, CActionEvent *pActEvent);
+      /* virtual */ void updateFightTargetPosition(CUnitObject *pUnitObject);
 
       void doMonsterAIIdle(CMonster *pMonster);
       void doMonsterAIGoals(CMonster *pMonster);
@@ -88,7 +120,20 @@ class CGameServer : public CScene,
         * @param pPacket    封包 */
       void onRecvPlayerDataWG(CPacketPlayerDataWG *pPacket);
 
+      /** @brief 接收玩家目標位置 */
       void onRecvTargetPos(CNetPlayer *pNetPlayer, CPacketTargetPos *pPacket);
+
+      /** @brief 接收玩家使用物品 */
+      void onRecvUseItem(CNetPlayer *pNetPlayer, CPacketUseItem *pPacket);
+
+      /** @brief 接收卸下裝備 */
+      void onRecvShedEquip(CNetPlayer *pNetPlayer, CPacketEquipData *pPacket);
+
+      /** @brief 接收能不能使用技能 */
+      void onRecvCanUseSkill(CNetPlayer *pNetPlayer, CPacketCanUseSkill *pPacket);
+
+      /** @brief 接收取消使用技能 */
+      void onRecvCancelUseSkill(CNetPlayer *pNetPlayer, CPacketCancelUseSkill *pPacket);
 
       std::string              m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       int                      m_port;

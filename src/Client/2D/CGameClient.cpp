@@ -7,6 +7,7 @@
   * @date   2012/12/12 */
 #include "CGameClient.h"
 #include "CPacketFirstLogin.h"
+#include "CPacketCancelUseSkill.h"
 
 #ifdef _GAMESOUND_
 #include "CSoundManager.h"
@@ -142,11 +143,11 @@ void CGameClient::initUI()
    CPlayer *pPlayer = m_pScene->getMainPlayer();
 
    CPlayerInfoWnd *pPlayerInfoWnd = new CPlayerInfoWnd();
-   pPlayerInfoWnd->init(10, 10, pPlayer);
+   pPlayerInfoWnd->init(10, 10, pPlayer, m_pNetStream);
    m_pWindowMan->addWnd(pPlayerInfoWnd);
 
    CBackpackWnd *pBackpackWnd = new CBackpackWnd();
-   pBackpackWnd->init(10, 411, pPlayer);
+   pBackpackWnd->init(10, 411, pPlayer, m_pNetStream);
    m_pWindowMan->addWnd(pBackpackWnd);
 
    CSkillWnd *pSkillWnd = new CSkillWnd();
@@ -154,7 +155,7 @@ void CGameClient::initUI()
    m_pWindowMan->addWnd(pSkillWnd);
 
    CHotKeyWnd *pHotKeyWnd = new CHotKeyWnd();
-   pHotKeyWnd->init(250, 860, pPlayer);
+   pHotKeyWnd->init(250, 860, pPlayer, m_pNetStream);
    m_pWindowMan->addWnd(pHotKeyWnd);
 
    m_pTargetInfoWnd = new CTargetInfoWnd();
@@ -189,6 +190,13 @@ void CGameClient::onRecvMonsterData(CPacketMonsterData *pPacket)
       pMonster = m_pScene->addMonster(-1, pPacket->getKindID(), 0, 0);
 
    pPacket->unpack(pMonster);
+}
+
+void CGameClient::onRecvEquipData(CPacketEquipData *pPacket)
+{
+   CPlayer *pPlayer = m_pScene->getPlayer(pPacket->getUID());
+   if(pPlayer != NULL)
+      pPacket->unpack(pPlayer);
 }
 
 void CGameClient::workLogin()
@@ -240,6 +248,16 @@ void CGameClient::workPlay(HWND hWnd, float timePass)
             onRecvActionEvent((CPacketActionEvent *)pPacket);
          else if(pPacket->m_id == PACKET_USE_SKILL)
             onRecvUseSkill((CPacketUseSkill *)pPacket);
+         else if(pPacket->m_id == PACKET_BACKPACK_DATA)
+            onRecvBackpackData((CPacketBackpackData *)pPacket);
+         else if(pPacket->m_id == PACKET_EQUIP_DATA)
+            onRecvEquipData((CPacketEquipData *)pPacket);
+         else if(pPacket->m_id == PACKET_ADVATTR_DATA)
+            onRecvAdvAttrData((CPacketAdvAttrData *)pPacket);
+         else if(pPacket->m_id == PACKET_ADD_SKILL)
+            onRecvAddSkill((CPacketAddSkill *)pPacket);
+         else if(pPacket->m_id == PACKET_CAN_USE_SKILL)
+            onRecvCanUseSkill((CPacketCanUseSkill *)pPacket);
       }
    }
 }
@@ -274,6 +292,36 @@ void CGameClient::onRecvUseSkill(CPacketUseSkill *pPacket)
       pPacket->unpack(pUnitObject);
 }
 
+void CGameClient::onRecvBackpackData(CPacketBackpackData *pPacket)
+{
+   CPlayer *pPlayer = m_pScene->getPlayer(pPacket->getUID());
+   if(pPlayer != NULL)
+      pPacket->unpack(pPlayer);
+}
+
+void CGameClient::onRecvAdvAttrData(CPacketAdvAttrData *pPacket)
+{
+   CUnitObject *pUnitObject = m_pScene->getUnitObject(pPacket->getUID());
+   if(pUnitObject != NULL)
+      pPacket->unpack(pUnitObject);
+}
+
+void CGameClient::onRecvAddSkill(CPacketAddSkill *pPacket)
+{
+   CPlayer *pPlayer = m_pScene->getPlayer(pPacket->getUID());
+   if(pPlayer != NULL)
+      pPacket->unpack(pPlayer);
+}
+
+void CGameClient::onRecvCanUseSkill(CPacketCanUseSkill *pPacket)
+{
+   CPlayer *pPlayer = m_pScene->getPlayer(pPacket->getUID());
+   if(pPlayer != NULL) {
+      if(pPacket->canUseSkill() == true)
+         pPlayer->startCastSkill(pPacket->getUseSkillID());
+   }
+}
+
 // Add by Darren Chen on 2013/01/03 {
 #ifdef _GAMEENGINE_2D_
 void CGameClient::doKeyControl()
@@ -301,6 +349,14 @@ void CGameClient::doKeyControl()
    }
 
    if(bKeyMove == true) {
+      if(pPlayer->isCastSkill() == true) {
+         pPlayer->cancelCastSkill();
+
+         CPacketCancelUseSkill packet;
+         packet.pack(pPlayer);
+         m_pNetStream->send(&packet, sizeof(packet));
+      }
+
       float moveX = pPlayer->getPosition().fX + 1.0f * sin(fmod(fMoveDirection, 2.0f * 3.1415926f));
       float moveY = pPlayer->getPosition().fY + 1.0f * cos(fmod(fMoveDirection, 2.0f * 3.1415926f));
       pPlayer->setTargetPosition(moveX, moveY, false);
@@ -340,9 +396,6 @@ void CGameClient::doUI(HWND hWnd)
 
    CPlayer *pPlayer = m_pScene->getMainPlayer();
 
-   if(pPlayer->isCastSkill() == true)
-      pPlayer->setTargetPosition(pPlayer->getPosition().fX, pPlayer->getPosition().fY);
-
    if(m_keyMan.isPress(KEY_LBUTTON)) {
       int mx, my;
       getMousePos(hWnd, mx, my);
@@ -369,9 +422,17 @@ void CGameClient::doUI(HWND hWnd)
                   CActionDispatch::getInstance()->sendEvnet(m_machineName, pPlayer->getUID(), actEvent);
                   m_keyMove = false;
 
-                  CPacketTargetPos packet;
-                  packet.pack(pPlayer, false);
-                  m_pNetStream->send(&packet, sizeof(packet));
+                  CPacketTargetPos packet1;
+                  packet1.pack(pPlayer, false);
+                  m_pNetStream->send(&packet1, sizeof(packet1));
+               }
+
+               if(pPlayer->isCastSkill() == true) {
+                  pPlayer->cancelCastSkill();
+                  
+                  CPacketCancelUseSkill packet2;
+                  packet2.pack(pPlayer);
+                  m_pNetStream->send(&packet2, sizeof(packet2));
                }
 
                pPlayer->setTargetPosition((float)mx, (float)my, true);
@@ -380,9 +441,9 @@ void CGameClient::doUI(HWND hWnd)
                actEvent.m_event = AET_NOT_REACH;
                CActionDispatch::getInstance()->sendEvnet(m_machineName, pPlayer->getUID(), actEvent);
 
-               CPacketTargetPos packet;
-               packet.pack(pPlayer, true);
-               m_pNetStream->send(&packet, sizeof(packet));
+               CPacketTargetPos packet3;
+               packet3.pack(pPlayer, true);
+               m_pNetStream->send(&packet3, sizeof(packet3));
             }
          }
       }

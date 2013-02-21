@@ -15,19 +15,16 @@ CAction::CAction() : m_iID(0),
                      m_bMove(false),
                      m_uid(-1)
 {
-   m_pvtEventHandlerSet = new std::vector<CActionEventHandler *>();
 }
 
 CAction::~CAction()
 {
-   std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
-   while(it != m_pvtEventHandlerSet->end()) {
+   std::vector<CActionEventHandler *>::iterator it = m_eventHandlerSet.begin();
+   while(it != m_eventHandlerSet.end()) {
       delete (*it);
-      it++;
+      ++it;
    }
-   m_pvtEventHandlerSet->clear();
-   delete m_pvtEventHandlerSet;
-   m_pvtEventHandlerSet = NULL;
+   m_eventHandlerSet.clear();
 }
 
 void CAction::init(ACTION_DATA &data)
@@ -44,7 +41,7 @@ void CAction::addEventHandler(CActionEventHandler *pHandler)
 {
    pHandler->setUID(m_uid);
    pHandler->setMachineName(m_machineName);
-   m_pvtEventHandlerSet->push_back(pHandler);
+   m_eventHandlerSet.push_back(pHandler);
 }
 
 int CAction::getID()
@@ -55,8 +52,8 @@ int CAction::getID()
 int CAction::work(float fPreTime, float fCurTime, CActionEvent *pEvent, std::set<int> *pKeyDownSet)
 {
    // 檢查受影響的事件有沒有被觸發, 有被觸發就需要換相對應的動作
-   std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
-   while(it != m_pvtEventHandlerSet->end()) {
+   std::vector<CActionEventHandler *>::iterator it = m_eventHandlerSet.begin();
+   while(it != m_eventHandlerSet.end()) {
       if((*it)->check(fPreTime, fCurTime, pEvent, pKeyDownSet) == true) {
          int nextActionID = (*it)->getNextActionID();
          
@@ -73,7 +70,7 @@ int CAction::work(float fPreTime, float fCurTime, CActionEvent *pEvent, std::set
          return nextActionID;
       }
 
-      it++;
+      ++it;
    }
 
    if(fCurTime > m_fTime)
@@ -100,16 +97,22 @@ std::string CAction::getName()
 void CAction::setUID(long long uid)
 {
    m_uid = uid;
+
+   std::vector<CActionEventHandler *>::iterator it = m_eventHandlerSet.begin();
+   while(it != m_eventHandlerSet.end()) {
+      (*it)->setUID(m_uid);
+      ++it;
+   }
 }
 
 void CAction::setMachineName(std::string machineName)
 {
    m_machineName = machineName;
 
-   std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
-   while(it != m_pvtEventHandlerSet->end()) {
+   std::vector<CActionEventHandler *>::iterator it = m_eventHandlerSet.begin();
+   while(it != m_eventHandlerSet.end()) {
       (*it)->setMachineName(m_machineName);
-      it++;
+      ++it;
    }
 }
 
@@ -142,13 +145,13 @@ void CAction::write(FILE *pFile)
       fwrite(&iMove, sizeof(iMove), 1, pFile);
    }
 
-   int count = m_pvtEventHandlerSet->size();
+   int count = m_eventHandlerSet.size();
 	fwrite(&count, sizeof(count), 1, pFile);
 
-   std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
-   while(it != m_pvtEventHandlerSet->end()) {
+   std::vector<CActionEventHandler *>::iterator it = m_eventHandlerSet.begin();
+   while(it != m_eventHandlerSet.end()) {
       (*it)->write(pFile);
-      it++;
+      ++it;
    }
 }
 
@@ -195,9 +198,9 @@ void CAction::read(FILE *pFile)
       addEventHandler(pActionEventHandler);
    }
 
-   std::vector<CActionEventHandler *>::iterator it = m_pvtEventHandlerSet->begin();
-   while(it != m_pvtEventHandlerSet->end()) {
+   std::vector<CActionEventHandler *>::iterator it = m_eventHandlerSet.begin();
+   while(it != m_eventHandlerSet.end()) {
       (*it)->read(pFile);
-      it++;
+      ++it;
    }
 }

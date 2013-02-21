@@ -145,6 +145,10 @@ void CItem::create (int id, int st)
 		else
 			m_iStack = pinfo->getStackLimit();
 	}
+   else {
+      m_iStack = 0;
+      clear();
+   }
 }
 
 void CItem::taken()

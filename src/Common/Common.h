@@ -320,12 +320,15 @@ typedef enum tagACTION_EVENT_TYPE {
    AET_KEY,                   // 快捷鍵
    AET_KEY_WASD,              // WASD按鍵
    AET_CAST_SKILL,            // 施展技能
+   AET_DAMAGE,                // 受傷
+   AET_DIE,                   // 死亡
 
    //--- 以下是動作系統發出的訊息
-   AET_NOTIFY_BEGIN,          // 通知訊息的開始, 此訊息動作編輯器不使用
+   AET_NOTIFY_BEGIN = 200,    // 通知訊息的開始, 此訊息動作編輯器不使用
    AET_NOTIFY_DRAW_WEAPON,    // 拔武器
    AET_NOTIFY_PUTIN_WEAPON,   // 收武器
    AET_NOTIFY_PLAY_SOUND,     // 播放動作音效
+   AET_NOTIFY_ATTACK,         // 攻擊扣血
 } ACTION_EVENT_TYPE;  // 動作事件種類
 
 const std::string SOUND_DIR   = "../media/sound/";  // 音效路徑

@@ -14,8 +14,9 @@
 
 unsigned int CMonster3D::m_iMonsterCount = 0;
 
-CMonster3D::CMonster3D(CMonster *pMonster, Ogre::SceneManager *pSceneManager) : m_pMonster2D(pMonster),
-                                                                                m_pSceneManager(pSceneManager)
+CMonster3D::CMonster3D(CMonster *pMonster, Ogre::SceneManager *pSceneManager, CTerrain &terrain) : m_pMonster2D(pMonster),
+                                                                                                   m_pSceneManager(pSceneManager),
+                                                                                                   m_terrain(terrain)
 {
    m_pRenderCore = CRenderLoader::getInstance()->getGraphicsRender("RenderEngine::OGRE");
 
@@ -97,6 +98,13 @@ void CMonster3D::update(float timeSinceLastFrame)
    else
       playAnimation(timeSinceLastFrame);
 
+   // 計算Y值, 要黏著3D地形
+   Ogre::Vector3 pos(m_pMonster2D->getPosition().fX, 1000, m_pMonster2D->getPosition().fY);
+   Ogre::Vector3 dir(0, -1, 0);
+   Ogre::Ray ray(pos, dir);
+   m_terrainHeight = Ogre::Vector3::ZERO;
+   m_terrain.getRayPos(ray, m_terrainHeight);
+
    if((m_pMonster2D->isMove() == true) && (m_pMonster2D->isReachTarget() == false)) {
       // 怪物位置改變時, 一律視為用滑鼠移動
       FPOS targetPos = m_pMonster2D->getTargetPosition();
@@ -111,11 +119,14 @@ void CMonster3D::update(float timeSinceLastFrame)
       m_mouseDirection.z = offsetPos.fY;
 
       move(timeSinceLastFrame, m_mouseDirection);
+
+      Ogre::Vector3 curNodePos = m_pMonsterNode->getPosition();
+      m_pMonsterNode->setPosition(curNodePos.x, m_terrainHeight.y, curNodePos.z);
    }
    else {
       // 怪物沒有改變位置時
       FPOS pos = m_pMonster2D->getPosition();
-      setPosition(pos.fX, 0, pos.fY);
+      setPosition(pos.fX, m_terrainHeight.y, pos.fY);
       setDirection(m_pMonster2D->getDirection());
    }
 

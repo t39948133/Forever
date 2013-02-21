@@ -11,7 +11,10 @@
 
 /** @brief 動作事件
   *        給事件沒有參數的使用 
-  *        ex: AET_REACH, AET_NOT_REACH */
+  *        ex: AET_REACH, 
+  *            AET_NOT_REACH,
+  *            AET_DAMAGE,
+  *            AET_DIE */
 class CActionEvent
 {
    public:

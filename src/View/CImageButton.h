@@ -38,6 +38,7 @@ class CImageButton : public CFButton
       void setTextVerticalAlignment(Alignment alignment);
       void setPosition(int x, int y);
       void setSize(int width, int height);
+      Ogre::PanelOverlayElement* getImage();
 
    protected:
       void addChild(Ogre::OverlayElement *pElement);

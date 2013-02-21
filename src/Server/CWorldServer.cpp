@@ -99,6 +99,50 @@ CPlayerServerID* CWorldServer::addPlayerServerID(GP::NetStream *pNetStream)
    int grid;
    pNewPlayer->getBackpack()->addItem(0, stack, grid);   //設定角色背包內容物: "訓練用長劍" X 1
 
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(27, stack, grid);  //測試用盾
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(26, stack, grid);  //測試用鞋
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(39, stack, grid);  //測試用技能書
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(40, stack, grid);  //測試用技能書
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(41, stack, grid);  //測試用技能書
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(42, stack, grid);  //測試用技能書
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(43, stack, grid);  //測試用技能書
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(44, stack, grid);  //測試用技能書
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(45, stack, grid);  //測試用技能書
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(46, stack, grid);  //測試用技能書
+
+   stack = 1;
+   grid = -1;
+   pNewPlayer->getBackpack()->addItem(47, stack, grid);  //測試用技能書
+
    pNewPlayer->wearToEquipSlot(CHEST, 1);                //設定角色穿 "訓練用金屬胸甲"
    pNewPlayer->wearToEquipSlot(LEGS, 2);                 //設定角色穿 "訓練用金屬腿甲"
 
@@ -109,16 +153,19 @@ CPlayerServerID* CWorldServer::addPlayerServerID(GP::NetStream *pNetStream)
    newHotKeyItem.iField = 0;
    newHotKeyItem.pSkill = pNewPlayer->getSkill(1);
    newHotKeyItem.pItem = NULL;
+   newHotKeyItem.iBackpackGrid = -1;
    pNewPlayer->addHotKeyItem(newHotKeyItem);             //設定角色 "1快捷鍵" 是 "猛烈一擊" 技能
 
    newHotKeyItem.iField = 8;
    newHotKeyItem.pSkill = NULL;
    newHotKeyItem.pItem = pNewPlayer->getBackpack()->getItem(gridHP);
+   newHotKeyItem.iBackpackGrid = gridHP;
    pNewPlayer->addHotKeyItem(newHotKeyItem);             //設定角色 "9快捷鍵" 是 "生命藥水" 道具
 
    newHotKeyItem.iField = 9;
    newHotKeyItem.pSkill = NULL;
    newHotKeyItem.pItem = pNewPlayer->getBackpack()->getItem(gridMP);
+   newHotKeyItem.iBackpackGrid = gridMP;
    pNewPlayer->addHotKeyItem(newHotKeyItem);             //設定角色 "0快捷鍵" 是 "精神藥水" 道具
 
    pNewPlayer->updateEquipAttr();                        //更新角色因為裝備關係的相關屬性數值

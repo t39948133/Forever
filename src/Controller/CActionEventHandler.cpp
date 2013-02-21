@@ -155,7 +155,8 @@ void CActionEventHandler::write(FILE *pFile)
       }
 
       case AET_NOTIFY_DRAW_WEAPON: 
-      case AET_NOTIFY_PUTIN_WEAPON: {
+      case AET_NOTIFY_PUTIN_WEAPON:
+      case AET_NOTIFY_ATTACK: {
          CNotifyActionEvent *pTriggerEvent = (CNotifyActionEvent *)m_pTriggerEvent;
          fwrite(&(pTriggerEvent->m_fBeginTime), sizeof(pTriggerEvent->m_fBeginTime), 1, pFile);
          fwrite(&(pTriggerEvent->m_fEndTime), sizeof(pTriggerEvent->m_fEndTime), 1, pFile);
@@ -261,6 +262,17 @@ void CActionEventHandler::read(FILE *pFile)
          memset(buf, 0, sizeof(buf));
          fread(buf, soundFileSize, 1, pFile);
          pTriggerEvent->m_soundFile = buf;
+
+         delete m_pTriggerEvent;
+         m_pTriggerEvent = pTriggerEvent;
+         break;
+      }
+
+      case AET_NOTIFY_ATTACK: {
+         CNotifyActionEvent *pTriggerEvent = new CNotifyActionEvent();
+         pTriggerEvent->m_event = AET_NOTIFY_ATTACK;
+         fread(&(pTriggerEvent->m_fBeginTime), sizeof(pTriggerEvent->m_fBeginTime), 1, pFile);
+         fread(&(pTriggerEvent->m_fEndTime), sizeof(pTriggerEvent->m_fEndTime), 1, pFile);
 
          delete m_pTriggerEvent;
          m_pTriggerEvent = pTriggerEvent;

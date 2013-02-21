@@ -11,6 +11,7 @@
 #include "CGraphicsRender.h"
 #include "CMonster.h"
 #include "CObjectTitle.h"
+#include "CTerrain.h"
 
 #include <OgreSceneManager.h>
 #include <OgreEntity.h>
@@ -22,7 +23,7 @@
 class CMonster3D
 {
    public:
-      CMonster3D(CMonster *pMonster, Ogre::SceneManager *pSceneManager);
+      CMonster3D(CMonster *pMonster, Ogre::SceneManager *pSceneManager, CTerrain &terrain);
       ~CMonster3D();
 
       /** @brief 設定模型 */
@@ -75,6 +76,8 @@ class CMonster3D
       std::string         m_meshName;         // 模型名稱, 沒有附檔名
       Ogre::Entity       *m_pBodyEntity;      // 身體模型 (基本模型)
       Ogre::SceneNode    *m_pMonsterNode;     // 角色節點
+      CTerrain           &m_terrain;          // 3D地形
+      Ogre::Vector3       m_terrainHeight;    // 3D地形高度
       Ogre::SceneManager *m_pSceneManager;    // 場景管理員
       CGraphicsRender    *m_pRenderCore;      // 繪圖引擎
 

@@ -51,6 +51,8 @@ void CPacketPlayerDataWG::pack(long long netID, CPlayer *pPlayer)
 
       CNetDataHotKey netHotKey;
       netHotKey.m_field = pHotKeyItem->iField;
+      netHotKey.m_backpackGrid = pHotKeyItem->iBackpackGrid;
+
       if(pHotKeyItem->pItem != NULL)
          netHotKey.m_itemID = pHotKeyItem->pItem->getID();
       else
@@ -101,6 +103,7 @@ void CPacketPlayerDataWG::unpack(CPlayer *pPlayer)
    for(int i = 0; i < UI_HOTKEY_NUM; i++) {
       HotKeyItem newHotKeyItem;
       newHotKeyItem.iField = m_vHotKey[i].m_field;
+      newHotKeyItem.iBackpackGrid = m_vHotKey[i].m_backpackGrid;
 
       if(m_vHotKey[i].m_itemID > -1) {
          for(int j = 0; j < pPlayer->getBackpack()->getSize(); j++) {

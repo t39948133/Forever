@@ -11,6 +11,7 @@
 #include "CGraphicsRender.h"
 #include "CPlayer.h"
 #include "CObjectTitle.h"
+#include "CTerrain.h"
 #include "IKeyEventListener.h"
 #include "IPlayerEquipEventListener.h"
 #include "IDrawWeaponNotifyListener.h"
@@ -29,7 +30,7 @@ class CPlayer3D : public IKeyEventListener,
                   public IPutinWeaponNotifyListener
 {
    public:
-      CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream);
+      CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream, CTerrain &terrain);
       ~CPlayer3D();
 
       /** @brief 設定模型 */
@@ -58,6 +59,7 @@ class CPlayer3D : public IKeyEventListener,
    private:
       friend class CPacketPlayerInit;
       friend class CPacketPlayerData;
+      friend class CPacketEquipData;
 
       void setPosition(float x, float y, float z);
       void setDirection(float direction);
@@ -136,6 +138,8 @@ class CPlayer3D : public IKeyEventListener,
       CGraphicsRender    *m_pRenderCore;          // 繪圖引擎
 
       GP::NetStream      *m_pNetStream;
+      CTerrain           &m_terrain;              // 3D地形
+      Ogre::Vector3       m_terrainHeight;        // 3D地形高度
       bool                m_bMainPlayer;          // 是主角嗎?
       CPlayer            *m_pPlayer2D;            // 玩家
 

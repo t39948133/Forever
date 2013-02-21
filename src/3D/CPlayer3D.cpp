@@ -12,6 +12,7 @@
 #include "CWeaponInfo.h"
 #include "CArmorInfo.h"
 #include "CPacketTargetPos.h"
+#include "CPacketCancelUseSkill.h"
 
 #include <OgreQuaternion.h>
 #include <OgreSkeletonInstance.h>
@@ -19,9 +20,10 @@
 
 unsigned int CPlayer3D::m_iPlayerCount = 0;
 
-CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream) : m_pPlayer2D(pPlayer),
-                                                                                                       m_pSceneManager(pSceneManager),
-                                                                                                       m_pNetStream(pNetStream)
+CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream, CTerrain &terrain) : m_pPlayer2D(pPlayer),
+                                                                                                                          m_pSceneManager(pSceneManager),
+                                                                                                                          m_pNetStream(pNetStream),
+                                                                                                                          m_terrain(terrain)
 {
    m_pRenderCore = CRenderLoader::getInstance()->getGraphicsRender("RenderEngine::OGRE");
    m_pRenderCore->addKeyEventListener(this);
@@ -133,15 +135,32 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
    else
       playAnimation(timeSinceLastFrame);
    
+   // 計算Y值, 要黏著3D地形
+   Ogre::Vector3 pos(m_pPlayer2D->getPosition().fX, 1000, m_pPlayer2D->getPosition().fY);
+   Ogre::Vector3 dir(0, -1, 0);
+   Ogre::Ray ray(pos, dir);
+   m_terrainHeight = Ogre::Vector3::ZERO;
+   m_terrain.getRayPos(ray, m_terrainHeight);
+
    if(pCameraNode != NULL) {
       // 代表主角
       m_bMainPlayer = true;
 
       if(m_keyDirection != Ogre::Vector3::ZERO) {
          // 鍵盤移動
+
+         if(m_pPlayer2D->isCastSkill() == true) {
+            m_pPlayer2D->cancelCastSkill();
+
+            CPacketCancelUseSkill packet;
+            packet.pack(m_pPlayer2D);
+            m_pNetStream->send(&packet, sizeof(packet));
+         }
+
          move(timeSinceLastFrame, pCameraNode, m_keyDirection);
 
          Ogre::Vector3 curPos = m_pPlayerNode->getPosition();
+         m_pPlayerNode->setPosition(curPos.x, m_terrainHeight.y, curPos.z);
          m_pPlayer2D->setTargetPosition(curPos.x, curPos.z);
 
          CPacketTargetPos packet;
@@ -163,12 +182,16 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
             m_mouseDirection.z = offsetPos.fY;
 
             move(timeSinceLastFrame, m_mouseDirection);
+
+            Ogre::Vector3 curNodePos = m_pPlayerNode->getPosition();
+            m_pPlayerNode->setPosition(curNodePos.x, m_terrainHeight.y, curNodePos.z);
          }
          else {
             // 主角，非鍵盤移動也非滑鼠移動時
             m_pPlayer2D->setKeyMoveEnabled(false);
 
             FPOS pos = m_pPlayer2D->getPosition();
+            setPosition(pos.fX, m_terrainHeight.y, pos.fY);
             setPosition(pos.fX, 0, pos.fY);
             setDirection(m_pPlayer2D->getDirection());
          }
@@ -192,11 +215,14 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
          m_mouseDirection.z = offsetPos.fY;
 
          move(timeSinceLastFrame, m_mouseDirection);
+
+         Ogre::Vector3 curNodePos = m_pPlayerNode->getPosition();
+         m_pPlayerNode->setPosition(curNodePos.x, m_terrainHeight.y, curNodePos.z);
       }
       else {
          // 其他玩家沒有改變位置時
          FPOS pos = m_pPlayer2D->getPosition();
-         setPosition(pos.fX, 0, pos.fY);
+         setPosition(pos.fX, m_terrainHeight.y, pos.fY);
          setDirection(m_pPlayer2D->getDirection());
       }
    }
@@ -290,8 +316,18 @@ const Ogre::Vector3& CPlayer3D::getPosition()
 
 void CPlayer3D::setMouseTargetPosition(Ogre::Vector3 &targetPos)
 {
-   if(m_bMainPlayer == false)
-      return;
+   //if(m_bMainPlayer == false)
+   //   return;
+
+   if(m_pPlayer2D->isCastSkill() == true) {
+      m_pPlayer2D->cancelCastSkill();
+
+      CPacketCancelUseSkill packet;
+      packet.pack(m_pPlayer2D);
+      m_pNetStream->send(&packet, sizeof(packet));
+   }
+
+   // Todo: 要記錄targetPos.y, 移動時要運算地形高度
 
    m_pPlayer2D->setTargetPosition(targetPos.x, targetPos.z);
 

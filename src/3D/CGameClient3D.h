@@ -16,13 +16,13 @@
 #include "CWindowMan3D.h"
 #include "CScene3D.h"
 #include "CTargetInfoWnd.h"
+#include "CMiniMapWnd.h"
 
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
 #include <OgreCamera.h>
 #include <OgreSceneNode.h>
 #include <OgreSceneQuery.h>
-#include "CMiniMapWnd.h"
 
 class CGameClient3D : public IGameFlowListener,
                       public IMouseEventListener,
@@ -67,6 +67,8 @@ class CGameClient3D : public IGameFlowListener,
       bool                 m_bCreateScene;   // 3D初始化是否完成 (true - 還沒完成 / false - 已經完成)
 
       CTargetInfoWnd      *m_pTargetInfoWnd;
+      CMiniMapWnd         *m_pMiniMapWnd;
+      float                m_cameraDir;
       CWindowMan3D        *m_pWindowMan;     // UI視窗管理
       
       CScene3D            *m_pScene3D;       // 3D場景管理
@@ -82,8 +84,6 @@ class CGameClient3D : public IGameFlowListener,
 
       Ogre::SceneManager  *m_pSceneManager;  // Ogre scene manager
       CGraphicsRender     *m_pRenderCore;    // 繪圖引擎
-	  float cameraDir ;
-	  CMiniMapWnd *pMiniMapWnd ;
 };
 
 #endif // #ifndef _CGAMECLIENT3D_H_

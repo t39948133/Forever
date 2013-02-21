@@ -30,7 +30,8 @@ void CTerrain::init(Ogre::SceneManager *pSceneManager, Ogre::Camera *pCamera)
    ET::TerrainInfo terrainInfo(129, 129, std::vector<float>(129*129, 0.5f));
 
    // set position and size of the terrain
-   terrainInfo.setExtents(Ogre::AxisAlignedBox(0, 0, 0, 900, 0, 900));  // 900 x 900
+   //terrainInfo.setExtents(Ogre::AxisAlignedBox(0, 0, 0, 900, 0, 900));  // 900 x 900
+   terrainInfo.setExtents(Ogre::AxisAlignedBox(0, -300, 0, 1500, 300, 1500));  // 1500 x 1500
 
    // now render it
    m_pTerrainMgr->createTerrain(terrainInfo);
@@ -166,7 +167,8 @@ void CTerrain::loadTerrain(int id)
 
    ET::TerrainInfo info;
    ET::loadHeightmapFromImage(info, image);
-   info.setExtents(Ogre::AxisAlignedBox(0, 0, 0, 900, 0, 900));
+   //info.setExtents(Ogre::AxisAlignedBox(0, 0, 0, 900, 0, 900));   // 900 X 900
+   info.setExtents(Ogre::AxisAlignedBox(0, -300, 0, 1500, 300, 1500));
    m_pTerrainMgr->createTerrain(info);
    m_pTerrainInfo = &(m_pTerrainMgr->getTerrainInfo());
 

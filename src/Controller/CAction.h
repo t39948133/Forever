@@ -99,7 +99,7 @@ class CAction
       bool        m_bMove;          // 是否可移動
       long long   m_uid;            // 玩家、怪物、NPC的唯一編號
 
-      std::vector<CActionEventHandler *> *m_pvtEventHandlerSet;  // 該動作會受哪些事件影響而更換動作
+      std::vector<CActionEventHandler *> m_eventHandlerSet;  // 該動作會受哪些事件影響而更換動作
 };
 
 #endif  // #ifndef _CACTION_H_

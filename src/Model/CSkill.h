@@ -43,6 +43,9 @@ class CSkill:public SKILL_INFO
       /** @brief 通知技能冷卻時間有更新 */
       void notifySkillCoolDownUpdate();
 
+      /** @brief 通知技能可不可用有更新 */
+      void notifySkillAvailableUpdate();
+
       std::set<ISkillEventListener *> m_skillEventListeners;   // 監聽技能改變的監聽者列表
       // } Add by Darren Chen on 2013/01/21
 };

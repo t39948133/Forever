@@ -10,9 +10,10 @@
 
 // Add by Darren Chen on 2013/01/12 {
 typedef struct tagHOTKEYITEM {
-   int     iField;  // 哪一個欄位的快捷鍵
-   CItem  *pItem;   // 要放入HotKey列表內的物品
-   CSkill *pSkill;  // 要放入HotKey列表內的技能
+   int     iField;         // 哪一個欄位的快捷鍵
+   CItem  *pItem;          // 要放入HotKey列表內的物品
+   int     iBackpackGrid;  // 針對CItem, 該物品是背包內哪一格
+   CSkill *pSkill;         // 要放入HotKey列表內的技能
 } HotKeyItem;
 // } Add by Darren Chen on 2013/01/12
 

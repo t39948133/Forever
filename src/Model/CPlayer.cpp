@@ -25,8 +25,8 @@ CPlayer::CPlayer(std::string machineName, std::string strName, long long uid, ch
    }
 
    // 讀取玩家動作檔 (守護星 的動作系統)
-   if(m_pActionSystem->read("../PlayerKnight.acs") == false)
-      m_pActionSystem->read("PlayerKnight.acs");
+   if(m_actionSystem.read("../PlayerKnight.acs") == false)
+      m_actionSystem.read("PlayerKnight.acs");
 }
 
 // Add by Darren Chen on 2013/01/12 {
@@ -84,40 +84,76 @@ CQuestMap* CPlayer::getQuestMap()
 // Modify by Darren Chen on 2013/01/07 {
 void CPlayer::wearToEquipSlot(EquipSlot es, int itemID)
 {
-   std::map<EquipSlot, int>::iterator it = m_mEquip.find(es);
-   if(it != m_mEquip.end()) {
-      // 舊物品放入背包
-		int st = 1;
-		int bu = 0;
-		m_pBackpack->addItem(it->second, st, bu);
+   std::string machineName = this->getMachineName();
+   size_t idx = machineName.find("Server");
+   if(idx != std::string::npos) {
+      // Server端處理
 
-      // 該裝備槽的資料移除
-      m_mEquip.erase(it);
+      std::map<EquipSlot, int>::iterator it = m_mEquip.find(es);
+      if(it != m_mEquip.end()) {
+         // 舊物品放入背包
+		   int st = 1;
+		   int bu = 0;
+		   m_pBackpack->addItem(it->second, st, bu);
+
+         // 該裝備槽的資料移除
+         m_mEquip.erase(it);
+      }
+
+	   // 物品裝備到裝備欄上
+	   m_mEquip.insert(std::make_pair(es, itemID));
+      notifyPlayerEquipUpdate(es, itemID);
+   	
+      // 背包的物品堆疊減一
+      m_pBackpack->removeItem(itemID);
+   }
+   else {
+      // Client端處理
+
+      std::map<EquipSlot, int>::iterator it = m_mEquip.find(es);
+      if(it != m_mEquip.end())
+         // 該裝備槽的資料移除
+         m_mEquip.erase(it);
+
+	   // 物品裝備到裝備欄上
+	   m_mEquip.insert(std::make_pair(es, itemID));
+      notifyPlayerEquipUpdate(es, itemID);
    }
 
-	// 物品裝備到裝備欄上
-	m_mEquip.insert(std::make_pair(es, itemID));
-   notifyPlayerEquipUpdate(es, itemID);
-	
-   // 背包的物品堆疊減一
-   m_pBackpack->removeItem(itemID);
+   updateEquipAttr();
 }
 // } Modify by Darren Chen on 2013/01/07
 
 void CPlayer::shedEquip(EquipSlot grid)
 {
-   std::map<EquipSlot, int>::iterator it = m_mEquip.find(grid);
-	if(m_mEquip.end() == it)
-		return;
-	
-	int st = 1;
-	int gr = 0;
-	m_pBackpack->addItem(it->second, st, gr);
+   std::string machineName = this->getMachineName();
+   size_t idx = machineName.find("Server");
+   if(idx != std::string::npos) {
+      // Server端處理
 
-	m_mEquip.erase(grid);
-   notifyPlayerEquipUpdate(grid, -1);
+      std::map<EquipSlot, int>::iterator it = m_mEquip.find(grid);
+	   if(m_mEquip.end() == it)
+		   return;
+   	
+	   int st = 1;
+	   int gr = 0;
+	   m_pBackpack->addItem(it->second, st, gr);
 
-	updateEquipAttr();
+	   m_mEquip.erase(grid);
+      notifyPlayerEquipUpdate(grid, -1);
+   }
+   else {
+      // Client端處理
+
+      std::map<EquipSlot, int>::iterator it = m_mEquip.find(grid);
+	   if(m_mEquip.end() == it)
+		   return;
+
+      m_mEquip.erase(grid);
+      notifyPlayerEquipUpdate(grid, -1);
+   }
+
+   updateEquipAttr();
 }
 
 std::map<EquipSlot, int> CPlayer::getEquip()
@@ -154,69 +190,70 @@ long long CPlayer::getMoney()
 
 void CPlayer::useItem(int itemID)
 {
-   CItemInfo* pItemInfo = CItem::getInfo(itemID);
-   if(pItemInfo == NULL)
-      return;
+   std::string machineName = this->getMachineName();
+   size_t idx = machineName.find("Server");
+   if(idx != std::string::npos) {
+      // Server端處理
 
-   if(pItemInfo->getClassType() == WEAPON) {
-		CWeaponInfo *pWp = (CWeaponInfo*) pItemInfo;
-      if(this->getLevel() >= pWp->getLevel()) {
-         if(ONE_HAND == pWp->getWield())
-			   wearToEquipSlot(MAIN_HAND, itemID);
-         else if(TWO_HAND == pWp->getWield())
-			   wearToEquipSlot(OFF_HAND, itemID);
-         else
-            return;
+      CItemInfo* pItemInfo = CItem::getInfo(itemID);
+      if(pItemInfo == NULL)
+         return;
 
-         updateEquipAttr();
-      }
-	}
-   else if(pItemInfo->getClassType() == ARMOR) {
-		CArmorInfo *pAm = (CArmorInfo*) pItemInfo;
-      if(this->getLevel() >= pAm->getLevel()) {
-		   if(CLOTHES == pAm->getWear())
-			   wearToEquipSlot(CHEST, itemID);
-		   else if(BELTS == pAm->getWear())
-			   wearToEquipSlot(BELT, itemID);
-		   else if(PANTS == pAm->getWear())
-			   wearToEquipSlot(LEGS, itemID);
-		   else if(PAULDRONS == pAm->getWear())
-			   wearToEquipSlot(SHOULDER, itemID);
-		   else if(GLOVES == pAm->getWear())
-			   wearToEquipSlot(GLOVE, itemID);
-		   else if(BOOTS == pAm->getWear())
-			   wearToEquipSlot(BOOT, itemID);
-         else
-            return;
-
-         updateEquipAttr();
-      }
-	}
-   else if(pItemInfo->getClassType() == CONSUMABLE) {
-      CConsumableInfo *pConsumableInfo = (CConsumableInfo *)pItemInfo;
-      if(this->getLevel() >= pConsumableInfo->getLevel()) {
-         if(pConsumableInfo->getEffect() == EDIBLE_SKILL)
-            addSkill(pConsumableInfo->getMuch());  // 學習某項技能   
-         else if(pConsumableInfo->getEffect() == EDIBLE_HP) {
-            if(getHPMax() == getHP())
-                 return;
-
-            addHP(pConsumableInfo->getMuch());     // 補血
-            // Todo: 藥水是否有CD時間
+      if(pItemInfo->getClassType() == WEAPON) {
+		   CWeaponInfo *pWp = (CWeaponInfo*) pItemInfo;
+         if(this->getLevel() >= pWp->getLevel()) {
+            if(ONE_HAND == pWp->getWield())
+			      wearToEquipSlot(MAIN_HAND, itemID);
+            else if(TWO_HAND == pWp->getWield())
+			      wearToEquipSlot(OFF_HAND, itemID);
          }
-         else if(pConsumableInfo->getEffect() == EDIBLE_MP) {
-            if(getMP() == getMPMax())
+	   }
+      else if(pItemInfo->getClassType() == ARMOR) {
+		   CArmorInfo *pAm = (CArmorInfo*) pItemInfo;
+         if(this->getLevel() >= pAm->getLevel()) {
+		      if(CLOTHES == pAm->getWear())
+			      wearToEquipSlot(CHEST, itemID);
+		      else if(BELTS == pAm->getWear())
+			      wearToEquipSlot(BELT, itemID);
+		      else if(PANTS == pAm->getWear())
+			      wearToEquipSlot(LEGS, itemID);
+		      else if(PAULDRONS == pAm->getWear())
+			      wearToEquipSlot(SHOULDER, itemID);
+		      else if(GLOVES == pAm->getWear())
+			      wearToEquipSlot(GLOVE, itemID);
+		      else if(BOOTS == pAm->getWear())
+			      wearToEquipSlot(BOOT, itemID);
+         }
+	   }
+      else if(pItemInfo->getClassType() == CONSUMABLE) {
+         CConsumableInfo *pConsumableInfo = (CConsumableInfo *)pItemInfo;
+         if(this->getLevel() >= pConsumableInfo->getLevel()) {
+            if(pConsumableInfo->getEffect() == EDIBLE_SKILL)
+               addSkill(pConsumableInfo->getMuch());  // 學習某項技能   
+            else if(pConsumableInfo->getEffect() == EDIBLE_HP) {
+               if(getHPMax() == getHP())
+                    return;
+
+               addHP(pConsumableInfo->getMuch());     // 補血
+               // Todo: 藥水是否有CD時間
+            }
+            else if(pConsumableInfo->getEffect() == EDIBLE_MP) {
+               if(getMP() == getMPMax())
+                  return;
+
+               addMP(pConsumableInfo->getMuch());     // 補魔
+               // Todo: 藥水是否有CD時間
+            }
+            else
                return;
 
-            addMP(pConsumableInfo->getMuch());     // 補魔
-            // Todo: 藥水是否有CD時間
+            // 背包物品減一
+            m_pBackpack->removeItem(itemID);
          }
-         else
-            return;
-
-         // 背包物品減一
-         m_pBackpack->removeItem(itemID);
       }
+   }
+   else {
+      // Client端處理
    }
 }
 
@@ -226,14 +263,14 @@ void CPlayer::addHotKeyItem(HotKeyItem &newHotKeyItem)
       HotKeyItem *pHotKeyItem = m_pvtHotKey->at(newHotKeyItem.iField);
       if(pHotKeyItem != NULL) {
          if(newHotKeyItem.pItem != NULL) {
-            for(int i = 0; i < m_pBackpack->getSize(); i++) {
-               CItem *pBackpackItem = m_pBackpack->getItem(i);
+            if(newHotKeyItem.iBackpackGrid > -1) {
+               CItem *pBackpackItem = m_pBackpack->getItem(newHotKeyItem.iBackpackGrid);
                if(pBackpackItem != NULL) {
                   if(newHotKeyItem.pItem->getID() == pBackpackItem->getID()) {
                      pHotKeyItem->iField = newHotKeyItem.iField;
                      pHotKeyItem->pItem = pBackpackItem;
+                     pHotKeyItem->iBackpackGrid = newHotKeyItem.iBackpackGrid;
                      pHotKeyItem->pSkill = NULL;
-                     break;
                   }
                }
             }
@@ -245,8 +282,8 @@ void CPlayer::addHotKeyItem(HotKeyItem &newHotKeyItem)
                   pHotKeyItem->iField = newHotKeyItem.iField;
                   pHotKeyItem->pSkill = (*it);
                   pHotKeyItem->pItem = NULL;
+                  pHotKeyItem->iBackpackGrid = -1;
 
-                  (*it)->checkAvailable(m_mEquip);
                   break;
                }
                it++;
@@ -255,10 +292,14 @@ void CPlayer::addHotKeyItem(HotKeyItem &newHotKeyItem)
          else {
             pHotKeyItem->iField = newHotKeyItem.iField;
             pHotKeyItem->pItem = NULL;
+            pHotKeyItem->iBackpackGrid = -1;
             pHotKeyItem->pSkill = NULL;
          }
 
          notifyPlayerHotKeyUpdate(pHotKeyItem);
+
+         if(pHotKeyItem->pSkill != NULL)
+            pHotKeyItem->pSkill->checkAvailable(m_mEquip);
       }
    }
 }
@@ -349,34 +390,49 @@ void CPlayer::draw(HDC hdc)
    char buf[128];
    sprintf_s(buf, sizeof(buf), "%s", getName().c_str());
    TextOut(hdc, (int)getPosition().fX - size, (int)getPosition().fY + size + 5, buf, strlen(buf));
+
+   memset(buf, 0, sizeof(buf));
+   sprintf_s(buf, sizeof(buf), "目標位置: x = %.0f, y = %.0f", this->getTargetPosition().fX, this->getTargetPosition().fY);
+   TextOut(hdc, (int)getPosition().fX - size, (int)getPosition().fY - size * 2, buf, strlen(buf));
 }
 #endif  // #ifdef _GAMEENGINE_2D_
 // } Add by Darren Chen on 2012/12/26
 
 void CPlayer::updateEquipAttr()
 {
-	std::map<EquipSlot , int>::iterator pi = m_mEquip.begin();
-	AdvancedAttribute advAttr;
-	AttributeSet(advAttr);
-	ObscureAttribute obsAttr;
-	AttributeClear(obsAttr);
-	BasicAttributeSet(getLevel(), getBasAttr(), advAttr, obsAttr);		//取得角色初始素質
-	while (m_mEquip.end() != pi)
-	{
-		CWeaponInfo* wp = (CWeaponInfo*) CItem::getInfo(pi->second);
-		if(NULL == wp)
-		{
-			break;
-		}
-		AttributeAdd (advAttr, wp->getBaseAttr());
-		AttributeAdd (advAttr, wp->getExtendAttr());
-		
-		pi++;
-	}
-	advAttr.iHP = getHP();
-	advAttr.iMP = getMP();
-	setAdvAttr(advAttr);
-	updateSkillAvailable();
+   std::string machineName = this->getMachineName();
+   size_t idx = machineName.find("Server");
+   if(idx != std::string::npos) {
+      // Server端處理
+
+	   std::map<EquipSlot , int>::iterator pi = m_mEquip.begin();
+	   AdvancedAttribute advAttr;
+	   AttributeSet(advAttr);
+	   ObscureAttribute obsAttr;
+	   AttributeClear(obsAttr);
+	   BasicAttributeSet(getLevel(), getBasAttr(), advAttr, obsAttr);		//取得角色初始素質
+	   while (m_mEquip.end() != pi)
+	   {
+		   CWeaponInfo* wp = (CWeaponInfo*) CItem::getInfo(pi->second);
+		   if(NULL == wp)
+		   {
+			   break;
+		   }
+		   AttributeAdd (advAttr, wp->getBaseAttr());
+		   AttributeAdd (advAttr, wp->getExtendAttr());
+   		
+		   pi++;
+	   }
+	   advAttr.iHP = getHP();
+	   advAttr.iMP = getMP();
+	   setAdvAttr(advAttr);
+	   updateSkillAvailable();
+   }
+   else {
+      // Client端處理
+
+      updateSkillAvailable();
+   }
 }
 
 void CPlayer::updateSkillAvailable()

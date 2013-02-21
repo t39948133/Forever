@@ -348,6 +348,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\3D\CSceneObj.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\3D\CSceneObjMan.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\3D\CTerrain.cpp"
 					>
 				</File>
@@ -532,6 +540,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CMiniMapWnd.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CObjectTitle.cpp"
 					>
 				</File>
@@ -564,6 +576,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CToolBarWnd.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CWindow.cpp"
 					>
 				</File>
@@ -588,6 +604,30 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketAddSkill.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketAdvAttrData.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketBackpackData.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketCancelUseSkill.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketCanUseSkill.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketEquipData.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketMonsterData.cpp"
 					>
 				</File>
@@ -609,6 +649,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CPacketTargetPos.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketUseItem.cpp"
 					>
 				</File>
 				<File
@@ -893,6 +937,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\3D\CSceneObj.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\3D\CSceneObjMan.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\3D\CTerrain.h"
 					>
 				</File>
@@ -993,6 +1045,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CMiniMapWnd.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CObjectTitle.h"
 					>
 				</File>
@@ -1022,6 +1078,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\View\CTextOverlay.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CToolBarWnd.h"
 					>
 				</File>
 				<File
@@ -1073,6 +1133,30 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketAddSkill.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketAdvAttrData.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketBackpackData.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketCancelUseSkill.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketCanUseSkill.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketEquipData.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketFirstLogin.h"
 					>
 				</File>
@@ -1102,6 +1186,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CPacketTargetPos.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketUseItem.h"
 					>
 				</File>
 				<File

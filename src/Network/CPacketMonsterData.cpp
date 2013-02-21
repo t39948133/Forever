@@ -14,6 +14,8 @@ void CPacketMonsterData::pack(CMonster *pMonster)
 {
    m_uid            = pMonster->getUID();
    m_kindID         = pMonster->getID();
+   m_basAttr        = pMonster->getBasAttr();
+   m_advAttr        = pMonster->getAdvAttr();
    m_position       = pMonster->getPosition();
    m_targetPosition = pMonster->getTargetPosition();
    m_fDirection     = pMonster->getDirection();
@@ -25,6 +27,8 @@ void CPacketMonsterData::pack(CMonster *pMonster)
 void CPacketMonsterData::unpack(CMonster *pMonster)
 {
    pMonster->setUID(m_uid);
+   pMonster->setBasAttr(m_basAttr);
+   pMonster->setAdvAttr(m_advAttr);
    pMonster->setPosition(m_position.fX, m_position.fY);
    pMonster->setTargetPosition(m_targetPosition.fX, m_targetPosition.fY);
    pMonster->setDirection(m_fDirection);

@@ -56,7 +56,8 @@ CActionEditorDlg::CActionEditorDlg(CWnd* pParent /*=NULL*/)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
-   m_pActionSystem = new CActionSystem("CActionEditor", 0);
+   m_pActionSystem = new CActionSystem();
+   m_pActionSystem->init("CActionEditor", 0);
    m_iActionListIdx = -1;
    m_iEventListIdx = -1;
 }
@@ -203,8 +204,8 @@ void CActionEditorDlg::updateActionList()
    CListBox *pActionList = (CListBox*)GetDlgItem(LST_ACTIONLIST);
    pActionList->ResetContent();
 
-   std::vector<CAction *>::iterator it = m_pActionSystem->m_pActionVector->begin();
-   while(it != m_pActionSystem->m_pActionVector->end()) {
+   std::vector<CAction *>::iterator it = m_pActionSystem->m_actionVector.begin();
+   while(it != m_pActionSystem->m_actionVector.end()) {
       CString str;
       char buf[256];
       memset(buf, 0, sizeof(buf));
@@ -237,9 +238,9 @@ void CActionEditorDlg::updateEventList()
    CString str;
    char buf[256];
 
-   CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
-   std::vector<CActionEventHandler *>::iterator it = pAction->m_pvtEventHandlerSet->begin();
-   while(it != pAction->m_pvtEventHandlerSet->end()) {
+   CAction *pAction = m_pActionSystem->m_actionVector.at(m_iActionListIdx);
+   std::vector<CActionEventHandler *>::iterator it = pAction->m_eventHandlerSet.begin();
+   while(it != pAction->m_eventHandlerSet.end()) {
       switch((*it)->m_pTriggerEvent->m_event) {
          case AET_NULL: {     
             str.Empty();
@@ -321,6 +322,15 @@ void CActionEditorDlg::updateEventList()
 		      pEventList->AddString(str);
             break;
          }
+
+         case AET_NOTIFY_ATTACK: {
+            str.Empty();
+            memset(buf, 0, sizeof(buf));
+            sprintf_s(buf, "AET_NOTIFY_ATTACK => [%d]", (*it)->m_iNextActionID);
+		      str = buf;
+		      pEventList->AddString(str);
+            break;
+         }
       }
 
       it++;
@@ -377,7 +387,7 @@ void CActionEditorDlg::OnBnClickedNewaction()
       m_pActionSystem->addAction(pAction);
    }
    else {
-      CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
+      CAction *pAction = m_pActionSystem->m_actionVector.at(m_iActionListIdx);
       pAction->m_iID = actData.iID;
       pAction->m_name = actData.name;
       pAction->m_animationName = actData.animationName;
@@ -416,7 +426,7 @@ void CActionEditorDlg::OnLbnSelchangeActionlist()
    m_iActionListIdx = pActionList->GetCurSel();
 
    if(m_iActionListIdx > -1) {
-      CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
+      CAction *pAction = m_pActionSystem->m_actionVector.at(m_iActionListIdx);
 
       SetDlgItemText(EDT_ACTIONID, toString<int>(pAction->m_iID).c_str());
       SetDlgItemText(EDT_ACTIONNAME, pAction->m_name.c_str());
@@ -485,18 +495,18 @@ void CActionEditorDlg::OnBnClickedCancelselactionlist()
 void CActionEditorDlg::OnBnClickedDelaction()
 {
    if(m_iActionListIdx > -1) {
-      CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
-      std::vector<CAction *>::iterator it = m_pActionSystem->m_pActionVector->begin();
-      while(it != m_pActionSystem->m_pActionVector->end()) {
+      CAction *pAction = m_pActionSystem->m_actionVector.at(m_iActionListIdx);
+      std::vector<CAction *>::iterator it = m_pActionSystem->m_actionVector.begin();
+      while(it != m_pActionSystem->m_actionVector.end()) {
          if((*it) == pAction) {
-            m_pActionSystem->m_pActionVector->erase(it);
+            m_pActionSystem->m_actionVector.erase(it);
             break;
          }
 
          it++;
       }
 
-      if(m_iActionListIdx >= (int)m_pActionSystem->m_pActionVector->size())
+      if(m_iActionListIdx >= (int)m_pActionSystem->m_actionVector.size())
          m_iActionListIdx--;
 
       updateActionList();
@@ -615,17 +625,35 @@ void CActionEditorDlg::OnBnClickedNewevent()
 
          pActionEvent = pEvent;
       }
+      else if(pcmbEvent->GetCurSel() == 9) {
+         CNotifyActionEvent *pEvent = new CNotifyActionEvent();
+         pEvent->m_event = AET_NOTIFY_ATTACK;
+
+         CString str;
+         str.Empty();
+         GetDlgItemText(EDT_BEGINTIME, str);
+         std::string strFTime = str.GetBuffer(0);
+         pEvent->m_fBeginTime = fromString<float>(strFTime);
+
+         str.Empty();
+         strFTime.clear();
+         GetDlgItemText(EDT_ENDTIME, str);
+         strFTime = str.GetBuffer(0);
+         pEvent->m_fEndTime = fromString<float>(strFTime);
+
+         pActionEvent = pEvent;
+      }
 
       if(m_iEventListIdx == -1) {
          CActionEventHandler *pActionEventHandler = new CActionEventHandler();
          pActionEventHandler->init(pActionEvent, GetDlgItemInt(EDT_EVENTNEXTACTIONID));
 
-         CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
+         CAction *pAction = m_pActionSystem->m_actionVector.at(m_iActionListIdx);
          pAction->addEventHandler(pActionEventHandler);
       }
       else {
-         CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
-         CActionEventHandler *pActionEventHandler = pAction->m_pvtEventHandlerSet->at(m_iEventListIdx);
+         CAction *pAction = m_pActionSystem->m_actionVector.at(m_iActionListIdx);
+         CActionEventHandler *pActionEventHandler = pAction->m_eventHandlerSet.at(m_iEventListIdx);
 
          pActionEventHandler->m_pTriggerEvent = pActionEvent;
          pActionEventHandler->m_iNextActionID = GetDlgItemInt(EDT_EVENTNEXTACTIONID);
@@ -645,8 +673,8 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
 
       if(m_iEventListIdx > -1) {
          clearEventData();
-         CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
-         CActionEventHandler *pActionEventHandler = pAction->m_pvtEventHandlerSet->at(m_iEventListIdx);
+         CAction *pAction = m_pActionSystem->m_actionVector.at(m_iActionListIdx);
+         CActionEventHandler *pActionEventHandler = pAction->m_eventHandlerSet.at(m_iEventListIdx);
 
          CComboBox *pcmbEvent = (CComboBox*)GetDlgItem(CMB_EVENT);
          switch(pActionEventHandler->m_pTriggerEvent->m_event) {
@@ -732,6 +760,17 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
                SetDlgItemText(EDT_SOUNDFILE, pPlaySoundNotifyActionEvent->m_soundFile.c_str());
                break;
             }
+
+            case AET_NOTIFY_ATTACK: {
+               pcmbEvent->SetCurSel(9);
+               OnCbnSelchangeEvent();
+
+               CNotifyActionEvent *pNotifyActionEvent = (CNotifyActionEvent *)pActionEventHandler->m_pTriggerEvent;
+
+               SetDlgItemText(EDT_BEGINTIME, toString<float>(pNotifyActionEvent->m_fBeginTime).c_str());
+               SetDlgItemText(EDT_ENDTIME, toString<float>(pNotifyActionEvent->m_fEndTime).c_str());
+               break;
+            }
          }
 
          SetDlgItemText(EDT_EVENTNEXTACTIONID, toString<int>(pActionEventHandler->getNextActionID()).c_str());
@@ -767,20 +806,20 @@ void CActionEditorDlg::OnBnClickedDelevent()
 {
    if(m_iActionListIdx > -1) {
       if(m_iEventListIdx > -1) {
-         CAction *pAction = m_pActionSystem->m_pActionVector->at(m_iActionListIdx);
-         CActionEventHandler *pActionEventHandler = pAction->m_pvtEventHandlerSet->at(m_iEventListIdx);
+         CAction *pAction = m_pActionSystem->m_actionVector.at(m_iActionListIdx);
+         CActionEventHandler *pActionEventHandler = pAction->m_eventHandlerSet.at(m_iEventListIdx);
 
-         std::vector<CActionEventHandler *>::iterator it = pAction->m_pvtEventHandlerSet->begin();
-         while(it != pAction->m_pvtEventHandlerSet->end()) {
+         std::vector<CActionEventHandler *>::iterator it = pAction->m_eventHandlerSet.begin();
+         while(it != pAction->m_eventHandlerSet.end()) {
             if((*it) == pActionEventHandler) {
-               pAction->m_pvtEventHandlerSet->erase(it);
+               pAction->m_eventHandlerSet.erase(it);
                break;
             }
 
             it++;
          }
 
-         if(m_iEventListIdx >= (int)pAction->m_pvtEventHandlerSet->size())
+         if(m_iEventListIdx >= (int)pAction->m_eventHandlerSet.size())
             m_iEventListIdx--;
 
          updateEventList();
@@ -904,7 +943,8 @@ void CActionEditorDlg::OnCbnSelchangeEvent()
       }
 
       case 6:    // AET_NOTIFY_DRAW_WEAPON
-      case 7: {  // AET_NOTIFY_PUTIN_WEAPON
+      case 7:    // AET_NOTIFY_PUTIN_WEAPON
+      case 9: {  // AET_NOTIFY_ATTACK
          CEdit *pedtKey = (CEdit*)GetDlgItem(EDT_KEY);
          pedtKey->EnableWindow(false);
          CEdit *pedtKeyDown = (CEdit*)GetDlgItem(EDT_KEYDOWN);

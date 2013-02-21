@@ -43,7 +43,8 @@ class CSkillWnd : public CWindow,
 #endif
 
       // ISkillEventListener
-      /* virtual */ void updateSkill(CUnitObject *pUnitObject);
+      /* virtual */ void updateAddSkill(CUnitObject *pUnitObject, int skillID);
+      /* virtual */ void updateSkillAvailable(CSkill *pSkill);
       /* virtual */ void updateSkillCoolDown(CSkill *pSkill);
 
    private:

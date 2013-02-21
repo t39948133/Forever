@@ -16,9 +16,14 @@ class CSkill;
 class ISkillEventListener
 {
    public:
-      /** @brief 更新作戰單位技能
-        * @param pUnitObject 更新的物件 */
-      virtual void updateSkill(CUnitObject *pUnitObject) = 0;
+      /** @brief 新增作戰單位技能
+        * @param pUnitObject 誰
+        * @param skillID     新技能 */
+      virtual void updateAddSkill(CUnitObject *pUnitObject, int skillID) = 0;
+
+      /** @brief 更新因裝備關係可不可用 
+        * @param pSkill 技能 */
+      virtual void updateSkillAvailable(CSkill *pSkill) = 0;
 
       /** @brief 更新技能冷卻時間
         * @param pSkill 技能 */

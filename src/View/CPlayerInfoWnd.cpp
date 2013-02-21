@@ -1,4 +1,5 @@
 #include "CPlayerInfoWnd.h"
+#include "CPacketEquipData.h"
 
 #ifdef _GAMEENGINE_3D_
 #include <OgreTextAreaOverlayElement.h>
@@ -43,9 +44,10 @@ CPlayerInfoWnd::~CPlayerInfoWnd()
    }
 }
 
-void CPlayerInfoWnd::init (int _x, int _y, CPlayer *pPlr)
+void CPlayerInfoWnd::init (int _x, int _y, CPlayer *pPlr, GP::NetStream *pNetStream)
 {
 	m_pPlayer = pPlr;
+   m_pNetStream = pNetStream;
    if(m_pPlayer != NULL) {
       m_pPlayer->addPlayerAttrEventListener(this);
       m_pPlayer->addAdvAttrEventListener(this);
@@ -412,42 +414,39 @@ bool CPlayerInfoWnd::canDrag (int tx, int ty)
 
 void CPlayerInfoWnd::onRCommand (int btnID)
 {
+   CPacketEquipData packet;
+
    switch(btnID) {
-      case 0: {  // 主手武器
-         m_pPlayer->shedEquip(MAIN_HAND);
+      case BUTTON_MAINHAND:   // 主手武器
+         packet.pack(m_pPlayer, MAIN_HAND, -1);
          break;
-      }
 
-      case 1: {  // 副手武器
-         m_pPlayer->shedEquip(OFF_HAND);
+      case BUTTON_OFFHAND:   // 副手武器
+         packet.pack(m_pPlayer, OFF_HAND, -1);
          break;
-      }
 
-      case 4: {  // 上衣
-         m_pPlayer->shedEquip(CHEST);
+      case BUTTON_CHEST:   // 上衣
+         packet.pack(m_pPlayer, CHEST, -1);
          break;
-      }
 
-      case 5: {  // 肩膀部位
-         m_pPlayer->shedEquip(SHOULDER);
+      case BUTTON_SHOULDER:   // 肩膀部位
+         packet.pack(m_pPlayer, SHOULDER, -1);
          break;
-      }
 
-      case 6: {  // 褲子
-         m_pPlayer->shedEquip(LEGS);
+      case BUTTON_LEGS:   // 褲子
+         packet.pack(m_pPlayer, LEGS, -1);
          break;
-      }
 
-      case 7: {  // 手套部位
-         m_pPlayer->shedEquip(GLOVE);
+      case BUTTON_GLOVE:   // 手套部位
+         packet.pack(m_pPlayer, GLOVE, -1);
          break;
-      }
 
-      case 10: {  // 鞋子
-         m_pPlayer->shedEquip(BOOT);
+      case BUTTON_BOOT:   // 鞋子
+         packet.pack(m_pPlayer, BOOT, -1);
          break;
-      }
    }
+
+   m_pNetStream->send(&packet, sizeof(packet));
 }
 
 WindowClassType CPlayerInfoWnd::getClassType()
@@ -689,77 +688,5 @@ void CPlayerInfoWnd::updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, in
          break;
 	   }
    }
-
-   /*switch(equipSlot) {
-      case MAIN_HAND: {
-         if(itemId == -1)
-		      m_vpBtn[0]->str = "主手武器";
-         else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemId);
-            m_vpBtn[0]->str = pItemInfo->getName();
-         }
-         break;
-	   }
-
-      case OFF_HAND: {
-         if(itemId == -1)
-		      m_vpBtn[1]->str = "副手武器";
-         else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemId);
-            m_vpBtn[1]->str = pItemInfo->getName();
-         }
-         break;
-	   }
-
-      case CHEST: {
-         if(itemId == -1)
-		      m_vpBtn[4]->str = "上衣";
-         else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemId);
-            m_vpBtn[4]->str = pItemInfo->getName();
-         }
-         break;
-	   }
-
-	   case SHOULDER: {
-         if(itemId == -1)
-		      m_vpBtn[5]->str = "肩甲";
-         else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemId);
-            m_vpBtn[5]->str = pItemInfo->getName();
-         }
-         break;
-	   }
-
-      case LEGS: {
-         if(itemId == -1)
-		      m_vpBtn[6]->str = "褲子";
-         else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemId);
-            m_vpBtn[6]->str = pItemInfo->getName();
-         }
-         break;
-	   }
-
-      case GLOVE: {
-         if(itemId == -1)
-		      m_vpBtn[7]->str = "手套";
-         else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemId);
-            m_vpBtn[7]->str = pItemInfo->getName();
-         }
-         break;
-	   }
-
-      case BOOT: {
-         if(itemId == -1)
-		      m_vpBtn[10]->str = "鞋子";
-         else {
-            CItemInfo *pItemInfo = CItem::getInfo(itemId);
-            m_vpBtn[10]->str = pItemInfo->getName();
-         }
-         break;
-	   }
-   }*/
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 }

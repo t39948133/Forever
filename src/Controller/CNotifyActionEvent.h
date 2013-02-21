@@ -13,7 +13,8 @@
   *        笆╰参穦ㄌ沮琘丁翴τ硄场琘癟
   *        倒⊿Τ把计ㄆンㄏノ
   *        Ex: AET_NOTIFY_DRAW_WEAPON,
-  *            AET_NOTIFY_PUTIN_WEAPON */
+  *            AET_NOTIFY_PUTIN_WEAPON,
+  *            AET_NOTIFY_ATTACK */
 class CNotifyActionEvent : public CActionEvent
 {
    public:

@@ -6,7 +6,7 @@ material Icon/Scroll/Skillbook_01
 		{
 			texture_unit
 			{
-				texture Icon_Item_Skillbook_01.dds
+				texture Icon_Item_Skillbook_01.png
 			}
 		}
 	}

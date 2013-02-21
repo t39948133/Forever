@@ -1,7 +1,8 @@
 #include "CScene3D.h"
 
-CScene3D::CScene3D(Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream) : m_pSceneManager(pSceneManager),
-                                                                                   m_pNetStream(pNetStream)
+CScene3D::CScene3D(Ogre::SceneManager *pSceneManager, GP::NetStream *pNetStream, CTerrain &terrain) : m_pSceneManager(pSceneManager),
+                                                                                                      m_pNetStream(pNetStream),
+                                                                                                      m_terrain(terrain)
 {
    m_pMainPlayer = NULL;
    m_pPlayer3DList = new std::list<CPlayer3D *>();
@@ -35,7 +36,7 @@ CScene3D::~CScene3D()
 
 CPlayer3D* CScene3D::addPlayer3D(CPlayer *pPlayer2D, bool bMainPlayer)
 {
-   CPlayer3D *pPlayer = new CPlayer3D(pPlayer2D, m_pSceneManager, m_pNetStream);
+   CPlayer3D *pPlayer = new CPlayer3D(pPlayer2D, m_pSceneManager, m_pNetStream, m_terrain);
    pPlayer->setup();
    m_pPlayer3DList->push_back(pPlayer);
 
@@ -79,7 +80,7 @@ CPlayer3D* CScene3D::getMainPlayer3D()
 
 CMonster3D* CScene3D::addMonster3D(CMonster *pMonster2D)
 {
-   CMonster3D *pMonster3D = new CMonster3D(pMonster2D, m_pSceneManager);
+   CMonster3D *pMonster3D = new CMonster3D(pMonster2D, m_pSceneManager, m_terrain);
    pMonster3D->setup();
    m_pMonster3DList->push_back(pMonster3D);
 

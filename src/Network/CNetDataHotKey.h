@@ -5,11 +5,12 @@
 class CNetDataHotKey
 {
    public:
-      CNetDataHotKey() : m_field(-1), m_itemID(-1), m_skillID(-1) {
+      CNetDataHotKey() : m_field(-1), m_itemID(-1), m_backpackGrid(-1), m_skillID(-1) {
       }
 
       int m_field;
       int m_itemID;
+      int m_backpackGrid;
       int m_skillID;
 };
 

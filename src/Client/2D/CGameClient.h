@@ -15,6 +15,11 @@
 #include "CPacketTargetObject.h"
 #include "CPacketActionEvent.h"
 #include "CPacketUseSkill.h"
+#include "CPacketBackpackData.h"
+#include "CPacketEquipData.h"
+#include "CPacketAdvAttrData.h"
+#include "CPacketAddSkill.h"
+#include "CPacketCanUseSkill.h"
 
 #include <network\gp_socket.h>
 
@@ -84,6 +89,9 @@ class CGameClient
         * @param pPacket 封包 */
       virtual void onRecvMonsterData(CPacketMonsterData *pPacket);
 
+      /** @brief 接收更換裝備資料 */
+      virtual void onRecvEquipData(CPacketEquipData *pPacket);
+
    private:
       /** @brief 遊戲第一次登入的邏輯運算 */
       void workLogin();
@@ -104,6 +112,18 @@ class CGameClient
 
       /** @brief 接收使用哪個技能 */
       void onRecvUseSkill(CPacketUseSkill *pPacket);
+
+      /** @brief 接收背包資料 */
+      void onRecvBackpackData(CPacketBackpackData *pPacket);
+
+      /** @brief 接收進階屬性資料 */
+      void onRecvAdvAttrData(CPacketAdvAttrData *pPacket);
+
+      /** @brief 接收學習技能 */
+      void onRecvAddSkill(CPacketAddSkill *pPacket);
+
+      /** @brief 接收可以使用技能(Server回覆) */
+      void onRecvCanUseSkill(CPacketCanUseSkill *pPacket);
 
       std::string    m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       CScene        *m_pScene;          // 遊戲場景管理

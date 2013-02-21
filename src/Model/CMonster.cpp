@@ -22,8 +22,8 @@ CMonster::CMonster(std::string machineName, int kindID, long long uid, float fx,
 
       // Åª¨ú°Ê§@ÀÉ
       std::string actionFile = MONSTER_INFO::getInfo(kindID)->getActionSystemFile();
-      if(m_pActionSystem->read("../" + actionFile) == false)
-         m_pActionSystem->read(actionFile);
+      if(m_actionSystem.read("../" + actionFile) == false)
+         m_actionSystem.read(actionFile);
    }
 }
 
@@ -41,12 +41,12 @@ void CMonster::initMonster()
    }
    else
    {
-        AdvancedAttribute advAttr;
-		AttributeSet(advAttr);
-	  advAttr.iATK = 50;
-	  advAttr.iHP = 300;
-	  advAttr.iHPMax = advAttr.iHP;
-	  advAttr.iDEF = 70;
+      AdvancedAttribute advAttr;
+      AttributeSet(advAttr);
+      advAttr.iATK = 50;
+      advAttr.iHP = 300;
+      advAttr.iHPMax = advAttr.iHP;
+      advAttr.iDEF = 70;
 
       CMonsterInfo* pm = new CMonsterInfo();
       std::vector<int> reware;

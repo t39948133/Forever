@@ -20,7 +20,7 @@ void CMiniMapWnd::init (int _x, int _y, CUnitObject* _pPlr, CScene* _pScene, flo
 	//еDид
 	pBtn = new CImageButton ;
 	pBtn->init (&m_overlay, HALF_MAP_SIZE, HALF_MAP_SIZE, ICON_SIZE*2, ICON_SIZE*2, 0) ;
-	pBtn->setImage ("blue_point") ;
+	pBtn->setImage ("droplet") ;
 	addChild (pBtn) ;
 
 /*

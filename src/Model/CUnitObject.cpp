@@ -26,11 +26,13 @@ CUnitObject::CUnitObject(std::string machineName, std::string strName, long long
 
    m_pTargetObject = NULL;
    m_bKeyMoveEnabled = false;
+   m_castSkillID = -1;
 
-   m_pActionSystem = new CActionSystem(m_machineName, uid);
-   m_pActionSystem->addPlaySoundNotifyListener(this);
+   m_actionSystem.init(m_machineName, m_uid);
+   m_actionSystem.addPlaySoundNotifyListener(this);
+   m_actionSystem.addAttackNotifyListener(this);  // 有攻擊扣血時，請告知
 
-   m_pFightSystem = new CFightSystem(m_machineName, uid);
+   m_fightSystem.init(m_machineName, m_uid);
 
 #ifdef _GAMEENGINE_2D_
    m_bFaceTarget = false;
@@ -41,22 +43,13 @@ CUnitObject::CUnitObject(std::string machineName, std::string strName, long long
 // Add by Darren Chen on 2012/12/22 {
 CUnitObject::~CUnitObject()
 {
-   m_pActionSystem->removePlaySoundNotifyListener(this);
-
-   if(m_pActionSystem != NULL) {
-      delete m_pActionSystem;
-      m_pActionSystem = NULL;
-   }
-
-   if(m_pFightSystem != NULL) {
-      delete m_pFightSystem;
-      m_pFightSystem = NULL;
-   }
+   m_actionSystem.removePlaySoundNotifyListener(this);
+   m_actionSystem.removeAttackNotifyListener(this);
 
    std::vector<CSkill *>::iterator itSkill = m_vSkill.begin();
    while(itSkill != m_vSkill.end()) {
       delete (*itSkill);
-      itSkill++;
+      ++itSkill;
    }
    m_vSkill.clear();
 
@@ -75,11 +68,14 @@ bool CUnitObject::canUseSkill(int skillID)
                if((pUseSkillInfo->getTarget() == ENEMY) ||   // 技能目標是怪物
                   (pUseSkillInfo->getTarget() == GROUND)) {  // 技能目標是範圍
                   if(m_pTargetObject != NULL) {
-                     float distance = getDistance(m_position.fX, m_position.fY,
+                     if(m_pTargetObject == this)
+                        return false;   // 目標是自己
+
+                     /*float distance = getDistance(m_position.fX, m_position.fY,
                                                   m_pTargetObject->getPosition().fX, m_pTargetObject->getPosition().fY);
-                     if(distance > pUseSkillInfo->getCastRange())
+                     if(distance > pUseSkillInfo->getCastRange() + 100)
                         return false;  // 離目標物距離遠過技能施展距離
-                     else
+                     else*/
                         return true;
                   }
                   else
@@ -112,7 +108,8 @@ void CUnitObject::startCastSkill(int skillID)
    if(pUseSkill != NULL) {
       CSkillInfo *pUseSkillInfo = pUseSkill->getInfo();
       if(pUseSkillInfo != NULL) {
-         m_pFightSystem->useSkill(pUseSkill);
+         m_fightSystem.useSkill(pUseSkill);
+         m_castSkillID = skillID;
       }
    }
 }
@@ -128,14 +125,16 @@ void CUnitObject::useSkill(int skillID)
             if(m_pTargetObject != NULL) {
                AdvancedAttribute effectAttr = pUseSkillInfo->getEffectAttr();
                AdvancedAttribute targetAttr = m_pTargetObject->getAdvAttr();
-			   //雙方攻擊防禦額外計算
-			   int targetDEF = targetAttr.iDEF;
-			   int basicDamage;
-			   basicDamage = targetDEF - getAdvAttr().iATK;
-			   if(0 > basicDamage)
-			   {
-				   effectAttr.iHP += basicDamage;
-			   }
+               
+               //雙方攻擊防禦額外計算
+               int targetDEF = targetAttr.iDEF;
+               int basicDamage;
+               basicDamage = getAdvAttr().iATK - targetDEF;
+               if(basicDamage > 0)
+                  effectAttr.iHP -= basicDamage;
+               else
+                  effectAttr.iHP -= 1;
+
                AttributeAdd(targetAttr, effectAttr);
 
                FloatPrecentAttribute effectPrecentAttr = pUseSkillInfo->getEffectAttrPercent();
@@ -172,32 +171,37 @@ void CUnitObject::skillDamage(AdvancedAttribute targetAttr)
 
 bool CUnitObject::isCastSkill()
 {
-   return m_pFightSystem->isCastSkill();
+   return m_fightSystem.isCastSkill();
+}
+
+void CUnitObject::cancelCastSkill()
+{
+   m_fightSystem.useSkill(NULL);
 }
 
 void CUnitObject::work(float timePass)
 {
    SkillCoolDown(timePass);
-   m_pActionSystem->work(timePass);
-   m_pFightSystem->work(timePass, this, m_pTargetObject);
+   m_actionSystem.work(timePass);
+   m_fightSystem.work(timePass, this, m_pTargetObject);
 
 #ifdef _GAMEENGINE_3D_
    size_t idx = m_machineName.find("Server");
    if(idx != std::string::npos) {
-      if(m_pActionSystem->isMove() == true)
+      if(m_actionSystem.isMove() == true)
          move(timePass, m_targetPosition.fX, m_targetPosition.fY, true);
    }
 #elif _GAMEENGINE_2D_
-   if(m_pActionSystem->isMove() == true)
+   if(m_actionSystem.isMove() == true)
       move(timePass, m_targetPosition.fX, m_targetPosition.fY, m_bFaceTarget);
 #endif
 
-   if((m_pActionSystem->isMove() == true) && (m_bKeyMoveEnabled == true))
+   if((m_actionSystem.isMove() == true) && (m_bKeyMoveEnabled == true))
       ;
-   else if((m_pActionSystem->isMove() == true) && (isReachTarget() == true)) {
+   else if((m_actionSystem.isMove() == true) && (isReachTarget() == true)) {
       CActionEvent actEvent;
       actEvent.m_event = AET_REACH;
-      CActionDispatch::getInstance()->sendEvnet(m_machineName, getUID(), actEvent);
+      CActionDispatch::getInstance()->sendEvnet(m_machineName, m_uid, actEvent);
    }
 }
 
@@ -262,17 +266,17 @@ bool CUnitObject::isReachTarget()
 
 bool CUnitObject::isChangeAction()
 {
-   return m_pActionSystem->isChangeAction();
+   return m_actionSystem.isChangeAction();
 }
 
 CAction* CUnitObject::getCurAction()
 {
-   return m_pActionSystem->getCurAction();
+   return m_actionSystem.getCurAction();
 }
 
 bool CUnitObject::isMove()
 {
-   if(m_pActionSystem->isMove() == true)
+   if(m_actionSystem.isMove() == true)
       return true;
    else
       return false;
@@ -285,7 +289,7 @@ void CUnitObject::setKeyMoveEnabled(bool bEnable)
 
 std::vector<std::string> CUnitObject::getAllAnimationName()
 {
-   return m_pActionSystem->getAllAnimationName();
+   return m_actionSystem.getAllAnimationName();
 }
 
 void CUnitObject::setTargetObject(CUnitObject *pUnitObject)
@@ -326,28 +330,34 @@ void CUnitObject::removeSkillEventListener(ISkillEventListener *pListener)
       m_skillEventListeners.erase(it);
 }
 
+void CUnitObject::addFightEventListener(IFightEventListener *pListener)
+{
+   m_fightSystem.addFightEventListener(pListener);
+}
+
+void CUnitObject::removeFightEventListener(IFightEventListener *pListener)
+{
+   m_fightSystem.removeFightEventListener(pListener);
+}
+
 void CUnitObject::addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener)
 {
-   if(m_pActionSystem != NULL)
-      m_pActionSystem->addDrawWeaponNotifyListener(pListener);
+   m_actionSystem.addDrawWeaponNotifyListener(pListener);
 }
 
 void CUnitObject::removeDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener)
 {
-   if(m_pActionSystem != NULL)
-      m_pActionSystem->removeDrawWeaponNotifyListener(pListener);
+   m_actionSystem.removeDrawWeaponNotifyListener(pListener);
 }
 
 void CUnitObject::addPutinWeaponNotifyListener(IPutinWeaponNotifyListener *pListener)
 {
-   if(m_pActionSystem != NULL)
-      m_pActionSystem->addPutinWeaponNotifyListener(pListener);
+   m_actionSystem.addPutinWeaponNotifyListener(pListener);
 }
 
 void CUnitObject::removePutinWeaponNotifyListener(IPutinWeaponNotifyListener *pListener)
 {
-   if(m_pActionSystem != NULL)
-      m_pActionSystem->removePutinWeaponNotifyListener(pListener);
+   m_actionSystem.removePutinWeaponNotifyListener(pListener);
 }
 
 #ifdef _GAMEENGINE_2D_
@@ -370,7 +380,7 @@ void CUnitObject::draw(HDC hdc)
    LineTo(hdc, (int)tx, (int)ty);
 
    // 畫動作系統
-   m_pActionSystem->draw(hdc, (int)m_position.fX - size, (int)m_position.fY + size + 22);
+   m_actionSystem.draw(hdc, (int)m_position.fX - size, (int)m_position.fY + size + 22);
 }
 #endif  // #ifdef _GAMEENGINE_2D_
 // } Add by Darren Chen on 2012/12/22
@@ -536,7 +546,7 @@ std::list<CBuff> CUnitObject::getBuff()
 
 void CUnitObject::updateBuff(float timepass)
 {
-    std::list<CBuff>::iterator pi = m_lBuff.begin();
+   std::list<CBuff>::iterator pi = m_lBuff.begin();
 
    while(m_lBuff.end() != pi)
    {
@@ -564,7 +574,7 @@ void CUnitObject::updateBuff(float timepass)
 
 void CUnitObject::addBuff(unsigned int id)
 {
-    CBuff bt;
+   CBuff bt;
    bt.create(id);
    m_lBuff.push_back(bt);
    updateBuff(0.0f);
@@ -585,7 +595,7 @@ CSkill* CUnitObject::getSkill(int skillID)
          break;
       }
 
-      itSkill++;
+      ++itSkill;
    }
 
    return pFindSkill;
@@ -594,10 +604,9 @@ CSkill* CUnitObject::getSkill(int skillID)
 void CUnitObject::SkillCoolDown(float timepass)
 {
    std::vector<CSkill *>::iterator pi = m_vSkill.begin();
-   while(m_vSkill.end() != pi)
-   {
+   while(m_vSkill.end() != pi) {
       (*pi)->updateCoolDown(timepass);
-      pi++;
+      ++pi;
    }
 }
 
@@ -605,10 +614,9 @@ bool CUnitObject::addSkill(int skillID)
 {
    CSkill *pSkill = new CSkill();
    pSkill->create(skillID);
-   if(pSkill->canLearn(m_level))
-   {
+   if(pSkill->canLearn(m_level)) {
       m_vSkill.push_back(pSkill);
-      notifySkillUpdate();
+      notifyAddSkillUpdate(skillID);
       return true;
    }
    return false;
@@ -620,16 +628,16 @@ void CUnitObject::notifyAdvAttrUpdate()
    std::set<IAdvAttrEventListener *>::iterator it = m_advAttrEventListeners.begin();
    while(it != m_advAttrEventListeners.end()) {
       (*it)->updateAdvAttr(this);
-      it++;
+      ++it;
    }
 }
 
-void CUnitObject::notifySkillUpdate()
+void CUnitObject::notifyAddSkillUpdate(int skillID)
 {
    std::set<ISkillEventListener *>::iterator it = m_skillEventListeners.begin();
    while(it != m_skillEventListeners.end()) {
-      (*it)->updateSkill(this);
-      it++;
+      (*it)->updateAddSkill(this, skillID);
+      ++it;
    }
 }
 
@@ -644,33 +652,18 @@ void CUnitObject::notifyPlaySound(std::string soundFile)
 #endif  // #ifdef _GAMESOUND_
 }
 
+void CUnitObject::notifyAttack()
+{
+   // 動作系統通知要扣血計算
+   useSkill(m_castSkillID);
+}
+
 void CUnitObject::setUID(long long uid)
 {
    m_uid = uid;
 
-   // 把舊的動作系統內資料複製一份
-   std::string actionFile = m_pActionSystem->m_actionFile;
-   std::set<IDrawWeaponNotifyListener *>  drawWeaponNotifyListeners  = m_pActionSystem->m_drawWeaponNotifyListeners;
-   std::set<IPutinWeaponNotifyListener *> putinWeaponNotifyListeners = m_pActionSystem->m_putinWeaponNotifyListeners;
-   std::set<IPlaySoundNotifyListener *>   playSoundNotifyListeners   = m_pActionSystem->m_playSoundNotifyListeners;
-
-   if(m_pActionSystem != NULL) {
-      delete m_pActionSystem;
-      m_pActionSystem = NULL;
-   }
-
-   if(m_pFightSystem != NULL) {
-      delete m_pFightSystem;
-      m_pFightSystem = NULL;
-   }
-
-   m_pActionSystem = new CActionSystem(m_machineName, m_uid);
-   m_pActionSystem->read(actionFile);
-   m_pActionSystem->m_drawWeaponNotifyListeners  = drawWeaponNotifyListeners;
-   m_pActionSystem->m_putinWeaponNotifyListeners = putinWeaponNotifyListeners;
-   m_pActionSystem->m_playSoundNotifyListeners   = playSoundNotifyListeners;
-
-   m_pFightSystem = new CFightSystem(m_machineName, m_uid);
+   m_actionSystem.setUID(m_uid);
+   m_fightSystem.setUID(m_uid);
 }
 
 //#ifdef _GAMEENGINE_2D_

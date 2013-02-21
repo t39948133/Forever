@@ -10,11 +10,18 @@
 #include "CActionDispatch.h"
 #include "CCastSkillActionEvent.h"
 #include "CUnitObject.h"
+#include "CPlayer.h"
+#include "CMonster.h"
 
-CFightSystem::CFightSystem(std::string machineName, long long uid) : m_machineName(machineName),
-                                                                     m_uid(uid),
-                                                                     m_pUseSkill(NULL)
+CFightSystem::CFightSystem()
 {
+   m_pUseSkill = NULL;
+}
+
+void CFightSystem::init(std::string machineName, long long uid)
+{
+   m_machineName = machineName;
+   m_uid = uid;
 }
 
 void CFightSystem::useSkill(CSkill *pSkill)
@@ -30,6 +37,25 @@ bool CFightSystem::isCastSkill()
       return false;
 }
 
+void CFightSystem::setUID(long long uid)
+{
+   m_uid = uid;
+}
+
+void CFightSystem::addFightEventListener(IFightEventListener *pListener)
+{
+   std::set<IFightEventListener *>::iterator it = m_fightEventListeners.find(pListener);
+   if(it == m_fightEventListeners.end())
+      m_fightEventListeners.insert(pListener);
+}
+
+void CFightSystem::removeFightEventListener(IFightEventListener *pListener)
+{
+   std::set<IFightEventListener *>::iterator it = m_fightEventListeners.find(pListener);
+   if(it != m_fightEventListeners.end())
+      m_fightEventListeners.erase(it);
+}
+
 void CFightSystem::work(float timePass, CUnitObject *pSelfObject, CUnitObject *pTargetObject)
 {
    if(m_pUseSkill != NULL) {
@@ -42,16 +68,49 @@ void CFightSystem::work(float timePass, CUnitObject *pSelfObject, CUnitObject *p
             CCastSkillActionEvent actEvent;
             actEvent.m_event = AET_CAST_SKILL;
             CActionDispatch::getInstance()->sendEvnet(m_machineName, m_uid, actEvent);
+
+            CPlayer *pPlayer = dynamic_cast<CPlayer *>(pSelfObject);
+            if(pPlayer != NULL)
+               notifyActionEventUpdate(pSelfObject, &actEvent);
          }
-         else if((pSelfCurAction->getID() == ACTION_RUN) ||
-                 (pSelfCurAction->getID() == ACTION_FIGHT_RUN)) {  // 跑步
+         else if(pSelfCurAction->getID() == ACTION_RUN) {  // 跑步
 
             CActionEvent actEvent;
             actEvent.m_event = AET_REACH;
             CActionDispatch::getInstance()->sendEvnet(m_machineName, m_uid, actEvent);
+
+            CPlayer *pPlayer = dynamic_cast<CPlayer *>(pSelfObject);
+            if(pPlayer != NULL)
+               notifyActionEventUpdate(pSelfObject, &actEvent);
          }
          else if(pSelfCurAction->getID() == ACTION_FIGHT) {  // 戰鬥姿態
-            // 判斷距離，距離太遠要切換跑步動作且人物要移動
+            // 判斷距離，距離太遠要切換跑步動作且人物要移動 (只有玩家可使用此功能)
+            if(pTargetObject != NULL) {
+               CPlayer *pPlayer = dynamic_cast<CPlayer *>(pSelfObject);
+               if(pPlayer != NULL) {
+                  float distance = getDistance(pSelfObject->getPosition().fX, pSelfObject->getPosition().fY,
+                                               pTargetObject->getPosition().fX, pTargetObject->getPosition().fY);
+                  CSkillInfo *pUseSkillInfo = m_pUseSkill->getInfo();
+                  if(distance > pUseSkillInfo->getCastRange()) {
+
+                     size_t idx = m_machineName.find("Server");
+                     if(idx != std::string::npos) {
+#ifdef _GAMEENGINE_3D_
+                        pSelfObject->setTargetPosition(pTargetObject->getPosition().fX, pTargetObject->getPosition().fY);
+#elif _GAMEENGINE_2D_
+                        pSelfObject->setTargetPosition(pTargetObject->getPosition().fX, pTargetObject->getPosition().fY, true);
+#endif
+                        CActionEvent actEvent;
+                        actEvent.m_event = AET_NOT_REACH;
+                        CActionDispatch::getInstance()->sendEvnet(pSelfObject->getMachineName(), pSelfObject->getUID(), actEvent);
+
+                        notifyTargetPositionUpdate(pSelfObject);
+                     }
+
+                     return;
+                  }
+               }
+            }
 
             // 判斷施法時間，是否要切換吟唱動作
 
@@ -60,16 +119,67 @@ void CFightSystem::work(float timePass, CUnitObject *pSelfObject, CUnitObject *p
             actEvent.m_event = AET_CAST_SKILL;
             actEvent.m_bCastSkill = true;
             actEvent.m_iCastSkillID = m_pUseSkill->getID();
-            //actEvent.m_fCastSkillTime = m_pUseSkill->getInfo()->getCastTime();
+            actEvent.m_fCastSkillTime = m_pUseSkill->getInfo()->getCastTime();
             CActionDispatch::getInstance()->sendEvnet(m_machineName, m_uid, actEvent);
-
-            // 扣血計算
-            pSelfObject->useSkill(m_pUseSkill->getID());
 
             // 判斷有無連續技，有的話要通知UI
 
             m_pUseSkill = NULL;
          }
+         else if(pSelfCurAction->getID() == ACTION_FIGHT_RUN) {  // 戰鬥姿態跑步
+            size_t idx = m_machineName.find("Server");
+            if(idx != std::string::npos) {
+               // 判斷距離，距離太遠繼續跑步動作且人物要移動 (只有玩家可使用此功能)
+               if(pTargetObject != NULL) {
+                  CPlayer *pPlayer = dynamic_cast<CPlayer *>(pSelfObject);
+                  if(pPlayer != NULL) {
+                     float distance = getDistance(pSelfObject->getPosition().fX, pSelfObject->getPosition().fY,
+                                                  pTargetObject->getPosition().fX, pTargetObject->getPosition().fY);
+                     CSkillInfo *pUseSkillInfo = m_pUseSkill->getInfo();
+                     if(distance > pUseSkillInfo->getCastRange()) {
+#ifdef _GAMEENGINE_3D_
+                        pSelfObject->setTargetPosition(pTargetObject->getPosition().fX, pTargetObject->getPosition().fY);
+#elif _GAMEENGINE_2D_
+                        pSelfObject->setTargetPosition(pTargetObject->getPosition().fX, pTargetObject->getPosition().fY, true);
+#endif
+                        CActionEvent actEvent;
+                        actEvent.m_event = AET_NOT_REACH;
+                        CActionDispatch::getInstance()->sendEvnet(pSelfObject->getMachineName(), pSelfObject->getUID(), actEvent);
+
+                        notifyTargetPositionUpdate(pSelfObject);
+
+                        return;
+                     }
+                  }
+               }
+
+               CActionEvent actEvent;
+               actEvent.m_event = AET_REACH;
+               CActionDispatch::getInstance()->sendEvnet(m_machineName, m_uid, actEvent);
+
+               CPlayer *pPlayer = dynamic_cast<CPlayer *>(pSelfObject);
+               if(pPlayer != NULL)
+                  notifyActionEventUpdate(pSelfObject, &actEvent);
+            }
+         }
       }
+   }
+}
+
+void CFightSystem::notifyActionEventUpdate(CUnitObject *pUnitObject, CActionEvent *pActEvent)
+{
+   std::set<IFightEventListener *>::iterator it = m_fightEventListeners.begin();
+   while(it != m_fightEventListeners.end()) {
+      (*it)->updateFightActionEvent(pUnitObject, pActEvent);
+      ++it;
+   }
+}
+
+void CFightSystem::notifyTargetPositionUpdate(CUnitObject *pUnitObject)
+{
+   std::set<IFightEventListener *>::iterator it = m_fightEventListeners.begin();
+   while(it != m_fightEventListeners.end()) {
+      (*it)->updateFightTargetPosition(pUnitObject);
+      ++it;
    }
 }

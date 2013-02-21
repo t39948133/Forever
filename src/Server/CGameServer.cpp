@@ -7,6 +7,9 @@
   * @date   2012/12/24 */
 #include "CGameServer.h"
 #include "CSkill.h"
+#include "CWeaponInfo.h"
+#include "CArmorInfo.h"
+#include "CConsumableInfo.h"
 #include "CPacketPasswordGW.h"
 #include "CPacketPlayerInit.h"
 #include "CPacketPlayerData.h"
@@ -14,6 +17,9 @@
 #include "CPacketTargetObject.h"
 #include "CPacketActionEvent.h"
 #include "CPacketUseSkill.h"
+#include "CPacketBackpackData.h"
+#include "CPacketAdvAttrData.h"
+#include "CPacketAddSkill.h"
 
 #ifdef _DEBUGLOG
 #include "LogWindow.h"
@@ -127,6 +133,90 @@ void CGameServer::updateMonsterTargetObject(CMonster *pMonster, long long newTar
       (*it)->m_pNetStream->send(&packet, sizeof(packet));
       it++;
    }
+}
+
+void CGameServer::updatePlayerBackpack(CBackpack *pBackpack)
+{
+   // 有某玩家的背包有更新
+   std::list<CNetPlayer *>::iterator it = m_pNetPlayerList->begin();
+   while(it != m_pNetPlayerList->end()) {
+      if((*it)->m_pPlayer->getBackpack() == pBackpack) {
+         CPacketBackpackData packet;
+         packet.pack((*it)->m_pPlayer);
+         (*it)->m_pNetStream->send(&packet, sizeof(packet));
+         break;
+      }
+
+      it++;
+   }
+}
+
+void CGameServer::updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int itemId)
+{
+   // 有某玩家裝備更換
+   CPacketEquipData packet;
+   packet.pack(pPlayer, equipSlot, itemId);
+   sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家
+}
+
+void CGameServer::updateAdvAttr(CUnitObject *pUnitObject)
+{
+   // 有可能是玩家也有可能是怪物
+
+   CPacketAdvAttrData packet;
+   packet.pack(pUnitObject);
+   sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家
+
+   // Todo : HP = 0, 死亡處理
+   if(pUnitObject->getAdvAttr().iHP <= 0) {
+
+   }
+}
+
+void CGameServer::updateAddSkill(CUnitObject *pUnitObject, int skillID)
+{
+   CPlayer *pPlayer = dynamic_cast<CPlayer *>(pUnitObject);
+   if(pPlayer == NULL)
+      return;
+
+   std::list<CNetPlayer *>::iterator it = m_pNetPlayerList->begin();
+   while(it != m_pNetPlayerList->end()) {
+      if((*it)->m_pPlayer == pPlayer) {
+         CPacketAddSkill packet;
+         packet.pack(pPlayer, skillID);
+         (*it)->m_pNetStream->send(&packet, sizeof(packet));
+         break;
+      }
+
+      it++;
+   }
+}
+
+void CGameServer::updateSkillAvailable(CSkill *pSkill)
+{
+   // 不做任何處理
+}
+
+void CGameServer::updateSkillCoolDown(CSkill *pSkill)
+{
+}
+
+void CGameServer::updateFightActionEvent(CUnitObject *pUnitObject, CActionEvent *pActEvent)
+{
+   CPacketActionEvent packet;
+   packet.pack(pUnitObject, pActEvent);
+   sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家
+}
+
+void CGameServer::updateFightTargetPosition(CUnitObject *pUnitObject)
+{
+   CPacketTargetPos packet;
+#ifdef _GAMEENGINE_3D_
+   packet.pack(pUnitObject);
+#elif _GAMEENGINE_2D_
+   packet.pack(pUnitObject, true);
+#endif
+   sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家   
 }
 
 void CGameServer::updateMonsterAI(CMonster *pMonster)
@@ -387,6 +477,14 @@ void CGameServer::procNetPlayer(CNetPlayer *pNetPlayer)
             CBasePacket *pPacket = (CBasePacket *)netBuff.getBuffer();
             if(pPacket->m_id == PACKET_TARGET_POS)
                onRecvTargetPos(pNetPlayer, (CPacketTargetPos *)pPacket);
+            else if(pPacket->m_id == PACKET_USE_ITEM)
+               onRecvUseItem(pNetPlayer, (CPacketUseItem *)pPacket);
+            else if(pPacket->m_id == PACKET_EQUIP_DATA)
+               onRecvShedEquip(pNetPlayer, (CPacketEquipData *)pPacket);
+            else if(pPacket->m_id == PACKET_CAN_USE_SKILL)
+               onRecvCanUseSkill(pNetPlayer, (CPacketCanUseSkill *)pPacket);
+            else if(pPacket->m_id == PACKET_CANCEL_USESKILL)
+               onRecvCancelUseSkill(pNetPlayer, (CPacketCancelUseSkill *)pPacket);
          }
       }
    }
@@ -472,6 +570,12 @@ void CGameServer::onRecvPlayerDataWG(CPacketPlayerDataWG *pPacket)
    CPlayer *pNewPlayer = CScene::addPlayer(pPacket->m_uid);
    pPacket->unpack(pNewPlayer);  // 取得封包內的玩家資料
    
+   pNewPlayer->addPlayerBackpackEventListener(this);   // 監聽玩家背包變動行為
+   pNewPlayer->addPlayerEquipEventListener(this);      // 監聽玩家裝備更換行為
+   pNewPlayer->addAdvAttrEventListener(this);          // 監聽玩家屬性變動行為
+   pNewPlayer->addSkillEventListener(this);            // 監聽玩家技能變動行為
+   pNewPlayer->addFightEventListener(this);            // 監聽玩家戰鬥系統變動行為
+
    CNetPlayer *pNetPlayer = getNetPlayer(pPacket->m_netID);
    pNetPlayer->m_pPlayer = pNewPlayer;
    pNetPlayer->m_state = CNetPlayer::STATE_PLAY;
@@ -496,5 +600,56 @@ void CGameServer::onRecvPlayerDataWG(CPacketPlayerDataWG *pPacket)
 void CGameServer::onRecvTargetPos(CNetPlayer *pNetPlayer, CPacketTargetPos *pPacket)
 {
    pPacket->unpack(pNetPlayer->m_pPlayer);
-   sendPacket(pNetPlayer, pPacket, sizeof(*pPacket));
+   //sendPacket(pNetPlayer, pPacket, sizeof(*pPacket));
+   sendPacket(NULL, pPacket, sizeof(*pPacket));
+}
+
+void CGameServer::onRecvUseItem(CNetPlayer *pNetPlayer, CPacketUseItem *pPacket)
+{
+   if(pNetPlayer->m_pPlayer->getUID() != pPacket->getUID())
+      return;
+
+   // 檢查玩家有沒有該項物品
+   CBackpack *pBackpack = pNetPlayer->m_pPlayer->getBackpack();
+   CItem *pItem = pBackpack->getItem(pPacket->getBackpackGrid());
+   if(pItem == NULL)
+      return;
+
+   CItemInfo *pItemInfo = pItem->getInfo();
+   if(pItemInfo == NULL)
+      return;
+
+   if(pItem->getID() != pPacket->getItemID())
+      return;
+
+   if(pItem->getStack() <= 0)
+      return;
+
+   pNetPlayer->m_pPlayer->useItem(pItem->getID());
+}
+
+void CGameServer::onRecvShedEquip(CNetPlayer *pNetPlayer, CPacketEquipData *pPacket)
+{
+   pPacket->unpack(pNetPlayer->m_pPlayer);
+}
+
+void CGameServer::onRecvCanUseSkill(CNetPlayer *pNetPlayer, CPacketCanUseSkill *pPacket)
+{
+   if(pNetPlayer->m_pPlayer->getUID() != pPacket->getUID())
+      return;
+
+   CUnitObject *pUnitObject = this->getUnitObject(pPacket->getTargetUID());
+   pNetPlayer->m_pPlayer->setTargetObject(pUnitObject);
+   bool bCanUse = pNetPlayer->m_pPlayer->canUseSkill(pPacket->getUseSkillID());
+   
+   pPacket->setCanUseSkill(bCanUse);
+   pNetPlayer->m_pNetStream->send(pPacket, sizeof(*pPacket));
+
+   if(bCanUse == true)
+      pNetPlayer->m_pPlayer->startCastSkill(pPacket->getUseSkillID());
+}
+
+void CGameServer::onRecvCancelUseSkill(CNetPlayer *pNetPlayer, CPacketCancelUseSkill *pPacket)
+{
+   pPacket->unpack(pNetPlayer->m_pPlayer);
 }

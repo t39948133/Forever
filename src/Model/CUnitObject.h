@@ -11,9 +11,12 @@
 #include "ISkillEventListener.h"
 #include "IDrawWeaponNotifyListener.h"
 #include "IPlaySoundNotifyListener.h"
+#include "IAttackNotifyListener.h"
+#include "IFightEventListener.h"
 // } Add by Darren Chen on 2012/12/22
 
-class CUnitObject : public IPlaySoundNotifyListener
+class CUnitObject : public IPlaySoundNotifyListener,
+                    public IAttackNotifyListener
 {
    public:
       CUnitObject(std::string machineName, std::string strName, long long uid, char level = 0); //建立角色 傳入名字、等級(預設建立後為0級)
@@ -64,6 +67,9 @@ class CUnitObject : public IPlaySoundNotifyListener
         * @return true  - 是
         *         false - 否 */
       bool isCastSkill();
+
+      /** @brief 取消施展技能 */
+      void cancelCastSkill();
 
       /** @brief 邏輯動作
         * @param timePass 一個frame幾秒 */
@@ -156,6 +162,9 @@ class CUnitObject : public IPlaySoundNotifyListener
            * @param pListener 監聽者 */
       void removeSkillEventListener(ISkillEventListener *pListener);
 
+      void addFightEventListener(IFightEventListener *pListener);
+      void removeFightEventListener(IFightEventListener *pListener);
+
       void addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
       void removeDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
 
@@ -182,8 +191,8 @@ class CUnitObject : public IPlaySoundNotifyListener
       std::vector<CSkill *>  m_vSkill;          //擁有的技能
 
       // Add by Darren Chen on 2012/12/27 {
-      CActionSystem         *m_pActionSystem;   // 動作系統
-      CFightSystem          *m_pFightSystem;    // 戰鬥系統         
+      CActionSystem         m_actionSystem;   // 動作系統
+      CFightSystem          m_fightSystem;    // 戰鬥系統         
       // } Add by Darren Chen on 2012/12/27
 
    private:
@@ -202,10 +211,13 @@ class CUnitObject : public IPlaySoundNotifyListener
       void notifyAdvAttrUpdate();
 
       /** @brief 通知技能有更新 */
-      void notifySkillUpdate();
+      void notifyAddSkillUpdate(int skillID);
 
       // IPlaySoundNotifyListener
       /* virtual */ void notifyPlaySound(std::string soundFile);
+
+      // IAttackNotifyListener
+      /* virtual */ void notifyAttack();
 
       void setUID(long long uid);
 
@@ -228,14 +240,15 @@ class CUnitObject : public IPlaySoundNotifyListener
       AdvancedAttribute      m_advAttr;         //屬性
       ObscureAttribute       m_obsAttr;         //隱藏數值
       ComplexAttribute       m_comAttr;         //狀態造成屬性變化暫存
-      FloatPrecentAttribute  m_preAttr;         //狀態造成屬性浮點數(百分比)
-                                                //變化暫存
+      FloatPrecentAttribute  m_preAttr;         //狀態造成屬性浮點數(百分比)變化暫存
+
       std::list<CBuff>       m_lBuff;	         //身上的Buff
       FPOS                   m_position;        // 角色X,Y座標 (2D)
       FPOS                   m_targetPosition;  // 目標點X,Y座標 (2D)
       float                  m_fDirection;      // 角色方向(單位: 弧度), 逆時針方向旋轉為+, 順時針方向旋轉為-, 方向為0是朝下
       CUnitObject           *m_pTargetObject;   // 目標物
       bool                   m_bKeyMoveEnabled; // 鍵盤移動模式
+      int                    m_castSkillID;     // 目前施展技能的ID
 
       std::set<IAdvAttrEventListener *>  m_advAttrEventListeners;  // 監聽AdvancedAttribute改變的監聽者列表
       std::set<ISkillEventListener *>    m_skillEventListeners;    // 監聽技能改變的監聽者列表

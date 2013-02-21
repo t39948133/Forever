@@ -29,7 +29,6 @@ CScene::~CScene()
    }
 
    if(m_pvtMonster != NULL) {
-      std::string name = this->m_machineName;
       std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
       while(itMonster != m_pvtMonster->end()) {
          delete (*itMonster);

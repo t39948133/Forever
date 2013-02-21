@@ -3,7 +3,7 @@
 
 CMonsterInfo::CMonsterInfo()
 {
-	AttributeSet(m_advAttr);
+    memset(&m_advAttr, 0, sizeof(m_advAttr));
 }
 
 CMonsterInfo::~CMonsterInfo()
@@ -157,7 +157,7 @@ void CMonsterInfo::read(FILE *pFile)
    fread(&m_LevelGrade, sizeof(m_LevelGrade), 1, pFile);
    fread(&m_fAlert, sizeof(m_fAlert), 1, pFile);
    fread(&m_fRegress, sizeof(m_fRegress), 1, pFile);
-    fread(&m_advAttr, sizeof(m_advAttr), 1, pFile);
+   fread(&m_advAttr, sizeof(m_advAttr), 1, pFile);
    fread(&m_Money, sizeof(m_Money), 1, pFile);
    int size = 0;
    fread(&size, sizeof(size), 1, pFile);
@@ -217,7 +217,7 @@ void CMonsterInfo::write(FILE *pFile)
    fwrite(&m_LevelGrade, sizeof(m_LevelGrade), 1, pFile);
    fwrite(&m_fAlert, sizeof(m_fAlert), 1, pFile);
    fwrite(&m_fRegress, sizeof(m_fRegress), 1, pFile);
-    fwrite(&m_advAttr, sizeof(m_advAttr), 1, pFile);
+   fwrite(&m_advAttr, sizeof(m_advAttr), 1, pFile);
    fwrite(&m_Money, sizeof(m_Money), 1, pFile);
    int size = 0;
    size = m_vReware.size();

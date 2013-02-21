@@ -33,6 +33,20 @@ void CWindow::addChild(CWindow* pChildWnd)
 	vpWnd.push_back(pChildWnd);
 }
 
+void CWindow::delChild(CWindow *pChildWnd)
+{
+   pChildWnd->pParent = NULL;
+   VP_WND::iterator it = vpWnd.begin();
+   while(it != vpWnd.end()) {
+      if((*it) == pChildWnd) {
+         vpWnd.erase(it);
+         break;
+      }
+
+      ++it;
+   }
+}
+
 bool CWindow::canDrag(int tx, int ty)
 {
 	return true ;

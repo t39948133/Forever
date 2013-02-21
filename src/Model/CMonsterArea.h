@@ -27,6 +27,7 @@ public:
 private:
 	int m_iMonsterCount;
 	int m_iConstTime;
+   std::vector<long long> m_vMonsterUID;
 };
 
 #endif //#ifndef _CMONSTEREA_H_

@@ -14,6 +14,8 @@
 #include "IItemEventListener.h"
 #include "ISkillEventListener.h"
 
+#include <network\gp_socket.h>
+
 #ifdef _GAMEENGINE_3D_
 #include "CHotKeyButton.h"
 #include "COverlayUI.h"
@@ -44,9 +46,9 @@ class CHotKeyWnd : public CWindow,
       ~CHotKeyWnd();
 
 #ifdef _GAMEENGINE_3D_
-      void init(int _x, int _y, CPlayer *pPlr, int zOrder);
+      void init(int _x, int _y, CPlayer *pPlr, int zOrder, GP::NetStream *pNetStream);
 #elif _GAMEENGINE_2D_
-      void init(int _x, int _y, CPlayer *pPlr);
+      void init(int _x, int _y, CPlayer *pPlr, GP::NetStream *pNetStream);
 #endif
 
       // CWindow
@@ -63,7 +65,8 @@ class CHotKeyWnd : public CWindow,
       /* virtual */ void updateItemData(CItem *pItem);
 
       // ISkillEventListener
-      /* virtual */ void updateSkill(CUnitObject *pUnitObject);
+      /* virtual */ void updateAddSkill(CUnitObject *pUnitObject, int skillID);
+      /* virtual */ void updateSkillAvailable(CSkill *pSkill);
       /* virtual */ void updateSkillCoolDown(CSkill *pSkill);
 
 #ifdef _GAMEENGINE_3D_
@@ -73,8 +76,9 @@ class CHotKeyWnd : public CWindow,
 #endif
 
    private:
-	   CPlayer *m_pPlayer;
-      std::map<void *, int> m_table;
+	   CPlayer               *m_pPlayer;
+      GP::NetStream         *m_pNetStream;      // 對Game Server的網路連線
+      std::map<void *, int>  m_table;
    	
 #ifdef _GAMEENGINE_3D_	
 	   CHotKeyButton  *m_vpBtn[BUTTON_COUNT];

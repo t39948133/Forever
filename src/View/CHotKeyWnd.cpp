@@ -1,6 +1,8 @@
 #include "CHotKeyWnd.h"
 #include "CSkill.h"
 #include "CItem.h"
+#include "CPacketUseItem.h"
+#include "CPacketCanUseSkill.h"
 
 CHotKeyWnd::CHotKeyWnd()
 {
@@ -46,14 +48,17 @@ CHotKeyWnd::~CHotKeyWnd()
 }
 
 #ifdef _GAMEENGINE_3D_
-void CHotKeyWnd::init(int _x, int _y, CPlayer *pPlr, int zOrder)
+void CHotKeyWnd::init(int _x, int _y, CPlayer *pPlr, int zOrder, GP::NetStream *pNetStream)
 #elif _GAMEENGINE_2D_
-void CHotKeyWnd::init(int _x, int _y, CPlayer *pPlr)
+void CHotKeyWnd::init(int _x, int _y, CPlayer *pPlr, GP::NetStream *pNetStream)
 #endif
 {
    m_pPlayer = pPlr;
-   if(m_pPlayer != NULL)
+   m_pNetStream = pNetStream;
+   if(m_pPlayer != NULL) {
       m_pPlayer->addPlayerHotKeyEventListener(this);
+      m_pPlayer->addSkillEventListener(this);
+   }
 
    x = _x;
 	y = _y;
@@ -141,12 +146,17 @@ void CHotKeyWnd::onLCommand(int btnID)
       HotKeyItem *pHotKeyItem = m_pPlayer->getHotKeyItem(btnID);
       if(pHotKeyItem->pItem != NULL) {
          CItemInfo *pItemInfo = pHotKeyItem->pItem->getInfo();
-         if(pItemInfo != NULL)
-            m_pPlayer->useItem(pHotKeyItem->pItem->getID());
+         if(pItemInfo != NULL) {
+            CPacketUseItem packet;
+            packet.pack(m_pPlayer, pHotKeyItem->iBackpackGrid, pHotKeyItem->pItem);
+            m_pNetStream->send(&packet, sizeof(packet));
+         }
       }
       else if(pHotKeyItem->pSkill != NULL) {
          if(m_pPlayer->canUseSkill(pHotKeyItem->pSkill->getID()) == true) {
-            m_pPlayer->startCastSkill(pHotKeyItem->pSkill->getID());
+            CPacketCanUseSkill packet;
+            packet.pack(m_pPlayer, pHotKeyItem->pSkill->getID());
+            m_pNetStream->send(&packet, sizeof(packet));
          }
       }
    }
@@ -176,6 +186,7 @@ void CHotKeyWnd::onRCommand(int btnID)
       newHotKeyItem.iField = btnID;
       newHotKeyItem.pSkill = NULL;
       newHotKeyItem.pItem = NULL;
+      newHotKeyItem.iBackpackGrid = -1;
       m_pPlayer->addHotKeyItem(newHotKeyItem);
    }
 }
@@ -285,14 +296,42 @@ void CHotKeyWnd::updateItemData(CItem *pItem)
             newHotKeyItem.iField = field;
             newHotKeyItem.pSkill = NULL;
             newHotKeyItem.pItem = NULL;
+            newHotKeyItem.iBackpackGrid = -1;
             m_pPlayer->addHotKeyItem(newHotKeyItem);
          }
       }
    }
 }
 
-void CHotKeyWnd::updateSkill(CUnitObject *pUnitObject)
+void CHotKeyWnd::updateAddSkill(CUnitObject *pUnitObject, int skillID)
 {
+}
+
+void CHotKeyWnd::updateSkillAvailable(CSkill *pSkill)
+{
+   if(pSkill != NULL) {
+      CSkillInfo *pSkillInfo = pSkill->getInfo();
+      std::map<void *, int>::iterator it = m_table.find(pSkill);
+      if(it != m_table.end()) {
+         int field = it->second;
+         if(pSkill->getAvailable() == false) {
+#ifdef _GAMEENGINE_3D_
+            m_vpBtn[field]->setImage(pSkillInfo->geticonName() + "/CoolDown");
+#elif _GAMEENGINE_2D_
+            char buf[10] ;
+		      sprintf_s(buf, sizeof(buf), "¤£¥i¥Î");
+            m_vpText[TEXT_COUNT/2 + field]->setText(buf, 1, 1, 1);
+#endif
+         }
+         else {
+#ifdef _GAMEENGINE_3D_
+            m_vpBtn[field]->setImage(pSkillInfo->geticonName());
+#elif _GAMEENGINE_2D_
+            m_vpText[TEXT_COUNT/2 + field]->setText("", 1, 1, 1);
+#endif
+         }
+      }
+   }
 }
 
 void CHotKeyWnd::updateSkillCoolDown(CSkill *pSkill)

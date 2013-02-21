@@ -73,6 +73,16 @@ void CMonsterArea::work(CGameServer *pGameServer, CScene *pScene)
 	if(m_iMonsterCount >= MONSTERAREA_INFO::getInfo()->getMaxMonster())
 		return;
 
+   // 檢查怪物是否死亡
+   std::vector<long long>::iterator it = m_vMonsterUID.begin();
+   while(it != m_vMonsterUID.end()) {
+      CMonster *pMonster = pScene->getMonster((*it));
+      if(pMonster == NULL)
+         --m_iMonsterCount;
+
+      ++it;
+   }
+
 	if((unsigned) m_iConstTime < GetTickCount()) {
 		CMonsterAreaInfo* pInfo = MONSTERAREA_INFO::getInfo();
 		int mid = pInfo->getBornMonsterID()[rand() % pInfo->getBornMonsterID().size()];
@@ -80,7 +90,8 @@ void CMonsterArea::work(CGameServer *pGameServer, CScene *pScene)
 		float fy = pInfo->getPosition().fY + (rand() % ((int) (pInfo->getBornSize()) * 2)) - pInfo->getBornSize();
 		CMonster *pMonster = pScene->addMonster(pGameServer->generateUID(), mid, fx, fy);
       pMonster->addMonsterAIEventListener(pGameServer);
-		m_iMonsterCount++;
+      m_vMonsterUID.push_back(pMonster->getUID());
+		++m_iMonsterCount;
 		m_iConstTime = GetTickCount() + pInfo->getAddTime();
 	}
 }

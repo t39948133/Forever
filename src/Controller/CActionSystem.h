@@ -13,15 +13,18 @@
 #include "IDrawWeaponNotifyListener.h"
 #include "IPutinWeaponNotifyListener.h"
 #include "IPlaySoundNotifyListener.h"
+#include "IAttackNotifyListener.h"
 
 /** @brief 動作系統 
   *        可用於玩家、怪物、NPC */
 class CActionSystem
 {
    public:
-      CActionSystem(std::string machineName, long long uid);
+      CActionSystem();
       ~CActionSystem();
    
+      void init(std::string machineName, long long uid);
+
       /** @brief 邏輯動作
         * @param timePass 一個frame幾秒 */
       void work(float timePass);
@@ -62,6 +65,8 @@ class CActionSystem
         * @param fileName 檔案名稱 */
       bool read(std::string fileName);
 
+      void setUID(long long uid);
+
       void addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
       void removeDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
 
@@ -70,6 +75,9 @@ class CActionSystem
 
       void addPlaySoundNotifyListener(IPlaySoundNotifyListener *pListener);
       void removePlaySoundNotifyListener(IPlaySoundNotifyListener *pListener);
+
+      void addAttackNotifyListener(IAttackNotifyListener *pListener);
+      void removeAttackNotifyListener(IAttackNotifyListener *pListener);
 
    private:
       /** @brief 切換動作
@@ -98,14 +106,15 @@ class CActionSystem
       long long   m_uid;           // 玩家、怪物、NPC的唯一編號
       bool        m_bChangeAction; // 動作是否改變
       
-      std::vector<CActionEvent *>       *m_pEventQueue;   // Action Event Queue
-      std::vector<CNotifyActionEvent *> *m_pNotifyQueue;  // Action Notify Queue
-      std::vector<CAction *>            *m_pActionVector; // 動作集合
-      std::set<int>                     *m_pKeyDownSet;   // 記錄按鍵按下
+      std::vector<CActionEvent *>       m_eventQueue;   // Action Event Queue
+      std::vector<CNotifyActionEvent *> m_notifyQueue;  // Action Notify Queue
+      std::vector<CAction *>            m_actionVector; // 動作集合
+      std::set<int>                     m_keyDownSet;   // 記錄按鍵按下
 
       std::set<IDrawWeaponNotifyListener *>  m_drawWeaponNotifyListeners;
       std::set<IPutinWeaponNotifyListener *> m_putinWeaponNotifyListeners;
       std::set<IPlaySoundNotifyListener *>   m_playSoundNotifyListeners;
+      std::set<IAttackNotifyListener *>      m_attackNotifyListeners;
 };
 
 #endif  // #ifndef _CACTIONSYSTEM_H_

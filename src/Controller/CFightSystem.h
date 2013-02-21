@@ -8,6 +8,7 @@
 #ifndef _CFIGHTSYSTEM_H_
 #define _CFIGHTSYSTEM_H_
 #include "CSkill.h"
+#include "IFightEventListener.h"
 
 class CUnitObject;
 
@@ -16,10 +17,15 @@ class CUnitObject;
 class CFightSystem
 {
    public:
-      CFightSystem(std::string machineName, long long uid);
+      CFightSystem();
 
+      void init(std::string machineName, long long uid);
       void useSkill(CSkill *pSkill);
       bool isCastSkill();
+      void setUID(long long uid);
+
+      void addFightEventListener(IFightEventListener *pListener);
+      void removeFightEventListener(IFightEventListener *pListener);
 
       /** @brief 邏輯動作
         * @param timePass 一個frame幾秒
@@ -28,9 +34,14 @@ class CFightSystem
       void work(float timePass, CUnitObject *pSelfObject, CUnitObject *pTargetObject);
 
    private:
+      void notifyActionEventUpdate(CUnitObject *pSelfObject, CActionEvent *pActEvent);
+      void notifyTargetPositionUpdate(CUnitObject *pSelfObject);
+
       std::string    m_machineName;   // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       long long      m_uid;           // 玩家、怪物、NPC的唯一編號
       CSkill        *m_pUseSkill;
+
+      std::set<IFightEventListener *>  m_fightEventListeners;    // 監聽戰鬥系統事件的監聽者列表
 };
 
 #endif  // #ifndef _CFIGHTSYSTEM_H_

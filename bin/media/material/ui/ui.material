@@ -118,24 +118,6 @@ material UI/Icon/BootSlot
 	}
 }
 
-//選單視窗
-material UI/BG/ToolBarWnd
-{
-	technique
-	{
-		pass
-		{			
-			scene_blend alpha_blend 			
-
-			texture_unit
-			{
-				texture toolbar.png
-			}
-		}
-	}
-}
-
-
 //背包視窗
 material UI/BG/BackpackWnd
 {
@@ -384,6 +366,22 @@ material UI/MonsterAI/Knight
 			texture_unit
 			{
 				texture icon_emblem_knight_alpha.png
+			}
+		}
+	}
+}
+
+//主角資訊視窗
+material UI/BG/ToolBarWnd
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture toolbar.png
 			}
 		}
 	}

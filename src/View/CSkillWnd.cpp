@@ -118,7 +118,7 @@ void CSkillWnd::init(int _x, int _y, CPlayer *pPlayer)
 	}
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
-   updateSkill(m_pPlayer);
+   updateAddSkill(m_pPlayer, -1);
    show(false);
 }
 
@@ -142,6 +142,7 @@ void CSkillWnd::onLCommand(int btnID)
                   newHotKeyItem.iField = i;
                   newHotKeyItem.pSkill = pSkill;
                   newHotKeyItem.pItem = NULL;
+                  newHotKeyItem.iBackpackGrid = -1;
                   m_pPlayer->addHotKeyItem(newHotKeyItem);
 
                   break;
@@ -183,7 +184,7 @@ void CSkillWnd::setZOrder(int order)
 }
 #endif  // #ifdef _GAMEENGINE_3D_
 
-void CSkillWnd::updateSkill(CUnitObject *pUnitObject)
+void CSkillWnd::updateAddSkill(CUnitObject *pUnitObject, int skillID)
 {
    std::vector<CSkill *> vtSkill = pUnitObject->getSkill();
 
@@ -215,6 +216,10 @@ void CSkillWnd::updateSkill(CUnitObject *pUnitObject)
          m_vpText[i * 2 + TEXT_FIELD_START + 1]->setText("", 1, 1, 1);
       }
    }
+}
+
+void CSkillWnd::updateSkillAvailable(CSkill *pSkill)
+{
 }
 
 void CSkillWnd::updateSkillCoolDown(CSkill *pSkill)

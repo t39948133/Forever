@@ -13,6 +13,8 @@
 #include "IPlayerBackpackEventListener.h"
 #include "IPlayerAttrEventListener.h"
 
+#include <network\gp_socket.h>
+
 #ifdef _GAMEENGINE_3D_
 #include "CImageButton.h"
 #include "CTextAreaOgre.h"
@@ -33,7 +35,7 @@ class CBackpackWnd : public CWindow,
       CBackpackWnd();
 	   ~CBackpackWnd();
 
-      void init(int _x, int _y, CPlayer *pb);
+      void init(int _x, int _y, CPlayer *pb, GP::NetStream *pNetStream);
 
 	   // CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
@@ -53,7 +55,8 @@ class CBackpackWnd : public CWindow,
       /* virtual */ void updatePlayerAttr(CPlayer *pPlayer);
 
    private:
-      CPlayer *m_pPlayer;
+      CPlayer       *m_pPlayer;
+      GP::NetStream *m_pNetStream;      // 對Game Server的網路連線
 
 #ifdef _GAMEENGINE_3D_	
 	   CImageButton   *m_vpBtn[BUTTON_COUNT];

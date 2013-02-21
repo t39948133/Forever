@@ -103,7 +103,7 @@ void CWindowMan3D::mouseDown(const OIS::MouseEvent &evt)
 				m_pWindowList->erase(it);
 				m_pDragWnd = m_pWindowList->front();
 
-            int offset = 0; 
+            int offset = 2; 
             std::list<CWindow *>::reverse_iterator it1 = m_pWindowList->rbegin();
             while(it1 != m_pWindowList->rend()) {
                (*it1)->setZOrder(offset++);
@@ -138,7 +138,7 @@ void CWindowMan3D::mouseDown(const OIS::MouseEvent &evt)
 				m_pWindowList->erase(it);
 				m_pDragWnd = m_pWindowList->front();
 
-            int offset = 0; 
+            int offset = 2; 
             std::list<CWindow *>::reverse_iterator it1 = m_pWindowList->rbegin();
             while(it1 != m_pWindowList->rend()) {
                (*it1)->setZOrder(offset++);

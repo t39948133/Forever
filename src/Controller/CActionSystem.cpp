@@ -12,60 +12,46 @@
 #include "CCastSkillActionEvent.h"
 #include "CPlaySoundNotifyActionEvent.h"
 
-CActionSystem::CActionSystem(std::string machineName, long long uid) : m_machineName(machineName),
-                                                                       m_uid(uid), 
-                                                                       m_fCurTime(0.0f),
-                                                                       m_iCurAction(0),
-                                                                       m_bChangeAction(false)
+CActionSystem::CActionSystem() : m_fCurTime(0.0f),
+                                 m_iCurAction(0),
+                                 m_bChangeAction(false)
 {
-   m_pEventQueue = new std::vector<CActionEvent *>();
-   m_pNotifyQueue = new std::vector<CNotifyActionEvent *>();
-   m_pActionVector = new std::vector<CAction *>();
-   m_pKeyDownSet = new std::set<int>;
-
-   CActionDispatch::getInstance()->addActionSystem(m_machineName, uid, this);
 }
 
 CActionSystem::~CActionSystem()
 {
    CActionDispatch::getInstance()->removeActionSystem(m_machineName, m_uid);
 
-   m_pKeyDownSet->clear();
-   delete m_pKeyDownSet;
-   m_pKeyDownSet = NULL;
+   m_keyDownSet.clear();
 
-   if(m_pEventQueue != NULL) {
-      std::vector<CActionEvent *>::iterator itEvent = m_pEventQueue->begin();
-      while(itEvent != m_pEventQueue->end()) {
-         delete (*itEvent);
-         itEvent++;
-      }
-      m_pEventQueue->clear();
-      delete m_pEventQueue;
-      m_pEventQueue = NULL;
+   std::vector<CActionEvent *>::iterator itEvent = m_eventQueue.begin();
+   while(itEvent != m_eventQueue.end()) {
+      delete (*itEvent);
+      ++itEvent;
    }
+   m_eventQueue.clear();
 
-   if(m_pNotifyQueue != NULL) {
-      std::vector<CNotifyActionEvent *>::iterator itNotify = m_pNotifyQueue->begin();
-      while(itNotify != m_pNotifyQueue->end()) {
-         delete (*itNotify);
-         itNotify++;
-      }
-      m_pNotifyQueue->clear();
-      delete m_pNotifyQueue;
-      m_pNotifyQueue = NULL;
+   std::vector<CNotifyActionEvent *>::iterator itNotify = m_notifyQueue.begin();
+   while(itNotify != m_notifyQueue.end()) {
+      delete (*itNotify);
+      ++itNotify;
    }
+   m_notifyQueue.clear();
 
-   if(m_pActionVector != NULL) {
-      std::vector<CAction *>::iterator itAction = m_pActionVector->begin();
-      while(itAction != m_pActionVector->end()) {
-         delete (*itAction);
-         itAction++;
-      }
-      m_pActionVector->clear();
-      delete m_pActionVector;
-      m_pActionVector = NULL;
+   std::vector<CAction *>::iterator itAction = m_actionVector.begin();
+   while(itAction != m_actionVector.end()) {
+      delete (*itAction);
+      ++itAction;
    }
+   m_actionVector.clear();
+}
+
+void CActionSystem::init(std::string machineName, long long uid)
+{
+   m_machineName = machineName;
+   m_uid = uid;
+
+   CActionDispatch::getInstance()->addActionSystem(m_machineName, m_uid, this);
 }
 
 void CActionSystem::work(float timePass)
@@ -76,15 +62,15 @@ void CActionSystem::work(float timePass)
    m_fCurTime += timePass;
 
    int nextActID = -1;
-   if(m_pActionVector->size() > 0) {
-      std::vector<CActionEvent *>::iterator it = m_pEventQueue->begin();
-      if(it != m_pEventQueue->end()) {
-         nextActID = m_pActionVector->at(m_iCurAction)->work(fPreTime, m_fCurTime, (*it), m_pKeyDownSet);
+   if(m_actionVector.size() > 0) {
+      std::vector<CActionEvent *>::iterator it = m_eventQueue.begin();
+      if(it != m_eventQueue.end()) {
+         nextActID = m_actionVector.at(m_iCurAction)->work(fPreTime, m_fCurTime, (*it), &m_keyDownSet);
          delete (*it);
-         m_pEventQueue->erase(it);
+         m_eventQueue.erase(it);
       }
       else
-         nextActID = m_pActionVector->at(m_iCurAction)->work(fPreTime, m_fCurTime, NULL, m_pKeyDownSet);
+         nextActID = m_actionVector.at(m_iCurAction)->work(fPreTime, m_fCurTime, NULL, &m_keyDownSet);
    }
 
    /** nextActID = 0   沒有下一個動作
@@ -104,8 +90,8 @@ bool CActionSystem::isChangeAction()
 
 CAction* CActionSystem::getCurAction()
 {
-   if(m_pActionVector->size() > 0)
-      return m_pActionVector->at(m_iCurAction);
+   if(m_actionVector.size() > 0)
+      return m_actionVector.at(m_iCurAction);
    else
       return NULL;
 }
@@ -114,7 +100,7 @@ void CActionSystem::addAction(CAction *pAction)
 {
    pAction->setUID(m_uid);
    pAction->setMachineName(m_machineName);
-   m_pActionVector->push_back(pAction);
+   m_actionVector.push_back(pAction);
 }
 
 bool CActionSystem::isMove()
@@ -130,10 +116,10 @@ std::vector<std::string> CActionSystem::getAllAnimationName()
 {
    std::vector<std::string> vtAnimationName;
 
-   std::vector<CAction *>::iterator it = m_pActionVector->begin();
-   while(it != m_pActionVector->end()) {
+   std::vector<CAction *>::iterator it = m_actionVector.begin();
+   while(it != m_actionVector.end()) {
       vtAnimationName.push_back((*it)->getAnimationName());
-      it++;
+      ++it;
    }
 
    return vtAnimationName;
@@ -163,13 +149,13 @@ void CActionSystem::write(std::string fileName)
 	int version = 0;
 	fwrite(&version, sizeof(version), 1, pFile);
 
-	int count = m_pActionVector->size();
+	int count = m_actionVector.size();
 	fwrite(&count, sizeof(count), 1, pFile);
 
-   std::vector<CAction *>::iterator it = m_pActionVector->begin();
-   while(it != m_pActionVector->end()) {
+   std::vector<CAction *>::iterator it = m_actionVector.begin();
+   while(it != m_actionVector.end()) {
       (*it)->write(pFile);
-      it++;
+      ++it;
    }
 
 	fclose(pFile);
@@ -200,15 +186,32 @@ bool CActionSystem::read(std::string fileName)
       addAction(pAction);
    }
 
-   std::vector<CAction *>::iterator it = m_pActionVector->begin();
-   while(it != m_pActionVector->end()) {
+   std::vector<CAction *>::iterator it = m_actionVector.begin();
+   while(it != m_actionVector.end()) {
       (*it)->read(pFile);
-      it++;
+      ++it;
    }
 
 	fclose(pFile);
 
    return true;
+}
+
+void CActionSystem::setUID(long long uid)
+{
+   // 移除註冊
+   CActionDispatch::getInstance()->removeActionSystem(m_machineName, m_uid);
+
+   // 重新註冊
+   m_uid = uid;
+   CActionDispatch::getInstance()->addActionSystem(m_machineName, m_uid, this);
+
+   // 重新給定下面所有物件新的uid
+   std::vector<CAction *>::iterator it = m_actionVector.begin();
+   while(it != m_actionVector.end()) {
+      (*it)->setUID(m_uid);
+      ++it;
+   }
 }
 
 void CActionSystem::addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener)
@@ -253,10 +256,24 @@ void CActionSystem::removePlaySoundNotifyListener(IPlaySoundNotifyListener *pLis
       m_playSoundNotifyListeners.erase(it);
 }
 
+void CActionSystem::addAttackNotifyListener(IAttackNotifyListener *pListener)
+{
+   std::set<IAttackNotifyListener *>::iterator it = m_attackNotifyListeners.find(pListener);
+   if(it == m_attackNotifyListeners.end())
+      m_attackNotifyListeners.insert(pListener);
+}
+
+void CActionSystem::removeAttackNotifyListener(IAttackNotifyListener *pListener)
+{
+   std::set<IAttackNotifyListener *>::iterator it = m_attackNotifyListeners.find(pListener);
+   if(it != m_attackNotifyListeners.end())
+      m_attackNotifyListeners.erase(it);
+}
+
 void CActionSystem::changeAction(int newActionID)
 {
-   for(int i = 0; i < (int)m_pActionVector->size(); i++) {
-      CAction *pAction = m_pActionVector->at(i);
+   for(int i = 0; i < (int)m_actionVector.size(); i++) {
+      CAction *pAction = m_actionVector.at(i);
       if(pAction->getID() == newActionID) {
          m_bChangeAction = true;
          m_fCurTime = 0.0f;
@@ -273,7 +290,7 @@ void CActionSystem::sendEvent(CActionEvent &actEvent)
       case AET_NOT_REACH: {
          CActionEvent *pActionEvent = new CActionEvent();
          *pActionEvent = actEvent;
-         m_pEventQueue->push_back(pActionEvent);
+         m_eventQueue.push_back(pActionEvent);
          break;
       }
 
@@ -281,7 +298,7 @@ void CActionSystem::sendEvent(CActionEvent &actEvent)
          CKeyActionEvent *pKeyActionEvent = new CKeyActionEvent();
          CKeyActionEvent &srcKeyActionEvent = (CKeyActionEvent &)actEvent;
          *pKeyActionEvent = srcKeyActionEvent;
-         m_pEventQueue->push_back(pKeyActionEvent);
+         m_eventQueue.push_back(pKeyActionEvent);
          break;
       }
 
@@ -289,7 +306,7 @@ void CActionSystem::sendEvent(CActionEvent &actEvent)
          CWASDKeyActionEvent *pWASDKeyActionEvent = new CWASDKeyActionEvent();
          CWASDKeyActionEvent &srcWASDKeyActionEvent = (CWASDKeyActionEvent &)actEvent;
          *pWASDKeyActionEvent = srcWASDKeyActionEvent;
-         m_pEventQueue->push_back(pWASDKeyActionEvent);
+         m_eventQueue.push_back(pWASDKeyActionEvent);
          break;
       }
 
@@ -297,7 +314,7 @@ void CActionSystem::sendEvent(CActionEvent &actEvent)
          CCastSkillActionEvent *pCastSkillActionEvent = new CCastSkillActionEvent();
          CCastSkillActionEvent &srcCastSkillActionEvent = (CCastSkillActionEvent &)actEvent;
          *pCastSkillActionEvent = srcCastSkillActionEvent;
-         m_pEventQueue->push_back(pCastSkillActionEvent);
+         m_eventQueue.push_back(pCastSkillActionEvent);
          break;
       }
    }
@@ -305,19 +322,19 @@ void CActionSystem::sendEvent(CActionEvent &actEvent)
 
 void CActionSystem::sendNotify(CNotifyActionEvent *pNotifyActionEvent)
 {
-   m_pNotifyQueue->push_back(pNotifyActionEvent);
+   m_notifyQueue.push_back(pNotifyActionEvent);
 }
 
 void CActionSystem::procNotify()
 {
-   std::vector<CNotifyActionEvent *>::iterator itNotifyActionEvent = m_pNotifyQueue->begin();
-   if(itNotifyActionEvent != m_pNotifyQueue->end()) {
+   std::vector<CNotifyActionEvent *>::iterator itNotifyActionEvent = m_notifyQueue.begin();
+   if(itNotifyActionEvent != m_notifyQueue.end()) {
       switch((*itNotifyActionEvent)->m_event) {
          case AET_NOTIFY_DRAW_WEAPON: {
             std::set<IDrawWeaponNotifyListener *>::iterator it = m_drawWeaponNotifyListeners.begin();
             while(it != m_drawWeaponNotifyListeners.end()) {
                (*it)->notifyDrawWeapon();
-               it++;
+               ++it;
             }
             break;
          }
@@ -326,7 +343,7 @@ void CActionSystem::procNotify()
             std::set<IPutinWeaponNotifyListener *>::iterator it = m_putinWeaponNotifyListeners.begin();
             while(it != m_putinWeaponNotifyListeners.end()) {
                (*it)->notifyPutinWeapon();
-               it++;
+               ++it;
             }
             break;
          }
@@ -336,12 +353,21 @@ void CActionSystem::procNotify()
             std::set<IPlaySoundNotifyListener *>::iterator it = m_playSoundNotifyListeners.begin();
             while(it != m_playSoundNotifyListeners.end()) {
                (*it)->notifyPlaySound(pPlaySoundNotifyActionEvent->m_soundFile);
-               it++;
+               ++it;
+            }
+            break;
+         }
+
+         case AET_NOTIFY_ATTACK: {
+            std::set<IAttackNotifyListener *>::iterator it = m_attackNotifyListeners.begin();
+            while(it != m_attackNotifyListeners.end()) {
+               (*it)->notifyAttack();
+               ++it;
             }
             break;
          }
       }
 
-      m_pNotifyQueue->erase(itNotifyActionEvent);
+      m_notifyQueue.erase(itNotifyActionEvent);
    }
 }

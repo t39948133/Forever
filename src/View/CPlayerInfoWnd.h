@@ -14,6 +14,8 @@
 #include "IPlayerAttrEventListener.h"
 #include "IPlayerEquipEventListener.h"
 
+#include <network\gp_socket.h>
+
 #ifdef _GAMEENGINE_3D_
 #include "CImageButton.h"
 #include "CTextAreaOgre.h"
@@ -42,7 +44,7 @@ class CPlayerInfoWnd : public CWindow,
       CPlayerInfoWnd();
 	   ~CPlayerInfoWnd();
 
-	   void init(int _x, int _y, CPlayer *pPlr);
+	   void init(int _x, int _y, CPlayer *pPlr, GP::NetStream *pNetStream);
 
       // CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
@@ -64,7 +66,8 @@ class CPlayerInfoWnd : public CWindow,
       /* virtual */ void updatePlayerEquip(CPlayer *pPlayer, EquipSlot equipSlot, int itemId);
 
    private:
-	   CPlayer *m_pPlayer;
+	   CPlayer        *m_pPlayer;
+      GP::NetStream  *m_pNetStream;      // 對Game Server的網路連線
    	
 #ifdef _GAMEENGINE_3D_	
 	   CImageButton   *m_vpBtn[BUTTON_COUNT];

@@ -1,5 +1,6 @@
 #include "CBackpackWnd.h"
 #include "CBackpack.h"
+#include "CPacketUseItem.h"
 
 CBackpackWnd::CBackpackWnd()
 {
@@ -63,9 +64,11 @@ CBackpackWnd::~CBackpackWnd()
 #endif
 }
 
-void CBackpackWnd::init(int _x, int _y, CPlayer *pb)
+void CBackpackWnd::init(int _x, int _y, CPlayer *pb, GP::NetStream *pNetStream)
 {	
-	m_pPlayer = pb ;
+	m_pPlayer = pb;
+   m_pNetStream = pNetStream;
+
    if(m_pPlayer != NULL) {
       m_pPlayer->addPlayerAttrEventListener(this);
       m_pPlayer->addPlayerBackpackEventListener(this);
@@ -175,6 +178,7 @@ void CBackpackWnd::onLCommand(int btnID)
                HotKeyItem newHotKeyItem;
                newHotKeyItem.iField = i;
                newHotKeyItem.pItem = pItem;
+               newHotKeyItem.iBackpackGrid = btnID;
                newHotKeyItem.pSkill = NULL;
                m_pPlayer->addHotKeyItem(newHotKeyItem);
 
@@ -193,8 +197,11 @@ void CBackpackWnd::onRCommand(int btnID)
    if(pItem != NULL) {
       CItemInfo *pItemInfo = pItem->getInfo();
 
-      if(pItemInfo != NULL)
-         m_pPlayer->useItem(pItem->getID());
+      if(pItemInfo != NULL) {
+         CPacketUseItem packet;
+         packet.pack(m_pPlayer, btnID, pItem);
+         m_pNetStream->send(&packet, sizeof(packet));
+      }
    }
 }
 
