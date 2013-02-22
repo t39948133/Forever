@@ -478,6 +478,11 @@ void CUnitObject::levelUp()
 	m_level++;
 }
 
+void CUnitObject::setLevel(char level)
+{
+	m_level = level;
+}
+
 int CUnitObject::getHPR()
 {
    int hpr = m_obsAttr.iHPR;

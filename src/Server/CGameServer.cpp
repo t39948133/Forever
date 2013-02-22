@@ -76,7 +76,14 @@ void CGameServer::init(int port)
       }
 
       // Todo: ²£¥ÍNPC
-		addNPC(this->generateUID(), 0, 300, 600);
+		addNPC(this->generateUID(), 0, 750, 450);
+		addNPC(this->generateUID(), 1, 600, 450);
+		addNPC(this->generateUID(), 2, 600, 350);
+		addNPC(this->generateUID(), 3, 750, 550);
+		addNPC(this->generateUID(), 4, 600, 550);
+		addNPC(this->generateUID(), 5, 750, 650);
+		addNPC(this->generateUID(), 6, 600, 650);
+		addNPC(this->generateUID(), 7, 750, 350);
    }
 }
 

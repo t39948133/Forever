@@ -51,12 +51,21 @@ void CQuest::initQuest()
 	else
 	{
 		CQuestInfo* pquest = new CQuestInfo();
-		std::vector<int> vireware;
-		vireware.push_back(0);
-		vireware.push_back(2);
-		vireware.push_back(3);
+		std::vector<Reware> vreware;
+		Reware item;
+		memset(&item, 0, sizeof(item));
+		item.ItemKind = 37;
+		item.ItemStack =10;
+		vreware.push_back(item);
+		memset(&item, 0, sizeof(item));
+		item.ItemKind = 38;
+		item.ItemStack = 10;
+		vreware.push_back(item);
+		item.ItemKind = 0;
+		item.ItemStack = 1;
+		vreware.push_back(item);
 		pquest->initQuestInfo("新手導引", "歡迎進入這遊戲，去和村長說話", 1, -1, TALK,
-			-1, 0, -1, 0, vireware, 20, (long long) 100);
+			-1, 0, -1, 0, vreware, 20, (long long) 100);
 		QUEST_INFO::addInfo(pquest);
 	}
 }

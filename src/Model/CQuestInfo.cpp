@@ -10,7 +10,7 @@ CQuestInfo::~CQuestInfo()
 
 void CQuestInfo::initQuestInfo(std::string name, std::string desc, char level,
 										 int perQuestID, QuestType eventType, int MonsterID,
-										 int TalkID, int ItemID, int Const, std::vector<int> reware,
+										 int TalkID, int ItemID, int Const, std::vector<Reware> reware,
 										 int xp, long long money)
 {
 	m_strName = name;
@@ -22,7 +22,7 @@ void CQuestInfo::initQuestInfo(std::string name, std::string desc, char level,
 	m_iTalkID = TalkID;
 	m_iItemID = ItemID;
 	m_iConst = Const;
-	m_viReware = reware;
+	m_vReware = reware;
 	m_ixp = xp;
 	m_Money = money;
 }
@@ -89,9 +89,9 @@ int CQuestInfo::getConst()
 	return m_iConst;
 }
 
-std::vector<int> CQuestInfo::getItemReware()
+std::vector<Reware> CQuestInfo::getItemReware()
 {
-	return m_viReware;
+	return m_vReware;
 }
 
 long long CQuestInfo::getMoney()
@@ -131,9 +131,10 @@ void CQuestInfo::read(FILE *pFile)
 	fread(&rewareSize, sizeof(rewareSize), 1, pFile);
 	for(int i = 0; rewareSize > i; i++)
 	{
-		int ItemID = -1;
-		fread(&ItemID, sizeof(ItemID), 1, pFile);
-		m_viReware.push_back(ItemID);
+		Reware Item;
+		memset(&Item, 0, sizeof(Item));
+		fread(&Item, sizeof(Item), 1, pFile);
+		m_vReware.push_back(Item);
 	}
 	fread(&m_ixp, sizeof(m_ixp), 1, pFile);
 	fread(&m_Money, sizeof(m_Money), 1, pFile);
@@ -158,13 +159,13 @@ void CQuestInfo::write(FILE *pFile)
 	fwrite(&m_iTalkID, sizeof(m_iTalkID), 1, pFile);
 	fwrite(&m_iItemID, sizeof(m_iItemID), 1, pFile);
 	fwrite(&m_iConst, sizeof(m_iConst), 1, pFile);
-	int rewareSize = m_viReware.size();
+	int rewareSize = m_vReware.size();
 	fwrite(&rewareSize, sizeof(rewareSize), 1, pFile);
-	std::vector<int>::iterator preware = m_viReware.begin();
-	while(m_viReware.end() != preware)
+	std::vector<Reware>::iterator preware = m_vReware.begin();
+	while(m_vReware.end() != preware)
 	{
-		int ItemID = (*preware);
-		fwrite(&ItemID, sizeof(ItemID), 1, pFile);
+		Reware Item = (*preware);
+		fwrite(&Item, sizeof(Item), 1, pFile);
 		preware++;
 	}
 	fwrite(&m_ixp, sizeof(m_ixp), 1, pFile);

@@ -405,6 +405,16 @@ void CPlayer::draw(HDC hdc)
 #endif  // #ifdef _GAMEENGINE_2D_
 // } Add by Darren Chen on 2012/12/26
 
+void CPlayer::setXP(unsigned int xp)
+{
+	m_xp = xp;
+}
+
+void CPlayer::setXPMax(unsigned int xpMax)
+{
+	m_xpMax = xpMax;
+}
+
 void CPlayer::updateEquipAttr()
 {
    std::string machineName = this->getMachineName();

@@ -380,4 +380,10 @@ enum QuestState
 	QUEST_FINISH		//這任務已繳交完成
 };
 
+struct Reware
+{
+	int ItemKind;
+	int ItemStack;
+};
+
 #endif  // #ifndef _COMMON_H_

@@ -103,6 +103,8 @@ private:
    friend class CPacketPlayerInit;    // 允許CPacketPlayerInit物件直接對private/protected成員做存取
    friend class CPacketPlayerData;
 
+	void setXP(unsigned int xp);
+	void setXPMax(unsigned int xpMax);
 	void updateEquipAttr(); //更新裝備造成的角色屬性
    void updateSkillAvailable();
 

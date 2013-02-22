@@ -542,3 +542,19 @@ material UI/MonsterAI/Knight
 		}
 	}
 }
+
+//主角資訊視窗
+material UI/BG/ToolBarWnd
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture toolbar.png
+			}
+		}
+	}
+}

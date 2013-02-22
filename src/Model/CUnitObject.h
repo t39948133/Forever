@@ -195,6 +195,7 @@ class CUnitObject : public IPlaySoundNotifyListener,
       CFightSystem          m_fightSystem;    // 戰鬥系統         
       // } Add by Darren Chen on 2012/12/27
 	 virtual void				levelUp();
+	   void						 setLevel(char level);
 
    private:
       friend class CPacketPlayerDataWG;  // 允許CPacketPlayerDataWG物件直接對private/protected成員做存取

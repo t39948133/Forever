@@ -10,7 +10,7 @@ public:
 	~CQuestInfo();
 	void			initQuestInfo(std::string name, std::string desc, char level, int perQuestID,
 		QuestType eventType, int MonsterID, int TalkID, int ItemID, int Const,
-		std::vector<int> reware, int xp, long long money);
+		std::vector<Reware> reware, int xp, long long money);
 	std::string getName();					//取得名稱
 	std::string getDesc();					//取得說明
 	char			getLevel();					//取得承接等級
@@ -21,7 +21,7 @@ public:
 	int			getItemID();				//取得物品ID
 	int			getTragetID();				//取得任務目標ID
 	int			getConst();					//取得目標數量
-	std::vector<int>	getItemReware();	//取得物品報酬
+	std::vector<Reware>	getItemReware();	//取得物品報酬
 	int			getXP();						//取得經驗報酬
 	long long	getMoney();					//取得金錢報酬
 
@@ -40,7 +40,7 @@ private:
 	int			m_iTalkID;			//說話對象ID
 	int			m_iItemID;			//物品ID
 	int			m_iConst;			//達成目標數量
-	std::vector<int> m_viReware;	//物品回報
+	std::vector<Reware> m_vReware;	//物品回報
 	int			m_ixp;				//經驗回報
 	long long	m_Money;				//金錢回報
 };

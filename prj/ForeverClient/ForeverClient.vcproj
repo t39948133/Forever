@@ -544,7 +544,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CMapWnd.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CMiniMapWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CNPCChatWnd.cpp"
 					>
 				</File>
 				<File
@@ -561,6 +569,18 @@
 				</File>
 				<File
 					RelativePath="..\..\src\View\CPlayerStateWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CQuestWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CShopWnd.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CSkillInfoWnd.cpp"
 					>
 				</File>
 				<File
@@ -1061,7 +1081,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CMapWnd.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CMiniMapWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CNPCChatWnd.h"
 					>
 				</File>
 				<File
@@ -1078,6 +1106,18 @@
 				</File>
 				<File
 					RelativePath="..\..\src\View\CPlayerStateWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CQuestWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CShopWnd.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CSkillInfoWnd.h"
 					>
 				</File>
 				<File
