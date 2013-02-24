@@ -76,6 +76,7 @@ void CGameServer::init(int port)
       }
 
       // Todo: ²£¥ÍNPC
+#ifdef _GAMEENGINE_2D_
 		addNPC(this->generateUID(), 0, 750, 450);
 		addNPC(this->generateUID(), 1, 600, 450);
 		addNPC(this->generateUID(), 2, 600, 350);
@@ -84,6 +85,17 @@ void CGameServer::init(int port)
 		addNPC(this->generateUID(), 5, 750, 650);
 		addNPC(this->generateUID(), 6, 600, 650);
 		addNPC(this->generateUID(), 7, 750, 350);
+#endif  //#ifdef _GAMEENGINE_2D_
+#ifdef _GAMEENGINE_3D_
+		addNPC(this->generateUID(), 0, 478, 520);
+		addNPC(this->generateUID(), 1, 524, 787);
+		addNPC(this->generateUID(), 2, 527, 787);
+		addNPC(this->generateUID(), 3, 652, 800);
+		addNPC(this->generateUID(), 4, 654, 800);
+		addNPC(this->generateUID(), 5, 656, 800);
+		addNPC(this->generateUID(), 6, 658, 800);
+		addNPC(this->generateUID(), 7, 660, 800);
+#endif  //#ifdef _GAMEENGINE_3D_
    }
 }
 

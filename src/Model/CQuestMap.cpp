@@ -113,6 +113,11 @@ void CQuestMap::finishQuestID(int id)
 	m_viFinishID.push_back(id);
 }
 
+void CQuestMap::addQuest(CQuest *pQuest)
+{
+	m_lpQuest.push_back(pQuest);
+}
+
 bool CQuestMap::addQuest(int id, char level)
 {
 	if(canTake(id, level))

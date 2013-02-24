@@ -56,6 +56,12 @@ void CBackpack::removeItem(int itemID)
    }
 }
 
+void CBackpack::removeGrid(int grid)
+{
+	CItem *pItem = getItem(grid);
+	pItem->clear();
+}
+
 // Add by Darren Chen on 2013/01/13 {
 int CBackpack::getSize()
 {

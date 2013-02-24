@@ -20,6 +20,7 @@ public:
 	bool	getItem(int grid, CBackpack& backPack);	//更新取得物品資訊，傳入背包、更新了哪一格
 	bool	onTalk(int id);							//更新對話任務
 private:
+	friend class CPacketQuestData;
 	int		m_iConst;	//任務目標目前完成數量
 	bool	m_bFinish;	//是否完成
 };

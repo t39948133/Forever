@@ -14,6 +14,7 @@ class CBackpack
 
 	   void addItem(int itemID, int &stack, int &grid);  //增加物品 id 物品編號 stack 數量
       void removeItem(int itemID);                      //移除物品(堆疊 - 1)
+		void removeGrid(int grid);
 
       // Add by Darren Chen on 2013/01/13 {
       int getSize();                                     // 取得背包總格數

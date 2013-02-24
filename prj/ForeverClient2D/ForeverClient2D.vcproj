@@ -555,6 +555,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketQuestData.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketTargetObject.cpp"
 					>
 				</File>
@@ -1008,10 +1012,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Network\CNetDataQuest.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\Network\CNetDataSkill.h"
 					>
 				</File>
@@ -1073,6 +1073,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CPacketPlayerInit.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketQuestData.h"
 					>
 				</File>
 				<File

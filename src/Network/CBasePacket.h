@@ -19,6 +19,7 @@ enum {
    PACKET_CANCEL_USESKILL,        // 取消使用技能
    //PACKET_CASTSKILL_ACTIONEVENT,  // 施展技能動作訊息
 	PACKET_NPC_DATA,
+	PACKET_QUEST_DATA,
 };
 
 class CBasePacket
