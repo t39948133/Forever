@@ -87,6 +87,18 @@ void CBackpack::initBack()
 {
 }
 
+bool CBackpack::isFull()
+{
+	for(int i = 0; i < BACK_MAX; i++)
+	{
+		if(m_itemBack[i].getInfo() == NULL)
+		{
+			return false;
+		}
+	}
+	return true;	
+}
+
 void CBackpack::notifyPlayerBackpackUpdate()
 {
    std::set<IPlayerBackpackEventListener *>::iterator it = m_playerBackpackEventListeners.begin();

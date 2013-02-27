@@ -84,9 +84,10 @@ bool CToolBarWnd::canDrag (int tx, int ty)
 	return false ;
 }
 
-void CToolBarWnd::onLCommand (int btnID)
+void CToolBarWnd::onLCommand(int btnID)
 {
-	vpWnd[btnID]->show (!vpWnd[btnID]->isVisible ()) ;
+   if(vpWnd[btnID] != NULL)
+	   vpWnd[btnID]->show(!vpWnd[btnID]->isVisible());
 }
 
 void CToolBarWnd::onDrag()

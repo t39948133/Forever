@@ -110,7 +110,7 @@ private:
 
    // Add by Darren Chen on 2013/01/17 {
    /** @brief 通知玩家屬性(xp, money)有更新 */
-   void notifyPlayerAttrUpdate();
+   void notifyPlayerAttrUpdate(unsigned int offsetXP, long long offsetMoney);
 
    /** @brief 通知玩家裝備有更新
      * @param es     裝備部位

@@ -13,21 +13,21 @@ void CMonsterArea::initMonsterArea()
 		CMonsterAreaInfo *pInfo = new CMonsterAreaInfo();
 		std::vector<int> viMonsterID;
 		viMonsterID.push_back(0);
-		pInfo->initMonsterAreaInfo(3, 300.0f, 300.0f, 50.0f, 1000, viMonsterID);
+		pInfo->initMonsterAreaInfo(3, 300.0f, 300.0f, 50.0f, 5000, viMonsterID);
 		MONSTERAREA_INFO::addInfo(pInfo);
 
       // 菁英怪
       pInfo = new CMonsterAreaInfo();
       std::vector<int> viMonsterID1;
 		viMonsterID1.push_back(1);
-		pInfo->initMonsterAreaInfo(3, 500.0f, 300.0f, 50.0f, 10000, viMonsterID1);
+		pInfo->initMonsterAreaInfo(3, 500.0f, 300.0f, 50.0f, 15000, viMonsterID1);
 		MONSTERAREA_INFO::addInfo(pInfo);
 
       // 王怪
       pInfo = new CMonsterAreaInfo();
       std::vector<int> viMonsterID2;
 		viMonsterID2.push_back(2);
-		pInfo->initMonsterAreaInfo(1, 400.0f, 700.0f, 50.0f, 20000, viMonsterID2);
+		pInfo->initMonsterAreaInfo(1, 400.0f, 700.0f, 50.0f, 25000, viMonsterID2);
 		MONSTERAREA_INFO::addInfo(pInfo);
 	}
 }
@@ -70,18 +70,20 @@ void CMonsterArea::work(CGameServer *pGameServer, CScene *pScene)
 	if(MONSTERAREA_INFO::getInfo() == NULL)
 		return;
 
-	if(m_iMonsterCount >= MONSTERAREA_INFO::getInfo()->getMaxMonster())
-		return;
-
    // 檢查怪物是否死亡
    std::vector<long long>::iterator it = m_vMonsterUID.begin();
    while(it != m_vMonsterUID.end()) {
       CMonster *pMonster = pScene->getMonster((*it));
-      if(pMonster == NULL)
+      if(pMonster == NULL) {
          --m_iMonsterCount;
-
-      ++it;
+         it = m_vMonsterUID.erase(it);
+      }
+      else
+         ++it;
    }
+
+   if(m_iMonsterCount >= MONSTERAREA_INFO::getInfo()->getMaxMonster())
+		return;
 
 	if((unsigned) m_iConstTime < GetTickCount()) {
 		CMonsterAreaInfo* pInfo = MONSTERAREA_INFO::getInfo();
@@ -89,7 +91,9 @@ void CMonsterArea::work(CGameServer *pGameServer, CScene *pScene)
 		float fx = pInfo->getPosition().fX + (rand() % ((int) (pInfo->getBornSize()) * 2)) - pInfo->getBornSize();
 		float fy = pInfo->getPosition().fY + (rand() % ((int) (pInfo->getBornSize()) * 2)) - pInfo->getBornSize();
 		CMonster *pMonster = pScene->addMonster(pGameServer->generateUID(), mid, fx, fy);
-      pMonster->addMonsterAIEventListener(pGameServer);
+      pMonster->addMonsterAIEventListener(pGameServer);  // 監聽怪物AI行為
+      pMonster->addDeadEventListener(pGameServer);       // 監聽怪物死亡行為
+      pMonster->addAdvAttrEventListener(pGameServer);    // 監聽怪物屬性資料改變行為
       m_vMonsterUID.push_back(pMonster->getUID());
 		++m_iMonsterCount;
 		m_iConstTime = GetTickCount() + pInfo->getAddTime();

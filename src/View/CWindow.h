@@ -19,6 +19,8 @@ typedef enum WINDOW_CLASS_TYPE {
    WND_HOTKEY,      // 快捷鍵視窗
    WND_TARGETINFO,  // 目標視窗
    WND_PLAYERSTATE, // 人物狀態視窗
+   WND_LOADING,     // 載入視窗
+   WND_SHOP,        // 商店視窗
 } WindowClassType;
 
 class CWindowMan;
@@ -56,6 +58,8 @@ class CWindow
 
       bool isVisible();
       virtual void show(bool bShow);
+      virtual bool isButtonClose();
+      virtual void setPosition(int _x, int _y);
 
 #ifdef _GAMEENGINE_3D_
 	   virtual void setZOrder(int order);

@@ -94,16 +94,6 @@ void CNPCChatWnd::init (int _x, int _y, CPlayer* pb, NetStream *pNetStream)
 	{
 		m_vpText[i] = new CTextArea ;
 		m_vpText[i]->init (0, i*CELL_SIZE, w, CELL_SIZE) ;
-		if (i == 0)
-		{	
-			m_vpText[i]->setText ("NPC:對話內容", 1, 1, 1) ;
-		}else if (i == 1)
-		{
-			m_vpText[i]->setText ("", 1, 1, 1) ;
-		}else
-		{
-			m_vpText[i]->setText ("", 1, 1, 1) ;
-		}
 		addChild (m_vpText[i]) ;
 	}
 #endif
@@ -180,6 +170,12 @@ void CNPCChatWnd::setNPC (CNPC* pnp)
 bool CNPCChatWnd::canDrag (int tx, int ty)
 {
 	return false ;
+}
+
+void CNPCChatWnd::updateContent(CNPC* pNPC)
+{
+	std::string st = pNPC->getInfo()->getTalk() ;
+	m_vpText[0]->setText(st, 1, 1, 1) ;
 }
 
 void CNPCChatWnd::onLCommand(int btnID)

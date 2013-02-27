@@ -2,6 +2,7 @@
 #define _CPACKETPLAYERDATA_H_
 #include "CBasePacket.h"
 #include "CPlayer.h"
+#include "CNetDataSkill.h"
 #include "CNetDataEquip.h"
 
 #ifdef _GAMEENGINE_3D_
@@ -32,6 +33,7 @@ class CPacketPlayerData : public CBasePacket
       FPOS              m_targetPosition; //目標點X,Y座標 (2D)
       float             m_fDirection;     //角色方向(單位: 弧度), 逆時針方向旋轉為+, 順時針方向旋轉為-, 方向為0是朝下
 
+      CNetDataSkill     m_vSkill[SKILL_MAX];      //技能
       CNetDataEquip     m_mEquip[MAX_SLOT];	     //裝備欄
 };
 

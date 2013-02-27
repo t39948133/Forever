@@ -41,7 +41,7 @@ class CScene
 
 		void removeMonster(long long uid);
 
-		CNPC* addNPC(long long uid, int kindID, float x, float y);
+		CNPC* addNPC(long long uid, int kindID, float x, float y, float direction = -3.1415926f);
 
 		void	removeNPC(long long uid);
 
@@ -61,7 +61,7 @@ class CScene
         * @return 怪物物件 */
       CMonster* getMonster(long long uid);
 
-		CNPC*		 getNPC(long long uid);
+		CNPC* getNPC(long long uid);
 
       /** @brief 取得作戰單位 (可能是玩家/怪物/NPC)
         * @param uid 唯一編號

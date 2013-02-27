@@ -30,6 +30,8 @@ class CBackpack
 
 	   void initBack();								          //預設角色建立有的物品
 
+      bool isFull();
+
    private:
       /** @brief 通知玩家背包有更新 */
       void notifyPlayerBackpackUpdate();

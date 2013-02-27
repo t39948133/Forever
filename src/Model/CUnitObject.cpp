@@ -27,6 +27,8 @@ CUnitObject::CUnitObject(std::string machineName, std::string strName, long long
    m_pTargetObject = NULL;
    m_bKeyMoveEnabled = false;
    m_castSkillID = -1;
+   m_fDieWaitTime = 0.0f;
+   m_bDead = false;
 
    m_actionSystem.init(m_machineName, m_uid);
    m_actionSystem.addPlaySoundNotifyListener(this);
@@ -121,42 +123,46 @@ void CUnitObject::useSkill(int skillID)
    if(pUseSkill != NULL) {
       CSkillInfo *pUseSkillInfo = pUseSkill->getInfo();
       if(pUseSkillInfo != NULL) {
-         if(pUseSkillInfo->getTarget() == ENEMY) {      // 技能目標是怪物
-            if(m_pTargetObject != NULL) {
-               AdvancedAttribute effectAttr = pUseSkillInfo->getEffectAttr();
-               AdvancedAttribute targetAttr = m_pTargetObject->getAdvAttr();
-               
-               //雙方攻擊防禦額外計算
-               int targetDEF = targetAttr.iDEF;
-               int basicDamage;
-               basicDamage = getAdvAttr().iATK - targetDEF;
-               if(basicDamage > 0)
-                  effectAttr.iHP -= basicDamage;
-               else
-                  effectAttr.iHP -= 1;
 
-               AttributeAdd(targetAttr, effectAttr);
+         size_t idx = m_machineName.find("Server");
+         if(idx != std::string::npos) {
+            if(pUseSkillInfo->getTarget() == ENEMY) {      // 技能目標是怪物
+               if(m_pTargetObject != NULL) {
+                  AdvancedAttribute effectAttr = pUseSkillInfo->getEffectAttr();
+                  AdvancedAttribute targetAttr = m_pTargetObject->getAdvAttr();
+                  
+                  //雙方攻擊防禦額外計算
+                  int targetDEF = targetAttr.iDEF;
+                  int basicDamage;
+                  basicDamage = getAdvAttr().iATK - targetDEF;
+                  if(basicDamage > 0)
+                     effectAttr.iHP -= basicDamage;
+                  else
+                     effectAttr.iHP -= 1;
+
+                  AttributeAdd(targetAttr, effectAttr);
+
+                  FloatPrecentAttribute effectPrecentAttr = pUseSkillInfo->getEffectAttrPercent();
+                  AttributeMulti(targetAttr, effectPrecentAttr);
+                  skillDamage(targetAttr);
+               }
+            }
+            else if(pUseSkillInfo->getTarget() == SELF) {  // 技能目標是自己
+               AdvancedAttribute effectAttr = pUseSkillInfo->getEffectAttr();
+               AdvancedAttribute playerAttr = getAdvAttr();
+               AttributeAdd(playerAttr, effectAttr);
 
                FloatPrecentAttribute effectPrecentAttr = pUseSkillInfo->getEffectAttrPercent();
-               AttributeMulti(targetAttr, effectPrecentAttr);
-               skillDamage(targetAttr);
+               AttributeMulti(playerAttr, effectPrecentAttr);
+
+               setAdvAttr(playerAttr);
+
+               //Todo: 技能產生Buff問題還沒處理
             }
+
+            // 扣除MP
+            addMP(-pUseSkillInfo->getCastMP());
          }
-         else if(pUseSkillInfo->getTarget() == SELF) {  // 技能目標是自己
-            AdvancedAttribute effectAttr = pUseSkillInfo->getEffectAttr();
-            AdvancedAttribute playerAttr = getAdvAttr();
-            AttributeAdd(playerAttr, effectAttr);
-
-            FloatPrecentAttribute effectPrecentAttr = pUseSkillInfo->getEffectAttrPercent();
-            AttributeMulti(playerAttr, effectPrecentAttr);
-
-            setAdvAttr(playerAttr);
-
-            //Todo: 技能產生Buff問題還沒處理
-         }
-
-         // 扣除MP
-         addMP(-pUseSkillInfo->getCastMP());
 
          // 技能冷卻時間開始
          pUseSkill->startCoolDown();
@@ -181,16 +187,16 @@ void CUnitObject::cancelCastSkill()
 
 void CUnitObject::work(float timePass)
 {
+   if(m_bDead == true)
+      return;
+
    SkillCoolDown(timePass);
    m_actionSystem.work(timePass);
    m_fightSystem.work(timePass, this, m_pTargetObject);
 
 #ifdef _GAMEENGINE_3D_
-   size_t idx = m_machineName.find("Server");
-   if(idx != std::string::npos) {
-      if(m_actionSystem.isMove() == true)
-         move(timePass, m_targetPosition.fX, m_targetPosition.fY, true);
-   }
+   if((m_actionSystem.isMove() == true) && (m_bKeyMoveEnabled == false))
+      move(timePass, m_targetPosition.fX, m_targetPosition.fY, true);
 #elif _GAMEENGINE_2D_
    if(m_actionSystem.isMove() == true)
       move(timePass, m_targetPosition.fX, m_targetPosition.fY, m_bFaceTarget);
@@ -202,6 +208,24 @@ void CUnitObject::work(float timePass)
       CActionEvent actEvent;
       actEvent.m_event = AET_REACH;
       CActionDispatch::getInstance()->sendEvnet(m_machineName, m_uid, actEvent);
+   }
+
+   if(m_advAttr.iHP <= 0) {
+      CAction *pCurAction = m_actionSystem.getCurAction();
+      if(pCurAction->getID() == ACTION_DIE) {
+         if(m_actionSystem.getCurTime() >= pCurAction->getActionTimeLength()) {
+            // 死亡動作播完, 等待5秒
+            m_fDieWaitTime += timePass;
+
+            if(m_fDieWaitTime >= 5.0f) {
+               m_bDead = true;
+               
+               size_t idx = m_machineName.find("Server");
+               if(idx != std::string::npos)
+                  notifyDeadUpdate();
+            }
+         }
+      }
    }
 }
 
@@ -282,6 +306,17 @@ bool CUnitObject::isMove()
       return false;
 }
 
+bool CUnitObject::isDead()
+{
+   return m_bDead;
+}
+
+void CUnitObject::resetDead()
+{
+   m_actionSystem.changeAction(1);  // 切回等待動作
+   m_bDead = false;
+}
+
 void CUnitObject::setKeyMoveEnabled(bool bEnable)
 {
    m_bKeyMoveEnabled = bEnable;
@@ -338,6 +373,20 @@ void CUnitObject::addFightEventListener(IFightEventListener *pListener)
 void CUnitObject::removeFightEventListener(IFightEventListener *pListener)
 {
    m_fightSystem.removeFightEventListener(pListener);
+}
+
+void CUnitObject::addDeadEventListener(IDeadEventListener *pListener)
+{
+   std::set<IDeadEventListener *>::iterator it = m_deadEventListeners.find(pListener);
+   if(it == m_deadEventListeners.end())
+      m_deadEventListeners.insert(pListener);
+}
+
+void CUnitObject::removeDeadEventListener(IDeadEventListener *pListener)
+{
+   std::set<IDeadEventListener *>::iterator it = m_deadEventListeners.find(pListener);
+   if(it != m_deadEventListeners.end())
+      m_deadEventListeners.erase(it);
 }
 
 void CUnitObject::addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener)
@@ -476,6 +525,8 @@ int CUnitObject::getMPMax()
 void CUnitObject::levelUp()
 {
 	m_level++;
+   BasicAttributeSet(m_level, m_basAttr, m_advAttr, m_obsAttr);
+   notifyAdvAttrUpdate();
 }
 
 void CUnitObject::setLevel(char level)
@@ -530,6 +581,13 @@ void CUnitObject::setAdvAttr(AdvancedAttribute advattr)
       m_advAttr.iMP = getMPMax();
    else if(m_advAttr.iMP < 0)
       m_advAttr.iMP = 0;
+
+   if(m_advAttr.iHP == 0) {
+      int x = this->m_advAttr.iHP;
+      CActionEvent actEvent;
+      actEvent.m_event = AET_DIE;
+      CActionDispatch::getInstance()->sendEvnet(m_machineName, m_uid, actEvent);
+   }
 
    notifyAdvAttrUpdate();
 }
@@ -647,6 +705,15 @@ void CUnitObject::notifyAddSkillUpdate(int skillID)
    std::set<ISkillEventListener *>::iterator it = m_skillEventListeners.begin();
    while(it != m_skillEventListeners.end()) {
       (*it)->updateAddSkill(this, skillID);
+      ++it;
+   }
+}
+
+void CUnitObject::notifyDeadUpdate()
+{
+   std::set<IDeadEventListener *>::iterator it = m_deadEventListeners.begin();
+   while(it != m_deadEventListeners.end()) {
+      (*it)->updateDead(m_uid);
       ++it;
    }
 }

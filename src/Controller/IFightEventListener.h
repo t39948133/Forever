@@ -22,9 +22,13 @@ class IFightEventListener
       virtual void updateFightActionEvent(CUnitObject *pUnitObject, CActionEvent *pActEvent) = 0;
 
       /** @brief 更新使用技能之前要跑步到目標物
+        * @param pUnitObject   誰 */
+      virtual void updateFightTargetPosition(CUnitObject *pUnitObject) = 0;
+
+      /** @brief 更新目標物死亡後的處理
         * @param pUnitObject   誰
         * @param pTargetObject 目標物 */
-      virtual void updateFightTargetPosition(CUnitObject *pUnitObject) = 0;
+      virtual void updateFightTargetDead(CUnitObject *pUnitObject, CUnitObject *pTargetObject) = 0;
 };
 
 #endif  // #ifndef _IFIGHTEVENTLISTENER_H_

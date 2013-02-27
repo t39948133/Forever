@@ -20,7 +20,13 @@
 #include "CPacketAdvAttrData.h"
 #include "CPacketAddSkill.h"
 #include "CPacketCanUseSkill.h"
+#include "CPacketDead.h"
+#include "CPacketPlayerDeadReset.h"
 #include "CPacketNPCData.h"
+#include "CPacketMoney.h"
+#include "CPacketXP.h"
+#include "CPacketCancelUseSkill.h"
+#include "CPacketKeyActionEvent.h"
 
 #include <network\gp_socket.h>
 
@@ -92,7 +98,14 @@ class CGameClient
 
       /** @brief 接收更換裝備資料 */
       virtual void onRecvEquipData(CPacketEquipData *pPacket);
-		virtual void onRecvNPCData(CPacketNPCData *pPacket);
+
+      /** @brief 接收死亡資料 */
+      virtual void onRecvDead(CPacketDead *pPacket);
+
+      /** @brief 接收玩家死亡後重生 */
+      virtual void onRecvPlayerDeadReset(CPacketPlayerDeadReset *pPacket);
+
+      virtual void onRecvNPCData(CPacketNPCData *pPacket);
 
    private:
       /** @brief 遊戲第一次登入的邏輯運算 */
@@ -126,6 +139,18 @@ class CGameClient
 
       /** @brief 接收可以使用技能(Server回覆) */
       void onRecvCanUseSkill(CPacketCanUseSkill *pPacket);
+
+      /** @brief 接收錢資料 */
+      void onRecvMoney(CPacketMoney *pPacket);
+
+      /** @brief 接收經驗值資料 */
+      void onRecvXP(CPacketXP *pPacket);
+
+      /** @brief 接收取消使用技能 */
+      void onRecvCancelUseSkill(CPacketCancelUseSkill *pPacket);
+
+      /** @brief 接收按鍵動作系統訊息 */
+      void onRecvKeyActionEvent(CPacketKeyActionEvent *pPacket);
 
       std::string    m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       CScene        *m_pScene;          // 遊戲場景管理

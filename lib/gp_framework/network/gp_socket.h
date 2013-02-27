@@ -1,6 +1,8 @@
 #ifndef _GP_SOCKET_H_
 #define _GP_SOCKET_H_
 
+//#include <winsock2.h>
+//#include <windows.h>
 #include <winsock.h>
 
 #include <list>
@@ -52,7 +54,7 @@ public:
 typedef std::list <AcceptSocket> LIST_ACCEPT_SOCKET ;
 
 //專門用來listen
-class NetStream ;
+class _NetStream ;
 class NetListener
 {
 private:
@@ -68,7 +70,7 @@ private:
 
 public:
 	bool isAccepted () ;
-	void transferAcceptStream (NetStream&) ;//把accecpt的socket傳出來使用
+	void transferAcceptStream (_NetStream&) ;//把accecpt的socket傳出來使用
 
 private:
 	bool open (const char*, WORD, bool) ;//client & server使用,
@@ -94,7 +96,7 @@ enum {MAX_PACKAGE_SIZE = 1024} ;
 typedef GLocalMemory <MAX_PACKAGE_SIZE> NetBuffer ;
 
 //點對點
-class NetStream
+class _NetStream
 {
 private:
 	SOCKET CurSocket ;//目前的socket,用來listen,或connect
@@ -179,8 +181,52 @@ public:
 
 	void release () ;
 
-	NetStream () ;
-	~NetStream () ;
+	_NetStream () ;
+	~_NetStream () ;
+} ;
+
+
+class NetStream:public _NetStream
+{
+private:
+	NetAddress addr ;
+	enum {NO_RECONNECT = -1} ;
+	int reConnectTime ;
+
+public:
+	NetStream ():reConnectTime(NO_RECONNECT)
+	{
+	}
+
+	bool procPackage ()
+	{
+		bool b = _NetStream::procPackage () ;
+
+		if (isConnected ())
+		{
+		}else
+		{
+			if (reConnectTime != NO_RECONNECT)
+			{
+				//未連線
+				int nowTime = GetTickCount () ;
+				if (nowTime > reConnectTime)
+				{
+					//時間到,重新連
+					startConnect (addr) ;
+				}
+			}
+		}
+
+		return b ;
+	}
+
+	void startConnect (const NetAddress& adr)
+	{
+		addr = adr ;
+		_NetStream::startConnect (adr) ;
+		reConnectTime = GetTickCount () + 3000 ;
+	}
 } ;
 
 }

@@ -155,13 +155,22 @@ void CBackpackWnd::init(int _x, int _y, CPlayer *pb, GP::NetStream *pNetStream)
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
    updatePlayerBackpack(m_pPlayer->getBackpack());
-   updatePlayerAttr(m_pPlayer);
+   updatePlayerAttr(m_pPlayer, 0, 0);
    show(false);
 }
 
 bool CBackpackWnd::canDrag(int tx, int ty)
 {
 	return ty < 25;
+}
+
+void CBackpackWnd::setPosition(int _x, int _y)
+{
+   CWindow::setPosition(_x, _y);
+
+#ifdef _GAMEENGINE_3D_
+   m_overlay.setPosition(_x, _y);
+#endif
 }
 
 void CBackpackWnd::onLCommand(int btnID)
@@ -280,7 +289,7 @@ void CBackpackWnd::updatePlayerBackpack(CBackpack *pBackpack)
    }
 }
 
-void CBackpackWnd::updatePlayerAttr(CPlayer *pPlayer)
+void CBackpackWnd::updatePlayerAttr(CPlayer *pPlayer, unsigned int offsetXP, long long offsetMoney)
 {
    //更新多少金幣			
    char buf[20];

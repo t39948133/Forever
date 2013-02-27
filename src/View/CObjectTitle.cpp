@@ -7,8 +7,22 @@
 #include <OgreResourceGroupManager.h>
 #include <OgreViewport.h>
 
-CObjectTitle::CObjectTitle(Ogre::MovableObject *pObject, Ogre::Camera *pCamera,
-                           const std::string &fontName, float fontSize, const Ogre::ColourValue &color)
+CObjectTitle::CObjectTitle()
+{
+}
+
+CObjectTitle::~CObjectTitle()
+{
+   Ogre::OverlayManager *pOverlayManager = Ogre::OverlayManager::getSingletonPtr();
+   m_pContainer->removeChild(m_pTextArea->getName());
+   m_pOverlay->remove2D(m_pContainer);
+   pOverlayManager->destroyOverlayElement(m_pTextArea);
+   pOverlayManager->destroyOverlayElement(m_pContainer);
+   pOverlayManager->destroy(m_pOverlay);
+}
+
+void CObjectTitle::init(Ogre::MovableObject *pObject, Ogre::Camera *pCamera,
+                        const std::string &fontName, float fontSize, const Ogre::ColourValue &color)
 {
    static int inObjectTitle = 0;
 	char buf[256];
@@ -46,19 +60,6 @@ CObjectTitle::CObjectTitle(Ogre::MovableObject *pObject, Ogre::Camera *pCamera,
    m_title.clear();
 }
 
-CObjectTitle::~CObjectTitle()
-{
-   Ogre::OverlayManager *pOverlayManager = Ogre::OverlayManager::getSingletonPtr();
-   m_pContainer->removeChild(m_pTextArea->getName());
-   m_pOverlay->remove2D(m_pContainer);
-   pOverlayManager->destroyOverlayElement(m_pTextArea);
-   pOverlayManager->destroyOverlayElement(m_pContainer);
-   pOverlayManager->destroy(m_pOverlay);
-
-   if(Ogre::FontManager::getSingleton().resourceExists(m_fontName) == true)
-      Ogre::FontManager::getSingleton().remove(m_fontName);
-}
-
 void CObjectTitle::setTitle(const std::string &title)
 {
    if(m_title != title) {
@@ -75,8 +76,16 @@ std::string CObjectTitle::getTitle()
    return m_title;
 }
 
-void CObjectTitle::update()
+void CObjectTitle::update(Ogre::SceneNode *pUnitObjectNode, Ogre::SceneNode *pCameraNode)
 {
+   
+   float distance = getDistance(pUnitObjectNode->getPosition().x, pUnitObjectNode->getPosition().z,
+                                pCameraNode->getPosition().x, pCameraNode->getPosition().z);
+   if(distance > 50) {
+      m_pOverlay->hide();
+      return;
+   }
+
    if(!m_pObject->isInScene()) {
       m_pOverlay->hide();
       return;

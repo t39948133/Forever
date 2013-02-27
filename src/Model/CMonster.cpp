@@ -46,7 +46,7 @@ void CMonster::initMonster()
       advAttr.iATK = 50;
       advAttr.iHP = 300;
       advAttr.iHPMax = advAttr.iHP;
-      advAttr.iDEF = 70;
+      advAttr.iDEF = 37;
 
       CMonsterInfo* pm = new CMonsterInfo();
       std::vector<int> reware;
@@ -61,10 +61,16 @@ void CMonster::initMonster()
       std::vector<int> skill;
       skill.push_back(11);
       pm->initMonsterInfo("圖爾辛暴徒", "普通怪", "KrallWarriorMT.mesh", "KrallWarriorMT.acs", 1, 1, 350, MONSTER_ACTIVE,
-                          REGULAR_GRADE, 50, 100, advAttr, 100, reware, skill);
+                          REGULAR_GRADE, 50, 100, advAttr, 50000, reware, skill);
       addInfo(pm);
 
       //-------------------------------------------------------------------------------
+
+      AttributeSet(advAttr);
+      advAttr.iATK = 100;
+      advAttr.iHP = 900;
+      advAttr.iHPMax = advAttr.iHP;
+      advAttr.iDEF = 100;
 
       pm = new CMonsterInfo();
       std::vector<int> reware1;
@@ -84,6 +90,12 @@ void CMonster::initMonster()
       addInfo(pm);
 
       //-------------------------------------------------------------------------------
+
+      AttributeSet(advAttr);
+      advAttr.iATK = 1100;
+      advAttr.iHP = 10000;
+      advAttr.iHPMax = advAttr.iHP;
+      advAttr.iDEF = 1100;
 
       pm = new CMonsterInfo();
       std::vector<int> reware2;
@@ -166,6 +178,22 @@ void CMonster::addHate(long long uid, int damage)
    }
 }
 
+void CMonster::removeHate(long long uid)
+{
+   std::list<AngerValue>::iterator pi = m_lHatred.begin();
+   while(m_lHatred.end() != pi) {
+      if(pi->uid == uid) {
+         m_lHatred.erase(pi);
+         break;
+      }
+   }
+}
+
+void CMonster::clearHate()
+{
+   m_lHatred.clear();
+}
+
 int CMonster::getReware()
 {
     std::vector<int> reware = MONSTER_INFO::getInfo()->getReware();
@@ -190,30 +218,29 @@ void CMonster::work(float timePass)
 {
    size_t idx = this->getMachineName().find("Server");
    if(idx != std::string::npos) {
-      // 依據仇恨表更新鎖定的玩家
-      long long newTargetObjectUID = updateTargetObjectUID();
-      std::set<IMonsterAIEventListener *>::iterator it = m_monsterAIListeners.begin();
-      while(it != m_monsterAIListeners.end()) {
-         (*it)->updateMonsterTargetObject(this, newTargetObjectUID);
-         it++;
+      if(getHP() > 0) {
+         // 依據仇恨表更新鎖定的玩家
+         long long newTargetObjectUID = updateTargetObjectUID();
+         std::set<IMonsterAIEventListener *>::iterator it = m_monsterAIListeners.begin();
+         while(it != m_monsterAIListeners.end()) {
+            (*it)->updateMonsterTargetObject(this, newTargetObjectUID);
+            ++it;
+         }
       }
    }
 
    CUnitObject::work(timePass);
 
    if(idx != std::string::npos) {
-      // 執行怪物AI運算
-      std::set<IMonsterAIEventListener *>::iterator it = m_monsterAIListeners.begin();
-      while(it != m_monsterAIListeners.end()) {
-         (*it)->updateMonsterAI(this);
-         it++;
+      if(getHP() > 0) {
+         // 執行怪物AI運算
+         std::set<IMonsterAIEventListener *>::iterator it = m_monsterAIListeners.begin();
+         while(it != m_monsterAIListeners.end()) {
+            (*it)->updateMonsterAI(this);
+            ++it;
+         }
       }
    }
-}
-
-bool CMonster::isDead()
-{
-	return 0 >= getAdvAttr().iHP;
 }
 
 void CMonster::setState(MonsterState state)

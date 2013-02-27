@@ -442,6 +442,14 @@
 							Name="VCCLCompilerTool"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -544,6 +552,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\View\CLoadingWnd.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\View\CMapWnd.cpp"
 					>
 				</File>
@@ -640,6 +652,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketBuyItem.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketCancelUseSkill.cpp"
 					>
 				</File>
@@ -652,6 +668,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketKeyActionEvent.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketMonsterData.cpp"
 					>
 				</File>
@@ -661,6 +681,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CPacketPlayerDataWG.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketPlayerDeadReset.cpp"
 					>
 				</File>
 				<File
@@ -734,6 +758,14 @@
 					>
 					<FileConfiguration
 						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
 						ExcludedFromBuild="true"
 						>
 						<Tool
@@ -871,6 +903,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Model\IAdvAttrEventListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Model\IDeadEventListener.h"
 					>
 				</File>
 				<File
@@ -1033,7 +1069,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Controller\IAttackNotifyListener.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Controller\IDrawWeaponNotifyListener.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Controller\IFightEventListener.h"
 					>
 				</File>
 				<File
@@ -1046,10 +1090,6 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Controller\ISceneMonsterEventListener.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\Controller\ISceneNPCEventListener.h"
 					>
 				</File>
 			</Filter>
@@ -1078,6 +1118,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\View\CImageButton.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\View\CLoadingWnd.h"
 					>
 				</File>
 				<File
@@ -1177,6 +1221,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CNetDataQuest.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CNetDataSkill.h"
 					>
 				</File>
@@ -1201,6 +1249,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketBuyItem.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketCancelUseSkill.h"
 					>
 				</File>
@@ -1209,11 +1261,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketDead.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketEquipData.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CPacketFirstLogin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketKeyActionEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketMoney.h"
 					>
 				</File>
 				<File
@@ -1234,6 +1298,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CPacketPlayerDataWG.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketPlayerDeadReset.h"
 					>
 				</File>
 				<File

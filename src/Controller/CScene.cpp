@@ -97,9 +97,10 @@ void CScene::removeMonster(long long uid)
 	}
 }
 
-CNPC* CScene::addNPC(long long uid, int kindID, float x, float y)
+CNPC* CScene::addNPC(long long uid, int kindID, float x, float y, float direction)
 {
 	CNPC *pNPC = new CNPC(m_machineName, kindID, uid, x, y);
+   pNPC->setDirection(direction);
    m_pvtNPC->push_back(pNPC);
 
    return pNPC;
@@ -221,16 +222,22 @@ void CScene::work(float timePass)
    std::list<CMonster *>::iterator itMonster = m_pvtMonster->begin();
    while(itMonster != m_pvtMonster->end()) {
       (*itMonster)->work(timePass);
-      if((*itMonster)->isDead()) {
-			long long uid = (*itMonster)->getUID();
-			itMonster++;
-			removeMonster(uid);
-		}
+
+      size_t idx = m_machineName.find("Server");
+      if(idx != std::string::npos) {
+         if((*itMonster)->isDead()) {
+			   long long uid = (*itMonster)->getUID();
+			    ++itMonster;
+			   removeMonster(uid);
+		   }
+         else
+             ++itMonster;
+      }
       else
-         itMonster++;
+         ++itMonster;
    }
 
-	std::vector<CNPC *>::iterator itNPC = m_pvtNPC->begin();
+   std::vector<CNPC *>::iterator itNPC = m_pvtNPC->begin();
 	while(itNPC != m_pvtNPC->end()) {
 		(*itNPC)->work(timePass);
 		itNPC++;

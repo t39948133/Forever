@@ -42,9 +42,9 @@ class CScene3D
       Ogre::SceneManager      *m_pSceneManager;  // Ogre scene manager
       CTerrain                &m_terrain;        // 3D地形
       CPlayer3D               *m_pMainPlayer;    // 玩家操控
-      std::list<CPlayer3D *>  *m_pPlayer3DList;  // 玩家列表
-      std::list<CMonster3D *> *m_pMonster3DList; // 怪物列表
-		std::list<CNPC3D *>		*m_pNPC3DList;
+      std::list<CPlayer3D *>   m_player3DList;   // 玩家列表
+      std::list<CMonster3D *>  m_monster3DList;  // 怪物列表
+		std::list<CNPC3D *>		 m_npc3DList;
 };
 
 #endif  // #ifndef _CSCENE3D_H_

@@ -176,7 +176,11 @@ bool COgreRender::configure()
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
+#ifdef _SERVER_
+       mWindow = mRoot->initialise(true, "ForeverServer");
+#else
         mWindow = mRoot->initialise(true, "ForeverClient");
+#endif // #ifdef _SERVER_
 
         return true;
     }
@@ -253,7 +257,7 @@ void COgreRender::createFrameListener()
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mMouse, this);
-    mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
+    //mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
     //OgreBites::Label *pLabel = mTrayMgr->createLabel(OgreBites::TL_BOTTOMRIGHT, "Forver", "v0.2", 50);
     //Ogre::TextAreaOverlayElement *pTextArea = (Ogre::TextAreaOverlayElement*)((Ogre::OverlayContainer*)pLabel->getOverlayElement())->getChild(pLabel->getName() + "/LabelCaption");
     //pTextArea->setFontName("NCTaiwanFont");

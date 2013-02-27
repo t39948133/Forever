@@ -16,7 +16,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (Taiwan) resources
+// 中文 (台灣) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHT)
 #ifdef _WIN32
@@ -247,6 +247,10 @@ BEGIN
     CMB_EVENT, 0x403, 18, 0
 0x4541, 0x5f54, 0x4f4e, 0x4954, 0x5946, 0x415f, 0x5454, 0x4341, 0x004b, 
 
+    CMB_EVENT, 0x403, 11, 0
+0x4541, 0x5f54, 0x4144, 0x414d, 0x4547, "\000" 
+    CMB_EVENT, 0x403, 8, 0
+0x4541, 0x5f54, 0x4944, 0x0045, 
     0
 END
 
@@ -261,7 +265,7 @@ BEGIN
     IDS_ABOUTBOX            "關於 ActionEditor(&A)..."
 END
 
-#endif    // Chinese (Taiwan) resources
+#endif    // 中文 (台灣) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -151,7 +151,7 @@ void CPlayerStateWnd::init(int _x, int _y, CPlayer *pPlr)
 #endif
 
    updateAdvAttr(m_pPlayer);
-   updatePlayerAttr(m_pPlayer);
+   updatePlayerAttr(m_pPlayer, 0, 0);
    show(true);
 }
 
@@ -202,7 +202,7 @@ void CPlayerStateWnd::updateAdvAttr(CUnitObject *pUnitObject)
 #endif
 }
 
-void CPlayerStateWnd::updatePlayerAttr(CPlayer *pPlayer)
+void CPlayerStateWnd::updatePlayerAttr(CPlayer *pPlayer, unsigned int offsetXP, long long offsetMoney)
 {
    char buf[50];
 

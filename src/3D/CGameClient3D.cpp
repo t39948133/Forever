@@ -14,10 +14,14 @@
 #include "CHotKeyWnd.h"
 #include "CPlayerStateWnd.h"
 #include "CToolBarWnd.h"
-#include "CNPCChatWnd.h"
-#include "CMapWnd.h"
-#include "CQuestWnd.h"
 #include "CShopWnd.h"
+//#include "CNPCChatWnd.h"
+//#include "CMapWnd.h"
+//#include "CQuestWnd.h"
+
+#ifdef _GAMESOUND_
+#include "CSoundManager.h"
+#endif  // #ifdef _GAMESOUND_
 
 #include <OgreMeshManager.h>
 #include <OgreMath.h>
@@ -65,13 +69,9 @@ void CGameClient3D::initUI()
    HWND hRenderWnd = m_pRenderCore->getRenderHwnd();
    GetClientRect(hRenderWnd, &rect);
 
-   CMapWnd *pMapWnd = new CMapWnd ;
-   pMapWnd->init (150, 100) ;
-   m_pWindowMan->addWnd(pMapWnd);
-
-   CShopWnd* pShopWnd = new CShopWnd ;
-   pShopWnd->init(600, 20, pPlayer2D) ;
-   m_pWindowMan->addWnd (pShopWnd) ;
+   //CMapWnd *pMapWnd = new CMapWnd ;
+   //pMapWnd->init (150, 100) ;
+   //m_pWindowMan->addWnd(pMapWnd);
 
    CPlayerInfoWnd *pPlayerInfoWnd = new CPlayerInfoWnd();
    pPlayerInfoWnd->init(10, 10, pPlayer2D, this->getNetStream());
@@ -86,7 +86,7 @@ void CGameClient3D::initUI()
    m_pWindowMan->addWnd(pSkillWnd);
 
    m_pTargetInfoWnd = new CTargetInfoWnd();
-   m_pTargetInfoWnd->init(0, 0, this->getScene(), pPlayer2D);
+   m_pTargetInfoWnd->init(0, 0, this->getScene(), pPlayer2D, this->getNetStream());
    m_pWindowMan->addWnd(m_pTargetInfoWnd);
 
    int hudX = ((rect.right - rect.left) - 856) / 2;
@@ -94,7 +94,6 @@ void CGameClient3D::initUI()
 
    CHudWnd *pHudWnd = new CHudWnd();
    pHudWnd->init(hudX, hudY, pPlayer2D);
-   m_pWindowMan->addWnd(pHudWnd);
 
    CHotKeyWnd *pHotKeyWnd = new CHotKeyWnd();
    int hotkeyX = hudX + 381;
@@ -109,13 +108,13 @@ void CGameClient3D::initUI()
    pPlayerStateWnd->init(playerstateX, playerstateY, pPlayer2D, pHudWnd->getZOrder() + 1);
    m_pWindowMan->addWnd(pPlayerStateWnd);
 
-   CNPCChatWnd *pNPCChatWnd = new CNPCChatWnd ;
-   pNPCChatWnd->init (0, 700, pPlayer2D, this->getNetStream()) ;
-   m_pWindowMan->addWnd(pNPCChatWnd);
+   //CNPCChatWnd *pNPCChatWnd = new CNPCChatWnd ;
+   //pNPCChatWnd->init (0, 700, pPlayer2D, this->getNetStream()) ;
+   //m_pWindowMan->addWnd(pNPCChatWnd);
 
-   CQuestWnd *pQuestWnd = new CQuestWnd ;
-   pQuestWnd->init (0, 500, pPlayer2D) ;
-   m_pWindowMan->addWnd (pQuestWnd) ;
+   //CQuestWnd *pQuestWnd = new CQuestWnd ;
+   //pQuestWnd->init (0, 500, pPlayer2D) ;
+   //m_pWindowMan->addWnd (pQuestWnd) ;
 
    m_pMiniMapWnd = new CMiniMapWnd();
    m_pMiniMapWnd->init((rect.right - rect.left) - 242, 0, pPlayer2D, getScene(), &m_cameraDir);
@@ -123,8 +122,18 @@ void CGameClient3D::initUI()
 
    CToolBarWnd *pToolBarWnd = new CToolBarWnd();
    pToolBarWnd->init(pBackpackWnd, pPlayerInfoWnd, pSkillWnd,
-	                  pShopWnd, hudX + 830, hudY + 66);
-   m_pWindowMan->addWnd(pToolBarWnd);   
+	                  NULL, hudX + 830, hudY + 66);
+   m_pWindowMan->addWnd(pToolBarWnd);
+
+   m_pWindowMan->addWnd(pHudWnd);
+
+   m_pLoadingWnd = new CLoadingWnd();
+   m_pLoadingWnd->init(0, 0, (rect.right - rect.left), (rect.bottom - rect.top));
+   m_pWindowMan->addWnd(m_pLoadingWnd);
+
+   CShopWnd *pShopWnd = new CShopWnd();
+   pShopWnd->init(600, 100, pPlayer2D, pBackpackWnd, this->getNetStream());
+   m_pWindowMan->addWnd(pShopWnd);
 }
 
 void CGameClient3D::onRecvPlayerInit(CPacketPlayerInit *pPacket)
@@ -134,6 +143,8 @@ void CGameClient3D::onRecvPlayerInit(CPacketPlayerInit *pPacket)
       pPacket->unpack(pMainPlayer);
 
    pMainPlayer->setUID(pPacket->getUID());
+
+   m_pLoadingWnd->show(false);
 
    // createScene完成, 取得GameServer的玩家資料
    m_bCreateScene = false;  
@@ -174,6 +185,39 @@ void CGameClient3D::onRecvEquipData(CPacketEquipData *pPacket)
       pPacket->unpack(pPlayer);
 }
 
+void CGameClient3D::onRecvDead(CPacketDead *pPacket)
+{
+   CPlayer3D *pPlayer = m_pScene3D->getPlayer3D(pPacket->getUID());
+   if(pPlayer != NULL) {
+      if(m_pScene3D->getMainPlayer3D() == pPlayer)
+         m_pLoadingWnd->show(true); // 出現載入畫面, 等待Server傳送玩家資料
+   }
+   else {
+      // 移除3D模型
+      m_pScene3D->removeMonster3D(pPacket->getUID());
+
+      // 移除2D資料
+      this->getScene()->removeMonster(pPacket->getUID());
+
+      // 取消目標設定
+      if(m_pTargetInfoWnd->getTargetUID() == pPacket->getUID())
+         m_pTargetInfoWnd->setTarget(pPacket->getUID());
+   }
+}
+
+void CGameClient3D::onRecvPlayerDeadReset(CPacketPlayerDeadReset *pPacket)
+{
+   CPlayer3D *pPlayer = m_pScene3D->getPlayer3D(pPacket->getUID());
+   if(pPlayer != NULL) {
+      pPacket->unpack(pPlayer);
+      m_pTargetInfoWnd->setTarget(pPacket->getTargetUID());
+      pPlayer->getPlayer2D()->resetDead();
+
+      if(m_pScene3D->getMainPlayer3D() == pPlayer)
+         m_pLoadingWnd->show(false);
+   }
+}
+
 void CGameClient3D::onRecvNPCData(CPacketNPCData *pPacket)
 {
 	CNPC3D *pNPC = m_pScene3D->getNPC3D(pPacket->getUID());
@@ -192,6 +236,12 @@ void CGameClient3D::createScene()
 {
    CGameClient::init();
 
+   m_pLoadingWnd->show(true);
+
+#ifdef _GAMESOUND_
+   CSoundManager::getInstance()->playBGM(SOUND_DIR + "idlf1b_bgm-01.wav", true);
+#endif  // #ifdef _GAMESOUND_
+
    m_pSceneManager = m_pRenderCore->getSceneManager();
    m_pRayQuery = m_pSceneManager->createRayQuery(Ogre::Ray());
 
@@ -206,9 +256,9 @@ void CGameClient3D::createScene()
 
    // 天空面
    Ogre::Plane plane;
-   plane.d = 1000;  // 天空高度
+   plane.d = 2000;  // 天空高度
    plane.normal = Ogre::Vector3::NEGATIVE_UNIT_Y;
-   m_pSceneManager->setSkyPlane(true, plane, "Examples/CloudySky", 1500, 40, true, 1.5f, 150, 150);
+   m_pSceneManager->setSkyPlane(true, plane, "Examples/CloudySky", 1500, 40, true, 1.5f, 128, 128);
 
    m_pScene3D = new CScene3D(m_pSceneManager, this->getNetStream(), m_terrain);
 
@@ -226,6 +276,11 @@ void CGameClient3D::createScene()
 bool CGameClient3D::frameRenderingQueued(float timeSinceLastFrame)
 {
    CGameClient::work(m_pRenderCore->getRenderHwnd(), timeSinceLastFrame);
+
+#ifdef _GAMESOUND_
+   CSoundManager::getInstance()->work();
+#endif  // #ifdef _GAMESOUND_
+
    m_pMiniMapWnd->update();
 
    if(m_bCreateScene == false) {
@@ -280,14 +335,29 @@ void CGameClient3D::mouseDown(const OIS::MouseEvent &evt)
 
                const Ogre::Any &value = (*it).movable->getParentNode()->getUserAny();
                long long uid = Ogre::any_cast<long long>(value);
-               m_pTargetInfoWnd->setTarget(uid);
-               break;
+               CUnitObject *pUnitObject = this->getScene()->getUnitObject(uid);
+               if(pUnitObject->getHP() > 0) {
+                  m_pTargetInfoWnd->setTarget(uid);
+                  break;
+               }
             }
-				else if(nodeName.find("CNPC3D") != std::string::npos) {
+            else if(nodeName.find("CNPC3D") != std::string::npos) {
 					const Ogre::Any &value = (*it).movable->getParentNode()->getUserAny();
 					long long uid = Ogre::any_cast<long long>(value);
-					m_pTargetInfoWnd->setTarget(uid);
-					break;
+               CNPC *pNPC = this->getScene()->getNPC(uid);
+               if(pNPC != NULL) {
+					   m_pTargetInfoWnd->setTarget(uid);
+
+                  CPlayer *pPlayer2D = this->getScene()->getMainPlayer();
+                  float distance = getDistance(pPlayer2D->getPosition().fX, pPlayer2D->getPosition().fY,
+                                               pNPC->getPosition().fX, pNPC->getPosition().fY);
+                  if(distance < 10.0f) {
+                     CNPCInfo *pNPCInfo = pNPC->getInfo();
+                     if(pNPCInfo->getNPCType() == STORE)
+                        m_pWindowMan->showShopWnd(pNPCInfo->getName(), pNPCInfo->getSell());
+                  }
+                  break;
+               }
 				}
             else if(nodeName.find("CPlayer3D") != std::string::npos) {
                // 滑鼠點到玩家

@@ -210,7 +210,7 @@ material Examples/CloudySky
 			texture_unit
 			{
 				texture clouds.jpg
-				scroll_anim 0.15 0
+				//scroll_anim 0.15 0
 			}
 		}
 	}

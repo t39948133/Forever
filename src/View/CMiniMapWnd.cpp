@@ -25,7 +25,7 @@ void CMiniMapWnd::init (int _x, int _y, CUnitObject* _pPlr, CScene* _pScene, flo
 
 	pText = new CTextAreaOgre ;
 	pText->init (&m_overlay, 5, 20, 100, 30) ;
-	pText->setText ("¹p¹F", 1, 0.8, 1) ;
+	pText->setText ("¹p¹F", 1, 0.8f, 1) ;
 	addChild (pText) ;
 
 #endif
@@ -62,7 +62,7 @@ void CMiniMapWnd::onAddUnit (CUnitObject* pu)
 	icon.pUnit = pu ;
 	vMiniIcon.push_back (icon) ;
 
-	vMiniIcon.back ().init(&m_overlay, pu->getPosition().fX, pu->getPosition().fY, 
+	vMiniIcon.back ().init(&m_overlay, (int)(pu->getPosition().fX), (int)(pu->getPosition().fY), 
 		ICON_SIZE, ICON_SIZE, vMiniIcon.size()) ;
 
 	vMiniIcon.back ().setImage ("GLX_icon") ;
@@ -80,7 +80,7 @@ void CMiniMapWnd::onAddNPCUnit (CUnitObject* pu)
 	icon.pUnit = pu ;
 	vMiniIcon.push_back (icon) ;
 
-	vMiniIcon.back ().init(&m_overlay, pu->getPosition().fX, pu->getPosition().fY, 
+	vMiniIcon.back ().init(&m_overlay, (int)(pu->getPosition().fX), (int)(pu->getPosition().fY), 
 		ICON_SIZE, ICON_SIZE, vMiniIcon.size()) ;
 
 	vMiniIcon.back ().setImage ("tusk") ;

@@ -331,6 +331,24 @@ void CActionEditorDlg::updateEventList()
 		      pEventList->AddString(str);
             break;
          }
+
+         case AET_DAMAGE: {
+            str.Empty();
+            memset(buf, 0, sizeof(buf));
+            sprintf_s(buf, "AET_DAMAGE => [%d]", (*it)->m_iNextActionID);
+		      str = buf;
+		      pEventList->AddString(str);
+            break;
+         }
+
+         case AET_DIE: {
+            str.Empty();
+            memset(buf, 0, sizeof(buf));
+            sprintf_s(buf, "AET_DIE => [%d]", (*it)->m_iNextActionID);
+		      str = buf;
+		      pEventList->AddString(str);
+            break;
+         }
       }
 
       it++;
@@ -643,6 +661,14 @@ void CActionEditorDlg::OnBnClickedNewevent()
 
          pActionEvent = pEvent;
       }
+      else if(pcmbEvent->GetCurSel() == 10) {
+         pActionEvent = new CActionEvent();
+         pActionEvent->m_event = AET_DAMAGE;
+      }
+      else if(pcmbEvent->GetCurSel() == 11) {
+         pActionEvent = new CActionEvent();
+         pActionEvent->m_event = AET_DIE;
+      }
 
       if(m_iEventListIdx == -1) {
          CActionEventHandler *pActionEventHandler = new CActionEventHandler();
@@ -771,6 +797,16 @@ void CActionEditorDlg::OnLbnSelchangeEventlist()
                SetDlgItemText(EDT_ENDTIME, toString<float>(pNotifyActionEvent->m_fEndTime).c_str());
                break;
             }
+
+            case AET_DAMAGE:
+               pcmbEvent->SetCurSel(10);
+               OnCbnSelchangeEvent();
+               break;
+
+            case AET_DIE:
+               pcmbEvent->SetCurSel(11);
+               OnCbnSelchangeEvent();
+               break;
          }
 
          SetDlgItemText(EDT_EVENTNEXTACTIONID, toString<int>(pActionEventHandler->getNextActionID()).c_str());
@@ -862,7 +898,9 @@ void CActionEditorDlg::OnCbnSelchangeEvent()
    switch(pcmbEvent->GetCurSel()) {
       case 0:    // AET_NULL
       case 1:    // AET_REACH
-      case 2: {  // AET_NOT_REACH
+      case 2:    // AET_NOT_REACH
+      case 10:   // AET_DAMAGE
+      case 11: { // AET_DIE
          CEdit *pedtKey = (CEdit*)GetDlgItem(EDT_KEY);
          pedtKey->EnableWindow(false);
          CEdit *pedtKeyDown = (CEdit*)GetDlgItem(EDT_KEYDOWN);

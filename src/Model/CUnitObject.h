@@ -13,6 +13,7 @@
 #include "IPlaySoundNotifyListener.h"
 #include "IAttackNotifyListener.h"
 #include "IFightEventListener.h"
+#include "IDeadEventListener.h"
 // } Add by Darren Chen on 2012/12/22
 
 class CUnitObject : public IPlaySoundNotifyListener,
@@ -132,6 +133,11 @@ class CUnitObject : public IPlaySoundNotifyListener,
         *         false - 否 */
       bool isMove();
 
+      bool isDead();
+
+      /** @brief 死亡重生 */
+      void resetDead();
+
       /** @brief 設定鍵盤讓角色移動模式 */
       void setKeyMoveEnabled(bool bEnable);
 
@@ -165,6 +171,9 @@ class CUnitObject : public IPlaySoundNotifyListener,
       void addFightEventListener(IFightEventListener *pListener);
       void removeFightEventListener(IFightEventListener *pListener);
 
+      void addDeadEventListener(IDeadEventListener *pListener);
+      void removeDeadEventListener(IDeadEventListener *pListener);
+
       void addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
       void removeDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
 
@@ -194,7 +203,7 @@ class CUnitObject : public IPlaySoundNotifyListener,
       CActionSystem         m_actionSystem;   // 動作系統
       CFightSystem          m_fightSystem;    // 戰鬥系統         
       // } Add by Darren Chen on 2012/12/27
-	 virtual void				levelUp();
+	   virtual void          levelUp();
 	   void						 setLevel(char level);
 
    private:
@@ -215,6 +224,9 @@ class CUnitObject : public IPlaySoundNotifyListener,
 
       /** @brief 通知技能有更新 */
       void notifyAddSkillUpdate(int skillID);
+
+      /** @brief 通知死亡 */
+      void notifyDeadUpdate();
 
       // IPlaySoundNotifyListener
       /* virtual */ void notifyPlaySound(std::string soundFile);
@@ -252,9 +264,12 @@ class CUnitObject : public IPlaySoundNotifyListener,
       CUnitObject           *m_pTargetObject;   // 目標物
       bool                   m_bKeyMoveEnabled; // 鍵盤移動模式
       int                    m_castSkillID;     // 目前施展技能的ID
+      float                  m_fDieWaitTime;    // 死亡之後的等待時間
+      bool                   m_bDead;           // 有沒有死亡
 
       std::set<IAdvAttrEventListener *>  m_advAttrEventListeners;  // 監聽AdvancedAttribute改變的監聽者列表
       std::set<ISkillEventListener *>    m_skillEventListeners;    // 監聽技能改變的監聽者列表
+      std::set<IDeadEventListener *>     m_deadEventListeners;     // 監聽死亡改變的監聽者列表
       // } Add by Darren Chen on 2012/12/22
 };
 

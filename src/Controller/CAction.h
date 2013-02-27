@@ -79,6 +79,15 @@ class CAction
 
       void setMachineName(std::string machineName);
 
+      /** @brief 取得播放下一個動作ID
+        * @return  0    重複播放
+        *         -1    只播放一次
+        *         > 0   下一個動作ID */
+      int getNextActionID();
+
+      /** @brief 取得該動作的時間長度 */
+      float getActionTimeLength();
+
       /** @brief 存檔
         * @param pFile 檔案 */
       void write(FILE *pFile);

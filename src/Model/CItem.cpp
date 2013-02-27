@@ -8,62 +8,6 @@ void CItem::initItem ()
 {
    if(ITEM_INFO::read("../Item.fla") == false)
       ITEM_INFO::read("Item.fla");
-
-	/*if(ITEM_INFO::read("Item.la"))
-	{
-	}
-	else
-	{
-		CWeaponInfo* pw;
-		pw = new CWeaponInfo();
-		AdvancedAttribute baseAttr;
-		AdvancedAttribute extendAttr;
-		AttributeClear(baseAttr);
-		AttributeClear(extendAttr);
-		baseAttr.iATK = 20;
-      baseAttr.fATKSpeed = 1.4f;
-		baseAttr.iCRI = 10;
-      baseAttr.iWDEF = 173;
-		pw->initWeaponInfo("訓練用長劍", "Weapon/Sword_C01", "SW_C001.mesh", SWORD, false, 1, 1, 5, 20, COMMON,
-			baseAttr, extendAttr, ONE_HAND);
-		addInfo(pw);
-
-		CArmorInfo* pa;
-		pa = new CArmorInfo();
-		AttributeClear(baseAttr);
-		AttributeClear(extendAttr);
-      baseAttr.iDEF = 24;
-      baseAttr.iFlee = 21;
-		pa->initArmorInfo("訓練用金屬胸甲", "Armor/PL_Torso_C01", "LMCH_C101_Body.mesh", PLATE, false, 1, 1, 5, 20, COMMON,
-			baseAttr, extendAttr, CLOTHES);
-		addInfo(pa);
-
-      pa = new CArmorInfo();
-		AttributeClear(baseAttr);
-		AttributeClear(extendAttr);
-      baseAttr.iDEF = 20;
-      baseAttr.iFlee = 17;
-		pa->initArmorInfo("訓練用金屬腿甲", "Armor/PL_Pants_C01", "LMCH_C101_Leg.mesh", PLATE, false, 1, 1, 5, 20, COMMON,
-			baseAttr, extendAttr, PANTS);
-		addInfo(pa);
-
-		CConsumableInfo* pc = new CConsumableInfo();
-		pc->initConsumableInfo("下級生命藥水", "Potion/HP02_2", POTION, false, 1, 200, 5, 100, "回復生命67點", EDIBLE_HP, 67);
-      addInfo(pc);
-
-      pc = new CConsumableInfo();
-		pc->initConsumableInfo("下級精神藥水", "Potion/MP02_2", POTION, false, 1, 200, 5, 100, "回復精神98點", EDIBLE_MP, 98);
-      addInfo(pc);
-
-      
-      pc = new CConsumableInfo();
-		pc->initConsumableInfo("主神盔甲", "Scroll/Skillbook_01", SCROLL, false, 1, 1, 5, 10, "可以學習主神盔甲技能", EDIBLE_SKILL, 0);
-      addInfo(pc);
-
-      pc = new CConsumableInfo();
-		pc->initConsumableInfo("猛烈一擊", "Scroll/Skillbook_01", SCROLL, false, 1, 1, 5, 10, "可以學習猛烈一擊技能", EDIBLE_SKILL, 1);
-      addInfo(pc);
-	}*/
 }
 CItem::CItem ():m_iStack(0)
 {
@@ -149,6 +93,8 @@ void CItem::create (int id, int st)
       m_iStack = 0;
       clear();
    }
+
+   notifyItemUpdate();
 }
 
 void CItem::taken()

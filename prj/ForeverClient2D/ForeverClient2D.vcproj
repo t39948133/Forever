@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="..\..\src\Server;..\..\src\Network;..\..\src\Common;..\..\src\View;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework;..\..\lib\openal_sdk\include;..\..\lib\openal_sdk\samples\framework\Win32;..\..\lib\sound_man"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_GAMEENGINE_2D_"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_GAMEENGINE_2D_;_GAMESOUND_"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -95,7 +95,7 @@
 			OutputDirectory="..\..\bin\$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="0"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -117,8 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\src\Network;..\..\src\Common;..\..\src\View;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework;..\..\lib\openal_sdk\include;..\..\lib\openal_sdk\samples\framework\Win32;..\..\lib\sound_man"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_GAMEENGINE_2D_"
+				AdditionalIncludeDirectories="..\..\src\Server;..\..\src\Network;..\..\src\Common;..\..\src\View;..\..\src\Model;..\..\src\Client\2D;..\..\src\Controller;..\..\lib\gp_framework;..\..\lib\openal_sdk\include;..\..\lib\openal_sdk\samples\framework\Win32;..\..\lib\sound_man"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_GAMEENGINE_2D_;_GAMESOUND_"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
@@ -138,6 +138,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="wsock32.lib OpenAL32.lib"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\lib\openal_sdk\libs\Win32"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -247,7 +248,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CBackPack.cpp"
+					RelativePath="..\..\src\Model\CBackpack.cpp"
 					>
 				</File>
 				<File
@@ -393,6 +394,22 @@
 				<File
 					RelativePath="..\..\src\Common\LogWindow.cpp"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -411,27 +428,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\View\CNPCChatWnd.cpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\View\CPlayerInfoWnd.cpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\View\CPlayerStateWnd.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\View\CQuestWnd.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\View\CShopWnd.cpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\View\CSkillInfoWnd.cpp"
 					>
 				</File>
 				<File
@@ -496,14 +497,6 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="Client"
-				>
-				<File
-					RelativePath="..\..\src\Client\2D\CGameClient.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Network"
 				>
 				<File
@@ -527,6 +520,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketBuyItem.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketCancelUseSkill.cpp"
 					>
 				</File>
@@ -536,6 +533,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CPacketEquipData.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketKeyActionEvent.cpp"
 					>
 				</File>
 				<File
@@ -551,11 +552,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketPlayerDeadReset.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketPlayerInit.cpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Network\CPacketQuestData.cpp"
+					RelativePath="..\..\src\Network\CPacketSellItem.cpp"
 					>
 				</File>
 				<File
@@ -588,6 +593,14 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Server\CWorldServer.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Client"
+				>
+				<File
+					RelativePath="..\..\src\Client\2D\CGameClient.cpp"
 					>
 				</File>
 			</Filter>
@@ -719,6 +732,22 @@
 				<File
 					RelativePath="..\..\src\Common\LogWindow.h"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32"
+						ExcludedFromBuild="true"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
 				</File>
 			</Filter>
 			<Filter
@@ -733,7 +762,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Model\CBackPack.h"
+					RelativePath="..\..\src\Model\CBackpack.h"
 					>
 				</File>
 				<File
@@ -795,6 +824,13 @@
 				<File
 					RelativePath="..\..\src\Model\CMonsterMap.h"
 					>
+					<FileConfiguration
+						Name="Debug|Win32"
+						>
+						<Tool
+							Name="VCCustomBuildTool"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\src\Model\CNPC.h"
@@ -853,6 +889,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Model\IDeadEventListener.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Model\IItemEventListener.h"
 					>
 				</File>
@@ -908,27 +948,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\View\CNPCChatWnd.h"
-					>
-				</File>
-				<File
 					RelativePath="..\..\src\View\CPlayerInfoWnd.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\View\CPlayerStateWnd.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\View\CQuestWnd.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\View\CShopWnd.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\src\View\CSkillInfoWnd.h"
 					>
 				</File>
 				<File
@@ -957,42 +981,6 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="Lib"
-				>
-				<Filter
-					Name="OpenAL"
-					>
-					<File
-						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\aldlist.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\CWaves.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\Framework.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\lib\openal_sdk\samples\framework\Win32\LoadOAL.h"
-						>
-					</File>
-					<File
-						RelativePath="..\..\lib\sound_man\sound_man.h"
-						>
-					</File>
-				</Filter>
-			</Filter>
-			<Filter
-				Name="Client"
-				>
-				<File
-					RelativePath="..\..\src\Client\2D\CGameClient.h"
-					>
-				</File>
-			</Filter>
-			<Filter
 				Name="Network"
 				>
 				<File
@@ -1009,6 +997,10 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CNetDataHotKey.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CNetDataQuest.h"
 					>
 				</File>
 				<File
@@ -1036,6 +1028,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketBuyItem.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketCancelUseSkill.h"
 					>
 				</File>
@@ -1044,11 +1040,23 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketDead.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketEquipData.h"
 					>
 				</File>
 				<File
 					RelativePath="..\..\src\Network\CPacketFirstLogin.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketKeyActionEvent.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\src\Network\CPacketMoney.h"
 					>
 				</File>
 				<File
@@ -1072,11 +1080,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketPlayerDeadReset.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPacketPlayerInit.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\src\Network\CPacketQuestData.h"
+					RelativePath="..\..\src\Network\CPacketSellItem.h"
 					>
 				</File>
 				<File
@@ -1096,6 +1108,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\src\Network\CPacketXP.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\src\Network\CPlayerServerID.h"
 					>
 				</File>
@@ -1109,6 +1125,14 @@
 				</File>
 				<File
 					RelativePath="..\..\src\Server\CWorldServer.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="Client"
+				>
+				<File
+					RelativePath="..\..\src\Client\2D\CGameClient.h"
 					>
 				</File>
 			</Filter>

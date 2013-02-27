@@ -17,6 +17,7 @@
 #include "CScene3D.h"
 #include "CTargetInfoWnd.h"
 #include "CMiniMapWnd.h"
+#include "CLoadingWnd.h"
 
 #include <OgreEntity.h>
 #include <OgreSceneManager.h>
@@ -39,7 +40,9 @@ class CGameClient3D : public IGameFlowListener,
       /* virtual */ void onRecvPlayerData(CPacketPlayerData *pPacket);
       /* virtual */ void onRecvMonsterData(CPacketMonsterData *pPacket);
       /* virtual */ void onRecvEquipData(CPacketEquipData *pPacket);
-		/* virtual */ void onRecvNPCData(CPacketNPCData *pPacket);
+      /* virtual */ void onRecvDead(CPacketDead *pPacket);
+      /* virtual */ void onRecvPlayerDeadReset(CPacketPlayerDeadReset *pPacket);
+      /* virtual */ void onRecvNPCData(CPacketNPCData *pPacket);
 
    private:
       // IGameFlowListener
@@ -68,6 +71,7 @@ class CGameClient3D : public IGameFlowListener,
       bool                 m_bCreateScene;   // 3D初始化是否完成 (true - 還沒完成 / false - 已經完成)
 
       CTargetInfoWnd      *m_pTargetInfoWnd;
+      CLoadingWnd         *m_pLoadingWnd;
       CMiniMapWnd         *m_pMiniMapWnd;
       float                m_cameraDir;
       CWindowMan3D        *m_pWindowMan;     // UI視窗管理

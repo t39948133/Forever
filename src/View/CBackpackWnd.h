@@ -44,6 +44,7 @@ class CBackpackWnd : public CWindow,
       /* virtual */ WindowClassType getClassType();
       /* virtual */ void show(bool bShow);
       /* virtual */ void onDrag();
+      /* virtual */ void setPosition(int _x, int _y);
 #ifdef _GAMEENGINE_3D_
 	   /* virtual */ void setZOrder(int order);
 #endif
@@ -52,7 +53,7 @@ class CBackpackWnd : public CWindow,
       /* virtual */ void updatePlayerBackpack(CBackpack *pBackpack);
 
       // IPlayerAttrEventListener
-      /* virtual */ void updatePlayerAttr(CPlayer *pPlayer);
+      /* virtual */ void updatePlayerAttr(CPlayer *pPlayer, unsigned int offsetXP, long long offsetMoney);
 
    private:
       CPlayer       *m_pPlayer;

@@ -1,6 +1,7 @@
 #include "CWindowMan3D.h"
 #include "CRenderLoader.h"
 #include "CGraphicsRender.h"
+#include "CShopWnd.h"
 
 CWindowMan3D::CWindowMan3D() : CWindowMan()
 {
@@ -32,11 +33,17 @@ void CWindowMan3D::keyDown(const OIS::KeyEvent &evt)
 {
    switch(evt.key) {
       case OIS::KC_P: {
+         int wndX = 0;
+         int wndY = 0;
+         int wndHeight = 0;
          bool bPlayerInfoWndVisible = false;
          std::list<CWindow *>::iterator it = m_pWindowList->begin();
          while(it != m_pWindowList->end()) {
             if((*it)->getClassType() == WND_PLAYERINFO) {
                (*it)->show(!(*it)->isVisible());
+               wndX = (*it)->x;
+               wndY = (*it)->y;
+               wndHeight = (*it)->h;
                bPlayerInfoWndVisible = (*it)->isVisible();
                break;
             }
@@ -47,6 +54,7 @@ void CWindowMan3D::keyDown(const OIS::KeyEvent &evt)
          while(it != m_pWindowList->end()) {
             if((*it)->getClassType() == WND_BACKPACK) {
                (*it)->show(bPlayerInfoWndVisible);
+               (*it)->setPosition(wndX, wndY + wndHeight);
                break;
             }
             it++;
@@ -168,7 +176,8 @@ void CWindowMan3D::mouseMove(const OIS::MouseEvent &evt)
 		   m_pDragWnd->x += dx;
 		   m_pDragWnd->y += dy;
 
-		   if(m_pDragWnd->getClassType() == WND_PLAYERINFO) {
+         if((m_pDragWnd->getClassType() == WND_PLAYERINFO) ||
+            (m_pDragWnd->getClassType() == WND_SHOP)) {
 		      m_pDragWnd->onDrag();
 
             if(m_pBackpackWnd->isVisible() == true) {
@@ -203,9 +212,46 @@ bool CWindowMan3D::isPressWindow(int x, int y)
          bPress = true;
          break;
       }
+      else if((*it)->isButtonClose() == true) {
+         bPress = true;
+         break;
+      }
    
       it++;
    }
 
    return bPress;
+}
+
+void CWindowMan3D::showShopWnd(std::string shopTitle, std::vector<int> vSellItems)
+{
+   int shopWndX = 0;
+   int shopWndY = 0;
+   int shopWndHeight = 0;
+
+   std::list<CWindow *>::iterator it = m_pWindowList->begin();
+   while(it != m_pWindowList->end()) {
+      if((*it)->getClassType() == WND_SHOP) {
+         CShopWnd *pShopWnd = (CShopWnd *)(*it);
+         pShopWnd->setTitle(shopTitle);
+         pShopWnd->setSellItem(vSellItems);
+         (*it)->show(true);
+         shopWndX = (*it)->x;
+         shopWndY = (*it)->y;
+         shopWndHeight = (*it)->h;
+         break;
+      }
+
+      ++it;
+   }
+
+   it = m_pWindowList->begin();
+   while(it != m_pWindowList->end()) {
+      if((*it)->getClassType() == WND_BACKPACK) {
+         (*it)->setPosition(shopWndX, shopWndY + shopWndHeight);
+         (*it)->show(true);
+         break;
+      }
+      it++;
+   }
 }

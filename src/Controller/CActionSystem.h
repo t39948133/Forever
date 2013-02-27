@@ -45,6 +45,9 @@ class CActionSystem
         * @return true - 可移動 / false - 不可移動 */
       bool isMove();
 
+      /** @brief 取得現在時間 */
+      float getCurTime();
+
       /** @brief 取得所有動畫名稱
         * @return 所有動畫名稱 */
       std::vector<std::string> getAllAnimationName();
@@ -67,6 +70,10 @@ class CActionSystem
 
       void setUID(long long uid);
 
+      /** @brief 切換動作
+        * @param newActionID 新動作編號 */
+      void changeAction(int newActionID);
+
       void addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
       void removeDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener);
 
@@ -80,10 +87,6 @@ class CActionSystem
       void removeAttackNotifyListener(IAttackNotifyListener *pListener);
 
    private:
-      /** @brief 切換動作
-        * @param newActionID 新動作編號 */
-      void changeAction(int newActionID);
-
       /** @brief 寄送動作訊息
         * @param actEvent 動作訊息 */
       void sendEvent(CActionEvent &actEvent);

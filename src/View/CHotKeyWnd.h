@@ -13,6 +13,7 @@
 #include "IPlayerHotKeyEventListener.h"
 #include "IItemEventListener.h"
 #include "ISkillEventListener.h"
+#include "IAdvAttrEventListener.h"
 
 #include <network\gp_socket.h>
 
@@ -31,7 +32,8 @@ class CHotKeyWnd : public CWindow,
 #ifdef _GAMEENGINE_3D_
                    public IKeyEventListener,
 #endif
-                   public ISkillEventListener
+                   public ISkillEventListener,
+                   public IAdvAttrEventListener
 
                    
 {
@@ -69,6 +71,9 @@ class CHotKeyWnd : public CWindow,
       /* virtual */ void updateSkillAvailable(CSkill *pSkill);
       /* virtual */ void updateSkillCoolDown(CSkill *pSkill);
 
+      // IAdvAttrEventListener
+      /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
+
 #ifdef _GAMEENGINE_3D_
       // IKeyEventListener
       /* virtual */ void keyDown(const OIS::KeyEvent &evt);
@@ -80,6 +85,8 @@ class CHotKeyWnd : public CWindow,
       GP::NetStream         *m_pNetStream;      // 對Game Server的網路連線
       std::map<void *, int>  m_table;
    	
+      bool canUseSkill(CSkill *pSkill);
+
 #ifdef _GAMEENGINE_3D_	
 	   CHotKeyButton  *m_vpBtn[BUTTON_COUNT];
       COverlayUI      m_overlay;  //管理overlay

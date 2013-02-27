@@ -12,6 +12,8 @@
 #include "CScene.h"
 #include "IAdvAttrEventListener.h"
 
+#include <network\gp_socket.h>
+
 #ifdef _GAMEENGINE_3D_
 #include "CImageButton.h"
 #include "CTextAreaOgre.h"
@@ -32,7 +34,7 @@ class CTargetInfoWnd : public CWindow,
       CTargetInfoWnd();
       ~CTargetInfoWnd();
 
-      void init(int _x, int _y, CScene *pScene, CPlayer *pPlayer);
+      void init(int _x, int _y, CScene *pScene, CPlayer *pPlayer, GP::NetStream *pNetStream);
 
       // CWindow
 	   /* virtual */ bool canDrag(int tx, int ty);
@@ -44,11 +46,13 @@ class CTargetInfoWnd : public CWindow,
 
       void setTarget(long long uid);
       CUnitObject* getTarget();
+      long long getTargetUID();
 
    private:
-      CScene    *m_pScene;
-      CPlayer   *m_pPlayer;
-      long long  m_targetUID;
+      CScene        *m_pScene;
+      CPlayer       *m_pPlayer;
+      long long      m_targetUID;
+      GP::NetStream *m_pNetStream;      // 對Game Server的網路連線
 
 #ifdef _GAMEENGINE_3D_	
 	   CImageButton   *m_pBtn[BUTTON_COUNT];

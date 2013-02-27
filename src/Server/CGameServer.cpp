@@ -14,13 +14,16 @@
 #include "CPacketPlayerInit.h"
 #include "CPacketPlayerData.h"
 #include "CPacketMonsterData.h"
-#include "CPacketTargetObject.h"
 #include "CPacketActionEvent.h"
 #include "CPacketUseSkill.h"
 #include "CPacketBackpackData.h"
 #include "CPacketAdvAttrData.h"
 #include "CPacketAddSkill.h"
+#include "CPacketDead.h"
+#include "CPacketPlayerDeadReset.h"
 #include "CPacketNPCData.h"
+#include "CPacketMoney.h"
+#include "CPacketXP.h"
 
 #ifdef _DEBUGLOG
 #include "LogWindow.h"
@@ -75,27 +78,24 @@ void CGameServer::init(int port)
          pMonsterArea->create(i);
       }
 
-      // Todo: 產生NPC
-#ifdef _GAMEENGINE_2D_
-		addNPC(this->generateUID(), 0, 750, 450);
-		addNPC(this->generateUID(), 1, 600, 450);
-		addNPC(this->generateUID(), 2, 600, 350);
-		addNPC(this->generateUID(), 3, 750, 550);
-		addNPC(this->generateUID(), 4, 600, 550);
-		addNPC(this->generateUID(), 5, 750, 650);
-		addNPC(this->generateUID(), 6, 600, 650);
-		addNPC(this->generateUID(), 7, 750, 350);
-#endif  //#ifdef _GAMEENGINE_2D_
-#ifdef _GAMEENGINE_3D_
-		addNPC(this->generateUID(), 0, 478, 520);
-		addNPC(this->generateUID(), 1, 524, 787);
-		addNPC(this->generateUID(), 2, 527, 787);
-		addNPC(this->generateUID(), 3, 652, 800);
-		addNPC(this->generateUID(), 4, 654, 800);
-		addNPC(this->generateUID(), 5, 656, 800);
-		addNPC(this->generateUID(), 6, 658, 800);
-		addNPC(this->generateUID(), 7, 660, 800);
-#endif  //#ifdef _GAMEENGINE_3D_
+      // 產生NPC
+		/*addNPC(this->generateUID(), 0, 518, 512, 0);
+		addNPC(this->generateUID(), 1, 525, 787);
+		addNPC(this->generateUID(), 2, 561, 797);
+		addNPC(this->generateUID(), 3, 586, 821);
+		addNPC(this->generateUID(), 4, 600, 800);
+		addNPC(this->generateUID(), 5, 615, 800);
+		addNPC(this->generateUID(), 6, 630, 821);
+		addNPC(this->generateUID(), 7, 652, 800);*/
+
+      addNPC(this->generateUID(), 0, 518, 512, 0);
+		addNPC(this->generateUID(), 1, 533, 512, 0);
+		addNPC(this->generateUID(), 2, 548, 512, 0);
+		addNPC(this->generateUID(), 3, 563, 512, 0);
+		addNPC(this->generateUID(), 4, 578, 512, 0);
+		addNPC(this->generateUID(), 5, 593, 512, 0);
+		addNPC(this->generateUID(), 6, 608, 512, 0);
+		addNPC(this->generateUID(), 7, 623, 512, 0);
    }
 }
 
@@ -147,13 +147,9 @@ void CGameServer::updateMonsterTargetObject(CMonster *pMonster, long long newTar
    CUnitObject *pNewTargetObject = this->getUnitObject(newTargetObjectUID);
    pMonster->setTargetObject(pNewTargetObject);
 
-   std::list<CNetPlayer *>::iterator it = m_pNetPlayerList->begin();
-   while(it != m_pNetPlayerList->end()) {
-      CPacketTargetObject packet;
-      packet.pack(pMonster);
-      (*it)->m_pNetStream->send(&packet, sizeof(packet));
-      it++;
-   }
+   CPacketTargetObject packet;
+   packet.pack(pMonster);
+   sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家
 }
 
 void CGameServer::updatePlayerBackpack(CBackpack *pBackpack)
@@ -187,11 +183,6 @@ void CGameServer::updateAdvAttr(CUnitObject *pUnitObject)
    CPacketAdvAttrData packet;
    packet.pack(pUnitObject);
    sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家
-
-   // Todo : HP = 0, 死亡處理
-   if(pUnitObject->getAdvAttr().iHP <= 0) {
-
-   }
 }
 
 void CGameServer::updateAddSkill(CUnitObject *pUnitObject, int skillID)
@@ -237,7 +228,71 @@ void CGameServer::updateFightTargetPosition(CUnitObject *pUnitObject)
 #elif _GAMEENGINE_2D_
    packet.pack(pUnitObject, true);
 #endif
-   sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家   
+   sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家
+}
+
+void CGameServer::updateFightTargetDead(CUnitObject *pUnitObject, CUnitObject *pTargetObject)
+{
+   // 怪物死亡後，玩家加經驗值與錢
+   CPlayer *pPlayer = dynamic_cast<CPlayer *>(pUnitObject);
+   if(pPlayer != NULL) {
+      CMonster *pMonster = dynamic_cast<CMonster *>(pTargetObject);
+      if(pMonster != NULL) {
+         pPlayer->addXP(pMonster->getXP());
+         pPlayer->addMoney(pMonster->getMoney());
+      }
+   }
+}
+
+void CGameServer::updateDead(long long uid)
+{
+   // 怪物/NPC/主角 死亡
+
+   CPlayer *pPlayer = this->getPlayer(uid);
+
+   CPacketDead packet;
+   packet.pack(uid);
+   sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家
+
+   if(pPlayer != NULL) {
+      // 玩家回血回魔
+      AdvancedAttribute advAttr = pPlayer->getAdvAttr();
+      advAttr.iHP = advAttr.iHPMax;
+      advAttr.iMP = advAttr.iMPMax;
+      pPlayer->setAdvAttr(advAttr);
+
+      // 玩家回到出生位置
+      pPlayer->setPosition(450.0f, 450.0f);
+      pPlayer->setTargetPosition(450.0f, 450.0f);
+      pPlayer->setDirection(-3.1415926f);
+      pPlayer->setTargetObject(NULL);
+      CPacketPlayerDeadReset packet1;
+      packet1.pack(pPlayer);
+      sendPacket(NULL, &packet1, sizeof(packet1));  // 送給所有玩家
+
+      pPlayer->resetDead();
+   }
+}
+
+void CGameServer::updatePlayerAttr(CPlayer *pPlayer, unsigned int offsetXP, long long offsetMoney)
+{
+   std::list<CNetPlayer *>::iterator it = m_pNetPlayerList->begin();
+   while(it != m_pNetPlayerList->end()) {
+      if((*it)->m_pPlayer == pPlayer) {
+         CPacketXP packetXP;
+         packetXP.m_uid = pPlayer->getUID();
+         packetXP.m_offsetXP = offsetXP;
+         (*it)->m_pNetStream->send(&packetXP, sizeof(packetXP));
+
+         CPacketMoney packetMoney;
+         packetMoney.m_uid = pPlayer->getUID();
+         packetMoney.m_offsetMoney = offsetMoney;
+         (*it)->m_pNetStream->send(&packetMoney, sizeof(packetMoney));
+         break;
+      }
+
+      it++;
+   }
 }
 
 void CGameServer::updateMonsterAI(CMonster *pMonster)
@@ -270,12 +325,14 @@ void CGameServer::doMonsterAIIdle(CMonster *pMonster)
       float distance = pMonsterInfo->getAlert();
       long long playerID = -1;
       while(it != playerList->end()) {
-         float dis = getDistance(pMonster->getPosition().fX, pMonster->getPosition().fY,
-                                 (*it)->getPosition().fX, (*it)->getPosition().fY);
-         if(dis < pMonsterInfo->getAlert()) {
-            if(dis < distance) {
-               distance = dis;
-               playerID = (*it)->getUID();
+         if((*it)->getHP() > 0) {
+            float dis = getDistance(pMonster->getPosition().fX, pMonster->getPosition().fY,
+                                    (*it)->getPosition().fX, (*it)->getPosition().fY);
+            if(dis < pMonsterInfo->getAlert()) {
+               if(dis < distance) {
+                  distance = dis;
+                  playerID = (*it)->getUID();
+               }
             }
          }
          it++;
@@ -329,7 +386,8 @@ void CGameServer::doMonsterAIDolly(CMonster *pMonster)
 
    //目標物離開太遠怪物回歸
    if(pMonster->isMonsterTargetTooFarAway() == true) {
-      moveMonster(pMonster, pMonster->getAnchorPosition().fX, pMonster->getAnchorPosition().fY);
+      pMonster->setState(RETURN);
+      pMonster->clearHate();
       return;
    }
 
@@ -359,8 +417,17 @@ void CGameServer::doMonsterAIReturn(CMonster *pMonster)
    if(pMonsterInfo == NULL)
       return;
 
-   pMonster->setAdvAttr(pMonsterInfo->getAdvAttr());
-   // Todo: 要處理怪物HP,MP封包
+   AdvancedAttribute advAttr = pMonster->getAdvAttr();
+   advAttr.iHP = advAttr.iHPMax;
+   advAttr.iMP = advAttr.iMPMax;
+   pMonster->setAdvAttr(advAttr);
+
+   pMonster->setTargetObject(NULL);
+   CPacketTargetObject packet;
+   packet.pack(pMonster);
+   sendPacket(NULL, &packet, sizeof(packet));  // 送給所有玩家
+
+   moveMonster(pMonster, pMonster->getAnchorPosition().fX, pMonster->getAnchorPosition().fY);
 
    if(pMonster->isReachTarget())
       pMonster->setState(IDLE);
@@ -371,6 +438,15 @@ void CGameServer::doMonsterAIAttack(CMonster *pMonster)
    CMonsterInfo* pMonsterInfo = pMonster->getInfo();
    if(pMonsterInfo == NULL)
       return;
+
+   if(pMonster->getTargetObject() == NULL) {
+      pMonster->setState(RETURN);
+      pMonster->clearHate();
+      return;
+   }
+
+   if(pMonster->getTargetObject()->getHP() <= 0)
+      pMonster->removeHate(pMonster->getTargetObject()->getUID());
 
    std::vector<CSkill*> vSkill = pMonster->getSkill();
    float castRange = -1.0f;
@@ -431,7 +507,7 @@ void CGameServer::doMonsterAIAttack(CMonster *pMonster)
    float distance = getDistance(pMonster->getPosition().fX, pMonster->getPosition().fY, fx, fy);
 
    if(distance > castRange) {
-      pMonster->setState(GOALS);
+      pMonster->setState(DOLLY);
       return;
    }
 }
@@ -506,6 +582,12 @@ void CGameServer::procNetPlayer(CNetPlayer *pNetPlayer)
                onRecvCanUseSkill(pNetPlayer, (CPacketCanUseSkill *)pPacket);
             else if(pPacket->m_id == PACKET_CANCEL_USESKILL)
                onRecvCancelUseSkill(pNetPlayer, (CPacketCancelUseSkill *)pPacket);
+            else if(pPacket->m_id == PACKET_BUY_ITEM)
+               onRecvBuyItem(pNetPlayer, (CPacketBuyItem *)pPacket);
+            else if(pPacket->m_id == PACKET_TARGET_OBJECT)
+               onRecvTargetObject(pNetPlayer, (CPacketTargetObject *)pPacket);
+            else if(pPacket->m_id == PACKET_KEY_ACTION_EVENT)
+               onRecvKeyActionEvent(pNetPlayer, (CPacketKeyActionEvent *)pPacket);
          }
       }
    }
@@ -605,9 +687,11 @@ void CGameServer::onRecvPlayerDataWG(CPacketPlayerDataWG *pPacket)
    
    pNewPlayer->addPlayerBackpackEventListener(this);   // 監聽玩家背包變動行為
    pNewPlayer->addPlayerEquipEventListener(this);      // 監聽玩家裝備更換行為
-   pNewPlayer->addAdvAttrEventListener(this);          // 監聽玩家屬性變動行為
+   pNewPlayer->addAdvAttrEventListener(this);          // 監聽基本屬性變動行為
    pNewPlayer->addSkillEventListener(this);            // 監聽玩家技能變動行為
    pNewPlayer->addFightEventListener(this);            // 監聽玩家戰鬥系統變動行為
+   pNewPlayer->addDeadEventListener(this);             // 監聽玩家死亡行為
+   pNewPlayer->addPlayerAttrEventListener(this);       // 監聽玩家屬性變動行為
 
    CNetPlayer *pNetPlayer = getNetPlayer(pPacket->m_netID);
    pNetPlayer->m_pPlayer = pNewPlayer;
@@ -627,15 +711,15 @@ void CGameServer::onRecvPlayerDataWG(CPacketPlayerDataWG *pPacket)
    // 送怪的資料給client
 	sendNearMonsterToClient(pNetPlayer);
 
-   // Todo: 還沒處理完畢
+   // 送NPC的資料給client
 	sendNearNPCToClient(pNetPlayer);
 }
 
 void CGameServer::onRecvTargetPos(CNetPlayer *pNetPlayer, CPacketTargetPos *pPacket)
 {
    pPacket->unpack(pNetPlayer->m_pPlayer);
-   //sendPacket(pNetPlayer, pPacket, sizeof(*pPacket));
-   sendPacket(NULL, pPacket, sizeof(*pPacket));
+   //sendPacket(NULL, pPacket, sizeof(*pPacket));
+   sendPacket(pNetPlayer, pPacket, sizeof(*pPacket));
 }
 
 void CGameServer::onRecvUseItem(CNetPlayer *pNetPlayer, CPacketUseItem *pPacket)
@@ -677,7 +761,7 @@ void CGameServer::onRecvCanUseSkill(CNetPlayer *pNetPlayer, CPacketCanUseSkill *
    bool bCanUse = pNetPlayer->m_pPlayer->canUseSkill(pPacket->getUseSkillID());
    
    pPacket->setCanUseSkill(bCanUse);
-   pNetPlayer->m_pNetStream->send(pPacket, sizeof(*pPacket));
+   sendPacket(NULL, pPacket, sizeof(*pPacket));
 
    if(bCanUse == true)
       pNetPlayer->m_pPlayer->startCastSkill(pPacket->getUseSkillID());
@@ -686,4 +770,51 @@ void CGameServer::onRecvCanUseSkill(CNetPlayer *pNetPlayer, CPacketCanUseSkill *
 void CGameServer::onRecvCancelUseSkill(CNetPlayer *pNetPlayer, CPacketCancelUseSkill *pPacket)
 {
    pPacket->unpack(pNetPlayer->m_pPlayer);
+   sendPacket(pNetPlayer, pPacket, sizeof(*pPacket));
+}
+
+void CGameServer::onRecvBuyItem(CNetPlayer *pNetPlayer, CPacketBuyItem *pPacket)
+{
+   if(pNetPlayer->m_pPlayer->getUID() != pPacket->getUID())
+      return;
+
+	CItemInfo *pItemInfo = CItem::getInfo(pPacket->getItemID ());
+	if (pNetPlayer->m_pPlayer->getMoney () >= pItemInfo->getBuyPrice())
+	{
+		CBackpack *pBackpack = pNetPlayer->m_pPlayer->getBackpack();
+		if (pBackpack->isFull() == false)
+		{
+			pNetPlayer->m_pPlayer->addMoney(- pItemInfo->getBuyPrice());		
+
+			int stack = 1;
+			int grid = -1;
+			pBackpack->addItem(pPacket->getItemID(), stack, grid);
+
+			CPacketMoney packet;
+         packet.m_uid = pNetPlayer->m_pPlayer->getUID();
+         packet.m_offsetMoney = - pItemInfo->getBuyPrice();
+			pNetPlayer->m_pNetStream->send(&packet, sizeof(packet));
+		}	
+	}
+}
+
+void CGameServer::onRecvTargetObject(CNetPlayer *pNetPlayer, CPacketTargetObject *pPacket)
+{
+   if(pNetPlayer->m_pPlayer->getUID() != pPacket->getUID())
+      return;
+
+   CUnitObject *pTargetObject = this->getUnitObject(pPacket->getTargetUID());
+   pNetPlayer->m_pPlayer->setTargetObject(pTargetObject);
+
+   sendPacket(pNetPlayer, pPacket, sizeof(*pPacket));
+}
+
+void CGameServer::onRecvKeyActionEvent(CNetPlayer *pNetPlayer, CPacketKeyActionEvent *pPacket)
+{
+   if(pNetPlayer->m_pPlayer->getUID() != pPacket->getUID())
+      return;
+
+   pPacket->unpack(pNetPlayer->m_pPlayer);
+
+   sendPacket(pNetPlayer, pPacket, sizeof(*pPacket));
 }

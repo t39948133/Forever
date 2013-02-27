@@ -17,9 +17,15 @@ enum {
    PACKET_ADD_SKILL,              // 學習技能
    PACKET_CAN_USE_SKILL,          // 是否能夠使用技能
    PACKET_CANCEL_USESKILL,        // 取消使用技能
-   //PACKET_CASTSKILL_ACTIONEVENT,  // 施展技能動作訊息
-	PACKET_NPC_DATA,
-	PACKET_QUEST_DATA,
+   PACKET_DEAD,                   // 死亡
+   PACKET_PLAYER_DEAD_RESET,      // 玩家死亡重生
+   PACKET_KEYBOARD_POS,           // 按鍵移動位置
+   PACKET_NPC_DATA,
+   PACKET_BUY_ITEM,
+   PACKET_MONEY,
+   PACKET_XP,
+   PACKET_SELL_ITEM,
+   PACKET_KEY_ACTION_EVENT,
 };
 
 class CBasePacket

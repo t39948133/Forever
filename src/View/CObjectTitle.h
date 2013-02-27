@@ -20,18 +20,18 @@
 class CObjectTitle
 {
    public:
-      CObjectTitle(Ogre::MovableObject *pObject,   // 璶竕3D家
-                   Ogre::Camera *pCamera,          // 尼紇诀
-                   const std::string &fontName,    // ㄏノぐ或
-                   float fontSize,                 // 
-                   const Ogre::ColourValue &color = Ogre::ColourValue::White);  // 陪ボぐ或肅︹, default = フ︹
- 
+      CObjectTitle();
       ~CObjectTitle();
     
+      void init(Ogre::MovableObject *pObject,   // 璶竕3D家
+                Ogre::Camera *pCamera,          // 尼紇诀
+                const std::string &fontName,    // ㄏノぐ或
+                float fontSize,                 // 
+                const Ogre::ColourValue &color = Ogre::ColourValue::White);  // 陪ボぐ或肅︹, default = フ︹
       void setTitle(const std::string &title);
       std::string getTitle();
     
-      void update();
+      void update(Ogre::SceneNode *pUnitObjectNode, Ogre::SceneNode *pCameraNode);
 
    private:
       Ogre::Vector2 getTextDimensions(std::string text);

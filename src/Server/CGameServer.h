@@ -18,6 +18,9 @@
 #include "CPacketEquipData.h"
 #include "CPacketCanUseSkill.h"
 #include "CPacketCancelUseSkill.h"
+#include "CPacketBuyItem.h"
+#include "CPacketTargetObject.h"
+#include "CPacketKeyActionEvent.h"
 #include "IMonsterAIEventListener.h"
 #include "ISceneMonsterEventListener.h"
 #include "IPlayerBackpackEventListener.h"
@@ -25,6 +28,8 @@
 #include "IAdvAttrEventListener.h"
 #include "ISkillEventListener.h"
 #include "IFightEventListener.h"
+#include "IDeadEventListener.h"
+#include "IPlayerAttrEventListener.h"
 
 #include <network\gp_socket.h>
 
@@ -35,7 +40,9 @@ class CGameServer : public CScene,
                     public IPlayerEquipEventListener,
                     public IAdvAttrEventListener,
                     public ISkillEventListener,
-                    public IFightEventListener
+                    public IFightEventListener,
+                    public IDeadEventListener,
+                    public IPlayerAttrEventListener
 {
    public:
       CGameServer(std::string machineName);
@@ -83,6 +90,13 @@ class CGameServer : public CScene,
       // IFightEventListener
       /* virtual */ void updateFightActionEvent(CUnitObject *pUnitObject, CActionEvent *pActEvent);
       /* virtual */ void updateFightTargetPosition(CUnitObject *pUnitObject);
+      /* virtual */ void updateFightTargetDead(CUnitObject *pUnitObject, CUnitObject *pTargetObject);
+
+      // IDeadEventListener
+      /* virtual */ void updateDead(long long uid);
+
+      // IPlayerAttrEventListener
+      /* virtual */ void updatePlayerAttr(CPlayer *pPlayer, unsigned int offsetXP, long long offsetMoney);
 
       void doMonsterAIIdle(CMonster *pMonster);
       void doMonsterAIGoals(CMonster *pMonster);
@@ -135,6 +149,15 @@ class CGameServer : public CScene,
 
       /** @brief 接收取消使用技能 */
       void onRecvCancelUseSkill(CNetPlayer *pNetPlayer, CPacketCancelUseSkill *pPacket);
+
+      /** @brief 接收買物品 */
+      void onRecvBuyItem(CNetPlayer *pNetPlayer, CPacketBuyItem *pPacket);
+
+      /** @brief 接收玩家的目標物 */
+      void onRecvTargetObject(CNetPlayer *pNetPlayer, CPacketTargetObject *pPacket);
+
+      /** @brief 接收按鍵動作訊息 */
+      void onRecvKeyActionEvent(CNetPlayer *pNetPlayer, CPacketKeyActionEvent *pPacket);
 
       std::string              m_machineName;     // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       int                      m_port;

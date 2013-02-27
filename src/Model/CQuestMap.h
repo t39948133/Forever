@@ -18,7 +18,6 @@ public:
 	void				delQuest(CQuest* pquest);
 	void				delQuestID(int id);
 	void				finishQuestID(int id);
-	void				addQuest(CQuest *pQuest);
 	bool				addQuest(int id, char level);
 	bool				haveQuest(int id);
 	bool				canTake(int id, char level);

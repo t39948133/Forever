@@ -122,7 +122,7 @@ bool NetListener::isAccepted ()
 	return ListAcceptSocket.size () > 0 ;
 }
 
-void NetListener::transferAcceptStream (NetStream& ns)
+void NetListener::transferAcceptStream (_NetStream& ns)
 {
 	if (ListAcceptSocket.size () > 0)
 	{
@@ -137,8 +137,8 @@ bool NetListener::GetAddressPort (NetAddress& addr)
 	if (CurSocket != INVALID_SOCKET)
 	{
 		char buf[256] ;
-		NetStream::GetHostAddress (buf, sizeof (buf)) ;
-//		NetStream::GetHostAddress (NetAddress& netAdd)
+		_NetStream::GetHostAddress (buf, sizeof (buf)) ;
+//		_NetStream::GetHostAddress (NetAddress& netAdd)
 
 		sockaddr_in tcp_address ;
 		int size = sizeof (tcp_address) ;
@@ -184,7 +184,7 @@ bool NetListener::open (const char* strAddress, WORD port, bool bUseTCP)
 
 		if (CurSocket == SOCKET_ERROR)
 		{
-			shutdown (CurSocket, 0) ;
+			shutdown (CurSocket, 0x01) ;
 			closesocket (CurSocket) ;
 			CurSocket = INVALID_SOCKET ;
 			release () ;
@@ -206,7 +206,7 @@ bool NetListener::open (const char* strAddress, WORD port, bool bUseTCP)
 			//bind
 			if (bind (CurSocket, (sockaddr*)&tcp_address, size) == SOCKET_ERROR)
 			{
-				shutdown (CurSocket, 0) ;
+				shutdown (CurSocket, 0x01) ;
 				closesocket (CurSocket) ;
 				CurSocket = INVALID_SOCKET ;
 				release () ;
@@ -217,7 +217,7 @@ bool NetListener::open (const char* strAddress, WORD port, bool bUseTCP)
 			u_long nonBlock = true ;
 			if (ioctlsocket (CurSocket, FIONBIO, &nonBlock) == SOCKET_ERROR)
 			{
-				shutdown (CurSocket, 0) ;
+				shutdown (CurSocket, 0x01) ;
 				closesocket (CurSocket) ;
 				CurSocket = INVALID_SOCKET ;
 				release () ;
@@ -244,7 +244,7 @@ bool NetListener::open (const char* strAddress, WORD port, bool bUseTCP)
 
 bool NetListener::startListen (WORD port)
 {
-	NetStream::fnInitShareData (NULL) ;
+	_NetStream::fnInitShareData (NULL) ;
 
 	release () ;
 	if (open (NULL, port, true))
@@ -260,7 +260,7 @@ void NetListener::release ()
 
 	if (CurSocket != INVALID_SOCKET)
 	{
-		shutdown (CurSocket, 0) ;
+		shutdown (CurSocket, 0x01) ;
 		closesocket (CurSocket) ;
 		CurSocket = INVALID_SOCKET ;
 	}
@@ -282,9 +282,9 @@ NetListener::~NetListener ()
 //#########################################################
 //#########################################################
 
-HWND NetStream::WorkWindow ;
+HWND _NetStream::WorkWindow ;
 
-void NetStream::fnInitShareData (HWND hwnd)
+void _NetStream::fnInitShareData (HWND hwnd)
 {
 	static bool bInit = false ;
 	if (!bInit)
@@ -300,7 +300,7 @@ void NetStream::fnInitShareData (HWND hwnd)
 	}
 }
 
-bool NetStream::getHostAddress (char* buf, WORD bufSize)
+bool _NetStream::getHostAddress (char* buf, WORD bufSize)
 {
 	gethostname (buf, bufSize) ;
 	hostent* pHostInfo = gethostbyname (buf) ;
@@ -315,7 +315,7 @@ bool NetStream::getHostAddress (char* buf, WORD bufSize)
 	return false ;
 }
 
-bool NetStream::getHostAddress (NetAddress& netAdd)
+bool _NetStream::getHostAddress (NetAddress& netAdd)
 {
 	char buf[256] ;
 	if (getHostAddress (buf, sizeof (buf)))
@@ -327,7 +327,7 @@ bool NetStream::getHostAddress (NetAddress& netAdd)
 		return false ;
 }
 
-bool NetStream::getAddressPort (char* buf, WORD bufSize, WORD& port)
+bool _NetStream::getAddressPort (char* buf, WORD bufSize, WORD& port)
 {
 		getHostAddress (buf, bufSize) ;
 
@@ -340,7 +340,7 @@ bool NetStream::getAddressPort (char* buf, WORD bufSize, WORD& port)
 		return true ;
 }
 
-bool NetStream::getAddressPort (NetAddress& addr)
+bool _NetStream::getAddressPort (NetAddress& addr)
 {
 	if (CurSocket != INVALID_SOCKET)
 	{
@@ -366,7 +366,7 @@ bool NetStream::getAddressPort (NetAddress& addr)
 		return false ;
 }
 
-bool NetStream::getAddressPort (char* buf, WORD bufSize)
+bool _NetStream::getAddressPort (char* buf, WORD bufSize)
 {
 		getHostAddress (buf, bufSize) ;
 
@@ -387,7 +387,7 @@ bool NetStream::getAddressPort (char* buf, WORD bufSize)
 		return true ;
 }
 
-bool NetStream::getPeerAddressPort (char* buf, WORD bufSize) 
+bool _NetStream::getPeerAddressPort (char* buf, WORD bufSize) 
 {
 		sockaddr_in tcp_address ;
 		int size = sizeof (tcp_address) ;
@@ -403,7 +403,7 @@ bool NetStream::getPeerAddressPort (char* buf, WORD bufSize)
 		return true ;
 }
 
-bool NetStream::getPeerAddress(char* pBuf, WORD nBufSize)
+bool _NetStream::getPeerAddress(char* pBuf, WORD nBufSize)
 {
 		sockaddr_in tcp_address;
 		int size = sizeof(tcp_address);
@@ -419,7 +419,7 @@ bool NetStream::getPeerAddress(char* pBuf, WORD nBufSize)
 		assert(strlen(szBuf) < nBufSize);
 		strcpy_s(pBuf, nBufSize, szBuf);
 #else
-		sprintf_s(pBuf, "%d.%d.%d.%d", tcp_address.sin_addr.S_un.S_un_b.s_b1,
+		sprintf_s(pBuf, sizeof(pBuf), "%d.%d.%d.%d", tcp_address.sin_addr.S_un.S_un_b.s_b1,
 			tcp_address.sin_addr.S_un.S_un_b.s_b2, tcp_address.sin_addr.S_un.S_un_b.s_b3,
 			tcp_address.sin_addr.S_un.S_un_b.s_b4);
 #endif
@@ -428,7 +428,7 @@ bool NetStream::getPeerAddress(char* pBuf, WORD nBufSize)
 	return false;
 }
 
-bool NetStream::getPeerAddressPort (NetAddress& add)
+bool _NetStream::getPeerAddressPort (NetAddress& add)
 {
 		sockaddr_in tcp_address ;
 		int size = sizeof (tcp_address) ;
@@ -445,12 +445,12 @@ bool NetStream::getPeerAddressPort (NetAddress& add)
 		return true ;
 }
 
-bool NetStream::isConnected ()
+bool _NetStream::isConnected ()
 {
 		return Flag.BIT.bLink ;
 }
 
-DWORD NetStream::unBufSend (const void* buf, DWORD memSize, NetAddress* pAddress)
+DWORD _NetStream::unBufSend (const void* buf, DWORD memSize, NetAddress* pAddress)
 {
 		int r = ::send (CurSocket, (char*)buf, memSize, 0) ;
 		if (r == memSize)//成功
@@ -479,7 +479,7 @@ DWORD NetStream::unBufSend (const void* buf, DWORD memSize, NetAddress* pAddress
 		}
 }
 
-bool NetStream::bufSend (const void* buf, DWORD memSize, NetAddress* pAddress)//
+bool _NetStream::bufSend (const void* buf, DWORD memSize, NetAddress* pAddress)//
 {
 		DWORD bufSize = SendBuffer.getAllDataSize () ;
 		if (bufSize > 0)//有封包還沒送出去
@@ -552,7 +552,7 @@ void EnableNetDebug (bool b)
 
 #define _SEND_IN_BUFFER_
 
-void NetStream::send (const void* pMem, DWORD size)
+void _NetStream::send (const void* pMem, DWORD size)
 {
 	if (!Flag.BIT.bLink)
 	{
@@ -586,7 +586,7 @@ void NetStream::send (const void* pMem, DWORD size)
 	#endif
 }
 
-DWORD NetStream::getFullPackage (void* pMem, DWORD bufSize)
+DWORD _NetStream::getFullPackage (void* pMem, DWORD bufSize)
 {
 	if (!Flag.BIT.bLink)
 	{
@@ -608,7 +608,7 @@ DWORD NetStream::getFullPackage (void* pMem, DWORD bufSize)
 	}
 }
 
-bool NetStream::getFullPackage (NetBuffer& tmpMem)
+bool _NetStream::getFullPackage (NetBuffer& tmpMem)
 {
 	if (!Flag.BIT.bLink)
 	{
@@ -630,22 +630,22 @@ bool NetStream::getFullPackage (NetBuffer& tmpMem)
 	}
 }
 
-void* NetStream::peekRecvBuffer (DWORD& dataSize)
+void* _NetStream::peekRecvBuffer (DWORD& dataSize)
 {
 	return RecvBuffer.peekStream (dataSize) ;
 }
 
-void NetStream::clearRecvBuffer ()
+void _NetStream::clearRecvBuffer ()
 {
 	RecvBuffer.cutStream (RecvBuffer.getAllDataSize ()) ;
 }
 
-void NetStream::setAcceptStream (SOCKET acceptSocket)
+void _NetStream::setAcceptStream (SOCKET acceptSocket)
 {
 	assert (CurSocket == INVALID_SOCKET) ;
 
 	CurSocket = acceptSocket ;
-//	RegisterNetStream (this) ;
+//	Register_NetStream (this) ;
 	Flag.BIT.bCanSend = true ;
 
 	//set to nonblock
@@ -658,7 +658,7 @@ void NetStream::setAcceptStream (SOCKET acceptSocket)
 	Flag.BIT.bLink = true ;
 }
 
-bool NetStream::procPackage ()
+bool _NetStream::procPackage ()
 {
 	if (!Flag.BIT.bLink)
 	{
@@ -788,7 +788,7 @@ bool NetStream::procPackage ()
 	return bHasPkg ;
 }
 
-bool NetStream::connect (const NetAddress& addr)//client用
+bool _NetStream::connect (const NetAddress& addr)//client用
 {
 //	assert (SocketType == TYPE_TCP) ;
 	assert (CurSocket != INVALID_SOCKET) ;
@@ -808,7 +808,7 @@ bool NetStream::connect (const NetAddress& addr)//client用
 	return ::connect (CurSocket, (sockaddr*)&tcp_address, size) == 0 ;
 }
 
-bool NetStream::connect (const char* strAddress, WORD port)
+bool _NetStream::connect (const char* strAddress, WORD port)
 {
 	assert (CurSocket != INVALID_SOCKET) ;
 
@@ -824,7 +824,7 @@ bool NetStream::connect (const char* strAddress, WORD port)
 	return ::connect (CurSocket, (sockaddr*)&tcp_address, size) == 0 ;
 }
 
-bool NetStream::open (const char* strAddress, WORD port, bool bUseTCP)
+bool _NetStream::open (const char* strAddress, WORD port, bool bUseTCP)
 {
 	assert (CurSocket == INVALID_SOCKET) ;
 
@@ -847,7 +847,7 @@ bool NetStream::open (const char* strAddress, WORD port, bool bUseTCP)
 		}
 		if (CurSocket == SOCKET_ERROR)
 		{
-			shutdown (CurSocket, 0) ;
+			shutdown (CurSocket, 0x01) ;
 			closesocket (CurSocket) ;
 			CurSocket = INVALID_SOCKET ;
 			release () ;
@@ -873,7 +873,7 @@ bool NetStream::open (const char* strAddress, WORD port, bool bUseTCP)
 			if (bind (CurSocket, (sockaddr*)&tcp_address, size) == SOCKET_ERROR)
 			{
 				assert (0) ;
-				shutdown (CurSocket, 0) ;
+				shutdown (CurSocket, 0x01) ;
 				closesocket (CurSocket) ;
 				CurSocket = INVALID_SOCKET ;
 				release () ;
@@ -904,21 +904,21 @@ bool NetStream::open (const char* strAddress, WORD port, bool bUseTCP)
 	}
 }
 
-void NetStream::startConnect (const NetAddress& addr)//client用
+void _NetStream::startConnect (const NetAddress& addr)//client用
 {
-	NetStream::fnInitShareData (NULL) ;
+	_NetStream::fnInitShareData (NULL) ;
 
 	release () ;
 	if (open (NULL, 0, true))
 		connect (addr) ;
 }
 
-void NetStream::stopConnection ()//停止連線
+void _NetStream::stopConnection ()//停止連線
 {
 	release () ;
 }
 
-void NetStream::release ()
+void _NetStream::release ()
 {
 	//##############################
 	//原本的作法有錯
@@ -941,8 +941,8 @@ void NetStream::release ()
 	//當一個角色要被踢掉,或者斷線的時候
 	//server會直接刪除物件
 	//比如說login server刪除LoginUserConnection
-	//LoginUserConnection::release會呼叫NetStream的release
-	//這個NetStream會被直接視為已經是無效的
+	//LoginUserConnection::release會呼叫_NetStream的release
+	//這個_NetStream會被直接視為已經是無效的
 	//但實際上的連線卻還沒結束
 
 	//解決的方式是
@@ -956,19 +956,19 @@ void NetStream::release ()
 	if (CurSocket != INVALID_SOCKET)
 	{
 		//通知要關閉
-		shutdown (CurSocket, 0) ;
+		shutdown (CurSocket, 0x01) ;
 		CurSocket = INVALID_SOCKET ;
 	}
 
 	Flag.Reset () ;
 }
 
-NetStream::NetStream ():CurSocket(INVALID_SOCKET)
+_NetStream::_NetStream ():CurSocket(INVALID_SOCKET)
 {
 	Flag.Reset () ;
 }
 
-NetStream::~NetStream ()
+_NetStream::~_NetStream ()
 {
 	release () ;
 }

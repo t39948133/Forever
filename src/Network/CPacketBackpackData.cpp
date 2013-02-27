@@ -27,11 +27,9 @@ void CPacketBackpackData::unpack(CPlayer *pPlayer)
       return;
 
    for(int i = 0; i < BACK_MAX; i++) {
-      //if(m_vBackpack[i].m_itemID != -1) {
-         CItem newItem;
-         newItem.create(m_vBackpack[i].m_itemID, m_vBackpack[i].m_stack);
+      CItem newItem;
+      newItem.create(m_vBackpack[i].m_itemID, m_vBackpack[i].m_stack);
 
-         pPlayer->getBackpack()->setGrid(m_vBackpack[i].m_grid, newItem);
-      //}
+      pPlayer->getBackpack()->setGrid(m_vBackpack[i].m_grid, newItem);
    }
 }

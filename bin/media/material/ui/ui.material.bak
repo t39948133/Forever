@@ -1,0 +1,545 @@
+//主角資訊視窗
+material UI/BG/PlayerInfoWnd
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture bg_PlayerInfoWnd.png
+			}
+		}
+	}
+}
+
+//主手槽
+material UI/Icon/MainHandSlot
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture MainHandSlot.png
+			}
+		}
+	}
+}
+
+//副手槽
+material UI/Icon/OffHandSlot
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture OffHandSlot.png
+			}
+		}
+	}
+}
+
+//上衣槽
+material UI/Icon/ChestSlot
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture ChestSlot.png
+			}
+		}
+	}
+}
+
+//褲子槽
+material UI/Icon/LegsSlot
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture LegsSlot.png
+			}
+		}
+	}
+}
+
+//肩甲槽
+material UI/Icon/ShoulderSlot
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture ShoulderSlot.png
+			}
+		}
+	}
+}
+
+//手套槽
+material UI/Icon/GloveSlot
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture GloveSlot.png
+			}
+		}
+	}
+}
+
+//鞋子槽
+material UI/Icon/BootSlot
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture BootSlot.png
+			}
+		}
+	}
+}
+
+//背包視窗
+material UI/BG/BackpackWnd
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture bg_BackpackWnd.png
+			}
+		}
+	}
+}
+
+//背包空槽
+material UI/Icon/NullBackpack
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture NullBackpack.png
+			}
+		}
+	}
+}
+
+//技能視窗
+material UI/BG/SkillWnd
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture bg_SkillWnd.png
+			}
+		}
+	}
+}
+
+//Hud視窗
+material UI/BG/HudWnd
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture player_hotkey.png
+			}
+		}
+	}
+}
+
+//HP
+material UI/BG/HPBar
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture hp.png
+			}
+		}
+	}
+}
+
+//MP
+material UI/BG/MPBar
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture mp.png
+			}
+		}
+	}
+}
+
+//XP
+material UI/BG/XPBar
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture xp.png
+			}
+		}
+	}
+}
+
+//一般怪物血條
+material UI/BG/RegularMonster
+{
+	technique
+	{
+		pass
+		{
+		  scene_blend alpha_blend
+			texture_unit 
+			{
+				texture bg_RegularMonster.png
+			}
+		}
+	}
+}
+
+//菁英怪物血條
+material UI/BG/EliteMonster
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture bg_EliteMonster.png
+			}
+		}
+	}
+}
+
+//王怪物血條
+material UI/BG/HeroMonster
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture bg_HeroMonster.png
+			}
+		}
+	}
+}
+
+//怪物AI等級1
+material UI/MonsterAI/1
+{
+	technique
+	{
+		pass
+		{			
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture icon_emblem_monster_n_1_a.dds
+			}
+			texture_unit
+			{
+				texture icon_emblem_monster_n_1_a_alpha.png
+			}
+		}
+	}
+}
+
+//怪物AI等級2
+material UI/MonsterAI/2
+{
+	technique
+	{
+		pass
+		{			
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture icon_emblem_monster_n_2_a.dds
+			}
+			texture_unit
+			{
+				texture icon_emblem_monster_n_1_a_alpha.png
+			}
+		}
+	}
+}
+
+//怪物AI等級3
+material UI/MonsterAI/3
+{
+	technique
+	{
+		pass
+		{			
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture icon_emblem_monster_n_3_a.dds
+			}
+			texture_unit
+			{
+				texture icon_emblem_monster_n_1_a_alpha.png
+			}
+		}
+	}
+}
+
+//怪物HP
+material UI/MonsterHP
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture MonsterHP.png
+			}
+		}
+	}
+}
+
+//守護
+material UI/MonsterAI/Knight
+{
+	technique
+	{
+		pass
+		{			
+		  alpha_rejection greater 128
+			texture_unit
+			{
+				texture icon_emblem_knight.dds
+			}
+			texture_unit
+			{
+				texture icon_emblem_knight_alpha.png
+			}
+		}
+	}
+}
+
+//選單視窗
+material UI/BG/ToolBarWnd
+{
+	technique
+	{
+		pass
+		{			
+		  scene_blend alpha_blend
+			texture_unit
+			{
+				texture toolbar.png
+			}
+		}
+	}
+}
+
+//載入視窗
+material UI/BG/Loading
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture loading.png
+			}
+		}
+	}
+}
+
+//商店視窗
+material UI/BG/ShopWnd
+{
+	technique
+	{
+		pass
+		{			
+			texture_unit
+			{
+				texture bg_ShopWnd.png
+			}
+		}
+	}
+}
+
+//彈出視窗
+material infownd
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture infownd.jpg
+			}
+		}
+	}
+}
+
+//關閉圖示
+material x
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend		
+			texture_unit
+			{
+				texture green-x.png
+			}
+		}
+	}
+}
+
+
+//NPC聊天視窗
+material chat
+{
+	technique
+	{
+		pass
+		{
+			scene_blend add		
+			texture_unit
+			{
+				texture chat.jpg
+			}
+		}
+	}
+}
+
+//地圖視窗
+material map
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture map.jpg
+			}
+		}
+	}
+}
+
+//小地圖視窗2版
+material minimap2
+{
+	technique
+	{
+		pass
+		{	
+			scene_blend alpha_blend	
+			texture_unit
+			{
+				texture minimap2.png
+			}
+		}
+	}
+}
+
+//小地圖中的主角
+material droplet
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture droplet.png
+			}
+		}
+	}
+}
+
+//小地圖中的怪物
+material GLX_icon
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			texture_unit
+			{
+				texture GLX_icon.png
+			}
+		}
+	}
+}
+
+//小地圖中的NPC
+material tusk
+{
+	technique
+	{
+		pass
+		{
+			
+			texture_unit
+			{
+				texture tusk.jpg
+			}
+		}
+	}
+}

@@ -52,7 +52,7 @@ class CPlayerStateWnd : public CWindow,
       /* virtual */ void updateAdvAttr(CUnitObject *pUnitObject);
 
       // IPlayerAttrEventListener
-      /* virtual */ void updatePlayerAttr(CPlayer *pPlayer);
+      /* virtual */ void updatePlayerAttr(CPlayer *pPlayer, unsigned int offsetXP, long long offsetMoney);
 
       /* virtual */ void updateSkill(CUnitObject *pUnitObject);
       /* virtual */ void updateHotKeyItem(int field, HotKeyItem *pHotKeyItem);

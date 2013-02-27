@@ -18,12 +18,13 @@ class CMonster:public MONSTER_INFO,
       static void          initMonster();						      //建立唯一怪物表(僅在場景初始時呼叫一次)
 
       void                 addHate(long long uid, int damage); //增加仇恨值 AngerValue 傳入攻擊者的UID 造成的仇恨值
+      void                 removeHate(long long uid);
+      void                 clearHate();
 
       int                  getReware();						      //取得掉落物品(傳回掉落物品的id)
       long long            getMoney();							      //取得掉落金錢
       unsigned int         getXP();							         //取得經驗
       void                 work(float timePass);
-      bool                 isDead();
 
       void                 setState(MonsterState state);
       MonsterState         getState();

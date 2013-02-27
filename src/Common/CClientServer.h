@@ -50,19 +50,19 @@ class CClientServer
       int  m_curServer;
 
       enum {MAX_SERVER = 1};
-      std::vector<CGameServer *>   *m_pvGameServer;
+      std::vector<CGameServer *>    m_gameServer;
 
       enum {MAX_WORLDSERVER = 1};
-      std::vector<CWorldServer *>  *m_pvWorldServer;
+      std::vector<CWorldServer *>   m_worldServer;
 
 #ifdef _GAMEENGINE_3D_
       enum {MAX_CLIENT = 1};
-      std::vector<CGameClient3D *> *m_pvGameClient;
+      std::vector<CGameClient3D *>  m_gameClient;
 
       CGraphicsRender              *m_pRenderCore;    // 繪圖引擎
 #elif _GAMEENGINE_2D_
-      enum {MAX_CLIENT = 3};
-      std::vector<CGameClient *>   *m_pvGameClient;
+      enum {MAX_CLIENT = 2};
+      std::vector<CGameClient *>    m_gameClient;
 
       CFPS                          m_fps;            // FPS產生器
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_

@@ -17,7 +17,7 @@ class IPlayerAttrEventListener
    public:
       /** @brief 更新玩家屬性 (XP, Money變動時)
         * @param pPlayer 更新的物件 */
-      virtual void updatePlayerAttr(CPlayer *pPlayer) = 0;
+      virtual void updatePlayerAttr(CPlayer *pPlayer, unsigned int offsetXP, long long offsetMoney) = 0;
 };
 
 #endif  // #ifndef _IPLAYERATTREVENTLISTENER_H_

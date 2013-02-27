@@ -7,8 +7,9 @@
 
 unsigned int CNPC3D::m_iNPCCount = 0;
 
-CNPC3D::CNPC3D(CNPC *pNPC, Ogre::SceneManager *pSceneManager) : m_pNPC2D(pNPC),
-																					 m_pSceneManager(pSceneManager)
+CNPC3D::CNPC3D(CNPC *pNPC, Ogre::SceneManager *pSceneManager, CTerrain &terrain) : m_pNPC2D(pNPC),
+																					                    m_pSceneManager(pSceneManager),
+                                                                                   m_terrain(terrain)
 {
 	m_pRenderCore = CRenderLoader::getInstance()->getGraphicsRender("RenderEngine::OGRE");
 
@@ -16,8 +17,6 @@ CNPC3D::CNPC3D(CNPC *pNPC, Ogre::SceneManager *pSceneManager) : m_pNPC2D(pNPC),
    memset(buf, 0, sizeof(buf));
    sprintf(buf, "%s::CNPC3D::%d", m_pNPC2D->getMachineName().c_str(), m_iNPCCount++);
    m_pNPCNode = m_pSceneManager->getRootSceneNode()->createChildSceneNode(buf);
-
-   m_nameOverlay = NULL;
 
    m_pBodyEntity = NULL;
 
@@ -76,11 +75,11 @@ void CNPC3D::setup()
       CAction *pNewAction = m_pNPC2D->getCurAction();
       setAnimation(pNewAction->getAnimationName() + "::" + m_pNPCNode->getName());
 
-      m_nameOverlay = new CObjectTitle(m_pBodyEntity, m_pRenderCore->getCamera(), "NCTaiwanFont", 20.0f);
+      m_nameOverlay.init(m_pBodyEntity, m_pRenderCore->getCamera(), "NCTaiwanFont", 20.0f);
 	}
 }
 
-void CNPC3D::update(float timeSinceLastFrame)
+void CNPC3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
 {
    // m_pNPC2D的work動作都在CScene內處理
 
@@ -91,39 +90,23 @@ void CNPC3D::update(float timeSinceLastFrame)
    else
       playAnimation(timeSinceLastFrame);
 
-   if((m_pNPC2D->isMove() == true) && (m_pNPC2D->isReachTarget() == false)) {
-      // 怪物位置改變時, 一律視為用滑鼠移動
-      FPOS targetPos = m_pNPC2D->getTargetPosition();
-      FPOS curPos = m_pNPC2D->getPosition();
+   // 計算Y值, 要黏著3D地形
+   Ogre::Vector3 terrianPos(m_pNPC2D->getPosition().fX, 500, m_pNPC2D->getPosition().fY);
+   Ogre::Vector3 dir(0, -1, 0);
+   Ogre::Ray ray(terrianPos, dir);
+   m_terrainHeight = Ogre::Vector3::ZERO;
+   m_terrain.getRayPos(ray, m_terrainHeight);
 
-      FPOS offsetPos;
-      offsetPos.fX = targetPos.fX - curPos.fX;
-      offsetPos.fY = targetPos.fY - curPos.fY;
+   FPOS pos = m_pNPC2D->getPosition();
+   setPosition(pos.fX, m_terrainHeight.y, pos.fY);
+   setDirection(m_pNPC2D->getDirection());
 
-      m_mouseDirection = Ogre::Vector3::ZERO;
-      m_mouseDirection.x = offsetPos.fX;
-      m_mouseDirection.z = offsetPos.fY;
-
-      move(timeSinceLastFrame, m_mouseDirection);
-   }
-   else {
-      // 怪物沒有改變位置時
-      FPOS pos = m_pNPC2D->getPosition();
-      setPosition(pos.fX, 0, pos.fY);
-      setDirection(m_pNPC2D->getDirection());
-   }
-
-   m_nameOverlay->setTitle(m_pNPC2D->getName());
-   m_nameOverlay->update();
+   m_nameOverlay.setTitle(m_pNPC2D->getName());
+   m_nameOverlay.update(m_pNPCNode, pCameraNode);
 }
 
 void CNPC3D::release()
 {
-   if(m_nameOverlay != NULL) {
-      delete m_nameOverlay;
-      m_nameOverlay = NULL;
-   }
-
    m_pvtAnimationSet->clear();
    m_pNPCNode->detachAllObjects();
 
@@ -188,8 +171,11 @@ void CNPC3D::playAnimation(float timeSinceLastFrame)
 {
    std::vector<Ogre::AnimationState *>::iterator it = m_pvtAnimationSet->begin();
    while(it != m_pvtAnimationSet->end()) {
-      if((*it)->hasEnded() == true)
-         (*it)->setTimePosition(0.0f);
+      if((*it)->hasEnded() == true) {
+         int nextActID = m_pNPC2D->getCurAction()->getNextActionID();
+         if(nextActID == 0)
+            (*it)->setTimePosition(0.0f);
+      }
 
       (*it)->addTime(timeSinceLastFrame);
       it++;
@@ -215,39 +201,4 @@ void CNPC3D::setupSkeleton(std::string skeletonFile)
    Ogre::SkeletonManager::getSingleton().remove(skeletonFile);
 
    m_pBodyEntity->getSkeleton()->_refreshAnimationState(m_pBodyEntity->getAllAnimationStates());
-}
-
-void CNPC3D::move(float timeSinceLastFrame, Ogre::Vector3 &offsetDirection)
-{
-   if(offsetDirection != Ogre::Vector3::ZERO) {
-      // 當offsetDirection不等於0時, 代表移動
-
-      // 數值清空
-      m_goalDirection = Ogre::Vector3::ZERO;
-
-      // 偏移量方向為目標方向
-      m_goalDirection = offsetDirection;
-      m_goalDirection.y = 0;
-      m_goalDirection.normalise(); // 以目標方向為單位
-
-      // 取得角色的Z軸方向旋轉到m_goalDirection的方向
-      Ogre::Quaternion toGoal = m_pNPCNode->getOrientation().zAxis().getRotationTo(m_goalDirection);
-
-      // 取得轉向後的方向是幾度角
-      Ogre::Real yawToGoal = toGoal.getYaw().valueDegrees();
-
-      // 更新轉向後的方向(弧度)
-      m_pNPC2D->addDirection(toGoal.getYaw().valueRadians());
-
-      // 模型Y軸旋轉
-      m_pNPCNode->yaw(Ogre::Degree(yawToGoal));
-
-      // 模型移動Z軸
-      AdvancedAttribute advAttr = m_pNPC2D->getAdvAttr();
-      m_pNPCNode->translate(0, 0, timeSinceLastFrame * advAttr.fMove, Ogre::Node::TS_LOCAL);
-
-      // 更新模型座標點
-      Ogre::Vector3 newPos = m_pNPCNode->getPosition();
-      m_pNPC2D->setPosition(newPos.x, newPos.z);
-   }
 }

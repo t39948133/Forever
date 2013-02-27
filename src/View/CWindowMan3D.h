@@ -33,6 +33,8 @@ class CWindowMan3D : public CWindowMan,
       /* virtual */ void mouseUp(const OIS::MouseEvent &evt);
 
       bool isPressWindow(int x, int y);  // 滑鼠左鍵是否有按到視窗
+
+      void showShopWnd(std::string shopTitle, std::vector<int> vSellItems);
 };
 
 #endif  // #ifdef _GAMEENGINE_3D_

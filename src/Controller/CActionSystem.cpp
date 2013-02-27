@@ -112,6 +112,11 @@ bool CActionSystem::isMove()
       return false;
 }
 
+float CActionSystem::getCurTime()
+{
+   return m_fCurTime;
+}
+
 std::vector<std::string> CActionSystem::getAllAnimationName()
 {
    std::vector<std::string> vtAnimationName;
@@ -214,6 +219,19 @@ void CActionSystem::setUID(long long uid)
    }
 }
 
+void CActionSystem::changeAction(int newActionID)
+{
+   for(int i = 0; i < (int)m_actionVector.size(); i++) {
+      CAction *pAction = m_actionVector.at(i);
+      if(pAction->getID() == newActionID) {
+         m_bChangeAction = true;
+         m_fCurTime = 0.0f;
+         m_iCurAction = i;
+         break;
+      }
+   }
+}
+
 void CActionSystem::addDrawWeaponNotifyListener(IDrawWeaponNotifyListener *pListener)
 {
    std::set<IDrawWeaponNotifyListener *>::iterator it = m_drawWeaponNotifyListeners.find(pListener);
@@ -270,24 +288,13 @@ void CActionSystem::removeAttackNotifyListener(IAttackNotifyListener *pListener)
       m_attackNotifyListeners.erase(it);
 }
 
-void CActionSystem::changeAction(int newActionID)
-{
-   for(int i = 0; i < (int)m_actionVector.size(); i++) {
-      CAction *pAction = m_actionVector.at(i);
-      if(pAction->getID() == newActionID) {
-         m_bChangeAction = true;
-         m_fCurTime = 0.0f;
-         m_iCurAction = i;
-         break;
-      }
-   }
-}
-
 void CActionSystem::sendEvent(CActionEvent &actEvent)
 {
    switch(actEvent.m_event) {
       case AET_REACH:
-      case AET_NOT_REACH: {
+      case AET_NOT_REACH: 
+      case AET_DAMAGE:
+      case AET_DIE: {
          CActionEvent *pActionEvent = new CActionEvent();
          *pActionEvent = actEvent;
          m_eventQueue.push_back(pActionEvent);

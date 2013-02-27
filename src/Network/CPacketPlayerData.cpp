@@ -16,6 +16,15 @@ void CPacketPlayerData::pack(CPlayer *pPlayer)
    m_targetPosition = pPlayer->getTargetPosition();
    m_fDirection     = pPlayer->getDirection();
 
+   std::vector<CSkill *> vSkill = pPlayer->getSkill();
+   if(vSkill.size() <= SKILL_MAX) {
+      for(int i = 0; i < (int)vSkill.size(); i++) {
+         CNetDataSkill netSkill;
+         netSkill.m_skillID = vSkill.at(i)->getID();
+         m_vSkill[i] = netSkill;
+      }
+   }
+
    std::map<EquipSlot, int> mEquip = pPlayer->getEquip();
    for(int slot = MAIN_HAND; slot < MAX_SLOT; slot++) {
       std::map<EquipSlot, int>::iterator it = mEquip.find((EquipSlot)slot);
@@ -39,6 +48,11 @@ void CPacketPlayerData::unpack(CPlayer *pPlayer)
    pPlayer->setTargetPosition(m_targetPosition.fX, m_targetPosition.fY);
    pPlayer->setDirection(m_fDirection);
 
+   for(int i = 0; i < SKILL_MAX; i++) {
+      if(m_vSkill[i].m_skillID != -1)
+         pPlayer->addSkill(m_vSkill[i].m_skillID);
+   }
+
    for(int slot = MAIN_HAND; slot < MAX_SLOT; slot++) {
       if(m_mEquip[slot].m_itemID != -1)
          pPlayer->wearToEquipSlot(m_mEquip[slot].m_slot, m_mEquip[slot].m_itemID);
@@ -49,12 +63,6 @@ void CPacketPlayerData::unpack(CPlayer *pPlayer)
 void CPacketPlayerData::unpack(CPlayer3D *pPlayer3D)
 {
    this->unpack(pPlayer3D->getPlayer2D());
-
-   //砞﹚家竚
-   //pPlayer3D->setPosition(m_position.fX, 0, m_position.fY);
-
-   //砞﹚家よ
-   //pPlayer3D->setDirection(m_fDirection);
 
    //砞﹚家ぐ或杆称┪猌竟
    for(int slot = MAIN_HAND; slot < MAX_SLOT; slot++)

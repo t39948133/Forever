@@ -31,7 +31,7 @@ class CMonster3D
 
       /** @brief 更新模型邏輯運算
         * @param timeSinceLastFrame 1Frame是幾秒 */
-      void update(float timeSinceLastFrame);
+      void update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode);
 
       /** @brief 釋放模型 */
       void release();
@@ -60,18 +60,10 @@ class CMonster3D
         * @param skeletonFile 動作檔 */
       void setupSkeleton(std::string skeletonFile);
 
-      /** @brief 3D版本移動
-        * @param timeSinceLastFrame 1個Frame經過幾秒
-        * @param offsetDirection    移動偏移量 */
-      void move(float timeSinceLastFrame, Ogre::Vector3 &offsetDirection);
-
       std::vector<Ogre::AnimationState *> *m_pvtAnimationSet;  // 當前角色的動畫集合(所有模型)
 
       // Title
-      CObjectTitle       *m_nameOverlay;      // 顯示於3D的角色名稱
-
-      Ogre::Vector3       m_mouseDirection;   // 滑鼠移動方向與偏移量
-      Ogre::Vector3       m_goalDirection;    // 目標方向
+      CObjectTitle        m_nameOverlay;      // 顯示於3D的角色名稱
 
       std::string         m_meshName;         // 模型名稱, 沒有附檔名
       Ogre::Entity       *m_pBodyEntity;      // 身體模型 (基本模型)

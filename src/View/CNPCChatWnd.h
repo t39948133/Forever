@@ -47,7 +47,8 @@ public:
 	void setNPC (CNPC*) ;
 
 	// CWindow
-	/* virtual */ bool canDrag(int tx, int ty);  
+	/* virtual */ bool canDrag(int tx, int ty); 
+	void updateContent(CNPC* pNPC) ;
 	/* virtual */ void onLCommand(int btnID);
 	/* virtual */ void show(bool bShow);
 #ifdef _GAMEENGINE_3D_

@@ -1,11 +1,10 @@
 #include "CTargetInfoWnd.h"
+#include "CPacketTargetObject.h"
 
 #ifdef _GAMEENGINE_3D_
 #include "CGraphicsRender.h"
 #include "CRenderLoader.h"
-#include "CPlayer.h"
 #include "CMonster.h"
-#include "CNPC.h"
 #endif
 
 CTargetInfoWnd::CTargetInfoWnd()
@@ -38,11 +37,12 @@ CTargetInfoWnd::~CTargetInfoWnd()
 #endif
 }
 
-void CTargetInfoWnd::init(int _x, int _y, CScene *pScene, CPlayer *pPlayer)
+void CTargetInfoWnd::init(int _x, int _y, CScene *pScene, CPlayer *pPlayer, GP::NetStream *pNetStream)
 {
    m_pPlayer = pPlayer;
    m_pScene = pScene;
    m_targetUID = -1;
+   m_pNetStream = pNetStream;
 
    x = _x;
 	y = _y;
@@ -161,6 +161,8 @@ void CTargetInfoWnd::setTarget(long long uid)
    m_pPlayer->setTargetObject(pTargetObject);   // 設定玩家目標物
    if(pTargetObject != NULL)
       pTargetObject->addAdvAttrEventListener(this);  // 監聽目標物的資料變動
+   else
+      m_targetUID = -1;
 
 #ifdef _GAMEENGINE_3D_
    if(pTargetObject != NULL) {
@@ -265,49 +267,30 @@ void CTargetInfoWnd::setTarget(long long uid)
          }
       }
       else {
-			CNPC *pNPC = dynamic_cast<CNPC *>(pTargetObject);
-			if(pNPC != NULL) {
-				int x = ((rect.right - rect.left) - 284) / 2;
-            m_overlay.setPosition(x, 0);
-            m_overlay.setSize(284, 84);
-            m_overlay.setBackImage("UI/BG/RegularMonster");
+         int x = ((rect.right - rect.left) - 284) / 2;
+         m_overlay.setPosition(x, 0);
+         m_overlay.setSize(284, 84);
+         m_overlay.setBackImage("UI/BG/RegularMonster");
 
-            m_pBtn[BUTTON_AI]->setPosition(30, 22);
-            m_pBtn[BUTTON_AI]->setSize(40, 40);
-            m_pBtn[BUTTON_AI]->setImage("UI/MonsterAI/Knight");
+         m_pBtn[BUTTON_AI]->setPosition(30, 22);
+         m_pBtn[BUTTON_AI]->setSize(40, 40);
+         m_pBtn[BUTTON_AI]->setImage("UI/MonsterAI/Knight");
 
-            m_pBtn[BUTTON_HP]->setPosition(83, 36);
-            m_pBtn[BUTTON_HP]->setSize(169, 13);
+         m_pBtn[BUTTON_HP]->setPosition(83, 36);
+         m_pBtn[BUTTON_HP]->setSize(169, 13);
 
-            m_pText[TEXT_LEVEL]->setPosition(9, 33);
+         m_pText[TEXT_LEVEL]->setPosition(9, 33);
 
-            m_pText[TEXT_NAME]->setPosition(80, 6);
-			}
-			else {
-         CPlayer *pPlayer = dynamic_cast<CPlayer *>(pTargetObject);
-         if(pPlayer != NULL) {
-            int x = ((rect.right - rect.left) - 284) / 2;
-            m_overlay.setPosition(x, 0);
-            m_overlay.setSize(284, 84);
-            m_overlay.setBackImage("UI/BG/RegularMonster");
-
-            m_pBtn[BUTTON_AI]->setPosition(30, 22);
-            m_pBtn[BUTTON_AI]->setSize(40, 40);
-            m_pBtn[BUTTON_AI]->setImage("UI/MonsterAI/Knight");
-
-            m_pBtn[BUTTON_HP]->setPosition(83, 36);
-            m_pBtn[BUTTON_HP]->setSize(169, 13);
-
-            m_pText[TEXT_LEVEL]->setPosition(9, 33);
-
-            m_pText[TEXT_NAME]->setPosition(80, 6);
-         }
+         m_pText[TEXT_NAME]->setPosition(80, 6);
       }
-   }
    }
 #endif
 
    updateAdvAttr(pTargetObject);
+
+   CPacketTargetObject packet;
+   packet.pack(m_pPlayer);
+   m_pNetStream->send(&packet, sizeof(packet));
 
    if(m_targetUID > -1)
       show(true);
@@ -318,4 +301,9 @@ void CTargetInfoWnd::setTarget(long long uid)
 CUnitObject* CTargetInfoWnd::getTarget()
 {
    return m_pScene->getUnitObject(m_targetUID);
+}
+
+long long CTargetInfoWnd::getTargetUID()
+{
+   return m_targetUID;
 }

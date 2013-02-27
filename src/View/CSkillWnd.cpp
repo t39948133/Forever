@@ -130,9 +130,10 @@ bool CSkillWnd::canDrag(int tx, int ty)
 void CSkillWnd::onLCommand(int btnID)
 {
    // 把技能放於HotKey上
+   int newBtnID = btnID + 1;  // 普通攻擊不放於列表上
    std::vector<CSkill *> vtPlayerSkill = m_pPlayer->getSkill();
-   if(btnID >= 0 && btnID < (int)vtPlayerSkill.size()) {
-      CSkill *pSkill = vtPlayerSkill.at(btnID);
+   if(newBtnID >= 0 && newBtnID < (int)vtPlayerSkill.size()) {
+      CSkill *pSkill = vtPlayerSkill.at(newBtnID);
       if(pSkill != NULL) {
          for(int i = 0; i < m_pPlayer->getHotKeySize(); i++) {
             HotKeyItem *pHotKeyItem = m_pPlayer->getHotKeyItem(i);
@@ -189,8 +190,8 @@ void CSkillWnd::updateAddSkill(CUnitObject *pUnitObject, int skillID)
    std::vector<CSkill *> vtSkill = pUnitObject->getSkill();
 
    for(int i = 0; i < BUTTON_COUNT; i++) {
-      if(i < (int)vtSkill.size()) {
-         CSkillInfo *pSkillInfo = vtSkill.at(i)->getInfo();
+      if((i + 1) < (int)vtSkill.size()) {
+         CSkillInfo *pSkillInfo = vtSkill.at(i + 1)->getInfo();
          
          if(pSkillInfo != NULL) {
 #ifdef _GAMEENGINE_3D_

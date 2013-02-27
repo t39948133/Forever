@@ -121,9 +121,9 @@ void CTextOverlay::init(Ogre::OverlayContainer *pOverlayContainer, int x, int y,
 void CTextOverlay::setText(std::string text, float r, float g, float b)
 {
 	int newColor;
-   ((Ogre::uint8*)(&newColor))[0] = b * 255.0f;
-   ((Ogre::uint8*)(&newColor))[1] = g * 255.0f;
-   ((Ogre::uint8*)(&newColor))[2] = r * 255.0f;
+   ((Ogre::uint8*)(&newColor))[0] = (Ogre::uint8)(b * 255.0f);
+   ((Ogre::uint8*)(&newColor))[1] = (Ogre::uint8)(g * 255.0f);
+   ((Ogre::uint8*)(&newColor))[2] = (Ogre::uint8)(r * 255.0f);
    ((Ogre::uint8*)(&newColor))[3] = 255;
 
 	if((m_text == text) && (m_color == newColor))
@@ -200,7 +200,7 @@ void CTextOverlay::setVerticalAlignment(Alignment alignment)
    if(alignment == V_CENTER || alignment == V_BOTTOM)
       m_iVerticalAlignment = alignment | DT_SINGLELINE;
    else
-      m_iVerticalAlignment = alignment;
+      m_iVerticalAlignment = alignment | DT_WORDBREAK;
 }
 
 void CTextOverlay::setFont(int fontSize, bool bBold)

@@ -132,6 +132,17 @@ void CWindow::show(bool bShow)
    m_bVisible = bShow;
 }
 
+bool CWindow::isButtonClose()
+{
+   return false;
+}
+
+void CWindow::setPosition(int _x, int _y)
+{
+   x = _x;
+   y = _y;
+}
+
 #ifdef _GAMEENGINE_3D_
 void CWindow::setZOrder(int order)
 {

@@ -59,7 +59,7 @@ void CPlayer::addXP(unsigned int xp)
 		//¤É¯Åfunction
 		levelUp();
 	}
-   notifyPlayerAttrUpdate();
+   notifyPlayerAttrUpdate(xp, 0);
 }
 
 void CPlayer::levelUp()
@@ -187,7 +187,7 @@ int CPlayer::getEquip(EquipSlot equip)
 void CPlayer::addMoney(long long money)
 {
    m_money += money;
-   notifyPlayerAttrUpdate();
+   notifyPlayerAttrUpdate(0, money);
 }
 
 long long CPlayer::getMoney()
@@ -463,11 +463,11 @@ void CPlayer::updateSkillAvailable()
 }
 
 // Add by Darren Chen on 2013/01/17 {
-void CPlayer::notifyPlayerAttrUpdate()
+void CPlayer::notifyPlayerAttrUpdate(unsigned int offsetXP, long long offsetMoney)
 {
    std::set<IPlayerAttrEventListener *>::iterator it = m_playerAttrEventListeners.begin();
    while(it != m_playerAttrEventListeners.end()) {
-      (*it)->updatePlayerAttr(this);
+      (*it)->updatePlayerAttr(this, offsetXP, offsetMoney);
       it++;
    }
 }

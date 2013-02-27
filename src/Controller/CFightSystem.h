@@ -36,10 +36,13 @@ class CFightSystem
    private:
       void notifyActionEventUpdate(CUnitObject *pSelfObject, CActionEvent *pActEvent);
       void notifyTargetPositionUpdate(CUnitObject *pSelfObject);
+      void notifyTargetDeadUpdate(CUnitObject *pSelfObject, CUnitObject *pTargetObject);
 
       std::string    m_machineName;   // 機器名稱 (用來識別是不同機器, ex: Client1 / Client2 / Client3 / GameServer1 / GameServer2 / WorldServer1)
       long long      m_uid;           // 玩家、怪物、NPC的唯一編號
       CSkill        *m_pUseSkill;
+      int            m_castSkillID;   // 目前施展技能的ID
+      bool           m_bFightState;
 
       std::set<IFightEventListener *>  m_fightEventListeners;    // 監聽戰鬥系統事件的監聽者列表
 };

@@ -70,6 +70,17 @@ CGameClient::~CGameClient()
 
 void CGameClient::init()
 {
+   FILE *pFile; 
+   fopen_s(&pFile, "server_ip.txt", "rt");
+
+   if(pFile == NULL)
+      return;
+
+   char buf[256];
+   memset(buf, 0, sizeof(buf));
+   fread(buf, 256, 1, pFile);
+   std::string serverIP = buf;
+
    m_gameState = STATE_LOGIN;
    m_bSendLogin = false;
 
@@ -78,7 +89,7 @@ void CGameClient::init()
 
    // 連線到Game Server來取得角色資料
    GP::NetAddress addr;
-	addr.setIPPort("127.0.0.1:2200");
+   addr.setIPPort(serverIP.c_str());
    m_pNetStream = new GP::NetStream();
 	m_pNetStream->startConnect(addr);
 
@@ -159,7 +170,7 @@ void CGameClient::initUI()
    m_pWindowMan->addWnd(pHotKeyWnd);
 
    m_pTargetInfoWnd = new CTargetInfoWnd();
-   m_pTargetInfoWnd->init(300, 0, m_pScene, pPlayer);
+   m_pTargetInfoWnd->init(300, 0, m_pScene, pPlayer, m_pNetStream);
    m_pWindowMan->addWnd(m_pTargetInfoWnd);
 
    CPlayerStateWnd *pPlayerStateWnd = new CPlayerStateWnd();
@@ -197,6 +208,30 @@ void CGameClient::onRecvEquipData(CPacketEquipData *pPacket)
    CPlayer *pPlayer = m_pScene->getPlayer(pPacket->getUID());
    if(pPlayer != NULL)
       pPacket->unpack(pPlayer);
+}
+
+void CGameClient::onRecvDead(CPacketDead *pPacket)
+{
+   CPlayer *pPlayer = m_pScene->getPlayer(pPacket->getUID());
+   if(pPlayer != NULL) {
+      // 出現載入畫面, 等待Server傳送玩家資料 (2D不做事情)
+   }
+   else
+      m_pScene->removeMonster(pPacket->getUID());
+}
+
+void CGameClient::onRecvPlayerDeadReset(CPacketPlayerDeadReset *pPacket)
+{
+   CPlayer *pPlayer = m_pScene->getPlayer(pPacket->getUID());
+   if(pPlayer != NULL) {
+      pPacket->unpack(pPlayer);
+
+#ifdef _GAMEENGINE_2D_
+      m_pTargetInfoWnd->setTarget(pPacket->getTargetUID());
+#endif
+
+      pPlayer->resetDead();   // 玩家復活
+   }
 }
 
 void CGameClient::onRecvNPCData(CPacketNPCData *pPacket)
@@ -267,8 +302,20 @@ void CGameClient::workPlay(HWND hWnd, float timePass)
             onRecvAddSkill((CPacketAddSkill *)pPacket);
          else if(pPacket->m_id == PACKET_CAN_USE_SKILL)
             onRecvCanUseSkill((CPacketCanUseSkill *)pPacket);
-	 else if(pPacket->m_id == PACKET_NPC_DATA)
-	    onRecvNPCData((CPacketNPCData *)pPacket);
+         else if(pPacket->m_id == PACKET_DEAD)
+            onRecvDead((CPacketDead *)pPacket);
+         else if(pPacket->m_id == PACKET_PLAYER_DEAD_RESET)
+            onRecvPlayerDeadReset((CPacketPlayerDeadReset *)pPacket);
+         else if(pPacket->m_id == PACKET_NPC_DATA)
+	         onRecvNPCData((CPacketNPCData *)pPacket);
+         else if(pPacket->m_id == PACKET_MONEY)
+            onRecvMoney((CPacketMoney *)pPacket);
+         else if(pPacket->m_id == PACKET_XP)
+            onRecvXP((CPacketXP *)pPacket);
+         else if(pPacket->m_id == PACKET_CANCEL_USESKILL)
+            onRecvCancelUseSkill((CPacketCancelUseSkill *)pPacket);
+         else if(pPacket->m_id == PACKET_KEY_ACTION_EVENT)
+            onRecvKeyActionEvent((CPacketKeyActionEvent *)pPacket);
       }
    }
 }
@@ -331,6 +378,38 @@ void CGameClient::onRecvCanUseSkill(CPacketCanUseSkill *pPacket)
       if(pPacket->canUseSkill() == true)
          pPlayer->startCastSkill(pPacket->getUseSkillID());
    }
+}
+
+void CGameClient::onRecvMoney(CPacketMoney *pPacket)
+{
+   CPlayer *pPlayer = m_pScene->getMainPlayer();
+   if(pPlayer->getUID() != pPacket->m_uid)
+      return;
+
+   pPlayer->addMoney(pPacket->m_offsetMoney);
+}
+
+void CGameClient::onRecvXP(CPacketXP *pPacket)
+{
+   CPlayer *pPlayer = m_pScene->getMainPlayer();
+   if(pPlayer->getUID() != pPacket->m_uid)
+      return;
+
+   pPlayer->addXP(pPacket->m_offsetXP);
+}
+
+void CGameClient::onRecvCancelUseSkill(CPacketCancelUseSkill *pPacket)
+{
+   CPlayer *pPlayer = m_pScene->getPlayer(pPacket->getUID());
+   if(pPlayer != NULL)
+      pPacket->unpack(pPlayer);
+}
+
+void CGameClient::onRecvKeyActionEvent(CPacketKeyActionEvent *pPacket)
+{
+   CUnitObject *pUnitObject = m_pScene->getUnitObject(pPacket->getUID());
+   if(pUnitObject != NULL)
+      pPacket->unpack(pUnitObject);
 }
 
 // Add by Darren Chen on 2013/01/03 {

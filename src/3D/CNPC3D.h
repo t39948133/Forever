@@ -5,6 +5,7 @@
 #include "CGraphicsRender.h"
 #include "CNPC.h"
 #include "CObjectTitle.h"
+#include "CTerrain.h"
 
 #include <OgreSceneManager.h>
 #include <OgreEntity.h>
@@ -16,7 +17,7 @@
 class CNPC3D
 {
 public:
-	CNPC3D(CNPC *pNPC, Ogre::SceneManager *pSceneManager);
+	CNPC3D(CNPC *pNPC, Ogre::SceneManager *pSceneManager, CTerrain &terrain);
 	~CNPC3D();
 
 	/** @brief 設定模型 */
@@ -24,7 +25,7 @@ public:
 
    /** @brief 更新模型邏輯運算
 	  * @param timeSinceLastFrame 1Frame是幾秒 */
-   void update(float timeSinceLastFrame);
+   void update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode);
 
    /** @brief 釋放模型 */
    void release();
@@ -52,26 +53,23 @@ private:
      * @param skeletonFile 動作檔 */
    void setupSkeleton(std::string skeletonFile);
 
-   /** @brief 3D版本移動
-     * @param timeSinceLastFrame 1個Frame經過幾秒
-     * @param offsetDirection    移動偏移量 */
-   void move(float timeSinceLastFrame, Ogre::Vector3 &offsetDirection);
-
    std::vector<Ogre::AnimationState *> *m_pvtAnimationSet;  // 當前角色的動畫集合(所有模型)
 
    // Title
-   CObjectTitle       *m_nameOverlay;      // 顯示於3D的角色名稱
+   CObjectTitle        m_nameOverlay;      // 顯示於3D的角色名稱
 
    Ogre::Vector3       m_mouseDirection;   // 滑鼠移動方向與偏移量
    Ogre::Vector3       m_goalDirection;    // 目標方向
 
    std::string         m_meshName;         // 模型名稱, 沒有附檔名
    Ogre::Entity       *m_pBodyEntity;      // 身體模型 (基本模型)
-   Ogre::SceneNode    *m_pNPCNode;     // 角色節點
+   Ogre::SceneNode    *m_pNPCNode;         // 角色節點
+   CTerrain           &m_terrain;          // 3D地形
+   Ogre::Vector3       m_terrainHeight;    // 3D地形高度
    Ogre::SceneManager *m_pSceneManager;    // 場景管理員
    CGraphicsRender    *m_pRenderCore;      // 繪圖引擎
 
-   CNPC					 *m_pNPC2D;       // 怪物
+   CNPC					 *m_pNPC2D;           // NPC
 
    static unsigned int m_iNPCCount;
 };

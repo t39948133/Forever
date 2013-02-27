@@ -116,6 +116,16 @@ void CAction::setMachineName(std::string machineName)
    }
 }
 
+int CAction::getNextActionID()
+{
+   return m_iNextActID;
+}
+
+float CAction::getActionTimeLength()
+{
+   return m_fTime;
+}
+
 void CAction::write(FILE *pFile)
 {
    int version = 0;

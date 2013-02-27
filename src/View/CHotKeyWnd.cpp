@@ -20,8 +20,10 @@ CHotKeyWnd::CHotKeyWnd()
 
 CHotKeyWnd::~CHotKeyWnd()
 {
-   if(m_pPlayer != NULL)
+   if(m_pPlayer != NULL) {
       m_pPlayer->removePlayerHotKeyEventListener(this);
+      m_pPlayer->removeAdvAttrEventListener(this);
+   }
 
 #ifdef _GAMEENGINE_3D_
    for(int i = 0; i < BUTTON_COUNT; i++) {
@@ -57,7 +59,7 @@ void CHotKeyWnd::init(int _x, int _y, CPlayer *pPlr, GP::NetStream *pNetStream)
    m_pNetStream = pNetStream;
    if(m_pPlayer != NULL) {
       m_pPlayer->addPlayerHotKeyEventListener(this);
-      m_pPlayer->addSkillEventListener(this);
+      m_pPlayer->addAdvAttrEventListener(this);
    }
 
    x = _x;
@@ -325,7 +327,8 @@ void CHotKeyWnd::updateSkillAvailable(CSkill *pSkill)
          }
          else {
 #ifdef _GAMEENGINE_3D_
-            m_vpBtn[field]->setImage(pSkillInfo->geticonName());
+            if(canUseSkill(pSkill) == true)
+               m_vpBtn[field]->setImage(pSkillInfo->geticonName());
 #elif _GAMEENGINE_2D_
             m_vpText[TEXT_COUNT/2 + field]->setText("", 1, 1, 1);
 #endif
@@ -358,11 +361,41 @@ void CHotKeyWnd::updateSkillCoolDown(CSkill *pSkill)
          else {
 #ifdef _GAMEENGINE_3D_
             if(m_bvCoolDown[field] == true) {
-               m_vpBtn[field]->setImage(pSkillInfo->geticonName());
+               if(canUseSkill(pSkill) == true)
+                  m_vpBtn[field]->setImage(pSkillInfo->geticonName());
                m_bvCoolDown[field] = false;
             }
 #elif _GAMEENGINE_2D_
             m_vpText[TEXT_COUNT/2 + field]->setText("", 1, 1, 1);
+#endif
+         }
+      }
+   }
+}
+
+void CHotKeyWnd::updateAdvAttr(CUnitObject *pUnitObject)
+{
+   for(int i = 0; i < (int)m_pPlayer->getHotKeySize(); i++) {
+      HotKeyItem *pHotKeyItem = m_pPlayer->getHotKeyItem(i);
+      if(pHotKeyItem->pSkill != NULL) {
+         std::map<void *, int>::iterator it = m_table.find(pHotKeyItem->pSkill);
+         if(it != m_table.end()) {
+            int field = it->second;
+
+            CSkillInfo *pSkillInfo = pHotKeyItem->pSkill->getInfo();
+#ifdef _GAMEENGINE_3D_
+            if(canUseSkill(pHotKeyItem->pSkill) == true)
+               m_vpBtn[field]->setImage(pSkillInfo->geticonName());
+            else
+               m_vpBtn[field]->setImage(pSkillInfo->geticonName() + "/CoolDown");
+#elif _GAMEENGINE_2D_
+            if(canUseSkill(pHotKeyItem->pSkill) == true)
+               m_vpText[TEXT_COUNT/2 + field]->setText("", 1, 1, 1);
+            else {
+               char buf[10];
+		         sprintf_s(buf, sizeof(buf), "不可用");
+               m_vpText[TEXT_COUNT/2 + field]->setText(buf, 1, 1, 1);
+            }
 #endif
          }
       }
@@ -422,6 +455,14 @@ void CHotKeyWnd::keyDown(const OIS::KeyEvent &evt)
          onLCommand(9);
          break;
       }
+
+      case OIS::KC_C: {
+         CSkill *pSkill = m_pPlayer->getSkill(0);
+         CPacketCanUseSkill packet;
+         packet.pack(m_pPlayer, pSkill->getID());
+         m_pNetStream->send(&packet, sizeof(packet));
+         break;
+      }
    }
 }
 
@@ -429,3 +470,18 @@ void CHotKeyWnd::keyUp(const OIS::KeyEvent &evt)
 {
 }
 #endif
+
+bool CHotKeyWnd::canUseSkill(CSkill *pSkill)
+{
+   if(pSkill->getAvailable() == false)  // 確定該項技能因裝備關係而可以使用
+      return false;
+
+   if(pSkill->isReady() == false)    // 確定該項技能的冷卻時間已經完成
+      return false;
+
+   CSkillInfo *pUseSkillInfo = pSkill->getInfo();
+   if(m_pPlayer->getMP() < pUseSkillInfo->getCastMP())   // 確定角色的MP足夠使用該項技能
+      return false;
+
+   return true;
+}

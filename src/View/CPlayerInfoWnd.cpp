@@ -385,7 +385,7 @@ void CPlayerInfoWnd::init (int _x, int _y, CPlayer *pPlr, GP::NetStream *pNetStr
 #endif  // #ifdef _GAMEENGINE_3D_ && #elif _GAMEENGINE_2D_
 
    updateAdvAttr(m_pPlayer);
-   updatePlayerAttr(m_pPlayer);
+   updatePlayerAttr(m_pPlayer, 0, 0);
    
    // 裝備欄清空
    updatePlayerEquip(m_pPlayer, MAIN_HAND, -1);
@@ -531,7 +531,7 @@ void CPlayerInfoWnd::updateAdvAttr(CUnitObject *pUnitObject)
    }
 }
 
-void CPlayerInfoWnd::updatePlayerAttr(CPlayer *pPlayer)
+void CPlayerInfoWnd::updatePlayerAttr(CPlayer *pPlayer, unsigned int offsetXP, long long offsetMoney)
 {
    //更新基本資訊
    char buf[50];

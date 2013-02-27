@@ -13,6 +13,7 @@
 #include "CArmorInfo.h"
 #include "CPacketTargetPos.h"
 #include "CPacketCancelUseSkill.h"
+#include "CPacketKeyActionEvent.h"
 
 #include <OgreQuaternion.h>
 #include <OgreSkeletonInstance.h>
@@ -32,8 +33,6 @@ CPlayer3D::CPlayer3D(CPlayer *pPlayer, Ogre::SceneManager *pSceneManager, GP::Ne
    memset(buf, 0, sizeof(buf));
    sprintf(buf, "%s::CPlayer3D::%d", m_pPlayer2D->getMachineName().c_str(), m_iPlayerCount++);
    m_pPlayerNode = m_pSceneManager->getRootSceneNode()->createChildSceneNode(buf);
-
-   m_nameOverlay = NULL;
 
    m_pHairEntity = NULL;
    m_pHeadEntity = NULL;
@@ -121,7 +120,7 @@ void CPlayer3D::setup()
    CAction *pNewAction = m_pPlayer2D->getCurAction();
    setAnimation(pNewAction->getAnimationName() + "::" + m_pPlayerNode->getName());
 
-   m_nameOverlay = new CObjectTitle(m_pHairEntity, m_pRenderCore->getCamera(), "NCTaiwanFont", 20.0f);
+   m_nameOverlay.init(m_pHairEntity, m_pRenderCore->getCamera(), "NCTaiwanFont", 20.0f);
 }
 
 void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
@@ -136,15 +135,14 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
       playAnimation(timeSinceLastFrame);
    
    // 計算Y值, 要黏著3D地形
-   Ogre::Vector3 pos(m_pPlayer2D->getPosition().fX, 1000, m_pPlayer2D->getPosition().fY);
+   Ogre::Vector3 pos(m_pPlayer2D->getPosition().fX, 500, m_pPlayer2D->getPosition().fY);
    Ogre::Vector3 dir(0, -1, 0);
    Ogre::Ray ray(pos, dir);
    m_terrainHeight = Ogre::Vector3::ZERO;
    m_terrain.getRayPos(ray, m_terrainHeight);
 
-   if(pCameraNode != NULL) {
+   if(m_bMainPlayer == true) {
       // 代表主角
-      m_bMainPlayer = true;
 
       if(m_keyDirection != Ogre::Vector3::ZERO) {
          // 鍵盤移動
@@ -157,87 +155,80 @@ void CPlayer3D::update(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode)
             m_pNetStream->send(&packet, sizeof(packet));
          }
 
-         move(timeSinceLastFrame, pCameraNode, m_keyDirection);
+         float cameraDirection = pCameraNode->getOrientation().getYaw().valueRadians();
+         m_pPlayer2D->setDirection(cameraDirection);
+         if(m_keyDirection.z == -1)  // W
+            m_pPlayer2D->addDirection(-3.1415926f);
+         else if(m_keyDirection.z == 1)   // S
+            m_pPlayer2D->addDirection(0.0f);
 
-         Ogre::Vector3 curPos = m_pPlayerNode->getPosition();
-         m_pPlayerNode->setPosition(curPos.x, m_terrainHeight.y, curPos.z);
-         m_pPlayer2D->setTargetPosition(curPos.x, curPos.z);
+         if(m_keyDirection.x == -1) {  // A
+            if(m_keyDirection.z == -1)      // WA
+               m_pPlayer2D->addDirection((3.1415926f / 2.0f) / 2.0f);
+            else if(m_keyDirection.z == 1)  // SA
+               m_pPlayer2D->addDirection((-3.1415926f / 2.0f) / 2.0f);
+            else
+               m_pPlayer2D->addDirection(-3.1415926f / 2.0f);
+         }
+         else if(m_keyDirection.x == 1) {  // D
+            if(m_keyDirection.z == -1)      // WD
+               m_pPlayer2D->addDirection((-3.1415926f / 2.0f) / 2.0f);
+            else if(m_keyDirection.z == 1)  // SD
+               m_pPlayer2D->addDirection(3.0f / 2.0f * -3.1415926f + ((-3.1415926f / 2.0f) / 2.0f));
+            else
+               m_pPlayer2D->addDirection(-3.1415926f + (-3.1415926f / 2.0f));
+         }
+
+         float newDirection = m_pPlayer2D->getDirection();
+         newDirection = fmod(newDirection, (2.0f * -3.1415926f));
+         m_pPlayer2D->setDirection(newDirection);
+
+         FPOS playerPos = m_pPlayer2D->getPosition();
+         float moveX = playerPos.fX + 1.0f * sin(fmod(newDirection, 2.0f * -3.1415926f));
+         float moveY = playerPos.fY + 1.0f * cos(fmod(newDirection, 2.0f * -3.1415926f));
+         m_pPlayer2D->setTargetPosition(moveX, moveY);
 
          CPacketTargetPos packet;
          packet.pack(m_pPlayer2D);
          m_pNetStream->send(&packet, sizeof(packet));
+
+         if(m_pPlayer2D->isMove() == true) {
+            movePoint(playerPos.fX, playerPos.fY, moveX, moveY, timeSinceLastFrame * m_pPlayer2D->getAdvAttr().fMove);
+            m_pPlayer2D->setPosition(playerPos.fX, playerPos.fY);
+            setPosition(playerPos.fX, m_terrainHeight.y, playerPos.fY);
+            setDirection(m_pPlayer2D->getDirection());
+         }
       }
       else {
+         m_pPlayer2D->setKeyMoveEnabled(false);
+
          if(m_pPlayer2D->isMove() == true) {
             // 滑鼠移動
-            FPOS targetPos = m_pPlayer2D->getTargetPosition();
             FPOS curPos = m_pPlayer2D->getPosition();
-
-            FPOS offsetPos;
-            offsetPos.fX = targetPos.fX - curPos.fX;
-            offsetPos.fY = targetPos.fY - curPos.fY;
-
-            m_mouseDirection = Ogre::Vector3::ZERO;
-            m_mouseDirection.x = offsetPos.fX;
-            m_mouseDirection.z = offsetPos.fY;
-
-            move(timeSinceLastFrame, m_mouseDirection);
-
-            Ogre::Vector3 curNodePos = m_pPlayerNode->getPosition();
-            m_pPlayerNode->setPosition(curNodePos.x, m_terrainHeight.y, curNodePos.z);
+            setPosition(curPos.fX, m_terrainHeight.y, curPos.fY);
+            setDirection(m_pPlayer2D->getDirection());
          }
          else {
             // 主角，非鍵盤移動也非滑鼠移動時
-            m_pPlayer2D->setKeyMoveEnabled(false);
-
             FPOS pos = m_pPlayer2D->getPosition();
             setPosition(pos.fX, m_terrainHeight.y, pos.fY);
-            setPosition(pos.fX, 0, pos.fY);
             setDirection(m_pPlayer2D->getDirection());
          }
       }
    }
    else {
       // 其他玩家
-      m_bMainPlayer = false;
-
-      if((m_pPlayer2D->isMove() == true) && (m_pPlayer2D->isReachTarget() == false)) {
-         // 其他玩家位置改變時, 一律視為其他玩家用滑鼠移動
-         FPOS targetPos = m_pPlayer2D->getTargetPosition();
-         FPOS curPos = m_pPlayer2D->getPosition();
-
-         FPOS offsetPos;
-         offsetPos.fX = targetPos.fX - curPos.fX;
-         offsetPos.fY = targetPos.fY - curPos.fY;
-
-         m_mouseDirection = Ogre::Vector3::ZERO;
-         m_mouseDirection.x = offsetPos.fX;
-         m_mouseDirection.z = offsetPos.fY;
-
-         move(timeSinceLastFrame, m_mouseDirection);
-
-         Ogre::Vector3 curNodePos = m_pPlayerNode->getPosition();
-         m_pPlayerNode->setPosition(curNodePos.x, m_terrainHeight.y, curNodePos.z);
-      }
-      else {
-         // 其他玩家沒有改變位置時
-         FPOS pos = m_pPlayer2D->getPosition();
-         setPosition(pos.fX, m_terrainHeight.y, pos.fY);
-         setDirection(m_pPlayer2D->getDirection());
-      }
+      FPOS pos = m_pPlayer2D->getPosition();
+      setPosition(pos.fX, m_terrainHeight.y, pos.fY);
+      setDirection(m_pPlayer2D->getDirection());
    }
 
-   m_nameOverlay->setTitle(m_pPlayer2D->getName());
-   m_nameOverlay->update();
+   m_nameOverlay.setTitle(m_pPlayer2D->getName());
+   m_nameOverlay.update(m_pPlayerNode, pCameraNode);
 }
 
 void CPlayer3D::release()
 {
-   if(m_nameOverlay != NULL) {
-      delete m_nameOverlay;
-      m_nameOverlay = NULL;
-   }
-
    m_pvtAnimationSet->clear();
    m_pPlayerNode->detachAllObjects();
 
@@ -316,9 +307,6 @@ const Ogre::Vector3& CPlayer3D::getPosition()
 
 void CPlayer3D::setMouseTargetPosition(Ogre::Vector3 &targetPos)
 {
-   //if(m_bMainPlayer == false)
-   //   return;
-
    if(m_pPlayer2D->isCastSkill() == true) {
       m_pPlayer2D->cancelCastSkill();
 
@@ -326,8 +314,6 @@ void CPlayer3D::setMouseTargetPosition(Ogre::Vector3 &targetPos)
       packet.pack(m_pPlayer2D);
       m_pNetStream->send(&packet, sizeof(packet));
    }
-
-   // Todo: 要記錄targetPos.y, 移動時要運算地形高度
 
    m_pPlayer2D->setTargetPosition(targetPos.x, targetPos.z);
 
@@ -350,6 +336,11 @@ CPlayer* CPlayer3D::getPlayer2D()
 void CPlayer3D::setUID(long long uid)
 {
    m_pPlayerNode->setUserAny(Ogre::Any(uid));
+}
+
+void CPlayer3D::setMainPlayer(bool bMainPlayer)
+{
+   m_bMainPlayer = bMainPlayer;
 }
 
 void CPlayer3D::setPosition(float x, float y, float z)
@@ -395,8 +386,11 @@ void CPlayer3D::playAnimation(float timeSinceLastFrame)
 {
    std::vector<Ogre::AnimationState *>::iterator it = m_pvtAnimationSet->begin();
    while(it != m_pvtAnimationSet->end()) {
-      if((*it)->hasEnded() == true)
-         (*it)->setTimePosition(0.0f);
+      if((*it)->hasEnded() == true) {
+         int nextActID = m_pPlayer2D->getCurAction()->getNextActionID();
+         if(nextActID == 0)
+            (*it)->setTimePosition(0.0f);
+      }
 
       (*it)->addTime(timeSinceLastFrame);
       it++;
@@ -437,77 +431,6 @@ void CPlayer3D::setupSkeleton(std::string skeletonFile)
    m_pFootEntity->getSkeleton()->_refreshAnimationState(m_pFootEntity->getAllAnimationStates());
    m_pHandEntity->getSkeleton()->_refreshAnimationState(m_pHandEntity->getAllAnimationStates());
    m_pLegEntity->getSkeleton()->_refreshAnimationState(m_pLegEntity->getAllAnimationStates());
-}
-
-void CPlayer3D::move(float timeSinceLastFrame, Ogre::SceneNode *pCameraNode, Ogre::Vector3 &offsetDirection)
-{
-   if(offsetDirection != Ogre::Vector3::ZERO) {
-      // 當offsetDirection不等於0時, 代表移動
-
-      // 數值清空
-      m_goalDirection = Ogre::Vector3::ZERO;
-
-      // 以攝影機的方向計算鍵盤的方向
-      m_goalDirection += (offsetDirection.z * pCameraNode->getOrientation().zAxis());
-      m_goalDirection += (offsetDirection.x * pCameraNode->getOrientation().xAxis());
-      m_goalDirection.y = 0;
-      m_goalDirection.normalise(); // 以計算後的方向為單位
-
-      // 取得角色的Z軸方向旋轉到m_goalDirection的方向
-      Ogre::Quaternion toGoal = m_pPlayerNode->getOrientation().zAxis().getRotationTo(m_goalDirection);
-
-      // 取得轉向後的方向是幾度角
-      Ogre::Real yawToGoal = toGoal.getYaw().valueDegrees();
-
-      // 更新轉向後的方向(弧度)
-      m_pPlayer2D->addDirection(toGoal.getYaw().valueRadians());
-
-      // 模型Y軸旋轉
-      m_pPlayerNode->yaw(Ogre::Degree(yawToGoal));
-
-      // 模型移動Z軸
-      AdvancedAttribute advAttr = m_pPlayer2D->getAdvAttr();
-      m_pPlayerNode->translate(0, 0, timeSinceLastFrame * advAttr.fMove, Ogre::Node::TS_LOCAL);
-
-      // 更新模型座標點
-      Ogre::Vector3 newPos = m_pPlayerNode->getPosition();
-      m_pPlayer2D->setPosition(newPos.x, newPos.z);
-   }
-}
-
-void CPlayer3D::move(float timeSinceLastFrame, Ogre::Vector3 &offsetDirection)
-{
-   if(offsetDirection != Ogre::Vector3::ZERO) {
-      // 當offsetDirection不等於0時, 代表移動
-
-      // 數值清空
-      m_goalDirection = Ogre::Vector3::ZERO;
-
-      // 偏移量方向為目標方向
-      m_goalDirection = offsetDirection;
-      m_goalDirection.y = 0;
-      m_goalDirection.normalise(); // 以目標方向為單位
-
-      // 取得角色的Z軸方向旋轉到m_goalDirection的方向
-      Ogre::Quaternion toGoal = m_pPlayerNode->getOrientation().zAxis().getRotationTo(m_goalDirection);
-
-      // 取得轉向後的方向是幾度角
-      Ogre::Real yawToGoal = toGoal.getYaw().valueDegrees();
-
-      // 更新轉向後的方向(弧度)
-      m_pPlayer2D->addDirection(toGoal.getYaw().valueRadians());
-
-      // 模型Y軸旋轉
-      m_pPlayerNode->yaw(Ogre::Degree(yawToGoal));
-
-      // 模型移動Z軸
-      AdvancedAttribute advAttr = m_pPlayer2D->getAdvAttr();
-      m_pPlayerNode->translate(0, 0, timeSinceLastFrame * advAttr.fMove, Ogre::Node::TS_LOCAL);
-
-      // 更新模型座標點
-      Ogre::Vector3 newPos = m_pPlayerNode->getPosition();
-      m_pPlayer2D->setPosition(newPos.x, newPos.z);
-   }
 }
 
 Ogre::Entity* CPlayer3D::setupArmor(Ogre::Entity *pBaseEntity, Ogre::Entity *pSlotEntity, int itemId)
@@ -611,6 +534,10 @@ void CPlayer3D::keyDown(const OIS::KeyEvent &evt)
                actEvent.m_event = AET_KEY;
                actEvent.m_iKeyID = 'X';
                CActionDispatch::getInstance()->sendEvnet(m_pPlayer2D->getMachineName(), m_pPlayer2D->getUID(), actEvent);
+               
+               CPacketKeyActionEvent packet;
+               packet.pack(m_pPlayer2D, &actEvent);
+               m_pNetStream->send(&packet, sizeof(packet));
             }
          }
          break;
